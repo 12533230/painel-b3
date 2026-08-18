@@ -506,6 +506,7 @@ companies.sort(key=lambda c: (c["setor"], c["subsetor"], c["segmento"], c["name"
 
 panel = {
     "updatedAt": UPDATED,
+    "b3FetchedAt": b3.get("fetchedAt"),
     "fontes": {"demonstracoes": "CVM Dados Abertos (ITR/DFP)", "setores": "B3 Classificação Setorial",
                "mercado": f"Fundamentus ({UPDATED})"},
     "companies": companies,

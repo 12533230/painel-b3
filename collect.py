@@ -176,6 +176,65 @@ def reddit_news():
         p["u"] = p["u"] if p["u"].startswith("https://www.reddit.com") else p["u"]
     return {"news": news, "disc": disc}
 
+# manchetes por veículo (RSS) — sugestão da equipe Insignia
+FEEDS_BR = [
+    ("G1 Economia", "https://g1.globo.com/economia/", "https://g1.globo.com/rss/g1/economia/"),
+    ("Valor Econômico", "https://valor.globo.com/", "https://pox.globo.com/rss/valor"),
+    ("InfoMoney", "https://www.infomoney.com.br/mercados/", "https://www.infomoney.com.br/feed/"),
+    ("Brazil Journal", "https://braziljournal.com/", "https://braziljournal.com/feed/"),
+    ("InvestNews", "https://investnews.com.br/", "https://investnews.com.br/feed/"),
+    ("Exame Invest", "https://exame.com/invest/", None),
+]
+FEEDS_INT = [
+    ("NY Times Business", "https://www.nytimes.com/section/business", "https://rss.nytimes.com/services/xml/rss/nyt/Business.xml"),
+    ("The Economist", "https://www.economist.com/finance-and-economics", "https://www.economist.com/finance-and-economics/rss.xml"),
+    ("The Guardian Business", "https://www.theguardian.com/business", "https://www.theguardian.com/uk/business/rss"),
+    ("BBC Business", "https://www.bbc.com/business", "https://feeds.bbci.co.uk/news/business/rss.xml"),
+    ("Financial Times", "https://www.ft.com/markets", None),
+    ("Bloomberg", "https://www.bloomberg.com/markets", None),
+    ("Reuters Business", "https://www.reuters.com/business/", None),
+    ("WSJ Finance", "https://www.wsj.com/finance", None),
+]
+def parse_rss(url, n=3):
+    r = get(url, timeout=25)
+    root = etree.fromstring(r.content)
+    itens = []
+    # RSS 2.0 <item> ou Atom <entry>
+    nodes = root.iter("item")
+    itens_nodes = [x for x in nodes][:n*2] or [x for x in root.iter("{http://www.w3.org/2005/Atom}entry")][:n*2]
+    for it in itens_nodes:
+        t = (it.findtext("title") or it.findtext("{http://www.w3.org/2005/Atom}title") or "").strip()
+        u = it.findtext("link") or ""
+        if not u:
+            ln = it.find("{http://www.w3.org/2005/Atom}link")
+            u = ln.get("href") if ln is not None else ""
+        d = (it.findtext("pubDate") or it.findtext("{http://www.w3.org/2005/Atom}updated") or "")
+        d = d[5:11].strip() if d else ""
+        if t and u:
+            itens.append({"t": t[:120], "u": u.strip(), "d": d})
+        if len(itens) >= n:
+            break
+    return itens
+
+def veiculos():
+    prev = PREV.get("veiculos") or {}
+    out = {}
+    for chave, feeds in (("br", FEEDS_BR), ("int", FEEDS_INT)):
+        lista = []
+        prev_map = {v.get("n"): v for v in (prev.get(chave) or [])}
+        for nome, home, rss in feeds:
+            v = {"n": nome, "u": home, "itens": []}
+            if rss:
+                try:
+                    v["itens"] = parse_rss(rss)
+                    log("RSS ok:", nome, len(v["itens"]))
+                except Exception as e:
+                    log("RSS falhou:", nome, repr(e))
+                    v["itens"] = (prev_map.get(nome) or {}).get("itens") or []
+            lista.append(v)
+        out[chave] = lista
+    return out
+
 def gnews():
     try:
         r = get("https://news.google.com/rss/headlines/section/topic/BUSINESS?hl=pt-BR&gl=BR&ceid=BR:pt-419", timeout=30)
@@ -228,6 +287,7 @@ if __name__ == "__main__":
         "agenda": agenda(),
         "reddit": reddit_news(),
         "manchetes": gnews(),
+        "veiculos": veiculos(),
         "fontesAgenda": "BCB (Copom), Federal Reserve (FOMC), BCE, IBGE",
     }
     (OUT / "macro_snapshot.json").write_text(json.dumps(snap, ensure_ascii=False), encoding="utf-8")

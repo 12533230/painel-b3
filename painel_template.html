@@ -88,6 +88,20 @@
   .newsmeta{color:var(--muted);font-size:11.5px;margin-top:3px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .ncchip{display:inline-block;background:var(--wash);color:var(--ink2);border-radius:999px;padding:1px 8px;font-size:11px;font-weight:700}
   .livechip{display:inline-block;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700;background:var(--wash);color:var(--ink2)}
+  /* ---- disclaimer & frescor dos dados ---- */
+  .notice{background:var(--wash);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--ink2);margin:0 0 12px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .notice b{color:var(--ink)}
+  .notice a{color:var(--link);cursor:pointer;font-weight:700;text-decoration:none;white-space:nowrap}
+  .notice a:hover{text-decoration:underline}
+  .iovl{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:80;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 14px}
+  .iovl.on{display:flex}
+  .ibox{background:var(--page);border:1px solid var(--border);border-radius:14px;max-width:1020px;width:100%;padding:18px 20px 20px;box-shadow:0 18px 60px rgba(0,0,0,.3);position:relative}
+  .ibox h2{margin:0 0 4px;font-size:17px}
+  .ibox .x2{position:absolute;top:12px;right:14px}
+  .ibox p{font-size:12.5px;color:var(--ink2);line-height:1.55;margin:10px 0}
+  .ibox p b{color:var(--ink)}
+  .fresh td:first-child{font-weight:600;color:var(--ink)}
+  .fresh .live{color:var(--good);font-weight:700}
   .side .all{font-weight:650;padding:7px 10px;border-radius:8px;cursor:pointer}
   .side .all:hover,.side .sec>span:hover,.side .sub>span:hover,.side .seg:hover{background:var(--wash)}
   .side .sec>span,.side .sub>span,.side .seg{display:flex;justify-content:space-between;gap:6px;padding:6px 10px;border-radius:8px;cursor:pointer}
@@ -178,6 +192,7 @@
     <input id="q" type="text" placeholder="Buscar empresa ou ticker… (ex.: WEGE3, Sabesp)" autocomplete="off">
     <div class="sugg" id="sugg"></div>
   </div>
+  <button class="btn" id="infobtn" title="Fontes, datas de atualização e avisos">ⓘ Dados</button>
   <button class="btn" id="theme" title="Alternar tema">◐ Tema</button>
 </div>
 <div class="ticker" id="ticker" title="Cotações — passe o mouse para pausar"><div class="tk-track" id="tkt"></div></div>
@@ -194,6 +209,8 @@
 </div>
 
 <main id="macroview"></main>
+
+<div class="iovl" id="iovl"><div class="ibox" id="ibox" role="dialog" aria-label="Dados, fontes e atualizações"></div></div>
 
 <div class="ovl" id="ovl"></div>
 <aside class="panel" id="panel" aria-label="Detalhe da empresa"></aside>
@@ -459,7 +476,7 @@ function colChart(container, data, color, fmt){
 const ovl = $('#ovl'), panel = $('#panel');
 ovl.onclick = closeDetail;
 function closeDetail(){ ovl.classList.remove('on'); panel.classList.remove('on'); openCvm=null; }
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDetail(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDetail(); if(typeof closeInfo==='function') closeInfo(); } });
 
 function statTile(label, value, extra, valueCls){
   const c = el('div','tile'); c.append(el('div','l',label));
@@ -641,6 +658,7 @@ const FOCUS_LBL = {'IPCA':'IPCA (%)','IGP-M':'IGP-M (%)','Selic':'Selic — fim 
 function renderMacro(){
   const m=$('#macroview'); m.textContent='';
   const c=MACRO.core||{}, fx=c.fx||{}, cg=c.cripto||{};
+  m.append(noticeEl());
   const status = el('div',null); status.style.margin='4px 0 10px';
   status.append(el('span','livechip', LIVE.ok ? '● ao vivo — APIs consultadas às '+LIVE.at : '◷ snapshot de '+brDate(MACRO.snapshotEm)+' — abra com internet para atualizar ao vivo'));
   m.append(status);
@@ -721,8 +739,17 @@ function renderMacro(){
   grid.append(nw);
   m.append(el('h3','sect','Agenda e repercussão')); m.append(grid);
 
+  // manchetes por veículo (Brasil e internacionais)
+  m.append(el('h3','sect','Manchetes por veículo'));
+  const vg=el('div','m-grid');
+  const vbr=(MACRO.veiculos&&MACRO.veiculos.br&&MACRO.veiculos.br.length)? MACRO.veiculos.br : OUTLETS_FALLBACK.br;
+  const vint=(MACRO.veiculos&&MACRO.veiculos.int&&MACRO.veiculos.int.length)? MACRO.veiculos.int : OUTLETS_FALLBACK.int;
+  vg.append(veiculoCard('Brasil', vbr));
+  vg.append(veiculoCard('Internacionais', vint));
+  m.append(vg);
+
   const grid2=el('div','m-grid'); grid2.style.marginTop='12px';
-  const mc=el('div','card'); mc.append(el('div','ct','Manchetes — Google News · Negócios (Brasil)'));
+  const mc=el('div','card'); mc.append(el('div','ct','Radar Google News · Negócios (Brasil)'));
   for(const g of MACRO.manchetes||[]){
     const it=el('div','newsit');
     const a=el('a',null,g.t); a.href='https://news.google.com/search?q='+encodeURIComponent('"'+g.t.slice(0,80)+'"')+'&hl=pt-BR&gl=BR&ceid=BR:pt-419'; a.target='_blank'; a.rel='noopener';
@@ -738,7 +765,10 @@ function renderMacro(){
   grid2.append(dc);
   m.append(grid2);
 
-  m.append(el('div','foot','Insignia Partners · painel interno. Indicadores: BCB (SGS e Expectativas/Focus), B3 (Ibovespa), AwesomeAPI (câmbio comercial), CoinGecko (cripto), IBGE. Notícias e discussões refletem repercussão pública em fóruns e o noticiário de negócios; não são curadoria da Insignia nem recomendação. Com internet, câmbio, cripto, Focus e taxas atualizam ao vivo ao abrir; Ibovespa e notícias renovam na atualização semanal.'));
+  m.append(el('h3','sect','Fontes e última atualização de cada conjunto'));
+  const frm=el('div'); renderFresh(frm); m.append(frm);
+
+  m.append(el('div','foot','Insignia Partners · painel interno. Indicadores: BCB (SGS e Expectativas/Focus), B3 (Ibovespa), AwesomeAPI (câmbio comercial), CoinGecko (cripto), IBGE. Notícias, manchetes e discussões refletem o noticiário e a repercussão pública; não são curadoria da Insignia nem recomendação. Detalhes e convenções no botão "ⓘ Dados" do topo.'));
 }
 
 // ---------- atualização ao vivo (APIs com CORS aberto) ----------
@@ -770,7 +800,104 @@ async function refreshLive(){
     LIVE.ok=true; LIVE.at=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     renderTicker();
     if(document.body.dataset.view==='macro') renderMacro();
+    if(iovl.classList.contains('on')) openInfo(); // atualiza as datas do modal para "ao vivo"
   }
+}
+
+// ---------- disclaimer, fontes e frescor dos dados ----------
+const BUILDAT='__BUILDAT__';
+const dmy = s => { if(!s) return '—'; const d=String(s).slice(0,10); return d.includes('-')? d.split('-').reverse().join('/') : d; };
+const META = {
+  dadosAte: (()=>{ let m=''; for(const c of COS) for(const q of c.q) if(q.p>m) m=q.p; return m; })(),
+  buildAt: BUILDAT.indexOf('__')===0 ? null : BUILDAT,
+};
+function buildLocal(){
+  if(!META.buildAt) return dmy(DB.updatedAt);
+  try{ return new Date(META.buildAt).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+' (Brasília)'; }
+  catch(e){ return dmy(META.buildAt); }
+}
+function freshRows(){
+  const c=MACRO.core||{};
+  const liveTxt='● ao vivo · '+(LIVE.at||'');
+  const snap=dmy(MACRO.snapshotEm);
+  return [
+   ['Resultados trimestrais e balanços','CVM (ITR/DFP)','dados até '+(META.dadosAte||'—')+' · lidos em '+dmy(DB.updatedAt),'robô · dias úteis'],
+   ['Múltiplos e cotações de ações','Fundamentus','fechamento de '+dmy(DB.updatedAt),'robô · dias úteis'],
+   ['Valor de mercado calculado','CVM × cotações','fechamento de '+dmy(DB.updatedAt),'robô · dias úteis'],
+   ['Classificação setorial','B3',dmy(DB.b3FetchedAt),'automática · ~45 dias'],
+   ['Ibovespa','B3',MACRO.ibov? dmy(MACRO.ibov.date)+' às '+(MACRO.ibov.hora||'').slice(0,5):'—','robô · dias úteis'],
+   ['Moedas','AwesomeAPI',LIVE.ok? liveTxt : ((c.fx&&c.fx.USDBRL&&c.fx.USDBRL.ts)? dmy(c.fx.USDBRL.ts)+' '+String(c.fx.USDBRL.ts).slice(11,16):snap),'ao abrir + a cada 5 min'],
+   ['Bitcoin e Ethereum','CoinGecko',LIVE.ok? liveTxt : snap,'ao abrir + a cada 5 min'],
+   ['Selic, CDI e IPCA 12m','Banco Central (SGS)',LIVE.ok? liveTxt : snap,'ao abrir + a cada 5 min'],
+   ['Boletim Focus','Banco Central','relatório de '+((c.focus&&c.focus[0])? dmy(c.focus[0].d):'—'),'BCB publica às segundas · busca ao abrir'],
+   ['Notícias e discussões','Reddit (fóruns de investimento)','semana encerrada em '+snap,'robô · dias úteis'],
+   ['Manchetes por veículo','RSS dos jornais (G1, Valor, NYT…)',snap,'robô · dias úteis'],
+   ['Agenda de eventos','BCB · Fed · BCE · IBGE','calendários oficiais de 2026','manual quando saírem os de 2027'],
+   ['Geração do painel','GitHub Actions (github.com/12533230/painel-b3)',buildLocal(),'dias úteis ~06:10 (Brasília)'],
+  ];
+}
+function renderFresh(container){
+  container.textContent='';
+  const w=el('div','qtblwrap'); const t=el('table','qtbl fresh');
+  const h=el('tr'); for(const x of ['Conjunto de dados','Fonte','Última atualização','Cadência']) h.append(el('th',null,x));
+  const th=el('thead'); th.append(h); t.append(th);
+  const b=el('tbody');
+  for(const r of freshRows()){
+    const tr=el('tr');
+    r.forEach((v,i)=>{ const td=el('td',null,v); if(i===2&&String(v).indexOf('● ao vivo')===0) td.classList.add('live'); tr.append(td); });
+    b.append(tr);
+  }
+  t.append(b); w.append(t); container.append(w);
+}
+const iovl=$('#iovl'), ibox=$('#ibox');
+function openInfo(){
+  ibox.textContent='';
+  const x=el('button','btn x2','✕ fechar'); x.onclick=closeInfo; ibox.append(x);
+  ibox.append(el('h2',null,'Dados, fontes e atualizações'));
+  ibox.append(el('div','note','A coluna "última atualização" reflete o dado realmente carregado neste momento — se uma fonte falhar, o painel mantém o último valor válido e a data mostra isso.'));
+  const fr=el('div'); fr.style.marginTop='10px'; renderFresh(fr); ibox.append(fr);
+  const ps=[
+   ['Uso','painel interno da Insignia Partners, informativo e educacional — não é recomendação de investimento nem oferta. Os números vêm de fontes públicas e podem conter erros ou defasagens; confira sempre os documentos oficiais (cada empresa tem link direto para a CVM).'],
+   ['Como atualiza','um robô refaz balanços, múltiplos, Ibovespa, notícias e manchetes em dias úteis por volta das 6h10 (Brasília), sem intervenção humana. Ao abrir a página com internet, câmbio, cripto, taxas e Focus são buscados ao vivo nas APIs públicas (BCB, AwesomeAPI, CoinGecko) — a faixa do topo marca "● ao vivo" quando isso acontece. A classificação setorial da B3 se renova a cada ~45 dias.'],
+   ['Defasagens naturais','resultados trimestrais seguem o calendário de entrega da CVM (até ~45 dias após o fim do trimestre); múltiplos e cotações de ações usam o último fechamento coletado; a agenda usa os calendários oficiais de 2026 (os de 2027 entram quando os bancos centrais publicarem).'],
+   ['Convenções de cálculo','demonstrações consolidadas quando disponíveis; lucro atribuído aos sócios da controladora; EBITDA = EBIT + depreciação/amortização (DFC); dívida bruta = empréstimos e financiamentos; ROIC = EBIT 12m × (1−34%) ÷ (PL + dívida líquida); EBITDA e dívida não se aplicam a bancos e seguradoras.'],
+   ['Saúde da automação','se as datas acima ficarem defasadas por vários dias, a automação precisa de atenção — o histórico de execuções fica em github.com/12533230/painel-b3/actions.'],
+  ];
+  for(const [b2,t2] of ps){ const p=el('p'); p.append(el('b',null,b2+' — '), document.createTextNode(t2)); ibox.append(p); }
+  iovl.classList.add('on');
+}
+function closeInfo(){ iovl.classList.remove('on'); }
+iovl.addEventListener('click', e=>{ if(e.target===iovl) closeInfo(); });
+$('#infobtn').onclick=openInfo;
+function noticeEl(){
+  const n=el('div','notice');
+  n.append(el('b',null,'Uso informativo — não é recomendação de investimento.'));
+  n.append(document.createTextNode(' Fontes públicas, cada uma com sua defasagem; ações refletem o último fechamento coletado. '));
+  const a=el('a',null,'ⓘ Ver fontes e a data de cada conjunto de dados'); a.onclick=openInfo; n.append(a);
+  return n;
+}
+
+// ---------- manchetes por veículo (sugestão da equipe) ----------
+const OUTLETS_FALLBACK = {
+  br: [["G1 Economia","https://g1.globo.com/economia/"],["Valor Econômico","https://valor.globo.com/"],["InfoMoney","https://www.infomoney.com.br/mercados/"],["Brazil Journal","https://braziljournal.com/"],["InvestNews","https://investnews.com.br/"],["Exame Invest","https://exame.com/invest/"]],
+  int: [["NY Times Business","https://www.nytimes.com/section/business"],["The Economist","https://www.economist.com/finance-and-economics"],["The Guardian Business","https://www.theguardian.com/business"],["BBC Business","https://www.bbc.com/business"],["Financial Times","https://www.ft.com/markets"],["Bloomberg","https://www.bloomberg.com/markets"],["Reuters Business","https://www.reuters.com/business/"],["WSJ Finance","https://www.wsj.com/finance"]],
+};
+function veiculoCard(titulo, lista){
+  const card=el('div','card'); card.append(el('div','ct',titulo));
+  for(const v of lista){
+    const it=el('div','newsit');
+    const a=el('a',null,(v.n||v[0])+' ↗'); a.href=v.u||v[1]; a.target='_blank'; a.rel='noopener'; a.style.color='var(--link)';
+    it.append(a);
+    for(const m of (v.itens||[]).slice(0,3)){
+      const row=el('div'); row.style.margin='4px 0 0 10px';
+      const ma=el('a',null,m.t); ma.href=m.u; ma.target='_blank'; ma.rel='noopener'; ma.style.fontWeight='400'; ma.style.fontSize='12.5px';
+      row.append(ma);
+      if(m.d) row.append(el('span','newsmeta',' '+m.d));
+      it.append(row);
+    }
+    card.append(it);
+  }
+  return card;
 }
 
 // ---------- navegação entre visões ----------
@@ -786,6 +913,7 @@ $('#nav-mac').onclick=()=>setView('macro');
 // ---------- init ----------
 $('#srcline').textContent = 'CVM (ITR/DFP) · B3 (setores) · Fundamentus (mercado) · atualizado '+DB.updatedAt.split('-').reverse().join('/');
 document.body.dataset.view='emp';
+document.querySelector('.main').insertBefore(noticeEl(), $('#crumb'));
 renderAll();
 renderTicker();
 refreshLive();

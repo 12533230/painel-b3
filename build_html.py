@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Injeta out/painel_data.json no template e gera out/Painel_B3.html"""
+import datetime as _dt
 from pathlib import Path
 BASE = Path(__file__).parent
 tpl = (BASE / "painel_template.html").read_text(encoding="utf-8")
@@ -9,6 +10,7 @@ html = tpl.replace("__DATA__", data)
 macro = (BASE / "out" / "macro_snapshot.json")
 macro = macro.read_text(encoding="utf-8") if macro.exists() else "{}"
 html = html.replace("__MACRO__", macro.replace("</", "<\\/"))
+html = html.replace("__BUILDAT__", _dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"))
 # marca Insignia (base64 gerados a partir de brand/)
 logo = (BASE / "brand" / "logo_header.b64")
 fav = (BASE / "brand" / "favicon.b64")
