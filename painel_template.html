@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insignia Partners · Painel B3</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,__FAVICON__">
+<style>
+  /* Identidade visual Insignia Partners — paleta do Manual de Marca + tema PPT v4 */
+  :root{
+    color-scheme: light;
+    --page:#f5fcf8; --surface:#ffffff; --ink:#0c2a2d; --ink2:#18494e; --muted:#5e8271;
+    --grid:#dfeae2; --axis:#a2b9af; --border:rgba(12,42,45,.13);
+    --s1:#18494e; --s2:#dcb604; --s3:#4f47ad;
+    --good:#3e6b52; --bad:#92442f; --wash:rgba(99,136,118,.10);
+    --link:#18494e; --brandbar:#0c2a2d; --brandink:#f5fcf8;
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --page:#091e20; --surface:#133a3e; --ink:#fafffc; --ink2:#a2b9af; --muted:#8ba79a;
+    --grid:#1d575e; --axis:#2b5c60; --border:rgba(245,252,248,.14);
+    --s1:#5ba7b6; --s2:#dcb604; --s3:#817adb;
+    --good:#b8c666; --bad:#bd7e6f; --wash:rgba(139,167,154,.13);
+    --link:#8dc8d4; --brandbar:#0c2a2d; --brandink:#f5fcf8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--page);color:var(--ink);font:13.5px/1.45 Tahoma,Verdana,"Segoe UI",system-ui,sans-serif}
+  a{color:inherit}
+  .hdr{position:sticky;top:0;z-index:30}
+  .top{background:var(--brandbar);border-bottom:1px solid rgba(245,252,248,.12);padding:10px 18px;display:flex;gap:14px;align-items:center;flex-wrap:nowrap;min-width:0}
+  /* ---- faixa de cotações (ticker) ---- */
+  .ticker{background:var(--brandbar);border-bottom:3px solid #638876;overflow:hidden;cursor:default}
+  .tk-track{display:inline-flex;align-items:baseline;gap:36px;padding:6px 0 7px;white-space:nowrap;animation:tkmove 60s linear infinite;will-change:transform}
+  .ticker:hover .tk-track{animation-play-state:paused}
+  @keyframes tkmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){.tk-track{animation:none}}
+  .tk{display:inline-flex;gap:7px;align-items:baseline;font-size:12.5px}
+  .tk .l{color:rgba(245,252,248,.60);font-size:10.5px;letter-spacing:.05em;font-weight:600}
+  .tk .v{color:#f5fcf8;font-weight:700;font-variant-numeric:tabular-nums}
+  .tk .up{color:#cbdd7f;font-weight:600;font-size:11.5px}
+  .tk .dn{color:#e9a08c;font-weight:600;font-size:11.5px}
+  .tk .st{color:rgba(245,252,248,.45);font-size:10.5px}
+  .nav{display:flex;border:1px solid rgba(245,252,248,.28);border-radius:8px;overflow:hidden;flex-shrink:0}
+  .nav button{border:none;background:transparent;color:rgba(245,252,248,.72);padding:7px 12px;cursor:pointer;font:inherit;font-weight:700;white-space:nowrap}
+  .nav button.on{background:rgba(245,252,248,.16);color:#fff}
+  .top .src{flex-shrink:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .top h1{white-space:nowrap}
+  @media(max-width:1100px){.top .src{display:none}}
+  @media(max-width:760px){.top h1{display:none}.top .div{display:none}}
+  .top .logo{height:20px;display:block}
+  .top .div{width:1px;height:24px;background:rgba(245,252,248,.25)}
+  .top h1{font-size:15px;margin:0;font-weight:700;letter-spacing:.01em;color:var(--brandink)}
+  .top .src{color:rgba(245,252,248,.62);font-size:11.5px}
+  .top .sp{flex:1}
+  .search{position:relative}
+  .search input{width:300px;max-width:60vw;padding:7px 12px;border:1px solid rgba(245,252,248,.28);border-radius:8px;background:rgba(245,252,248,.10);color:#f5fcf8;font:inherit;outline:none}
+  .search input::placeholder{color:rgba(245,252,248,.55)}
+  .search input:focus{border-color:#cbdd7f;background:rgba(245,252,248,.16)}
+  .sugg{position:absolute;top:38px;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);max-height:320px;overflow:auto;display:none;z-index:40}
+  .sugg div{padding:8px 12px;cursor:pointer;display:flex;gap:8px;align-items:baseline}
+  .sugg div:hover{background:var(--wash)}
+  .sugg .tk{color:var(--muted);font-size:12px}
+  .btn{border:1px solid var(--border);background:var(--surface);color:var(--ink2);border-radius:8px;padding:7px 11px;cursor:pointer;font:inherit}
+  .btn:hover{border-color:#638876;color:var(--ink)}
+  .top .btn{background:rgba(245,252,248,.10);border-color:rgba(245,252,248,.28);color:#f5fcf8;white-space:nowrap;flex-shrink:0}
+  .top .search{flex-shrink:0}
+  .top .btn:hover{border-color:#cbdd7f;color:#fff}
+  .wrap{display:grid;grid-template-columns:270px 1fr;gap:0;min-height:calc(100vh - 90px)}
+  @media(max-width:900px){.wrap{grid-template-columns:1fr}.side{display:none}}
+  .side{border-right:1px solid var(--grid);padding:14px 10px 40px;overflow-y:auto;max-height:calc(100vh - 92px);position:sticky;top:92px}
+  body[data-view="macro"] .wrap{display:none}
+  #macroview{display:none;padding:16px 18px 60px;max-width:1280px;margin:0 auto}
+  body[data-view="macro"] #macroview{display:block}
+  .m-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  @media(max-width:980px){.m-grid{grid-template-columns:1fr}}
+  .agrow{display:flex;gap:12px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--grid)}
+  .agrow:last-child{border-bottom:none}
+  .agdate{min-width:96px;font-weight:700;color:var(--ink2);font-variant-numeric:tabular-nums;font-size:12.5px}
+  .agtag{font-size:10.5px;border:1px solid var(--border);border-radius:999px;padding:2px 8px;color:var(--ink2);flex-shrink:0}
+  .agsuper{font-size:10.5px;border-radius:999px;padding:2px 8px;background:rgba(220,182,4,.18);color:var(--ink2);font-weight:700;flex-shrink:0}
+  .agnext{background:var(--wash);border-radius:10px}
+  .agdays{margin-left:auto;color:var(--muted);font-size:11.5px;white-space:nowrap}
+  .newsit{padding:9px 10px;border-bottom:1px solid var(--grid)}
+  .newsit:last-child{border-bottom:none}
+  .newsit a{color:var(--ink);text-decoration:none;font-weight:600;font-size:13px}
+  .newsit a:hover{color:var(--link);text-decoration:underline}
+  .newsmeta{color:var(--muted);font-size:11.5px;margin-top:3px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .ncchip{display:inline-block;background:var(--wash);color:var(--ink2);border-radius:999px;padding:1px 8px;font-size:11px;font-weight:700}
+  .livechip{display:inline-block;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700;background:var(--wash);color:var(--ink2)}
+  .side .all{font-weight:650;padding:7px 10px;border-radius:8px;cursor:pointer}
+  .side .all:hover,.side .sec>span:hover,.side .sub>span:hover,.side .seg:hover{background:var(--wash)}
+  .side .sec>span,.side .sub>span,.side .seg{display:flex;justify-content:space-between;gap:6px;padding:6px 10px;border-radius:8px;cursor:pointer}
+  .side .sec{margin-top:2px}
+  .side .sec>span{font-weight:600}
+  .side .sub{margin-left:10px}
+  .side .sub>span{color:var(--ink2)}
+  .side .seg{margin-left:22px;color:var(--ink2);font-size:13px}
+  .side .n{color:var(--muted);font-size:12px}
+  .side .on{background:var(--wash);color:var(--ink)}
+  .side .kids{display:none}
+  .side .open>.kids{display:block}
+  .main{padding:16px 18px 60px;min-width:0}
+  .crumb{color:var(--muted);font-size:12.5px;margin:2px 0 10px}
+  .crumb b{color:var(--ink2);font-weight:600}
+  .crumb a{cursor:pointer;text-decoration:none}
+  .crumb a:hover{color:var(--link);text-decoration:underline}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+  .tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+  .tile .l{color:var(--muted);font-size:12px}
+  .tile .v{font-size:20px;font-weight:650;margin-top:2px}
+  .tile .d{font-size:12px;color:var(--muted)}
+  table.list{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  .listwrap{border-radius:12px;overflow:auto;border:1px solid var(--border)}
+  .listwrap table{border:none;min-width:860px}
+  table.list th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:right;padding:9px 10px;border-bottom:1px solid var(--grid);cursor:pointer;user-select:none;white-space:nowrap;background:var(--surface);position:sticky;top:0}
+  table.list th:first-child{text-align:left}
+  table.list td{padding:8px 10px;border-bottom:1px solid var(--grid);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  table.list td:first-child{text-align:left;white-space:normal}
+  table.list tr:last-child td{border-bottom:none}
+  table.list tbody tr{cursor:pointer}
+  table.list tbody tr:hover{background:var(--wash)}
+  .nm{font-weight:600}
+  .nm .tks{color:var(--muted);font-weight:400;font-size:12px}
+  .seglbl{color:var(--muted);font-size:12px}
+  .neg{color:var(--bad)} .pos{color:var(--good)}
+  .dim{color:var(--muted)}
+  /* -------- painel de detalhe -------- */
+  .ovl{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;display:none}
+  .ovl.on{display:block}
+  .panel{position:fixed;top:0;right:0;bottom:0;width:min(920px,96vw);background:var(--page);z-index:60;transform:translateX(102%);transition:transform .18s ease;overflow-y:auto;border-left:1px solid var(--grid);box-shadow:-12px 0 40px rgba(0,0,0,.18)}
+  .panel.on{transform:none}
+  .ph{position:sticky;top:0;background:var(--page);border-bottom:1px solid var(--grid);padding:14px 20px;z-index:5}
+  .ph .row1{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .ph h2{margin:0;font-size:19px;letter-spacing:-.01em}
+  .ph .path{color:var(--muted);font-size:12.5px;margin-top:3px}
+  .ph .x{position:absolute;top:12px;right:14px}
+  .pb{padding:16px 20px 50px}
+  .links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+  .links a{font-size:12.5px;color:var(--link);text-decoration:none;border:1px solid var(--border);padding:5px 10px;border-radius:999px;background:var(--surface);font-weight:600}
+  .links a:hover{border-color:#638876;background:var(--wash)}
+  .badges{display:flex;gap:6px;flex-wrap:wrap}
+  .badge{font-size:11.5px;color:var(--ink2);border:1px solid var(--border);background:var(--surface);border-radius:999px;padding:3px 9px}
+  h3.sect{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 0 8px;font-weight:650}
+  .charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px}
+  .card .ct{font-size:12.5px;color:var(--ink2);font-weight:600;margin-bottom:6px}
+  .qtbl{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;font-size:13px}
+  .qtblwrap{border-radius:12px;overflow:auto;border:1px solid var(--border)}
+  .qtblwrap table{border:none;min-width:620px}
+  .qtbl th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:7px 9px;border-bottom:1px solid var(--grid);text-align:right;white-space:nowrap}
+  .qtbl th:first-child{text-align:left}
+  .qtbl td{padding:6px 9px;border-bottom:1px solid var(--grid);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .qtbl td:first-child{text-align:left;color:var(--ink2)}
+  .qtbl tr:last-child td{border-bottom:none}
+  .note{color:var(--muted);font-size:11.5px;margin-top:8px}
+  .tip{position:fixed;pointer-events:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.15);padding:7px 10px;font-size:12.5px;z-index:99;display:none}
+  .tip b{font-size:13px}
+  .tip .k{color:var(--muted)}
+  svg text{font:11px system-ui,-apple-system,"Segoe UI",sans-serif;fill:var(--muted)}
+  svg .val{fill:var(--ink2);font-weight:600}
+  .foot{color:var(--muted);font-size:12px;margin-top:26px;border-top:1px solid var(--grid);padding-top:10px}
+  .empty{color:var(--muted);padding:30px;text-align:center}
+</style>
+</head>
+<body>
+<script id="dados" type="application/json">__DATA__</script>
+
+<div class="hdr">
+<div class="top">
+  <img class="logo" alt="Insignia Partners" src="data:image/png;base64,__LOGO__">
+  <span class="div"></span>
+  <h1>Painel B3</h1>
+  <div class="nav"><button id="nav-emp" class="on">Empresas</button><button id="nav-mac">Brasil &amp; Macro</button></div>
+  <span class="src" id="srcline"></span>
+  <span class="sp"></span>
+  <div class="search">
+    <input id="q" type="text" placeholder="Buscar empresa ou ticker… (ex.: WEGE3, Sabesp)" autocomplete="off">
+    <div class="sugg" id="sugg"></div>
+  </div>
+  <button class="btn" id="theme" title="Alternar tema">◐ Tema</button>
+</div>
+<div class="ticker" id="ticker" title="Cotações — passe o mouse para pausar"><div class="tk-track" id="tkt"></div></div>
+</div>
+<script id="macrodados" type="application/json">__MACRO__</script>
+
+<div class="wrap">
+  <nav class="side" id="side"></nav>
+  <main class="main">
+    <div class="crumb" id="crumb"></div>
+    <div class="tiles" id="tiles"></div>
+    <div class="listwrap"><table class="list" id="list"></table></div>
+  </main>
+</div>
+
+<main id="macroview"></main>
+
+<div class="ovl" id="ovl"></div>
+<aside class="panel" id="panel" aria-label="Detalhe da empresa"></aside>
+<div class="tip" id="tip"></div>
+
+<script>
+"use strict";
+const DB = JSON.parse(document.getElementById('dados').textContent);
+const COS = DB.companies;
+let themeDark = matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
+function applyTheme(){ document.documentElement.setAttribute('data-theme', themeDark ? 'dark' : 'light'); }
+applyTheme();
+document.getElementById('theme').onclick = () => { themeDark = !themeDark; applyTheme(); renderAll(); if(openCvm) openDetail(openCvm); };
+
+// ---------- helpers ----------
+const $ = s => document.querySelector(s);
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if(cls) e.className = cls; if(txt != null) e.textContent = txt; return e; };
+const norm = s => (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const nbr = new Intl.NumberFormat('pt-BR', {maximumFractionDigits:1});
+const nbr2 = new Intl.NumberFormat('pt-BR', {maximumFractionDigits:2});
+function fmtMi(v){ // v em R$ milhões
+  if(v==null) return '—';
+  const a = Math.abs(v);
+  if(a >= 1e6) return 'R$ ' + nbr.format(v/1e6) + ' tri';
+  if(a >= 1e3) return 'R$ ' + nbr.format(v/1e3) + ' bi';
+  return 'R$ ' + nbr.format(v) + ' mi';
+}
+function fmtNum(v){ if(v==null) return '—'; const a=Math.abs(v); if(a>=1e6) return nbr.format(v/1e6)+' tri'; if(a>=1e3) return nbr.format(v/1e3)+' bi'; return nbr.format(v)+' mi'; }
+const fmtX = v => v==null ? '—' : nbr.format(v).replace(/ /g,'') + 'x';
+const fmtPct = v => v==null ? '—' : nbr.format(v) + '%';
+const fmtPrice = v => v==null ? '—' : 'R$ ' + nbr2.format(v);
+function cls(v){ return v==null ? 'dim' : (v<0 ? 'neg' : ''); }
+function med(arr){ const a = arr.filter(x=>x!=null).sort((x,y)=>x-y); if(!a.length) return null; const m = a.length>>1; return a.length%2 ? a[m] : (a[m-1]+a[m])/2; }
+function mainTicker(c){ let best=null, bl=-1; for(const t of c.tickers){ const l=t.liq2m||0; if(l>bl){bl=l;best=t;} } return best; }
+
+// ---------- estado ----------
+let selSetor=null, selSub=null, selSeg=null, sortKey='mktCap', sortDir=-1, openCvm=null;
+
+// ---------- árvore de setores ----------
+function buildTree(){
+  const side = $('#side'); side.textContent='';
+  const all = el('div','all'); all.append(el('span',null,'Todos os setores'), el('span','n', String(COS.length)));
+  all.style.display='flex'; all.style.justifyContent='space-between';
+  all.onclick = () => { selSetor=selSub=selSeg=null; renderAll(); };
+  side.append(all);
+  const tree = {};
+  for(const c of COS){
+    tree[c.setor] = tree[c.setor] || {n:0, subs:{}};
+    tree[c.setor].n++;
+    const su = tree[c.setor].subs[c.subsetor] = tree[c.setor].subs[c.subsetor] || {n:0, segs:{}};
+    su.n++; su.segs[c.segmento] = (su.segs[c.segmento]||0)+1;
+  }
+  for(const [setor, s] of Object.entries(tree).sort()){
+    const sec = el('div','sec');
+    const head = el('span'); head.append(el('span',null,setor), el('span','n',String(s.n)));
+    if(selSetor===setor && !selSub) head.classList.add('on');
+    head.onclick = () => { selSetor = setor; selSub=selSeg=null; sec.classList.toggle('open', true); renderAll(); };
+    const kids = el('div','kids');
+    if(selSetor===setor) sec.classList.add('open');
+    for(const [sub, su] of Object.entries(s.subs).sort()){
+      const subd = el('div','sub');
+      const sh = el('span'); sh.append(el('span',null,sub), el('span','n',String(su.n)));
+      if(selSub===sub && !selSeg) sh.classList.add('on');
+      sh.onclick = (e) => { e.stopPropagation(); selSetor=setor; selSub=sub; selSeg=null; subd.classList.add('open'); renderAll(); };
+      const skids = el('div','kids');
+      if(selSub===sub) subd.classList.add('open');
+      const segs = Object.entries(su.segs).sort();
+      if(segs.length>1 || segs[0][0]!==sub){
+        for(const [seg, n] of segs){
+          const sg = el('div','seg'); sg.append(el('span',null,seg), el('span','n',String(n)));
+          if(selSeg===seg && selSub===sub) sg.classList.add('on');
+          sg.onclick = (e) => { e.stopPropagation(); selSetor=setor; selSub=sub; selSeg=seg; renderAll(); };
+          skids.append(sg);
+        }
+      }
+      subd.append(sh, skids); kids.append(subd);
+    }
+    sec.append(head, kids); side.append(sec);
+  }
+}
+
+// ---------- filtro ----------
+function filtered(){
+  return COS.filter(c =>
+    (!selSetor || c.setor===selSetor) &&
+    (!selSub || c.subsetor===selSub) &&
+    (!selSeg || c.segmento===selSeg));
+}
+
+// ---------- tiles agregados ----------
+function renderTiles(list){
+  const t = $('#tiles'); t.textContent='';
+  const mk = list.map(c=>c.ind.mktCap).filter(Boolean);
+  const tri26 = list.filter(c=>c.q.some(q=>q.p.startsWith('2026'))).length;
+  const tk = list.flatMap(c=>c.tickers);
+  const tiles = [
+    ['Empresas', String(list.length), selSetor? 'no filtro atual' : 'listadas na B3'],
+    ['Com resultado 2026', String(tri26), 'ITR entregue à CVM'],
+    ['Valor de mercado', fmtMi(mk.reduce((a,b)=>a+b,0)||null), 'soma das calculáveis'],
+    ['P/L mediano', fmtX(med(tk.map(x=>x.pl>0?x.pl:null))), 'tickers com lucro'],
+    ['EV/EBITDA mediano', fmtX(med(tk.map(x=>x.evebitda>0?x.evebitda:null))), 'Fundamentus'],
+    ['ROE mediano', fmtPct(med(tk.map(x=>x.roe))), 'Fundamentus'],
+    ['Div. Yield mediano', fmtPct(med(tk.map(x=>x.dy))), 'Fundamentus'],
+  ];
+  for(const [l,v,d] of tiles){
+    const c = el('div','tile'); c.append(el('div','l',l), el('div','v',v), el('div','d',d)); t.append(c);
+  }
+}
+
+// ---------- lista ----------
+const COLS = [
+  ['name','Empresa', c=>null],
+  ['cot','Cotação', c=>{const t=mainTicker(c); return t?t.cot:null;}],
+  ['mktCap','Valor mercado', c=>c.ind.mktCap],
+  ['pl','P/L', c=>{const t=mainTicker(c); return t?t.pl:null;}],
+  ['pvp','P/VP', c=>{const t=mainTicker(c); return t?t.pvp:null;}],
+  ['evebitda','EV/EBITDA', c=>{const t=mainTicker(c); return t?t.evebitda:null;}],
+  ['dy','Div.Yield', c=>{const t=mainTicker(c); return t?t.dy:null;}],
+  ['roe','ROE', c=>{const t=mainTicker(c); return t?t.roe:null;}],
+  ['roic','ROIC', c=>{const t=mainTicker(c); return t?t.roic:null;}],
+  ['dlEbitda','DívLíq/EBITDA', c=>c.ind.dlEbitda],
+];
+function renderList(list){
+  const tbl = $('#list'); tbl.textContent='';
+  const thead = el('thead'); const hr = el('tr');
+  for(const [k,label] of COLS.map(c=>[c[0],c[1]])){
+    const th = el('th',null,label + (sortKey===k ? (sortDir<0?' ↓':' ↑') : ''));
+    th.onclick = () => { if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir = k==='name'?1:-1;} renderList(filtered()); };
+    hr.append(th);
+  }
+  thead.append(hr); tbl.append(thead);
+  const getter = Object.fromEntries(COLS.map(c=>[c[0],c[2]]));
+  const sorted = [...list].sort((a,b)=>{
+    if(sortKey==='name') return sortDir * (a.name||'').localeCompare(b.name||'', 'pt-BR');
+    const va = getter[sortKey](a), vb = getter[sortKey](b);
+    if(va==null && vb==null) return 0; if(va==null) return 1; if(vb==null) return -1;
+    return sortDir*(va-vb);
+  });
+  const tb = el('tbody');
+  for(const c of sorted){
+    const tr = el('tr');
+    const t = mainTicker(c);
+    const td0 = el('td');
+    const nm = el('div','nm', c.name); nm.append(el('span','tks','  '+c.tickers.map(x=>x.t).join(' · ')));
+    td0.append(nm, el('div','seglbl', c.segmento + (c.fin?' · financeiro':'')));
+    tr.append(td0);
+    tr.append(el('td', t&&t.cot!=null?'':'dim', fmtPrice(t&&t.cot)));
+    tr.append(el('td', c.ind.mktCap?'':'dim', fmtMi(c.ind.mktCap)));
+    tr.append(el('td', cls(t&&t.pl), fmtX(t&&t.pl)));
+    tr.append(el('td', cls(t&&t.pvp), fmtX(t&&t.pvp)));
+    tr.append(el('td', cls(t&&t.evebitda), c.fin?'—':fmtX(t&&t.evebitda)));
+    tr.append(el('td', 'pos', fmtPct(t&&t.dy)));
+    tr.append(el('td', cls(t&&t.roe), fmtPct(t&&t.roe)));
+    tr.append(el('td', cls(t&&t.roic), c.fin?'—':fmtPct(t&&t.roic)));
+    tr.append(el('td', (c.ind.dlEbitda!=null&&c.ind.dlEbitda<0)?'pos':'', c.fin?'—':fmtX(c.ind.dlEbitda)));
+    tr.onclick = () => openDetail(c.cvm);
+    tb.append(tr);
+  }
+  if(!sorted.length){ const tr = el('tr'); const td = el('td','empty','Nenhuma empresa neste filtro.'); td.colSpan = COLS.length; tr.append(td); tb.append(tr); }
+  tbl.append(tb);
+}
+
+// ---------- crumb ----------
+function renderCrumb(){
+  const c = $('#crumb'); c.textContent='';
+  const mk = (label, fn) => { const a = el('a',null,label); a.onclick=fn; return a; };
+  c.append(mk('Todos os setores', ()=>{selSetor=selSub=selSeg=null; renderAll();}));
+  if(selSetor){ c.append(document.createTextNode('  ›  ')); c.append(mk(selSetor, ()=>{selSub=selSeg=null; renderAll();})); }
+  if(selSub){ c.append(document.createTextNode('  ›  ')); c.append(mk(selSub, ()=>{selSeg=null; renderAll();})); }
+  if(selSeg){ c.append(document.createTextNode('  ›  ')); const b = el('b',null,selSeg); c.append(b); }
+}
+
+function renderAll(){ buildTree(); renderCrumb(); const f = filtered(); renderTiles(f); renderList(f); }
+
+// ---------- busca ----------
+const qin = $('#q'), sugg = $('#sugg');
+qin.addEventListener('input', () => {
+  const v = norm(qin.value.trim());
+  sugg.textContent=''; if(v.length<2){ sugg.style.display='none'; return; }
+  const hits = COS.filter(c => norm(c.name).includes(v) || norm(c.fullName).includes(v) ||
+    c.root.toLowerCase().includes(v) || c.tickers.some(t=>t.t.toLowerCase().includes(v))).slice(0,12);
+  for(const c of hits){
+    const d = el('div'); d.append(el('span','nm',c.name), el('span','tk', c.tickers.map(t=>t.t).join(' ')+' · '+c.setor));
+    d.onclick = () => { sugg.style.display='none'; qin.value=''; openDetail(c.cvm); };
+    sugg.append(d);
+  }
+  sugg.style.display = hits.length ? 'block' : 'none';
+});
+document.addEventListener('click', e => { if(!e.target.closest('.search')) sugg.style.display='none'; });
+
+// ---------- gráficos ----------
+const tip = $('#tip');
+function showTip(x,y,rows){
+  tip.textContent='';
+  for(const [k,v] of rows){ const d = el('div'); d.append(el('b',null,v), document.createTextNode(' ')); d.append(el('span','k',k)); tip.append(d); }
+  tip.style.display='block';
+  const w = tip.offsetWidth||120;
+  tip.style.left = Math.min(innerWidth-w-12, x+14)+'px'; tip.style.top = (y+14)+'px';
+}
+function hideTip(){ tip.style.display='none'; }
+
+function colChart(container, data, color, fmt){
+  // data: [{p, v}] — colunas finas, base única, cantos 4px no topo, gap ≥2px
+  container.textContent='';
+  const vals = data.map(d=>d.v).filter(v=>v!=null);
+  if(!vals.length){ container.append(el('div','dim','sem dados')); return; }
+  const W = Math.max(container.clientWidth||280, 240), H = 150, padL=8, padR=8, padT=14, padB=20;
+  const iw = W-padL-padR, ih = H-padT-padB;
+  let mx = Math.max(0,...vals), mn = Math.min(0,...vals);
+  if(mx===mn){ mx = mx||1; }
+  const y = v => padT + ih*(mx-v)/(mx-mn);
+  const y0 = y(0);
+  const n = data.length;
+  const slot = iw/n, bw = Math.min(24, Math.max(6, slot-6));
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.setAttribute('width','100%'); svg.style.display='block';
+  const line = (x1,y1,x2,y2,st,swidth) => { const l=document.createElementNS(svg.namespaceURI,'line'); l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.setAttribute('stroke',st);l.setAttribute('stroke-width',swidth||1); return l; };
+  // gridline no zero (baseline) — recessiva
+  svg.append(line(padL, y0, W-padR, y0, 'var(--axis)', 1));
+  for(let i=0;i<n;i++){
+    const d = data[i];
+    const cx = padL + slot*i + slot/2;
+    if(d.v!=null){
+      const h = Math.abs(y(d.v)-y0);
+      const top = d.v>=0 ? y(d.v) : y0;
+      const r = Math.min(4, bw/2, h);
+      const path = document.createElementNS(svg.namespaceURI,'path');
+      const x0 = cx-bw/2, x1b = cx+bw/2;
+      let dd;
+      if(d.v>=0) dd = `M${x0},${top+h}L${x0},${top+r}Q${x0},${top} ${x0+r},${top}L${x1b-r},${top}Q${x1b},${top} ${x1b},${top+r}L${x1b},${top+h}Z`;
+      else dd = `M${x0},${top}L${x1b},${top}L${x1b},${top+h-r}Q${x1b},${top+h} ${x1b-r},${top+h}L${x0+r},${top+h}Q${x0},${top+h} ${x0},${top+h-r}Z`;
+      path.setAttribute('d',dd); path.setAttribute('fill',color);
+      svg.append(path);
+    }
+    // hit target maior que a marca
+    const hit = document.createElementNS(svg.namespaceURI,'rect');
+    hit.setAttribute('x', padL+slot*i); hit.setAttribute('y', 0); hit.setAttribute('width', slot); hit.setAttribute('height', H);
+    hit.setAttribute('fill','transparent');
+    hit.addEventListener('pointermove', e=>{ showTip(e.clientX,e.clientY, [[d.p, d.v==null?'—':fmt(d.v)]]); });
+    hit.addEventListener('pointerleave', hideTip);
+    svg.append(hit);
+    // rótulos de eixo: só T1 de cada ano p/ respirar
+    if(d.p.endsWith('T1') || n<=4){
+      const t = document.createElementNS(svg.namespaceURI,'text');
+      t.setAttribute('x',cx); t.setAttribute('y',H-5); t.setAttribute('text-anchor','middle');
+      t.textContent = d.p.slice(0,4); svg.append(t);
+    }
+  }
+  // rótulo direto: último ponto
+  const last = [...data].reverse().find(d=>d.v!=null);
+  if(last){
+    const cx = padL + slot*data.indexOf(last) + slot/2;
+    const t = document.createElementNS(svg.namespaceURI,'text');
+    t.setAttribute('class','val');
+    t.setAttribute('y', Math.max(10,(last.v>=0? y(last.v)-4 : y(last.v)+12)));
+    t.setAttribute('x', Math.min(cx, W-padR-4)); t.setAttribute('text-anchor','middle');
+    t.textContent = fmt(last.v); svg.append(t);
+  }
+  container.append(svg);
+}
+
+// ---------- detalhe ----------
+const ovl = $('#ovl'), panel = $('#panel');
+ovl.onclick = closeDetail;
+function closeDetail(){ ovl.classList.remove('on'); panel.classList.remove('on'); openCvm=null; }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDetail(); });
+
+function statTile(label, value, extra, valueCls){
+  const c = el('div','tile'); c.append(el('div','l',label));
+  const v = el('div','v',value); if(valueCls) v.classList.add(valueCls); c.append(v);
+  if(extra) c.append(el('div','d',extra)); return c;
+}
+
+function openDetail(cvm){
+  const c = COS.find(x=>x.cvm===cvm); if(!c) return;
+  openCvm = cvm;
+  panel.textContent='';
+  // header
+  const ph = el('div','ph');
+  const x = el('button','btn x','✕ fechar'); x.onclick=closeDetail; ph.append(x);
+  const r1 = el('div','row1'); r1.append(el('h2',null,c.name));
+  const bd = el('div','badges');
+  for(const t of c.tickers) bd.append(el('span','badge', t.t + (t.cot!=null? ' · '+fmtPrice(t.cot):'')));
+  bd.append(el('span','badge', c.listagem));
+  r1.append(bd); ph.append(r1);
+  ph.append(el('div','path', c.setor+' › '+c.subsetor+' › '+c.segmento+'  ·  '+c.fullName+'  ·  CNPJ '+c.cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,'$1.$2.$3/$4-$5')));
+  const lk = el('div','links');
+  const mklink=(href,txt)=>{const a=el('a',null,txt); a.href=href; a.target='_blank'; a.rel='noopener'; return a;};
+  lk.append(mklink(c.links.cvm,'Documentos CVM (ITR/DFP/release) ↗'));
+  lk.append(mklink('https://www.google.com/search?q='+encodeURIComponent(c.name+' relações com investidores central de resultados'),'Central de resultados / RI ↗'));
+  lk.append(mklink(c.links.fund,'Fundamentus ↗'));
+  if(c.links.ri) lk.append(mklink(c.links.ri,'Site ↗'));
+  ph.append(lk);
+  panel.append(ph);
+
+  const pb = el('div','pb');
+  // ---- indicadores-chave (12m / balanço)
+  pb.append(el('h3','sect','Indicadores — últimos 12 meses e balanço mais recente'));
+  const tiles = el('div','tiles');
+  const i = c.ind, t = mainTicker(c);
+  tiles.append(statTile('Valor de mercado', fmtMi(i.mktCap), i.mktCap?'calculado (ações × cotação)':'sem dado'));
+  tiles.append(statTile('P/L', fmtX(t&&t.pl), 'Fundamentus · '+(t?t.t:'—'), cls(t&&t.pl)));
+  tiles.append(statTile('P/VP', fmtX(t&&t.pvp), 'Fundamentus'));
+  if(!c.fin){
+    tiles.append(statTile('EV/EBITDA', fmtX(t&&t.evebitda), 'Fundamentus · 12m', cls(t&&t.evebitda)));
+    tiles.append(statTile('EV/EBIT', fmtX(t&&t.evebit), 'Fundamentus'));
+  }
+  tiles.append(statTile('Div. Yield', fmtPct(t&&t.dy), 'Fundamentus', 'pos'));
+  tiles.append(statTile('ROE', fmtPct(i.roe!=null?i.roe:(t&&t.roe)), i.roe!=null?'CVM · lucro 12m / PL':'Fundamentus', cls(i.roe!=null?i.roe:(t&&t.roe))));
+  if(!c.fin){
+    tiles.append(statTile('ROIC', fmtPct(t&&t.roic!=null?t.roic:i.roic), t&&t.roic!=null?'Fundamentus':'CVM (aprox.)', cls(t&&t.roic!=null?t.roic:i.roic)));
+    tiles.append(statTile('Dív. líq./EBITDA', fmtX(i.dlEbitda), 'CVM · 12m', i.dlEbitda!=null&&i.dlEbitda>3?'neg':null));
+    tiles.append(statTile('Dív. líq./Patrimônio', i.dlPl==null?'—':nbr2.format(i.dlPl), 'CVM'));
+    tiles.append(statTile('Margem EBITDA 12m', fmtPct(i.mgE12), 'CVM'));
+  }
+  tiles.append(statTile('Margem líquida 12m', fmtPct(i.mgL12), 'CVM', cls(i.mgL12)));
+  tiles.append(statTile('Receita 12m', fmtMi(i.rev12), 'CVM'));
+  tiles.append(statTile('Lucro líquido 12m', fmtMi(i.ni12), 'CVM', cls(i.ni12)));
+  pb.append(tiles);
+
+  // ---- gráficos trimestrais
+  pb.append(el('h3','sect','Resultados trimestrais — '+(c.con?'consolidado':'individual')+' (CVM)'));
+  const ch = el('div','charts');
+  const mkCard=(title)=>{ const card=el('div','card'); card.append(el('div','ct',title)); const box=el('div'); card.append(box); ch.append(card); return box; };
+  const qd = c.q;
+  const b1 = mkCard('Receita líquida (R$)');
+  const b2 = c.fin? null : mkCard('EBITDA (R$)');
+  const b3 = mkCard('Lucro líquido (R$)');
+  pb.append(ch);
+  requestAnimationFrame(()=>{
+    colChart(b1, qd.map(q=>({p:q.p, v:q.rev})), 'var(--s1)', fmtNum);
+    if(b2) colChart(b2, qd.map(q=>({p:q.p, v:q.ebitda})), 'var(--s2)', fmtNum);
+    colChart(b3, qd.map(q=>({p:q.p, v:q.ni})), 'var(--s3)', fmtNum);
+  });
+
+  // ---- tabela trimestral
+  const qw = el('div','qtblwrap'); const qt = el('table','qtbl');
+  const hd = el('tr'); for(const h of ['Trimestre','Receita','EBIT','EBITDA','Lucro líq.','Mg. EBITDA','Mg. líquida']) hd.append(el('th',null,h));
+  qt.append(el('thead')); qt.firstChild.append(hd);
+  const tb = el('tbody');
+  for(const q of [...qd].reverse()){
+    const tr = el('tr');
+    tr.append(el('td',null,q.p));
+    tr.append(el('td',null,fmtNum(q.rev)));
+    tr.append(el('td',cls(q.ebit),fmtNum(q.ebit)));
+    tr.append(el('td',cls(q.ebitda),fmtNum(q.ebitda)));
+    tr.append(el('td',cls(q.ni),fmtNum(q.ni)));
+    tr.append(el('td',cls(q.mgE),fmtPct(q.mgE)));
+    tr.append(el('td',cls(q.mgL),fmtPct(q.mgL)));
+    tb.append(tr);
+  }
+  qt.append(tb); qw.append(qt);
+  pb.append(el('h3','sect','Tabela trimestral')); pb.append(qw);
+
+  // ---- balanço
+  if(c.bal){
+    pb.append(el('h3','sect','Balanço em '+c.bal.dt.split('-').reverse().join('/')));
+    const bt = el('div','tiles');
+    bt.append(statTile('Ativo total', fmtMi(c.bal.ativo)));
+    bt.append(statTile('Patrimônio líquido', fmtMi(c.bal.pl)));
+    if(!c.fin){
+      bt.append(statTile('Caixa e aplicações', fmtMi(c.bal.caixa)));
+      bt.append(statTile('Dívida bruta', fmtMi(c.bal.divB)));
+      bt.append(statTile('Dívida líquida', fmtMi(c.bal.divL), null, cls(c.bal.divL==null?null:-c.bal.divL)));
+    }
+    pb.append(bt);
+  }
+
+  // ---- múltiplos por ticker
+  if(c.tickers.length){
+    pb.append(el('h3','sect','Múltiplos por ticker (Fundamentus)'));
+    const tw = el('div','qtblwrap'); const tt = el('table','qtbl');
+    const th = el('tr'); for(const h of ['Ticker','Cotação','P/L','P/VP','PSR','Div.Yield','EV/EBIT','EV/EBITDA','ROIC','ROE','Liq. 2m (R$)','DívLíq/PL']) th.append(el('th',null,h));
+    tt.append(el('thead')); tt.firstChild.append(th);
+    const tbb = el('tbody');
+    for(const k of c.tickers){
+      const tr = el('tr');
+      tr.append(el('td',null,k.t));
+      tr.append(el('td',null,fmtPrice(k.cot)));
+      tr.append(el('td',cls(k.pl),fmtX(k.pl)));
+      tr.append(el('td',cls(k.pvp),fmtX(k.pvp)));
+      tr.append(el('td',null,fmtX(k.psr)));
+      tr.append(el('td','pos',fmtPct(k.dy)));
+      tr.append(el('td',cls(k.evebit),fmtX(k.evebit)));
+      tr.append(el('td',cls(k.evebitda),fmtX(k.evebitda)));
+      tr.append(el('td',cls(k.roic),fmtPct(k.roic)));
+      tr.append(el('td',cls(k.roe),fmtPct(k.roe)));
+      tr.append(el('td',null,k.liq2m==null?'—':fmtNum(k.liq2m/1e6)));
+      tr.append(el('td',null,k.dlpl==null?'—':nbr2.format(k.dlpl)));
+      tbb.append(tr);
+    }
+    tt.append(tbb); tw.append(tt); pb.append(tw);
+  }
+
+  pb.append(el('div','foot','Insignia Partners · painel interno. Fontes: demonstrações ITR/DFP nos Dados Abertos da CVM (valores em R$; consolidado quando disponível) · classificação setorial oficial da B3 · cotações e múltiplos Fundamentus. EBITDA = EBIT + depreciação/amortização (DFC). ROIC CVM = EBIT 12m × (1−34%) ÷ (PL + dívida líquida). Indicadores de bancos/seguradoras seguem lógica própria — EBITDA e dívida não se aplicam. Atualizado em '+DB.updatedAt+'. Uso informativo; não é recomendação de investimento.'));
+  panel.append(pb);
+  ovl.classList.add('on'); panel.classList.add('on');
+  panel.scrollTop = 0;
+}
+
+// ================= BRASIL & MACRO =================
+const MACRO = JSON.parse(document.getElementById('macrodados').textContent);
+let LIVE = {ok:false, at:null};
+const fmtc2 = new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtc4 = new Intl.NumberFormat('pt-BR',{minimumFractionDigits:4,maximumFractionDigits:4});
+const fmtc0 = new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0});
+const fxVal = v => v>=1 ? fmtc2.format(v) : fmtc4.format(v);
+const brDate = s => s ? s.split('-').reverse().join('/') : '';
+function delta(p){ if(p==null||isNaN(p)) return null; const cls=p>0?'up':(p<0?'dn':'st'); return {txt:(p>0?'▲':(p<0?'▼':'='))+' '+fmtc2.format(Math.abs(p))+'%', cls}; }
+
+// ---------- ticker (faixa de cotações) ----------
+function tickerItems(){
+  const c=MACRO.core||{}, fx=c.fx||{}, cg=c.cripto||{};
+  const it=[];
+  if(MACRO.ibov) it.push({l:'IBOVESPA', v:fmtc0.format(MACRO.ibov.pontos)+' pts', p:MACRO.ibov.varDia, st:brDate(MACRO.ibov.date).slice(0,5)});
+  for(const [k,l] of [['USDBRL','DÓLAR'],['EURBRL','EURO'],['GBPBRL','LIBRA'],['JPYBRL','IENE'],['CNYBRL','YUAN'],['ARSBRL','PESO ARG']]){
+    const f=fx[k]; if(f) it.push({l, v:'R$ '+fxVal(f.bid), p:f.pct});
+  }
+  if(cg.bitcoin){ it.push({l:'BITCOIN', v:'R$ '+fmtc0.format(cg.bitcoin.brl), p:cg.bitcoin.brl_24h_change});
+                  it.push({l:'BTC/USD', v:'US$ '+fmtc0.format(cg.bitcoin.usd), p:cg.bitcoin.usd_24h_change}); }
+  else if(fx.BTCBRL) it.push({l:'BITCOIN', v:'R$ '+fmtc0.format(fx.BTCBRL.bid), p:fx.BTCBRL.pct});
+  if(cg.ethereum) it.push({l:'ETHEREUM', v:'US$ '+fmtc0.format(cg.ethereum.usd), p:cg.ethereum.usd_24h_change});
+  if(c.selic) it.push({l:'SELIC', v:String(c.selic.valor).replace('.',',')+'% a.a.'});
+  if(c.cdi) it.push({l:'CDI', v:String(c.cdi.valor).replace('.',',')+'% a.a.'});
+  if(c.ipca12) it.push({l:'IPCA 12M', v:String(c.ipca12.valor).replace('.',',')+'%'});
+  return it;
+}
+function renderTicker(){
+  const t=$('#tkt'); t.textContent='';
+  const items=tickerItems();
+  const mk=()=>{ const frag=document.createDocumentFragment();
+    const tag=el('span','tk');
+    tag.append(el('span', LIVE.ok?'up':'st', LIVE.ok?('● ao vivo '+LIVE.at):('◷ dados de '+brDate(MACRO.snapshotEm))));
+    frag.append(tag);
+    for(const i of items){ const s=el('span','tk'); s.append(el('span','l',i.l), el('span','v',i.v));
+      const d=delta(i.p); if(d) s.append(el('span',d.cls,d.txt));
+      if(i.st) s.append(el('span','st',i.st));
+      frag.append(s); }
+    return frag; };
+  t.append(mk(), mk()); // conteúdo duplicado -> loop contínuo em -50%
+}
+
+// ---------- visão Brasil & Macro ----------
+const FOCUS_LBL = {'IPCA':'IPCA (%)','IGP-M':'IGP-M (%)','Selic':'Selic — fim de período (% a.a.)','Câmbio':'Câmbio (R$/US$)','PIB Total':'PIB (% de crescimento)'};
+function renderMacro(){
+  const m=$('#macroview'); m.textContent='';
+  const c=MACRO.core||{}, fx=c.fx||{}, cg=c.cripto||{};
+  const status = el('div',null); status.style.margin='4px 0 10px';
+  status.append(el('span','livechip', LIVE.ok ? '● ao vivo — APIs consultadas às '+LIVE.at : '◷ snapshot de '+brDate(MACRO.snapshotEm)+' — abra com internet para atualizar ao vivo'));
+  m.append(status);
+
+  // indicadores Brasil
+  m.append(el('h3','sect','Indicadores Brasil'));
+  const t1=el('div','tiles');
+  if(c.selic) t1.append(statTile('Selic (meta)', String(c.selic.valor).replace('.',',')+'% a.a.','BCB'));
+  if(c.cdi) t1.append(statTile('CDI', String(c.cdi.valor).replace('.',',')+'% a.a.','BCB · '+c.cdi.data));
+  if(c.ipca12) t1.append(statTile('IPCA acum. 12 meses', String(c.ipca12.valor).replace('.',',')+'%','IBGE/BCB · até jul/26'));
+  if(fx.USDBRL) t1.append(statTile('Dólar', 'R$ '+fxVal(fx.USDBRL.bid), (LIVE.ok?'ao vivo':'fech. '+brDate(MACRO.snapshotEm))));
+  if(MACRO.ibov) t1.append(statTile('Ibovespa', fmtc0.format(MACRO.ibov.pontos)+' pts', brDate(MACRO.ibov.date)+' · '+fmtc2.format(MACRO.ibov.varDia)+'%'));
+  m.append(t1);
+
+  // Focus
+  const fdate = (c.focus&&c.focus[0]&&c.focus[0].d) ? brDate(c.focus[0].d) : '';
+  m.append(el('h3','sect','Boletim Focus — medianas das expectativas (BCB, '+fdate+')'));
+  const refs=['2026','2027','2028','2029'];
+  const fw=el('div','qtblwrap'); const ft=el('table','qtbl');
+  const fh=el('tr'); fh.append(el('th',null,'Indicador')); for(const r of refs) fh.append(el('th',null,r));
+  ft.append(el('thead')); ft.firstChild.append(fh);
+  const fb=el('tbody');
+  for(const ind of ['IPCA','IGP-M','Selic','Câmbio','PIB Total']){
+    const tr=el('tr'); tr.append(el('td',null,FOCUS_LBL[ind]||ind));
+    for(const r of refs){
+      const row=(c.focus||[]).find(x=>x.i===ind && String(x.ref)===r);
+      tr.append(el('td',null,row?fmtc2.format(row.med):'—'));
+    }
+    fb.append(tr);
+  }
+  ft.append(fb); fw.append(ft); m.append(fw);
+
+  // moedas & cripto
+  m.append(el('h3','sect','Moedas e cripto'));
+  const t2=el('div','tiles');
+  for(const [k,l] of [['USDBRL','Dólar'],['EURBRL','Euro'],['GBPBRL','Libra'],['JPYBRL','Iene'],['CNYBRL','Yuan'],['ARSBRL','Peso argentino']]){
+    const f=fx[k]; if(!f) continue;
+    t2.append(statTile(l, 'R$ '+fxVal(f.bid), (delta(f.pct)||{txt:''}).txt+' no dia'));
+  }
+  if(cg.bitcoin){ t2.append(statTile('Bitcoin', 'R$ '+fmtc0.format(cg.bitcoin.brl), (delta(cg.bitcoin.brl_24h_change)||{txt:''}).txt+' 24h'));
+                  t2.append(statTile('Bitcoin (US$)', 'US$ '+fmtc0.format(cg.bitcoin.usd), (delta(cg.bitcoin.usd_24h_change)||{txt:''}).txt+' 24h')); }
+  if(cg.ethereum) t2.append(statTile('Ethereum (US$)', 'US$ '+fmtc0.format(cg.ethereum.usd), (delta(cg.ethereum.usd_24h_change)||{txt:''}).txt+' 24h'));
+  m.append(t2);
+
+  // agenda + notícias
+  const grid=el('div','m-grid');
+  const agCard=el('div','card');
+  agCard.append(el('div','ct','Agenda — decisões de juros e divulgações'));
+  const today=new Date().toISOString().slice(0,10);
+  const fut=(MACRO.agenda||[]).filter(a=>a.fim>=today).sort((a,b)=>a.dt.localeCompare(b.dt));
+  let firstKey=null;
+  if(fut.length) firstKey=fut[0].dt;
+  for(const a of fut){
+    const row=el('div','agrow'+(a.dt===firstKey?' agnext':''));
+    const d1=brDate(a.dt).slice(0,5), d2=brDate(a.fim).slice(0,5);
+    row.append(el('span','agdate', d1===d2?d1:(d1+'–'+d2)));
+    row.append(el('span',null,a.ev));
+    row.append(el('span','agtag',a.tag));
+    if(a.super) row.append(el('span','agsuper','Super Quarta'));
+    const days=Math.ceil((new Date(a.dt)-new Date(today))/864e5);
+    row.append(el('span','agdays', days<=0?'em andamento':('em '+days+(days===1?' dia':' dias'))));
+    agCard.append(row);
+  }
+  agCard.append(el('div','note','Fontes: '+(MACRO.fontesAgenda||'BCB, Fed, BCE, IBGE')+'. “Super Quarta” = Copom e FOMC decidem no mesmo dia.'));
+  grid.append(agCard);
+
+  const nw=el('div','card');
+  nw.append(el('div','ct','Notícias com mais repercussão na semana — fóruns de investimento'));
+  for(const n of (MACRO.reddit&&MACRO.reddit.news)||[]){
+    const it=el('div','newsit');
+    const a=el('a',null,n.t); a.href=n.u; a.target='_blank'; a.rel='noopener'; it.append(a);
+    const meta=el('div','newsmeta');
+    meta.append(el('span','ncchip','💬 '+n.nc+' coment.'));
+    meta.append(el('span',null,(n.dom||'').replace('www.','')+' · r/'+n.sub));
+    it.append(meta); nw.append(it);
+  }
+  nw.append(el('div','note','Ranqueadas por nº de comentários em r/investimentos, r/economia e r/farialimabets nos últimos 7 dias.'));
+  grid.append(nw);
+  m.append(el('h3','sect','Agenda e repercussão')); m.append(grid);
+
+  const grid2=el('div','m-grid'); grid2.style.marginTop='12px';
+  const mc=el('div','card'); mc.append(el('div','ct','Manchetes — Google News · Negócios (Brasil)'));
+  for(const g of MACRO.manchetes||[]){
+    const it=el('div','newsit');
+    const a=el('a',null,g.t); a.href='https://news.google.com/search?q='+encodeURIComponent('"'+g.t.slice(0,80)+'"')+'&hl=pt-BR&gl=BR&ceid=BR:pt-419'; a.target='_blank'; a.rel='noopener';
+    it.append(a); const meta=el('div','newsmeta'); meta.append(el('span',null,g.src+' · '+g.d)); it.append(meta); mc.append(it);
+  }
+  grid2.append(mc);
+  const dc=el('div','card'); dc.append(el('div','ct','Discussões em alta nos fóruns'));
+  for(const n of (MACRO.reddit&&MACRO.reddit.disc)||[]){
+    const it=el('div','newsit');
+    const a=el('a',null,n.t); a.href=n.u; a.target='_blank'; a.rel='noopener'; it.append(a);
+    const meta=el('div','newsmeta'); meta.append(el('span','ncchip','💬 '+n.nc)); meta.append(el('span',null,'r/'+n.sub)); it.append(meta); dc.append(it);
+  }
+  grid2.append(dc);
+  m.append(grid2);
+
+  m.append(el('div','foot','Insignia Partners · painel interno. Indicadores: BCB (SGS e Expectativas/Focus), B3 (Ibovespa), AwesomeAPI (câmbio comercial), CoinGecko (cripto), IBGE. Notícias e discussões refletem repercussão pública em fóruns e o noticiário de negócios; não são curadoria da Insignia nem recomendação. Com internet, câmbio, cripto, Focus e taxas atualizam ao vivo ao abrir; Ibovespa e notícias renovam na atualização semanal.'));
+}
+
+// ---------- atualização ao vivo (APIs com CORS aberto) ----------
+async function refreshLive(){
+  const tmo=(p,ms)=>Promise.race([p,new Promise((_,rj)=>setTimeout(()=>rj(new Error('timeout')),ms))]);
+  const j=u=>tmo(fetch(u).then(r=>r.json()),8000);
+  const sgs=id=>j('https://api.bcb.gov.br/dados/serie/bcdata.sgs.'+id+'/dados/ultimos/1?formato=json');
+  const dmin=new Date(Date.now()-12*864e5).toISOString().slice(0,10);
+  const ffilter=encodeURIComponent("Data gt '"+dmin+"' and (Indicador eq 'IPCA' or Indicador eq 'Selic' or Indicador eq 'PIB Total' or Indicador eq 'Câmbio' or Indicador eq 'IGP-M')");
+  const furl='https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?%24format=json&%24select=Indicador,Data,DataReferencia,Mediana&%24filter='+ffilter+'&%24orderby=Data%20desc&%24top=400';
+  const r=await Promise.allSettled([
+    j('https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,GBP-BRL,JPY-BRL,CNY-BRL,ARS-BRL,BTC-BRL'),
+    j('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd,brl&include_24hr_change=true'),
+    sgs(432), sgs(13522), sgs(4389), j(furl)
+  ]);
+  const c=MACRO.core=MACRO.core||{}; let any=false;
+  if(r[0].status==='fulfilled'&&r[0].value&&r[0].value.USDBRL){ c.fx=c.fx||{}; for(const [k,v] of Object.entries(r[0].value)) c.fx[k]={bid:+v.bid,pct:+v.pctChange,ts:v.create_date,name:v.name}; any=true; }
+  if(r[1].status==='fulfilled'&&r[1].value&&r[1].value.bitcoin){ c.cripto=r[1].value; any=true; }
+  if(r[2].status==='fulfilled'&&r[2].value&&r[2].value[0]){ c.selic=r[2].value[0]; any=true; }
+  if(r[3].status==='fulfilled'&&r[3].value&&r[3].value[0]){ c.ipca12=r[3].value[0]; any=true; }
+  if(r[4].status==='fulfilled'&&r[4].value&&r[4].value[0]){ c.cdi=r[4].value[0]; any=true; }
+  if(r[5].status==='fulfilled'&&r[5].value&&r[5].value.value&&r[5].value.value.length){
+    const seen={}, rows=[];
+    for(const x of r[5].value.value){ const k=x.Indicador+'|'+x.DataReferencia; if(!seen[k]){ seen[k]=1; rows.push({i:x.Indicador,ref:x.DataReferencia,med:x.Mediana,d:x.Data}); } }
+    rows.sort((a,b)=>a.i.localeCompare(b.i)||String(a.ref).localeCompare(String(b.ref)));
+    c.focus=rows; any=true;
+  }
+  if(any){
+    LIVE.ok=true; LIVE.at=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    renderTicker();
+    if(document.body.dataset.view==='macro') renderMacro();
+  }
+}
+
+// ---------- navegação entre visões ----------
+function setView(v){
+  document.body.dataset.view=v;
+  $('#nav-emp').classList.toggle('on', v==='emp');
+  $('#nav-mac').classList.toggle('on', v==='macro');
+  if(v==='macro') renderMacro();
+}
+$('#nav-emp').onclick=()=>setView('emp');
+$('#nav-mac').onclick=()=>setView('macro');
+
+// ---------- init ----------
+$('#srcline').textContent = 'CVM (ITR/DFP) · B3 (setores) · Fundamentus (mercado) · atualizado '+DB.updatedAt.split('-').reverse().join('/');
+document.body.dataset.view='emp';
+renderAll();
+renderTicker();
+refreshLive();
+setInterval(refreshLive, 5*60*1000); // ao vivo a cada 5 min enquanto aberto
+</script>
+</body>
+</html>

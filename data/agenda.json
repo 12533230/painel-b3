@@ -1,0 +1,14 @@
+[
+ {"dt":"2026-09-01","fim":"2026-09-01","ev":"PIB 2º trimestre 2026 (IBGE)","tag":"BR"},
+ {"dt":"2026-09-09","fim":"2026-09-10","ev":"BCE — decisão de juros","tag":"ZE"},
+ {"dt":"2026-09-11","fim":"2026-09-11","ev":"IPCA de agosto (IBGE)","tag":"BR"},
+ {"dt":"2026-09-15","fim":"2026-09-16","ev":"Copom — decisão da Selic","tag":"BR","super":true},
+ {"dt":"2026-09-15","fim":"2026-09-16","ev":"FOMC — decisão de juros (Fed)","tag":"EUA","super":true},
+ {"dt":"2026-10-27","fim":"2026-10-28","ev":"FOMC — decisão de juros (Fed)","tag":"EUA"},
+ {"dt":"2026-10-28","fim":"2026-10-29","ev":"BCE — decisão de juros","tag":"ZE"},
+ {"dt":"2026-11-03","fim":"2026-11-04","ev":"Copom — decisão da Selic","tag":"BR"},
+ {"dt":"2026-12-01","fim":"2026-12-01","ev":"PIB 3º trimestre 2026 (IBGE, data típica — confirmar)","tag":"BR"},
+ {"dt":"2026-12-08","fim":"2026-12-09","ev":"Copom — decisão da Selic","tag":"BR","super":true},
+ {"dt":"2026-12-08","fim":"2026-12-09","ev":"FOMC — decisão de juros (Fed)","tag":"EUA","super":true},
+ {"dt":"2026-12-16","fim":"2026-12-17","ev":"BCE — decisão de juros","tag":"ZE"}
+]
