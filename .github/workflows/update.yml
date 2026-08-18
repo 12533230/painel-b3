@@ -1,0 +1,47 @@
+name: Atualiza Painel B3
+
+on:
+  schedule:
+    - cron: "10 9 * * 1-5"   # dias uteis, 09:10 UTC = 06:10 Brasilia
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atualiza-painel
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Dependencias
+        run: pip install --quiet pandas lxml requests
+
+      - name: Coletar dados (CVM, Fundamentus, B3, BCB, moedas, cripto, noticias)
+        run: python collect.py
+
+      - name: Consolidar indicadores por empresa
+        run: python process.py
+
+      - name: Gerar painel
+        run: |
+          python build_html.py
+          mkdir -p docs
+          cp out/Painel_B3.html docs/index.html
+
+      - name: Publicar (commit)
+        run: |
+          git config user.name "painel-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/index.html data/macro_snapshot_prev.json data/b3_companies.json
+          git diff --cached --quiet && echo "sem mudancas" || git commit -m "Atualizacao automatica $(date -u +%F)"
+          git push
