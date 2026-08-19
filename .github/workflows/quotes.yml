@@ -1,0 +1,52 @@
+name: Cotações quase ao vivo
+
+# Roda a cada 15 min durante o pregão (13h–21h45 UTC = 10h–18h45 Brasília,
+# cobre B3 e NYSE/Nasdaq o ano todo). Publica data/quotes.json no branch
+# "quotes" (sempre 1 commit, via force-push, para não inflar o histórico).
+on:
+  schedule:
+    - cron: "*/15 13-21 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cotacoes
+  cancel-in-progress: true
+
+jobs:
+  cotacoes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Dependências
+        run: pip install --quiet requests
+
+      - name: Baixar último quotes.json publicado (para manter valores em caso de falha)
+        run: |
+          if curl -sf --retry 3 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/quotes/data/quotes.json" -o /tmp/quotes_prev.json \
+             && python -c "import json; json.load(open('/tmp/quotes_prev.json'))"; then
+            mv /tmp/quotes_prev.json data/quotes.json
+          else
+            echo "sem snapshot anterior válido no branch quotes"
+          fi
+
+      - name: Coletar cotações (Yahoo Finance, lotes)
+        run: python collect_quotes.py
+
+      - name: Publicar no branch quotes (force-push, 1 commit)
+        run: |
+          git config user.name "painel-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan quotes-tmp
+          git reset
+          git add -f data/quotes.json
+          git commit -m "cotações $(date -u +%FT%TZ)"
+          git push -f origin quotes-tmp:quotes
