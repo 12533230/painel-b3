@@ -822,8 +822,8 @@ function freshRows(){
   const snap=dmy(MACRO.snapshotEm);
   return [
    ['Resultados trimestrais e balanços','CVM (ITR/DFP)','dados até '+(META.dadosAte||'—')+' · lidos em '+dmy(DB.updatedAt),'robô · dias úteis'],
-   ['Múltiplos e cotações de ações','Fundamentus','fechamento de '+dmy(DB.updatedAt),'robô · dias úteis'],
-   ['Valor de mercado calculado','CVM × cotações','fechamento de '+dmy(DB.updatedAt),'robô · dias úteis'],
+   ['Múltiplos e cotações de ações','Fundamentus','coletado em '+dmy(DB.updatedAt),'robô · dias úteis'],
+   ['Valor de mercado calculado','CVM × cotações','coletado em '+dmy(DB.updatedAt),'robô · dias úteis'],
    ['Classificação setorial','B3',dmy(DB.b3FetchedAt),'automática · ~45 dias'],
    ['Ibovespa','B3',MACRO.ibov? dmy(MACRO.ibov.date)+' às '+(MACRO.ibov.hora||'').slice(0,5):'—','robô · dias úteis'],
    ['Moedas','AwesomeAPI',LIVE.ok? liveTxt : ((c.fx&&c.fx.USDBRL&&c.fx.USDBRL.ts)? dmy(c.fx.USDBRL.ts)+' '+String(c.fx.USDBRL.ts).slice(11,16):snap),'ao abrir + a cada 5 min'],
