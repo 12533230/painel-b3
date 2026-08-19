@@ -20,6 +20,7 @@
     ],
     "Internacional": [
       {"t": "IVVB11", "n": "iShares S&P 500 em R$"},
+      {"t": "USTK11", "n": "Investo US Tech em R$"},
       {"t": "WRLD11", "n": "Investo FTSE Global All Cap (via VT)"},
       {"t": "NASD11", "n": "Trend Nasdaq-100 em R$"},
       {"t": "ACWI11", "n": "Trend ACWI (XP)"},
