@@ -1,0 +1,77 @@
+{
+  "_comment": "Listas padrão dos painéis ETFs e EUA. Edite aqui (e faça commit) para mudar o que o robô de cotações coleta a cada 15 min. No navegador dá para sobrepor a lista via botão ✎ (fica só no seu navegador).",
+  "etfs_b3": {
+    "Renda fixa": [
+      {"t": "AUPO11", "n": "BTG Teva Liquidez / caixa (IR 15%)"},
+      {"t": "LFTB11", "n": "Investo Selic+IPCA 2 anos (IR 15%)"},
+      {"t": "LFTS11", "n": "Investo Tesouro Selic (IR 25%)"},
+      {"t": "GPCA11", "n": "Grupo Primo IPCA curto"},
+      {"t": "IMAB11", "n": "It Now IMA-B (IPCA)"},
+      {"t": "B5P211", "n": "It Now IMA-B5 P2 (IPCA curto)"},
+      {"t": "IRFM11", "n": "It Now IRF-M (prefixado)"},
+      {"t": "DEBB11", "n": "BTG Debêntures incentivadas"}
+    ],
+    "Ações Brasil": [
+      {"t": "BOVA11", "n": "iShares Ibovespa"},
+      {"t": "BOVV11", "n": "It Now Ibovespa"},
+      {"t": "PIBB11", "n": "It Now IBrX-50 (taxa 0,06%)"},
+      {"t": "SMAL11", "n": "iShares Small Caps"},
+      {"t": "DIVO11", "n": "It Now IDIV (dividendos)"}
+    ],
+    "Internacional": [
+      {"t": "IVVB11", "n": "iShares S&P 500 em R$"},
+      {"t": "WRLD11", "n": "Investo FTSE Global All Cap (via VT)"},
+      {"t": "NASD11", "n": "Trend Nasdaq-100 em R$"},
+      {"t": "ACWI11", "n": "Trend ACWI (XP)"},
+      {"t": "XINA11", "n": "Trend China (XP)"}
+    ],
+    "Cripto e ouro": [
+      {"t": "HASH11", "n": "Hashdex Nasdaq Crypto"},
+      {"t": "QBTC11", "n": "QR Bitcoin"},
+      {"t": "QETH11", "n": "QR Ethereum"},
+      {"t": "BITH11", "n": "Hashdex Bitcoin"},
+      {"t": "GOLD11", "n": "Trend Ouro"}
+    ]
+  },
+  "us_indices": [
+    {"t": "^GSPC", "n": "S&P 500"},
+    {"t": "^IXIC", "n": "Nasdaq Composite"},
+    {"t": "^DJI", "n": "Dow Jones"},
+    {"t": "^RUT", "n": "Russell 2000"},
+    {"t": "^VIX", "n": "VIX (volatilidade)"},
+    {"t": "^TNX", "n": "Treasury 10 anos (% a.a.)"}
+  ],
+  "us_etfs": [
+    {"t": "SPY", "n": "SPDR S&P 500"},
+    {"t": "VOO", "n": "Vanguard S&P 500"},
+    {"t": "QQQ", "n": "Invesco Nasdaq-100"},
+    {"t": "VTI", "n": "Vanguard Total Market"},
+    {"t": "IWM", "n": "iShares Russell 2000"},
+    {"t": "EEM", "n": "iShares Emergentes"},
+    {"t": "GLD", "n": "SPDR Ouro"},
+    {"t": "TLT", "n": "iShares Treasuries 20a+"},
+    {"t": "SCHD", "n": "Schwab Dividendos"}
+  ],
+  "us_stocks": [
+    {"t": "AAPL", "n": "Apple"},
+    {"t": "MSFT", "n": "Microsoft"},
+    {"t": "NVDA", "n": "Nvidia"},
+    {"t": "AMZN", "n": "Amazon"},
+    {"t": "GOOGL", "n": "Alphabet"},
+    {"t": "META", "n": "Meta"},
+    {"t": "TSLA", "n": "Tesla"},
+    {"t": "BRK-B", "n": "Berkshire Hathaway"},
+    {"t": "AVGO", "n": "Broadcom"},
+    {"t": "JPM", "n": "JPMorgan"},
+    {"t": "V", "n": "Visa"},
+    {"t": "MA", "n": "Mastercard"},
+    {"t": "LLY", "n": "Eli Lilly"},
+    {"t": "UNH", "n": "UnitedHealth"},
+    {"t": "XOM", "n": "Exxon Mobil"},
+    {"t": "WMT", "n": "Walmart"},
+    {"t": "NFLX", "n": "Netflix"},
+    {"t": "AMD", "n": "AMD"},
+    {"t": "KO", "n": "Coca-Cola"},
+    {"t": "PG", "n": "Procter & Gamble"}
+  ]
+}

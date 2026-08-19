@@ -69,9 +69,15 @@
   .wrap{display:grid;grid-template-columns:270px 1fr;gap:0;min-height:calc(100vh - 90px)}
   @media(max-width:900px){.wrap{grid-template-columns:1fr}.side{display:none}}
   .side{border-right:1px solid var(--grid);padding:14px 10px 40px;overflow-y:auto;max-height:calc(100vh - 92px);position:sticky;top:92px}
-  body[data-view="macro"] .wrap{display:none}
-  #macroview{display:none;padding:16px 18px 60px;max-width:1280px;margin:0 auto}
+  body[data-view="macro"] .wrap,body[data-view="etf"] .wrap,body[data-view="eua"] .wrap{display:none}
+  #macroview,#etfview,#euaview{display:none;padding:16px 18px 60px;max-width:1280px;margin:0 auto}
   body[data-view="macro"] #macroview{display:block}
+  body[data-view="etf"] #etfview{display:block}
+  body[data-view="eua"] #euaview{display:block}
+  .rmv{border:none;background:transparent;color:var(--bad);cursor:pointer;font:inherit;font-size:12px;padding:0 4px}
+  .cfgrow{display:flex;gap:10px;align-items:center;margin:10px 0;flex-wrap:wrap}
+  .cfgrow label{min-width:150px;font-weight:600;font-size:12.5px;color:var(--ink2)}
+  .cfgrow input{flex:1;min-width:220px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
   .m-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
   @media(max-width:980px){.m-grid{grid-template-columns:1fr}}
   .agrow{display:flex;gap:12px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--grid)}
@@ -175,59 +181,6 @@
   svg .val{fill:var(--ink2);font-weight:600}
   .foot{color:var(--muted);font-size:12px;margin-top:26px;border-top:1px solid var(--grid);padding-top:10px}
   .empty{color:var(--muted);padding:30px;text-align:center}
-  /* ---------- mobile ---------- */
-  .msel{display:none}
-  @media(max-width:900px){
-    .msel{display:flex;gap:8px;margin:0 0 10px}
-    .msel select{flex:1;min-width:0;padding:9px 10px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;font-size:16px}
-    table.list,.qtbl{border-collapse:separate;border-spacing:0;overflow:visible}
-    table.list th:first-child,table.list td:first-child{position:sticky;left:0;z-index:2;background:var(--surface);box-shadow:inset -1px 0 0 var(--grid)}
-    table.list th:first-child{z-index:3}
-    table.list td:first-child{min-width:148px;max-width:56vw}
-    .qtbl th:first-child,.qtbl td:first-child{position:sticky;left:0;background:var(--surface);z-index:2;box-shadow:inset -1px 0 0 var(--grid);width:150px;max-width:42vw;white-space:normal}
-  }
-  @media(max-width:760px){
-    .top{flex-wrap:wrap;padding:8px 10px;gap:8px;row-gap:8px}
-    .top .logo{height:16px}
-    .nav button{padding:7px 10px;font-size:12.5px}
-    .blbl{display:none}
-    .top .btn{padding:7px 9px}
-    .search{order:10;flex:1 1 100%}
-    .search input{width:100%;max-width:none;font-size:16px}
-    .sugg{top:42px}
-    .main{padding:12px 10px 60px}
-    #macroview{padding:12px 10px 60px}
-    .tiles{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-    .tile .v{font-size:18px}
-    table.list th,table.list td{padding:8px}
-    .panel{width:100vw;border-left:none}
-    .ph{padding:12px}
-    .ph .row1{padding-right:78px}
-    .ph h2{font-size:17px}
-    .pb{padding:14px 12px 60px}
-    .iovl{padding:14px 8px}
-    .ibox{padding:14px 12px 16px}
-    .ibox h2{padding-right:88px;font-size:16px}
-    /* painel de detalhe: cabeçalho rola junto, ✕ flutua fixo */
-    .ph{position:static;padding-right:12px}
-    .ph .x{position:fixed;top:10px;right:10px;z-index:7;box-shadow:0 4px 14px rgba(0,0,0,.22)}
-    /* tabela de fontes vira lista empilhada */
-    .qtblwrap table.fresh{min-width:0;width:100%}
-    .fresh thead{display:none}
-    .fresh,.fresh tbody,.fresh tr,.fresh td{display:block;width:100%}
-    .fresh tr{padding:8px 2px;border-bottom:1px solid var(--grid)}
-    .fresh tr:last-child{border-bottom:none}
-    .qtbl.fresh td{border:none;padding:1px 0;text-align:left;white-space:normal;position:static;box-shadow:none;max-width:none}
-    .qtbl.fresh td:first-child{font-weight:700;min-width:0;position:static;box-shadow:none;max-width:none}
-    .fresh td:nth-child(2)::before{content:"Fonte: ";color:var(--muted);font-weight:400}
-    .fresh td:nth-child(3)::before{content:"Atualização: ";color:var(--muted);font-weight:400}
-    .fresh td:nth-child(4){color:var(--muted)}
-    .fresh td:nth-child(4)::before{content:"Cadência: "}
-    .agdate{min-width:78px}
-    .agrow{gap:8px;flex-wrap:wrap}
-    .crumb{font-size:12px}
-    .notice{font-size:11.5px;padding:7px 10px}
-  }
 </style>
 </head>
 <body>
@@ -238,24 +191,26 @@
   <img class="logo" alt="Insignia Partners" src="data:image/png;base64,__LOGO__">
   <span class="div"></span>
   <h1>Painel B3</h1>
-  <div class="nav"><button id="nav-emp" class="on">Empresas</button><button id="nav-mac">Brasil &amp; Macro</button></div>
+  <div class="nav"><button id="nav-emp" class="on">Empresas</button><button id="nav-etf">ETFs</button><button id="nav-eua">EUA</button><button id="nav-mac">Brasil &amp; Macro</button></div>
   <span class="src" id="srcline"></span>
   <span class="sp"></span>
   <div class="search">
     <input id="q" type="text" placeholder="Buscar empresa ou ticker… (ex.: WEGE3, Sabesp)" autocomplete="off">
     <div class="sugg" id="sugg"></div>
   </div>
-  <button class="btn" id="infobtn" title="Fontes, datas de atualização e avisos">ⓘ<span class="blbl"> Dados</span></button>
-  <button class="btn" id="theme" title="Alternar tema">◐<span class="blbl"> Tema</span></button>
+  <button class="btn" id="infobtn" title="Fontes, datas de atualização e avisos">ⓘ Dados</button>
+  <button class="btn" id="cfgbtn" title="Cotações ao vivo — fontes e chaves opcionais">⚙ Ao vivo</button>
+  <button class="btn" id="theme" title="Alternar tema">◐ Tema</button>
 </div>
 <div class="ticker" id="ticker" title="Cotações — passe o mouse para pausar"><div class="tk-track" id="tkt"></div></div>
 </div>
 <script id="macrodados" type="application/json">__MACRO__</script>
+<script id="quotesdados" type="application/json">__QUOTES__</script>
+<script id="watchlists" type="application/json">__WATCHLISTS__</script>
 
 <div class="wrap">
   <nav class="side" id="side"></nav>
   <main class="main">
-    <div class="msel" id="msel"></div>
     <div class="crumb" id="crumb"></div>
     <div class="tiles" id="tiles"></div>
     <div class="listwrap"><table class="list" id="list"></table></div>
@@ -263,6 +218,8 @@
 </div>
 
 <main id="macroview"></main>
+<main id="etfview"></main>
+<main id="euaview"></main>
 
 <div class="iovl" id="iovl"><div class="ibox" id="ibox" role="dialog" aria-label="Dados, fontes e atualizações"></div></div>
 
@@ -295,7 +252,8 @@ function fmtMi(v){ // v em R$ milhões
 function fmtNum(v){ if(v==null) return '—'; const a=Math.abs(v); if(a>=1e6) return nbr.format(v/1e6)+' tri'; if(a>=1e3) return nbr.format(v/1e3)+' bi'; return nbr.format(v)+' mi'; }
 const fmtX = v => v==null ? '—' : nbr.format(v).replace(/ /g,'') + 'x';
 const fmtPct = v => v==null ? '—' : nbr.format(v) + '%';
-const fmtPrice = v => v==null ? '—' : 'R$ ' + nbr2.format(v);
+const nbrP = new Intl.NumberFormat('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+const fmtPrice = v => v==null ? '—' : 'R$ ' + nbrP.format(v);
 function cls(v){ return v==null ? 'dim' : (v<0 ? 'neg' : ''); }
 function med(arr){ const a = arr.filter(x=>x!=null).sort((x,y)=>x-y); if(!a.length) return null; const m = a.length>>1; return a.length%2 ? a[m] : (a[m-1]+a[m])/2; }
 function mainTicker(c){ let best=null, bl=-1; for(const t of c.tickers){ const l=t.liq2m||0; if(l>bl){bl=l;best=t;} } return best; }
@@ -377,7 +335,8 @@ function renderTiles(list){
 // ---------- lista ----------
 const COLS = [
   ['name','Empresa', c=>null],
-  ['cot','Cotação', c=>{const t=mainTicker(c); return t?t.cot:null;}],
+  ['cot','Cotação', c=>{const t=mainTicker(c); if(!t) return null; const q=getQ(t.t); return q&&q.p!=null?q.p:t.cot;}],
+  ['var','Var. dia', c=>{const t=mainTicker(c); if(!t) return null; const q=getQ(t.t); return q?q.pct:null;}],
   ['mktCap','Valor mercado', c=>c.ind.mktCap],
   ['pl','P/L', c=>{const t=mainTicker(c); return t?t.pl:null;}],
   ['pvp','P/VP', c=>{const t=mainTicker(c); return t?t.pvp:null;}],
@@ -389,6 +348,7 @@ const COLS = [
 ];
 function renderList(list){
   const tbl = $('#list'); tbl.textContent='';
+  LISTROWS = [];
   const thead = el('thead'); const hr = el('tr');
   for(const [k,label] of COLS.map(c=>[c[0],c[1]])){
     const th = el('th',null,label + (sortKey===k ? (sortDir<0?' ↓':' ↑') : ''));
@@ -411,7 +371,13 @@ function renderList(list){
     const nm = el('div','nm', c.name); nm.append(el('span','tks','  '+c.tickers.map(x=>x.t).join(' · ')));
     td0.append(nm, el('div','seglbl', c.segmento + (c.fin?' · financeiro':'')));
     tr.append(td0);
-    tr.append(el('td', t&&t.cot!=null?'':'dim', fmtPrice(t&&t.cot)));
+    const q = t && getQ(t.t);
+    const cot = q&&q.p!=null ? q.p : (t&&t.cot);
+    const tdc = el('td', cot!=null?'':'dim', fmtPrice(cot));
+    const vd = q ? q.pct : null;
+    const tdv = el('td', vd==null?'dim':(vd<0?'neg':'pos'), fmtSign(vd));
+    tr.append(tdc, tdv);
+    if(t) LISTROWS.push({tk:t.t, tdc, tdv});
     tr.append(el('td', c.ind.mktCap?'':'dim', fmtMi(c.ind.mktCap)));
     tr.append(el('td', cls(t&&t.pl), fmtX(t&&t.pl)));
     tr.append(el('td', cls(t&&t.pvp), fmtX(t&&t.pvp)));
@@ -437,50 +403,7 @@ function renderCrumb(){
   if(selSeg){ c.append(document.createTextNode('  ›  ')); const b = el('b',null,selSeg); c.append(b); }
 }
 
-function renderAll(){ buildTree(); buildMobileSel(); renderCrumb(); const f = filtered(); renderTiles(f); renderList(f); }
-
-// ---------- seletor de setor no mobile (a árvore lateral some em telas pequenas) ----------
-function selTree(){
-  const tree = {};
-  for(const c of COS){
-    tree[c.setor] = tree[c.setor] || {n:0, subs:{}};
-    tree[c.setor].n++;
-    const su = tree[c.setor].subs[c.subsetor] = tree[c.setor].subs[c.subsetor] || {n:0, segs:{}};
-    su.n++; su.segs[c.segmento] = (su.segs[c.segmento]||0)+1;
-  }
-  return tree;
-}
-function buildMobileSel(){
-  const box = $('#msel'); if(!box) return; box.textContent='';
-  const tree = selTree();
-  const s1 = document.createElement('select');
-  s1.setAttribute('aria-label','Setor');
-  s1.append(new Option('Todos os setores ('+COS.length+')',''));
-  for(const [setor,s] of Object.entries(tree).sort()) s1.append(new Option(setor+' ('+s.n+')', setor));
-  s1.value = selSetor||'';
-  s1.onchange = () => { selSetor = s1.value||null; selSub=selSeg=null; renderAll(); };
-  box.append(s1);
-  if(selSetor && tree[selSetor]){
-    const s2 = document.createElement('select');
-    s2.setAttribute('aria-label','Subsetor e segmento');
-    s2.append(new Option('Todo o setor',''));
-    for(const [sub,su] of Object.entries(tree[selSetor].subs).sort()){
-      const segs = Object.entries(su.segs).sort();
-      if(segs.length>1 || segs[0][0]!==sub){
-        const og = document.createElement('optgroup'); og.label = sub;
-        og.append(new Option('Todos — '+sub, sub+'||'));
-        for(const [seg,n] of segs) og.append(new Option(seg+' ('+n+')', sub+'||'+seg));
-        s2.append(og);
-      } else {
-        s2.append(new Option(sub+' ('+su.n+')', sub+'||'));
-      }
-    }
-    s2.value = selSub ? (selSub+'||'+(selSeg||'')) : '';
-    if(s2.selectedIndex < 0) s2.value = '';
-    s2.onchange = () => { const v=s2.value; if(!v){ selSub=selSeg=null; } else { const i=v.indexOf('||'); selSub=v.slice(0,i); selSeg=v.slice(i+2)||null; } renderAll(); };
-    box.append(s2);
-  }
-}
+function renderAll(){ buildTree(); renderCrumb(); const f = filtered(); renderTiles(f); renderList(f); }
 
 // ---------- busca ----------
 const qin = $('#q'), sugg = $('#sugg');
@@ -590,7 +513,7 @@ function openDetail(cvm){
   const x = el('button','btn x','✕ fechar'); x.onclick=closeDetail; ph.append(x);
   const r1 = el('div','row1'); r1.append(el('h2',null,c.name));
   const bd = el('div','badges');
-  for(const t of c.tickers) bd.append(el('span','badge', t.t + (t.cot!=null? ' · '+fmtPrice(t.cot):'')));
+  for(const t of c.tickers){ const bq = el('span','badge', t.t + (t.cot!=null? ' · '+fmtPrice(t.cot):'')); bq.id = 'bq-'+t.t; bd.append(bq); }
   bd.append(el('span','badge', c.listagem));
   r1.append(bd); ph.append(r1);
   ph.append(el('div','path', c.setor+' › '+c.subsetor+' › '+c.segmento+'  ·  '+c.fullName+'  ·  CNPJ '+c.cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,'$1.$2.$3/$4-$5')));
@@ -706,6 +629,8 @@ function openDetail(cvm){
   panel.append(pb);
   ovl.classList.add('on'); panel.classList.add('on');
   panel.scrollTop = 0;
+  updateDetailQuotes();   // usa o que já chegou
+  refreshB3();            // e busca ao vivo os tickers desta empresa
 }
 
 // ================= BRASIL & MACRO =================
@@ -718,11 +643,337 @@ const fxVal = v => v>=1 ? fmtc2.format(v) : fmtc4.format(v);
 const brDate = s => s ? s.split('-').reverse().join('/') : '';
 function delta(p){ if(p==null||isNaN(p)) return null; const cls=p>0?'up':(p<0?'dn':'st'); return {txt:(p>0?'▲':(p<0?'▼':'='))+' '+fmtc2.format(Math.abs(p))+'%', cls}; }
 
+// ================= COTAÇÕES AO VIVO (B3 direto + robô Yahoo + chaves opcionais) =================
+const REPO = '12533230/painel-b3'; // se o repositório mudar de nome/dono, ajuste aqui
+const QUOTES_RAW_URL = 'https://raw.githubusercontent.com/'+REPO+'/quotes/data/quotes.json';
+let QSNAP = {updatedAt:null, q:{}};   // snapshot do robô (Yahoo): B3 completa + EUA + índices
+let WL = {};                          // listas padrão (data/watchlists.json)
+try{ const q0 = JSON.parse(document.getElementById('quotesdados').textContent); if(q0 && q0.q) QSNAP = q0; }catch(e){}
+try{ WL = JSON.parse(document.getElementById('watchlists').textContent) || {}; }catch(e){}
+const LIVEB3 = {};                    // ticker -> cotação da API pública da B3 (defasagem ~15 min)
+const LIVEUS = {};                    // ticker -> cotação Finnhub (chave opcional)
+const LIVEIDX = {};                   // IBOV / IFIX ao vivo (B3)
+let RELAY = {ok:false, at:null};      // último quotes.json lido do branch "quotes"
+let B3LIVE = {ok:false, at:null};
+let FINN = {ok:false, at:null};
+const fmtSign = v => v==null ? '—' : ((v>0?'+':'')+fmtc2.format(v)+'%');
+const hhmm = () => new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+const jj = (u,ms,opts) => Promise.race([fetch(u,opts).then(r=>{ if(!r.ok) throw new Error('http '+r.status); return r.json(); }),
+                                        new Promise((_,rj)=>setTimeout(()=>rj(new Error('timeout')), ms||9000))]);
+const lsGet = k => { try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } };
+const lsSet = (k,v) => { try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
+
+const FRESH_MS = 5*60*1000; // entrada "ao vivo" mais velha que isso volta a cair no snapshot do robô
+const freshQ = e => !!(e && e.p!=null && e.ts && (Date.now()-e.ts) < FRESH_MS);
+function getQ(k){ // melhor cotação disponível para um símbolo (prioridade: B3 ao vivo > Finnhub > robô)
+  const b = LIVEB3[k];
+  if(freshQ(b)) return {p:b.p, pct:b.pct, cur:'BRL', live:'b3', at:b.at};
+  const f = LIVEUS[k];
+  if(freshQ(f)) return {p:f.p, pct:f.pct, cur:'USD', live:'finnhub', at:f.at};
+  const s = QSNAP.q && QSNAP.q[k];
+  if(s && s.p!=null){
+    const pct = (s.pv!=null && s.pv!==0) ? (s.p/s.pv-1)*100 : null;
+    return {p:s.p, pct, cur:s.cur, live:null, t:s.t, n:s.n};
+  }
+  return null;
+}
+const qName = k => { const s=QSNAP.q && QSNAP.q[k]; return (s && s.n) || ''; };
+const qHora = q => { if(!q) return ''; if(q.at) return q.at; if(q.t) try{ return new Date(q.t*1000).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }catch(e){} return ''; };
+const relayLocal = () => { if(!QSNAP.updatedAt) return '—';
+  try{ return new Date(QSNAP.updatedAt).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }catch(e){ return QSNAP.updatedAt; } };
+
+async function pool(items, n, fn){ // concorrência limitada
+  let i = 0;
+  await Promise.all(Array.from({length: Math.min(n, items.length)}, async () => {
+    while(i < items.length){ const k = i++; try{ await fn(items[k]); }catch(e){} }
+  }));
+}
+
+// ---- B3: API pública do site de cotações (CORS aberto; defasagem ~15 min do pregão)
+async function b3quote(t){
+  const d = await jj('https://cotacao.b3.com.br/mds/api/v1/instrumentQuotation/'+encodeURIComponent(t));
+  const tr = d && d.Trad && d.Trad[0];
+  const q = tr && tr.scty && tr.scty.SctyQtn;
+  if(!q || q.curPrc==null) return null;
+  return {p:q.curPrc, pct:q.prcFlcn, open:q.opngPric, min:q.minPric, max:q.maxPric,
+          qty:tr.ttlQty, at:((d.Msg&&d.Msg.dtTm)||'').slice(11,16)};
+}
+async function b3index(sym){
+  const d = await jj('https://cotacao.b3.com.br/mds/api/v1/DailyFluctuationHistory/'+sym);
+  const l = d.TradgFlr.scty.lstQtn; const last = l[l.length-1];
+  return {pontos:+last.closPric, varDia:+(+last.prcFlcn).toFixed(2), date:d.TradgFlr.date, hora:(last.dtTm||'').slice(0,5)};
+}
+function meusEtfs(){ return lsGet('meus_etfs') || []; }
+function meusUS(){ return lsGet('meus_us') || []; }
+function etfLists(){
+  const out = {};
+  for(const [cat, arr] of Object.entries(WL.etfs_b3 || {})) out[cat] = arr;
+  const mine = meusEtfs();
+  if(mine.length) out['Meus ETFs'] = mine.map(t => ({t, n:qName(t)}));
+  return out;
+}
+function b3Needed(){ // tickers B3 que precisam de cotação ao vivo agora
+  const set = new Set();
+  if(document.body.dataset.view === 'etf')
+    for(const arr of Object.values(etfLists())) for(const e of arr) set.add(e.t);
+  if(openCvm){ const c = COS.find(x=>x.cvm===openCvm); if(c) for(const t of c.tickers) set.add(t.t); }
+  return [...set];
+}
+async function refreshB3(){
+  if(document.hidden) return;
+  let any = false;
+  const [ib, ifx] = await Promise.all([b3index('IBOV').catch(()=>null), b3index('IFIX').catch(()=>null)]);
+  if(ib){ LIVEIDX.IBOV = ib; any = true; }
+  if(ifx){ LIVEIDX.IFIX = ifx; any = true; }
+  const need = b3Needed();
+  if(need.length){
+    const tok = localStorage.getItem('tok_brapi');
+    if(tok){
+      try{
+        const d = await jj('https://brapi.dev/api/quote/'+need.join(',')+'?token='+encodeURIComponent(tok), 12000);
+        for(const r of (d.results||[])){
+          if(r.regularMarketPrice==null) continue;
+          LIVEB3[r.symbol] = {p:r.regularMarketPrice, pct:r.regularMarketChangePercent,
+            open:r.regularMarketOpen, min:r.regularMarketDayLow, max:r.regularMarketDayHigh,
+            qty:r.regularMarketVolume, at:hhmm(), ts:Date.now()};
+          any = true;
+        }
+      }catch(e){}
+    } else {
+      await pool(need, 6, async t => { const q = await b3quote(t); if(q){ LIVEB3[t] = {...q, ts:Date.now()}; any = true; } });
+    }
+  }
+  if(any){ B3LIVE.ok = true; B3LIVE.at = hhmm(); afterQuotes(); }
+}
+
+// ---- robô (branch "quotes"): B3 completa + EUA, atualizado a cada ~15 min em pregão
+async function refreshRelay(){
+  if(document.hidden) return;
+  try{
+    const d = await jj(QUOTES_RAW_URL+'?v='+Math.floor(Date.now()/6e4), 12000);
+    if(d && d.q && (!QSNAP.updatedAt || String(d.updatedAt) >= String(QSNAP.updatedAt))){
+      QSNAP = d; RELAY.ok = true; RELAY.at = hhmm(); afterQuotes();
+    }
+  }catch(e){}
+}
+
+// ---- Finnhub (chave opcional): EUA em tempo real direto no navegador
+async function refreshFinnhub(){
+  if(document.hidden) return;
+  const tok = localStorage.getItem('tok_finnhub');
+  if(!tok || document.body.dataset.view !== 'eua') return;
+  const syms = [...(WL.us_etfs||[]), ...(WL.us_stocks||[])].map(x=>x.t)
+    .concat(meusUS()).filter(t => !t.startsWith('^')).slice(0, 50);
+  let any = false;
+  await pool(syms, 4, async t => {
+    // token via header (não via URL) para não aparecer em logs de proxy/CDN;
+    // Finnhub usa ponto em classes de ação (BRK.B), Yahoo usa hífen (BRK-B)
+    const d = await jj('https://finnhub.io/api/v1/quote?symbol='+encodeURIComponent(t.replace(/-/g,'.')), 9000,
+                       {headers: {'X-Finnhub-Token': tok}});
+    if(d && d.c){ LIVEUS[t] = {p:d.c, pct:d.dp, at:hhmm(), ts:Date.now()}; any = true; }
+  });
+  if(any){ FINN.ok = true; FINN.at = hhmm(); if(document.body.dataset.view==='eua') renderEUA(); renderTicker(); }
+}
+
+function afterQuotes(){
+  renderTicker(); updateListQuotes(); updateDetailQuotes();
+  const v = document.body.dataset.view;
+  if(v==='etf') renderETF();
+  if(v==='eua') renderEUA();
+}
+
+// ---- células de cotação da lista de empresas (atualizadas sem redesenhar a tabela)
+let LISTROWS = [];
+function updateListQuotes(){
+  for(const r of LISTROWS){
+    if(!r.tk) continue;
+    const q = getQ(r.tk);
+    if(!q || q.p==null) continue;
+    r.tdc.textContent = fmtPrice(q.p); r.tdc.className = '';
+    r.tdv.textContent = fmtSign(q.pct);
+    r.tdv.className = q.pct==null ? 'dim' : (q.pct<0 ? 'neg' : 'pos');
+  }
+}
+function updateDetailQuotes(){
+  if(!openCvm) return;
+  const c = COS.find(x=>x.cvm===openCvm); if(!c) return;
+  for(const t of c.tickers){
+    const q = freshQ(LIVEB3[t.t]) ? LIVEB3[t.t] : null, b = document.getElementById('bq-'+t.t);
+    if(q && b){
+      b.textContent = t.t+' · '+fmtPrice(q.p)+' ';
+      b.append(el('span', (q.pct||0)<0?'neg':'pos', fmtSign(q.pct)));
+    }
+  }
+}
+
+// ---- view ETFs (B3) ----
+function etfChip(){
+  // "● ao vivo" só quando os ETFs listados de fato têm cotação fresca da B3 (não basta o IBOV ter respondido)
+  const anyLive = Object.values(etfLists()).some(arr => arr.some(e => freshQ(LIVEB3[e.t])));
+  return el('span','livechip', anyLive
+    ? '● B3 ao vivo às '+B3LIVE.at+' — feed público com ~15 min de defasagem'
+    : (QSNAP.updatedAt ? '◷ snapshot do robô de '+relayLocal()+' — abrindo com internet atualiza sozinho' : '◷ aguardando cotações…'));
+}
+function renderETF(){
+  const m = $('#etfview'); m.textContent = '';
+  m.append(noticeEl());
+  const st = el('div'); st.style.margin = '4px 0 10px'; st.append(etfChip()); m.append(st);
+  for(const [cat, arr] of Object.entries(etfLists())){
+    m.append(el('h3','sect', cat+' ('+arr.length+')'));
+    const w = el('div','qtblwrap'); const t = el('table','qtbl');
+    const hd = el('tr');
+    for(const h of ['Ticker','Nome','Cotação','Var. dia','Abertura','Mín · Máx do dia','Negócios','Atualizado','']) hd.append(el('th',null,h));
+    const th = el('thead'); th.append(hd); t.append(th);
+    const tb = el('tbody');
+    for(const e of arr){
+      const tk = e.t, q = getQ(tk), L = freshQ(LIVEB3[tk]) ? LIVEB3[tk] : null;
+      const tr = el('tr');
+      tr.append(el('td',null,tk));
+      const nm = e.n || qName(tk) || '—';
+      tr.append(el('td',null,nm));
+      tr.append(el('td', q?'':'dim', q ? fmtPrice(q.p) : '—'));
+      tr.append(el('td', !q||q.pct==null?'dim':(q.pct<0?'neg':'pos'), q?fmtSign(q.pct):'—'));
+      tr.append(el('td', L?'':'dim', L&&L.open!=null ? fmtPrice(L.open) : '—'));
+      tr.append(el('td', L?'':'dim', L&&L.min!=null ? fmtPrice(L.min)+' · '+fmtPrice(L.max) : '—'));
+      tr.append(el('td', L?'':'dim', L&&L.qty!=null ? fmtc0.format(L.qty) : '—'));
+      tr.append(el('td','dim', qHora(q) || '—'));
+      const tdx = el('td');
+      if(cat === 'Meus ETFs'){
+        const x = el('button','rmv','✕'); x.title = 'remover da minha lista';
+        x.onclick = () => { lsSet('meus_etfs', meusEtfs().filter(z=>z!==tk)); renderETF(); };
+        tdx.append(x);
+      }
+      tr.append(tdx);
+      tb.append(tr);
+    }
+    t.append(tb); w.append(t); m.append(w);
+  }
+  const add = el('button','btn','➕ acompanhar outro ETF da B3');
+  add.style.marginTop = '12px';
+  add.onclick = () => {
+    const v = (prompt('Ticker do ETF na B3 (ex.: BOVA11):')||'').trim().toUpperCase();
+    if(!/^[A-Z0-9]{5,7}$/.test(v)) return;
+    const mine = meusEtfs(); if(!mine.includes(v)) mine.push(v);
+    lsSet('meus_etfs', mine); renderETF(); refreshB3();
+  };
+  m.append(add);
+  m.append(el('div','note','Cotações direto da API pública da B3 (a mesma do site de cotações da bolsa; defasagem ~15 min do pregão), atualizadas a cada 60 s com a página aberta. "Negócios" = contagem informada pela B3 na sessão. A lista padrão vem de data/watchlists.json no repositório; a lista "Meus ETFs" fica só neste navegador.'));
+  m.append(el('div','foot','Insignia Partners · painel interno. Nada aqui é recomendação de investimento; verifique taxa, tributação e liquidez de cada fundo nos documentos oficiais do gestor e da B3.'));
+}
+
+// ---- view EUA ----
+function euaChip(){
+  const anyLive = Object.values(LIVEUS).some(freshQ);
+  return el('span','livechip', anyLive
+    ? '● Finnhub ao vivo às '+FINN.at+' (chave sua, direto no navegador)'
+    : (QSNAP.updatedAt ? '◷ robô a cada 15 min em pregão — arquivo de '+relayLocal()+' · página relê a cada 60 s'
+                       : '◷ sem dados dos EUA ainda — rode o workflow "Cotações quase ao vivo" no GitHub'));
+}
+function usTable(m, titulo, arr, custom){
+  m.append(el('h3','sect', titulo+' ('+arr.length+')'));
+  const w = el('div','qtblwrap'); const t = el('table','qtbl');
+  const hd = el('tr'); for(const h of ['Ticker','Nome','Preço','Var. dia','Atualizado','']) hd.append(el('th',null,h));
+  const th = el('thead'); th.append(hd); t.append(th);
+  const tb = el('tbody');
+  for(const e of arr){
+    const tk = e.t, q = getQ(tk);
+    const tr = el('tr');
+    tr.append(el('td',null,tk));
+    tr.append(el('td',null, e.n || qName(tk) || '—'));
+    tr.append(el('td', q?'':'dim', q ? 'US$ '+fmtc2.format(q.p) : '—'));
+    tr.append(el('td', !q||q.pct==null?'dim':(q.pct<0?'neg':'pos'), q?fmtSign(q.pct):'—'));
+    tr.append(el('td','dim', (q&&q.live==='finnhub'?'● ':'')+(qHora(q)||'—')));
+    const tdx = el('td');
+    if(custom){
+      const x = el('button','rmv','✕'); x.title = 'remover da minha lista';
+      x.onclick = () => { lsSet('meus_us', meusUS().filter(z=>z!==tk)); renderEUA(); };
+      tdx.append(x);
+    }
+    tr.append(tdx);
+    tb.append(tr);
+  }
+  t.append(tb); w.append(t); m.append(w);
+}
+function renderEUA(){
+  const m = $('#euaview'); m.textContent = '';
+  m.append(noticeEl());
+  const st = el('div'); st.style.margin = '4px 0 10px'; st.append(euaChip()); m.append(st);
+  m.append(el('h3','sect','Índices'));
+  const t1 = el('div','tiles');
+  for(const e of (WL.us_indices || [])){
+    const q = getQ(e.t); if(!q){ t1.append(statTile(e.n, '—', e.t)); continue; }
+    const val = e.t==='^TNX' ? fmtc2.format(q.p)+'%' : (e.t==='^VIX' ? fmtc2.format(q.p) : fmtc0.format(q.p)+' pts');
+    let dtxt = fmtSign(q.pct)+' no dia';
+    if(e.t==='^TNX' && q.pct!=null){ // juros: variação em pontos-base, não %
+      const bps = (q.p - q.p/(1+q.pct/100))*100;
+      dtxt = (bps>0?'+':'')+fmtc2.format(bps)+' bps no dia';
+    }
+    t1.append(statTile(e.n, val, dtxt+' · '+(qHora(q)||''), q.pct==null?null:(q.pct<0?'neg':'pos')));
+  }
+  m.append(t1);
+  usTable(m, 'ETFs', WL.us_etfs || []);
+  usTable(m, 'Ações', WL.us_stocks || []);
+  const mine = meusUS();
+  if(mine.length) usTable(m, 'Meus tickers', mine.map(t=>({t, n:qName(t)})), true);
+  const add = el('button','btn','➕ acompanhar outro ticker dos EUA');
+  add.style.marginTop = '12px';
+  add.onclick = () => {
+    const v = (prompt('Ticker nos EUA (ex.: AAPL, BRK-B):')||'').trim().toUpperCase();
+    if(!/^[A-Z0-9.\-]{1,8}$/.test(v)) return;
+    const mm = meusUS(); if(!mm.includes(v)) mm.push(v);
+    lsSet('meus_us', mm); renderEUA(); refreshFinnhub();
+  };
+  m.append(add);
+  m.append(el('div','note','Sem chave, os dados dos EUA vêm do robô (Yahoo Finance via GitHub Actions, a cada 15 min em pregão) — tickers fora da lista padrão só aparecem se adicionados em data/watchlists.json no repositório. Com uma chave gratuita do Finnhub (botão "⚙ Ao vivo"), preços de ações e ETFs atualizam em tempo real direto no navegador, inclusive os da lista "Meus tickers".'));
+  m.append(el('div','foot','Insignia Partners · painel interno. Preços em dólar. Uso informativo; não é recomendação de investimento.'));
+}
+
+// ---- modal ⚙ Ao vivo (chaves opcionais) ----
+function openConfig(){
+  modalKind='cfg';
+  ibox.textContent = '';
+  const x = el('button','btn x2','✕ fechar'); x.onclick = closeInfo; ibox.append(x);
+  ibox.append(el('h2',null,'Cotações ao vivo — como funciona e chaves opcionais'));
+  const ps = [
+   ['Sem configurar nada','B3 (ações e ETFs) vem da API pública da própria bolsa, ao vivo no navegador com ~15 min de defasagem. EUA e a lista completa da B3 vêm de um robô que roda a cada 15 min em pregão (Yahoo Finance) — a página relê o arquivo a cada 60 s. Câmbio, cripto, Selic/CDI e Focus já são ao vivo (BCB, AwesomeAPI, CoinGecko).'],
+   ['Finnhub (grátis, opcional)','crie uma conta em finnhub.io e cole a chave abaixo: ações e ETFs dos EUA passam a atualizar em tempo real direto no navegador (índices continuam vindo do robô).'],
+   ['brapi (grátis, opcional)','crie um token em brapi.dev e cole abaixo: as cotações da B3 passam a vir em uma única chamada em lote (mais rápido quando a lista de ETFs é grande).'],
+   ['Privacidade','as chaves ficam gravadas só neste navegador (localStorage) — não vão para o repositório nem para outro servidor.'],
+  ];
+  for(const [b,t] of ps){ const p = el('p'); p.append(el('b',null,b+' — '), document.createTextNode(t)); ibox.append(p); }
+  const mk = (id, label, ph) => {
+    const row = el('div','cfgrow'); row.append(el('label',null,label));
+    const inp = el('input'); inp.type = 'text'; inp.id = id; inp.placeholder = ph;
+    inp.value = localStorage.getItem(id) || '';
+    row.append(inp); ibox.append(row); return inp;
+  };
+  const f = mk('tok_finnhub','Chave Finnhub (EUA)','ex.: c0abc1234…');
+  const b = mk('tok_brapi','Token brapi (B3)','ex.: aBcD1234…');
+  const save = el('button','btn','Salvar'); save.style.marginTop = '8px';
+  save.onclick = () => {
+    const fv = f.value.trim(), bv = b.value.trim();
+    if(fv) localStorage.setItem('tok_finnhub', fv); else localStorage.removeItem('tok_finnhub');
+    if(bv) localStorage.setItem('tok_brapi', bv); else localStorage.removeItem('tok_brapi');
+    if(!fv){ for(const k of Object.keys(LIVEUS)) delete LIVEUS[k]; FINN.ok=false; } // sem chave, some o "tempo real"
+    closeInfo(); refreshFinnhub(); refreshB3();
+    if(document.body.dataset.view==='eua') renderEUA();
+  };
+  ibox.append(save);
+  iovl.classList.add('on');
+}
+
 // ---------- ticker (faixa de cotações) ----------
 function tickerItems(){
   const c=MACRO.core||{}, fx=c.fx||{}, cg=c.cripto||{};
   const it=[];
-  if(MACRO.ibov) it.push({l:'IBOVESPA', v:fmtc0.format(MACRO.ibov.pontos)+' pts', p:MACRO.ibov.varDia, st:brDate(MACRO.ibov.date).slice(0,5)});
+  const ib = LIVEIDX.IBOV || MACRO.ibov;
+  if(ib) it.push({l:'IBOVESPA', v:fmtc0.format(ib.pontos)+' pts', p:ib.varDia, st:LIVEIDX.IBOV?(ib.hora||''):brDate(ib.date).slice(0,5)});
+  if(LIVEIDX.IFIX) it.push({l:'IFIX', v:fmtc0.format(LIVEIDX.IFIX.pontos)+' pts', p:LIVEIDX.IFIX.varDia});
+  for(const [sym,l] of [['^GSPC','S&P 500'],['^IXIC','NASDAQ'],['^DJI','DOW JONES'],['^VIX','VIX'],['^TNX','TREASURY 10A']]){
+    const q = getQ(sym); if(!q) continue;
+    const v = sym==='^TNX' ? fmtc2.format(q.p)+'% a.a.' : (sym==='^VIX' ? fmtc2.format(q.p) : fmtc0.format(q.p)+' pts');
+    it.push({l, v, p:sym==='^TNX'?null:q.pct});
+  }
   for(const [k,l] of [['USDBRL','DÓLAR'],['EURBRL','EURO'],['GBPBRL','LIBRA'],['JPYBRL','IENE'],['CNYBRL','YUAN'],['ARSBRL','PESO ARG']]){
     const f=fx[k]; if(f) it.push({l, v:'R$ '+fxVal(f.bid), p:f.pct});
   }
@@ -765,9 +1016,16 @@ function renderMacro(){
   const t1=el('div','tiles');
   if(c.selic) t1.append(statTile('Selic (meta)', String(c.selic.valor).replace('.',',')+'% a.a.','BCB'));
   if(c.cdi) t1.append(statTile('CDI', String(c.cdi.valor).replace('.',',')+'% a.a.','BCB · '+c.cdi.data));
-  if(c.ipca12) t1.append(statTile('IPCA acum. 12 meses', String(c.ipca12.valor).replace('.',',')+'%','IBGE/BCB · até jul/26'));
+  if(c.ipca12) t1.append(statTile('IPCA acum. 12 meses', String(c.ipca12.valor).replace('.',',')+'%',
+    'IBGE/BCB'+(c.ipca12.data?' · ref. '+String(c.ipca12.data).slice(3):'')));
   if(fx.USDBRL) t1.append(statTile('Dólar', 'R$ '+fxVal(fx.USDBRL.bid), (LIVE.ok?'ao vivo':'fech. '+brDate(MACRO.snapshotEm))));
-  if(MACRO.ibov) t1.append(statTile('Ibovespa', fmtc0.format(MACRO.ibov.pontos)+' pts', brDate(MACRO.ibov.date)+' · '+fmtc2.format(MACRO.ibov.varDia)+'%'));
+  const ibv = LIVEIDX.IBOV || MACRO.ibov;
+  if(ibv) t1.append(statTile('Ibovespa', fmtc0.format(ibv.pontos)+' pts',
+    (LIVEIDX.IBOV ? '● B3 às '+(ibv.hora||'') : brDate(ibv.date))+' · '+fmtc2.format(ibv.varDia)+'%',
+    ibv.varDia<0?'neg':'pos'));
+  if(LIVEIDX.IFIX) t1.append(statTile('IFIX (FIIs)', fmtc0.format(LIVEIDX.IFIX.pontos)+' pts',
+    '● B3 às '+(LIVEIDX.IFIX.hora||'')+' · '+fmtc2.format(LIVEIDX.IFIX.varDia)+'%',
+    LIVEIDX.IFIX.varDia<0?'neg':'pos'));
   m.append(t1);
 
   // Focus
@@ -897,7 +1155,7 @@ async function refreshLive(){
     LIVE.ok=true; LIVE.at=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     renderTicker();
     if(document.body.dataset.view==='macro') renderMacro();
-    if(iovl.classList.contains('on')) openInfo(); // atualiza as datas do modal para "ao vivo"
+    if(iovl.classList.contains('on') && modalKind==='info') openInfo(); // atualiza as datas do ⓘ (não mexe no ⚙)
   }
 }
 
@@ -919,13 +1177,15 @@ function freshRows(){
   const snap=dmy(MACRO.snapshotEm);
   return [
    ['Resultados trimestrais e balanços','CVM (ITR/DFP)','dados até '+(META.dadosAte||'—')+' · lidos em '+dmy(DB.updatedAt),'robô · dias úteis'],
-   ['Múltiplos e cotações de ações','Fundamentus','coletado em '+dmy(DB.updatedAt),'robô · dias úteis'],
-   ['Valor de mercado calculado','CVM × cotações','coletado em '+dmy(DB.updatedAt),'robô · dias úteis'],
+   ['Múltiplos (P/L, ROE etc.)','Fundamentus','último fechamento disponível · coletado em '+dmy(DB.updatedAt),'robô · dias úteis'],
+   ['Valor de mercado calculado','CVM × cotações','último fechamento disponível · coletado em '+dmy(DB.updatedAt),'robô · dias úteis'],
    ['Classificação setorial','B3',dmy(DB.b3FetchedAt),'automática · ~45 dias'],
-   ['Ibovespa','B3',MACRO.ibov? dmy(MACRO.ibov.date)+' às '+(MACRO.ibov.hora||'').slice(0,5):'—','robô · dias úteis'],
-   ['Moedas','AwesomeAPI',LIVE.ok? liveTxt : ((c.fx&&c.fx.USDBRL&&c.fx.USDBRL.ts)? dmy(c.fx.USDBRL.ts)+' '+String(c.fx.USDBRL.ts).slice(11,16):snap),'ao abrir + a cada 5 min'],
-   ['Bitcoin e Ethereum','CoinGecko',LIVE.ok? liveTxt : snap,'ao abrir + a cada 5 min'],
-   ['Selic, CDI e IPCA 12m','Banco Central (SGS)',LIVE.ok? liveTxt : snap,'ao abrir + a cada 5 min'],
+   ['Ibovespa e IFIX','B3',LIVEIDX.IBOV? '● ao vivo · '+(B3LIVE.at||'') : (MACRO.ibov? dmy(MACRO.ibov.date)+' às '+(MACRO.ibov.hora||'').slice(0,5):'—'),'no navegador · a cada 60 s'],
+   ['Cotações B3 — ações e ETFs (ao vivo)','B3 (feed público, ~15 min de defasagem)',B3LIVE.ok? '● ao vivo · '+(B3LIVE.at||'') : 'aguardando primeira consulta','no navegador · a cada 60 s'],
+   ['Cotações EUA + lista completa da B3','Yahoo Finance via robô (branch quotes)',QSNAP.updatedAt? 'arquivo de '+relayLocal() : '—','robô a cada 15 min em pregão · página relê a cada 60 s'],
+   ['Moedas','AwesomeAPI',LIVE.ok? liveTxt : ((c.fx&&c.fx.USDBRL&&c.fx.USDBRL.ts)? dmy(c.fx.USDBRL.ts)+' '+String(c.fx.USDBRL.ts).slice(11,16):snap),'no navegador · a cada 60 s'],
+   ['Bitcoin e Ethereum','CoinGecko',LIVE.ok? liveTxt : snap,'no navegador · a cada 60 s'],
+   ['Selic, CDI e IPCA 12m','Banco Central (SGS)',LIVE.ok? liveTxt : snap,'no navegador · a cada 5 min'],
    ['Boletim Focus','Banco Central','relatório de '+((c.focus&&c.focus[0])? dmy(c.focus[0].d):'—'),'BCB publica às segundas · busca ao abrir'],
    ['Notícias e discussões','Reddit (fóruns de investimento)','semana encerrada em '+snap,'robô · dias úteis'],
    ['Manchetes por veículo','RSS dos jornais (G1, Valor, NYT…)',snap,'robô · dias úteis'],
@@ -947,7 +1207,9 @@ function renderFresh(container){
   t.append(b); w.append(t); container.append(w);
 }
 const iovl=$('#iovl'), ibox=$('#ibox');
+let modalKind=null; // 'info' (ⓘ) ou 'cfg' (⚙) — #iovl/#ibox são compartilhados
 function openInfo(){
+  modalKind='info';
   ibox.textContent='';
   const x=el('button','btn x2','✕ fechar'); x.onclick=closeInfo; ibox.append(x);
   ibox.append(el('h2',null,'Dados, fontes e atualizações'));
@@ -955,7 +1217,7 @@ function openInfo(){
   const fr=el('div'); fr.style.marginTop='10px'; renderFresh(fr); ibox.append(fr);
   const ps=[
    ['Uso','painel interno da Insignia Partners, informativo e educacional — não é recomendação de investimento nem oferta. Os números vêm de fontes públicas e podem conter erros ou defasagens; confira sempre os documentos oficiais (cada empresa tem link direto para a CVM).'],
-   ['Como atualiza','um robô refaz balanços, múltiplos, Ibovespa, notícias e manchetes em dias úteis por volta das 6h10 (Brasília), sem intervenção humana. Ao abrir a página com internet, câmbio, cripto, taxas e Focus são buscados ao vivo nas APIs públicas (BCB, AwesomeAPI, CoinGecko) — a faixa do topo marca "● ao vivo" quando isso acontece. A classificação setorial da B3 se renova a cada ~45 dias.'],
+   ['Como atualiza','um robô refaz balanços, múltiplos, notícias e manchetes em dias úteis por volta das 6h10 (Brasília). Com a página aberta e internet: cotações da B3 (ações, ETFs, Ibovespa, IFIX) são consultadas a cada 60 s direto na API pública da bolsa (defasagem ~15 min do pregão); câmbio e cripto a cada 60 s; Selic/CDI/IPCA e Focus a cada 5 min; EUA e a lista completa da B3 vêm de um segundo robô que roda a cada 15 min em pregão (Yahoo Finance) e publica um arquivo que a página relê a cada 60 s. Chaves gratuitas opcionais (botão "⚙ Ao vivo") deixam os EUA em tempo real (Finnhub) e a B3 em lote (brapi). A classificação setorial da B3 se renova a cada ~45 dias.'],
    ['Defasagens naturais','resultados trimestrais seguem o calendário de entrega da CVM (até ~45 dias após o fim do trimestre); múltiplos e cotações de ações usam o último fechamento coletado; a agenda usa os calendários oficiais de 2026 (os de 2027 entram quando os bancos centrais publicarem).'],
    ['Convenções de cálculo','demonstrações consolidadas quando disponíveis; lucro atribuído aos sócios da controladora; EBITDA = EBIT + depreciação/amortização (DFC); dívida bruta = empréstimos e financiamentos; ROIC = EBIT 12m × (1−34%) ÷ (PL + dívida líquida); EBITDA e dívida não se aplicam a bancos e seguradoras.'],
    ['Saúde da automação','se as datas acima ficarem defasadas por vários dias, a automação precisa de atenção — o histórico de execuções fica em github.com/12533230/painel-b3/actions.'],
@@ -963,7 +1225,7 @@ function openInfo(){
   for(const [b2,t2] of ps){ const p=el('p'); p.append(el('b',null,b2+' — '), document.createTextNode(t2)); ibox.append(p); }
   iovl.classList.add('on');
 }
-function closeInfo(){ iovl.classList.remove('on'); }
+function closeInfo(){ iovl.classList.remove('on'); modalKind=null; }
 iovl.addEventListener('click', e=>{ if(e.target===iovl) closeInfo(); });
 $('#infobtn').onclick=openInfo;
 function noticeEl(){
@@ -997,25 +1259,53 @@ function veiculoCard(titulo, lista){
   return card;
 }
 
+// ---------- câmbio e cripto a cada 60 s (mais rápido que o ciclo completo de 5 min) ----------
+async function refreshFast(){
+  if(document.hidden) return;
+  const r = await Promise.allSettled([
+    jj('https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,GBP-BRL,JPY-BRL,CNY-BRL,ARS-BRL,BTC-BRL'),
+    jj('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd,brl&include_24hr_change=true')
+  ]);
+  const c = MACRO.core = MACRO.core || {}; let any = false;
+  if(r[0].status==='fulfilled' && r[0].value && r[0].value.USDBRL){
+    c.fx = c.fx || {};
+    for(const [k,v] of Object.entries(r[0].value)) c.fx[k] = {bid:+v.bid, pct:+v.pctChange, ts:v.create_date, name:v.name};
+    any = true;
+  }
+  if(r[1].status==='fulfilled' && r[1].value && r[1].value.bitcoin){ c.cripto = r[1].value; any = true; }
+  if(any){ LIVE.ok = true; LIVE.at = hhmm(); renderTicker(); if(document.body.dataset.view==='macro') renderMacro(); }
+}
+
 // ---------- navegação entre visões ----------
 function setView(v){
   document.body.dataset.view=v;
-  $('#nav-emp').classList.toggle('on', v==='emp');
-  $('#nav-mac').classList.toggle('on', v==='macro');
+  for(const [id,key] of [['#nav-emp','emp'],['#nav-etf','etf'],['#nav-eua','eua'],['#nav-mac','macro']])
+    $(id).classList.toggle('on', v===key);
   if(v==='macro') renderMacro();
+  if(v==='etf'){ renderETF(); refreshB3(); }
+  if(v==='eua'){ renderEUA(); refreshFinnhub(); }
 }
 $('#nav-emp').onclick=()=>setView('emp');
+$('#nav-etf').onclick=()=>setView('etf');
+$('#nav-eua').onclick=()=>setView('eua');
 $('#nav-mac').onclick=()=>setView('macro');
+$('#cfgbtn').onclick=openConfig;
 
 // ---------- init ----------
-$('#srcline').textContent = 'CVM (ITR/DFP) · B3 (setores) · Fundamentus (mercado) · atualizado '+DB.updatedAt.split('-').reverse().join('/');
+$('#srcline').textContent = 'CVM (ITR/DFP) · B3 (setores + cotações ao vivo) · Fundamentus · Yahoo (EUA) · atualizado '+DB.updatedAt.split('-').reverse().join('/');
 document.body.dataset.view='emp';
-const mainEl = document.querySelector('.main');
-mainEl.insertBefore(noticeEl(), mainEl.firstElementChild);
+document.querySelector('.main').insertBefore(noticeEl(), $('#crumb'));
 renderAll();
 renderTicker();
 refreshLive();
-setInterval(refreshLive, 5*60*1000); // ao vivo a cada 5 min enquanto aberto
+refreshRelay();
+refreshB3();
+setInterval(refreshLive, 5*60*1000);   // BCB, Focus, câmbio, cripto — ciclo completo
+setInterval(refreshFast, 60*1000);     // câmbio + cripto
+setInterval(refreshRelay, 60*1000);    // quotes.json do robô (B3 completa + EUA)
+setInterval(refreshB3, 60*1000);       // B3 direto (ETFs na tela, empresa aberta, IBOV/IFIX)
+setInterval(refreshFinnhub, 60*1000);  // EUA em tempo real (só com chave)
+document.addEventListener('visibilitychange', () => { if(!document.hidden){ refreshFast(); refreshRelay(); refreshB3(); refreshFinnhub(); } });
 </script>
 </body>
 </html>
