@@ -175,6 +175,59 @@
   svg .val{fill:var(--ink2);font-weight:600}
   .foot{color:var(--muted);font-size:12px;margin-top:26px;border-top:1px solid var(--grid);padding-top:10px}
   .empty{color:var(--muted);padding:30px;text-align:center}
+  /* ---------- mobile ---------- */
+  .msel{display:none}
+  @media(max-width:900px){
+    .msel{display:flex;gap:8px;margin:0 0 10px}
+    .msel select{flex:1;min-width:0;padding:9px 10px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;font-size:16px}
+    table.list,.qtbl{border-collapse:separate;border-spacing:0;overflow:visible}
+    table.list th:first-child,table.list td:first-child{position:sticky;left:0;z-index:2;background:var(--surface);box-shadow:inset -1px 0 0 var(--grid)}
+    table.list th:first-child{z-index:3}
+    table.list td:first-child{min-width:148px;max-width:56vw}
+    .qtbl th:first-child,.qtbl td:first-child{position:sticky;left:0;background:var(--surface);z-index:2;box-shadow:inset -1px 0 0 var(--grid);width:150px;max-width:42vw;white-space:normal}
+  }
+  @media(max-width:760px){
+    .top{flex-wrap:wrap;padding:8px 10px;gap:8px;row-gap:8px}
+    .top .logo{height:16px}
+    .nav button{padding:7px 10px;font-size:12.5px}
+    .blbl{display:none}
+    .top .btn{padding:7px 9px}
+    .search{order:10;flex:1 1 100%}
+    .search input{width:100%;max-width:none;font-size:16px}
+    .sugg{top:42px}
+    .main{padding:12px 10px 60px}
+    #macroview{padding:12px 10px 60px}
+    .tiles{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+    .tile .v{font-size:18px}
+    table.list th,table.list td{padding:8px}
+    .panel{width:100vw;border-left:none}
+    .ph{padding:12px}
+    .ph .row1{padding-right:78px}
+    .ph h2{font-size:17px}
+    .pb{padding:14px 12px 60px}
+    .iovl{padding:14px 8px}
+    .ibox{padding:14px 12px 16px}
+    .ibox h2{padding-right:88px;font-size:16px}
+    /* painel de detalhe: cabeçalho rola junto, ✕ flutua fixo */
+    .ph{position:static;padding-right:12px}
+    .ph .x{position:fixed;top:10px;right:10px;z-index:7;box-shadow:0 4px 14px rgba(0,0,0,.22)}
+    /* tabela de fontes vira lista empilhada */
+    .qtblwrap table.fresh{min-width:0;width:100%}
+    .fresh thead{display:none}
+    .fresh,.fresh tbody,.fresh tr,.fresh td{display:block;width:100%}
+    .fresh tr{padding:8px 2px;border-bottom:1px solid var(--grid)}
+    .fresh tr:last-child{border-bottom:none}
+    .qtbl.fresh td{border:none;padding:1px 0;text-align:left;white-space:normal;position:static;box-shadow:none;max-width:none}
+    .qtbl.fresh td:first-child{font-weight:700;min-width:0;position:static;box-shadow:none;max-width:none}
+    .fresh td:nth-child(2)::before{content:"Fonte: ";color:var(--muted);font-weight:400}
+    .fresh td:nth-child(3)::before{content:"Atualização: ";color:var(--muted);font-weight:400}
+    .fresh td:nth-child(4){color:var(--muted)}
+    .fresh td:nth-child(4)::before{content:"Cadência: "}
+    .agdate{min-width:78px}
+    .agrow{gap:8px;flex-wrap:wrap}
+    .crumb{font-size:12px}
+    .notice{font-size:11.5px;padding:7px 10px}
+  }
 </style>
 </head>
 <body>
@@ -192,8 +245,8 @@
     <input id="q" type="text" placeholder="Buscar empresa ou ticker… (ex.: WEGE3, Sabesp)" autocomplete="off">
     <div class="sugg" id="sugg"></div>
   </div>
-  <button class="btn" id="infobtn" title="Fontes, datas de atualização e avisos">ⓘ Dados</button>
-  <button class="btn" id="theme" title="Alternar tema">◐ Tema</button>
+  <button class="btn" id="infobtn" title="Fontes, datas de atualização e avisos">ⓘ<span class="blbl"> Dados</span></button>
+  <button class="btn" id="theme" title="Alternar tema">◐<span class="blbl"> Tema</span></button>
 </div>
 <div class="ticker" id="ticker" title="Cotações — passe o mouse para pausar"><div class="tk-track" id="tkt"></div></div>
 </div>
@@ -202,6 +255,7 @@
 <div class="wrap">
   <nav class="side" id="side"></nav>
   <main class="main">
+    <div class="msel" id="msel"></div>
     <div class="crumb" id="crumb"></div>
     <div class="tiles" id="tiles"></div>
     <div class="listwrap"><table class="list" id="list"></table></div>
@@ -383,7 +437,50 @@ function renderCrumb(){
   if(selSeg){ c.append(document.createTextNode('  ›  ')); const b = el('b',null,selSeg); c.append(b); }
 }
 
-function renderAll(){ buildTree(); renderCrumb(); const f = filtered(); renderTiles(f); renderList(f); }
+function renderAll(){ buildTree(); buildMobileSel(); renderCrumb(); const f = filtered(); renderTiles(f); renderList(f); }
+
+// ---------- seletor de setor no mobile (a árvore lateral some em telas pequenas) ----------
+function selTree(){
+  const tree = {};
+  for(const c of COS){
+    tree[c.setor] = tree[c.setor] || {n:0, subs:{}};
+    tree[c.setor].n++;
+    const su = tree[c.setor].subs[c.subsetor] = tree[c.setor].subs[c.subsetor] || {n:0, segs:{}};
+    su.n++; su.segs[c.segmento] = (su.segs[c.segmento]||0)+1;
+  }
+  return tree;
+}
+function buildMobileSel(){
+  const box = $('#msel'); if(!box) return; box.textContent='';
+  const tree = selTree();
+  const s1 = document.createElement('select');
+  s1.setAttribute('aria-label','Setor');
+  s1.append(new Option('Todos os setores ('+COS.length+')',''));
+  for(const [setor,s] of Object.entries(tree).sort()) s1.append(new Option(setor+' ('+s.n+')', setor));
+  s1.value = selSetor||'';
+  s1.onchange = () => { selSetor = s1.value||null; selSub=selSeg=null; renderAll(); };
+  box.append(s1);
+  if(selSetor && tree[selSetor]){
+    const s2 = document.createElement('select');
+    s2.setAttribute('aria-label','Subsetor e segmento');
+    s2.append(new Option('Todo o setor',''));
+    for(const [sub,su] of Object.entries(tree[selSetor].subs).sort()){
+      const segs = Object.entries(su.segs).sort();
+      if(segs.length>1 || segs[0][0]!==sub){
+        const og = document.createElement('optgroup'); og.label = sub;
+        og.append(new Option('Todos — '+sub, sub+'||'));
+        for(const [seg,n] of segs) og.append(new Option(seg+' ('+n+')', sub+'||'+seg));
+        s2.append(og);
+      } else {
+        s2.append(new Option(sub+' ('+su.n+')', sub+'||'));
+      }
+    }
+    s2.value = selSub ? (selSub+'||'+(selSeg||'')) : '';
+    if(s2.selectedIndex < 0) s2.value = '';
+    s2.onchange = () => { const v=s2.value; if(!v){ selSub=selSeg=null; } else { const i=v.indexOf('||'); selSub=v.slice(0,i); selSeg=v.slice(i+2)||null; } renderAll(); };
+    box.append(s2);
+  }
+}
 
 // ---------- busca ----------
 const qin = $('#q'), sugg = $('#sugg');
@@ -913,7 +1010,8 @@ $('#nav-mac').onclick=()=>setView('macro');
 // ---------- init ----------
 $('#srcline').textContent = 'CVM (ITR/DFP) · B3 (setores) · Fundamentus (mercado) · atualizado '+DB.updatedAt.split('-').reverse().join('/');
 document.body.dataset.view='emp';
-document.querySelector('.main').insertBefore(noticeEl(), $('#crumb'));
+const mainEl = document.querySelector('.main');
+mainEl.insertBefore(noticeEl(), mainEl.firstElementChild);
 renderAll();
 renderTicker();
 refreshLive();
