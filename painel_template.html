@@ -75,6 +75,34 @@
   body[data-view="etf"] #etfview{display:block}
   body[data-view="eua"] #euaview{display:block}
   .rmv{border:none;background:transparent;color:var(--bad);cursor:pointer;font:inherit;font-size:12px;padding:0 4px}
+  /* ---- mobile ---- */
+  .mobsec{display:none;margin:0 0 10px}
+  .mobsec select{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
+  @media(max-width:1360px){ /* janelas médias: a busca desce para a 2ª linha do cabeçalho */
+    .top{flex-wrap:wrap;row-gap:8px}
+    .search{flex:1 1 100%}
+    .search input{width:100%;max-width:none}
+    .sugg{top:42px}
+  }
+  @media(max-width:900px){
+    .mobsec{display:block}
+    .hdr{position:static}
+    .top{padding:8px 10px}
+    .top h1{display:none}.top .div{display:none}
+    .search input{font-size:16px} /* <16px dispara zoom no iOS */
+    .mobsec select{font-size:16px}
+  }
+  @media(max-width:760px){
+    .nav button{padding:6px 8px;font-size:12px}
+    .top .btn{padding:6px 8px;font-size:12px}
+    .main{padding:10px 10px 60px}
+    #macroview,#etfview,#euaview{padding:10px 10px 60px}
+    .tiles{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+    .tile .v{font-size:17px}
+    .ph{padding:10px 12px}
+    .pb{padding:12px 12px 50px}
+    .m-grid{gap:8px}
+  }
   .cfgrow{display:flex;gap:10px;align-items:center;margin:10px 0;flex-wrap:wrap}
   .cfgrow label{min-width:150px;font-weight:600;font-size:12.5px;color:var(--ink2)}
   .cfgrow input{flex:1;min-width:220px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
@@ -212,6 +240,7 @@
   <nav class="side" id="side"></nav>
   <main class="main">
     <div class="crumb" id="crumb"></div>
+    <div class="mobsec" id="mobsec"></div>
     <div class="tiles" id="tiles"></div>
     <div class="listwrap"><table class="list" id="list"></table></div>
   </main>
@@ -403,7 +432,24 @@ function renderCrumb(){
   if(selSeg){ c.append(document.createTextNode('  ›  ')); const b = el('b',null,selSeg); c.append(b); }
 }
 
-function renderAll(){ buildTree(); renderCrumb(); const f = filtered(); renderTiles(f); renderList(f); }
+function buildMobSec(){ // filtro de setor para telas pequenas (a árvore lateral some < 900px)
+  const box = $('#mobsec'); if(!box) return;
+  box.textContent='';
+  const counts = {};
+  for(const c of COS) counts[c.setor] = (counts[c.setor]||0)+1;
+  const sel = document.createElement('select');
+  sel.setAttribute('aria-label','Filtrar por setor');
+  const o0 = el('option',null,'Todos os setores ('+COS.length+')'); o0.value='';
+  sel.append(o0);
+  for(const s of Object.keys(counts).sort()){
+    const o = el('option',null,s+' ('+counts[s]+')'); o.value = s;
+    if(selSetor===s) o.selected = true;
+    sel.append(o);
+  }
+  sel.onchange = () => { selSetor = sel.value || null; selSub = selSeg = null; renderAll(); };
+  box.append(sel);
+}
+function renderAll(){ buildTree(); buildMobSec(); renderCrumb(); const f = filtered(); renderTiles(f); renderList(f); }
 
 // ---------- busca ----------
 const qin = $('#q'), sugg = $('#sugg');
