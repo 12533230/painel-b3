@@ -812,10 +812,10 @@ async function refreshFinnhub(){
     .concat(meusUS()).filter(t => !t.startsWith('^')).slice(0, 50);
   let any = false;
   await pool(syms, 4, async t => {
-    // token via header (não via URL) para não aparecer em logs de proxy/CDN;
+    // token na query (o CORS do Finnhub bloqueia o header X-Finnhub-Token no navegador);
     // Finnhub usa ponto em classes de ação (BRK.B), Yahoo usa hífen (BRK-B)
-    const d = await jj('https://finnhub.io/api/v1/quote?symbol='+encodeURIComponent(t.replace(/-/g,'.')), 9000,
-                       {headers: {'X-Finnhub-Token': tok}});
+    const d = await jj('https://finnhub.io/api/v1/quote?symbol='+encodeURIComponent(t.replace(/-/g,'.'))
+                       +'&token='+encodeURIComponent(tok.trim()), 9000);
     if(d && d.c){ LIVEUS[t] = {p:d.c, pct:d.dp, at:hhmm(), ts:Date.now()}; any = true; }
   });
   if(any){ FINN.ok = true; FINN.at = hhmm(); if(document.body.dataset.view==='eua') renderEUA(); renderTicker(); }
