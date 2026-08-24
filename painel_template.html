@@ -75,6 +75,8 @@
   body[data-view="etf"] #etfview{display:block}
   body[data-view="eua"] #euaview{display:block}
   .rmv{border:none;background:transparent;color:var(--bad);cursor:pointer;font:inherit;font-size:12px;padding:0 4px}
+  .cndl{cursor:pointer}
+  .qtbl tbody tr.cndl:hover{background:var(--wash)}
   /* ---- mobile ---- */
   .mobsec{display:none;margin:0 0 10px}
   .mobsec select{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
@@ -597,6 +599,29 @@ function openDetail(cvm){
   tiles.append(statTile('Lucro líquido 12m', fmtMi(i.ni12), 'CVM', cls(i.ni12)));
   pb.append(tiles);
 
+  // ---- candles diários do ticker principal (troca de ticker quando houver mais de um)
+  pb.append(el('h3','sect','Cotação — candles diários (~3 meses)'));
+  const cndCard = el('div','card');
+  const cndBox = el('div');
+  let curTk = t ? t.t : (c.tickers[0] && c.tickers[0].t);
+  const drawCnd = () => loadCandles().then(() => {
+    if(openCvm !== cvm) return;
+    const rows = candleSeries(curTk);
+    if(rows.length) { candleChart(cndBox, rows); }
+    else { cndBox.textContent=''; cndBox.append(el('div','dim','sem histórico para '+(curTk||'—'))); }
+  });
+  if(c.tickers.length > 1){
+    const selrow = el('div','badges'); selrow.style.marginBottom = '8px';
+    for(const k of c.tickers){
+      const b = el('span','badge cndl', k.t);
+      b.onclick = () => { curTk = k.t; drawCnd(); };
+      selrow.append(b);
+    }
+    cndCard.append(selrow);
+  }
+  cndCard.append(cndBox); pb.append(cndCard);
+  if(curTk) drawCnd();
+
   // ---- gráficos trimestrais
   pb.append(el('h3','sect','Resultados trimestrais — '+(c.con?'consolidado':'individual')+' (CVM)'));
   const ch = el('div','charts');
@@ -822,7 +847,7 @@ async function refreshFinnhub(){
 }
 
 function afterQuotes(){
-  renderTicker(); updateListQuotes(); updateDetailQuotes();
+  renderTicker(); updateListQuotes(); updateDetailQuotes(); redrawChart();
   const v = document.body.dataset.view;
   if(v==='etf') renderETF();
   if(v==='eua') renderEUA();
@@ -850,6 +875,140 @@ function updateDetailQuotes(){
       b.append(el('span', (q.pct||0)<0?'neg':'pos', fmtSign(q.pct)));
     }
   }
+}
+
+// ---- candles: histórico diário do robô + candle de hoje ao vivo ----
+let CANDLES = null, CANDLES_ERR = false, chartSym = null, chartBox = null, chartNote = null;
+async function loadCandles(){
+  if(CANDLES) return CANDLES;
+  try{
+    CANDLES = await jj('https://raw.githubusercontent.com/'+REPO+'/main/data/candles.json?v='+Math.floor(Date.now()/36e5), 25000);
+    if(!CANDLES || !CANDLES.c) throw new Error('formato');
+  }catch(e){ CANDLES = null; CANDLES_ERR = true; }
+  return CANDLES;
+}
+function todayCandle(sym){
+  const L = LIVEB3[sym];
+  if(freshQ(L) && L.open!=null && L.min!=null && L.max!=null)
+    return {t:Math.floor(Date.now()/864e5), o:L.open, h:L.max, l:L.min, c:L.p, parcial:true};
+  const q = getQ(sym);
+  if(q && q.p!=null && q.pct!=null){
+    const pv = q.p/(1+q.pct/100);
+    return {t:Math.floor(Date.now()/864e5), o:pv, h:Math.max(q.p,pv), l:Math.min(q.p,pv), c:q.p, parcial:true, aprox:true};
+  }
+  return null;
+}
+function candleSeries(sym){
+  const hist = (CANDLES && CANDLES.c && CANDLES.c[sym])
+    ? CANDLES.c[sym].map(r=>({t:r[0], o:r[1], h:r[2], l:r[3], c:r[4]})) : [];
+  const hoje = todayCandle(sym);
+  if(hoje){
+    const last = hist[hist.length-1];
+    if(last && last.t >= hoje.t){ // o histórico já tem o dia: completa com o ao vivo
+      last.c = hoje.c; last.h = Math.max(last.h, hoje.h); last.l = Math.min(last.l, hoje.l);
+      last.parcial = true; last.aprox = hoje.aprox;
+    } else hist.push(hoje);
+  }
+  return hist;
+}
+function candleChart(container, rows){
+  container.textContent = '';
+  if(!rows || rows.length < 2){ container.append(el('div','dim','sem histórico para este ativo')); return; }
+  const W = Math.max(container.clientWidth||600, 320), H = 250, padL=6, padR=52, padT=10, padB=18;
+  const iw = W-padL-padR, ih = H-padT-padB;
+  let mn = Infinity, mx = -Infinity;
+  for(const r of rows){ if(r.l<mn) mn=r.l; if(r.h>mx) mx=r.h; }
+  if(!(mx>mn)) mx = mn+1;
+  const y = v => padT + ih*(mx-v)/(mx-mn);
+  const n = rows.length, slot = iw/n, bw = Math.max(2, Math.min(9, slot*0.65));
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox','0 0 '+W+' '+H); svg.setAttribute('width','100%'); svg.style.display='block';
+  const fmtP = v => fmtc2.format(v);
+  for(let g=0; g<=3; g++){ // linhas de referência com rótulo à direita
+    const v = mn + (mx-mn)*g/3, gy = y(v);
+    const l = document.createElementNS(svg.namespaceURI,'line');
+    l.setAttribute('x1',padL); l.setAttribute('x2',W-padR); l.setAttribute('y1',gy); l.setAttribute('y2',gy);
+    l.setAttribute('stroke','var(--grid)'); svg.append(l);
+    const tx = document.createElementNS(svg.namespaceURI,'text');
+    tx.setAttribute('x',W-padR+4); tx.setAttribute('y',gy+4); tx.textContent = fmtP(v); svg.append(tx);
+  }
+  const dtBR = d => new Date(d*864e5).toLocaleDateString('pt-BR',{timeZone:'UTC',day:'2-digit',month:'2-digit'});
+  let mesAnt = new Date(rows[0].t*864e5).getUTCMonth();
+  for(let i=0; i<n; i++){
+    const r = rows[i], cx = padL + slot*i + slot/2;
+    const cor = r.c >= r.o ? 'var(--good)' : 'var(--bad)';
+    const wick = document.createElementNS(svg.namespaceURI,'line');
+    wick.setAttribute('x1',cx); wick.setAttribute('x2',cx);
+    wick.setAttribute('y1',y(r.h)); wick.setAttribute('y2',y(r.l));
+    wick.setAttribute('stroke',cor); svg.append(wick);
+    const bt = y(Math.max(r.o,r.c)), bb = y(Math.min(r.o,r.c));
+    const body = document.createElementNS(svg.namespaceURI,'rect');
+    body.setAttribute('x',cx-bw/2); body.setAttribute('y',bt);
+    body.setAttribute('width',bw); body.setAttribute('height',Math.max(1, bb-bt));
+    body.setAttribute('fill',cor); body.setAttribute('rx',1);
+    if(r.parcial) body.setAttribute('opacity','.75');
+    svg.append(body);
+    const mes = new Date(r.t*864e5).getUTCMonth();
+    if(i>0 && mes!==mesAnt){ mesAnt = mes;
+      const tx = document.createElementNS(svg.namespaceURI,'text');
+      tx.setAttribute('x',cx); tx.setAttribute('y',H-4); tx.setAttribute('text-anchor','middle');
+      tx.textContent = new Date(r.t*864e5).toLocaleDateString('pt-BR',{timeZone:'UTC',month:'short'});
+      svg.append(tx);
+    }
+    const hit = document.createElementNS(svg.namespaceURI,'rect');
+    hit.setAttribute('x',padL+slot*i); hit.setAttribute('y',0);
+    hit.setAttribute('width',slot); hit.setAttribute('height',H);
+    hit.setAttribute('fill','transparent');
+    hit.addEventListener('pointermove', e => showTip(e.clientX, e.clientY, [
+      [dtBR(r.t)+(r.parcial ? (r.aprox?' · hoje (aprox.)':' · hoje ao vivo') : ''), fmtP(r.c)],
+      ['abre '+fmtP(r.o)+' · máx '+fmtP(r.h)+' · mín '+fmtP(r.l), (r.c>=r.o?'▲ ':'▼ ')+fmtc2.format(Math.abs(r.c/r.o-1)*100)+'%'],
+    ]));
+    hit.addEventListener('pointerleave', hideTip);
+    svg.append(hit);
+  }
+  const last = rows[n-1];
+  const tx = document.createElementNS(svg.namespaceURI,'text');
+  tx.setAttribute('class','val'); tx.setAttribute('x',W-padR+4);
+  tx.setAttribute('y', Math.max(12, Math.min(H-6, y(last.c)-6)));
+  tx.textContent = '● '+fmtP(last.c); svg.append(tx);
+  container.append(svg);
+}
+function chartNoteTxt(rows){
+  const ult = rows[rows.length-1];
+  return 'Diário · ~3 meses · histórico do robô'
+    + (CANDLES && CANDLES.updatedAt ? ' ('+dmy(CANDLES.updatedAt)+')' : '')
+    + (ult && ult.parcial ? (ult.aprox ? ' · hoje ao vivo (abertura aproximada)' : ' · hoje ao vivo com abertura/mín/máx da B3') : '');
+}
+async function openChart(sym, titulo){
+  modalKind = 'chart'; chartSym = sym;
+  ibox.textContent = '';
+  const x = el('button','btn x2','✕ fechar'); x.onclick = closeInfo; ibox.append(x);
+  ibox.append(el('h2',null,titulo));
+  chartNote = el('div','note','carregando histórico…'); ibox.append(chartNote);
+  chartBox = el('div'); chartBox.style.marginTop = '8px'; ibox.append(chartBox);
+  iovl.classList.add('on');
+  await loadCandles();
+  if(modalKind !== 'chart' || chartSym !== sym) return; // usuário fechou/trocou
+  refreshB3charts(sym); // busca o ao vivo deste símbolo se for B3
+  const rows = candleSeries(sym);
+  if(!rows.length){
+    chartNote.textContent = CANDLES_ERR
+      ? 'histórico indisponível no momento — tente de novo em instantes'
+      : 'sem histórico para '+sym+' — o robô diário ainda não coletou este ativo';
+    return;
+  }
+  chartNote.textContent = chartNoteTxt(rows);
+  requestAnimationFrame(() => candleChart(chartBox, rows));
+}
+async function refreshB3charts(sym){ // candle de hoje mais rico p/ ativos B3 abertos no gráfico
+  if(/^[A-Z]{4}[0-9]{1,2}$/.test(sym) && !LIVEB3[sym]){
+    try{ const q = await b3quote(sym); if(q){ LIVEB3[sym] = {...q, ts:Date.now()}; redrawChart(); } }catch(e){}
+  }
+}
+function redrawChart(){
+  if(modalKind !== 'chart' || !chartSym || !chartBox) return;
+  const rows = candleSeries(chartSym);
+  if(rows.length){ chartNote.textContent = chartNoteTxt(rows); candleChart(chartBox, rows); }
 }
 
 // ---- view ETFs (B3) ----
@@ -886,10 +1045,12 @@ function renderETF(){
       const tdx = el('td');
       if(cat === 'Meus ETFs'){
         const x = el('button','rmv','✕'); x.title = 'remover da minha lista';
-        x.onclick = () => { lsSet('meus_etfs', meusEtfs().filter(z=>z!==tk)); renderETF(); };
+        x.onclick = (ev) => { ev.stopPropagation(); lsSet('meus_etfs', meusEtfs().filter(z=>z!==tk)); renderETF(); };
         tdx.append(x);
       }
       tr.append(tdx);
+      tr.classList.add('cndl'); tr.title = 'clique para ver o gráfico de candles';
+      tr.onclick = () => openChart(tk, (nm && nm!=='—' ? nm+' · ' : '')+tk);
       tb.append(tr);
     }
     t.append(tb); w.append(t); m.append(w);
@@ -932,10 +1093,12 @@ function usTable(m, titulo, arr, custom){
     const tdx = el('td');
     if(custom){
       const x = el('button','rmv','✕'); x.title = 'remover da minha lista';
-      x.onclick = () => { lsSet('meus_us', meusUS().filter(z=>z!==tk)); renderEUA(); };
+      x.onclick = (ev) => { ev.stopPropagation(); lsSet('meus_us', meusUS().filter(z=>z!==tk)); renderEUA(); };
       tdx.append(x);
     }
     tr.append(tdx);
+    tr.classList.add('cndl'); tr.title = 'clique para ver o gráfico de candles';
+    tr.onclick = () => openChart(tk, (e.n ? e.n+' · ' : '')+tk);
     tb.append(tr);
   }
   t.append(tb); w.append(t); m.append(w);
@@ -954,7 +1117,10 @@ function renderEUA(){
       const bps = (q.p - q.p/(1+q.pct/100))*100;
       dtxt = (bps>0?'+':'')+fmtc2.format(bps)+' bps no dia';
     }
-    t1.append(statTile(e.n, val, dtxt+' · '+(qHora(q)||''), q.pct==null?null:(q.pct<0?'neg':'pos')));
+    const tile = statTile(e.n, val, dtxt+' · '+(qHora(q)||''), q.pct==null?null:(q.pct<0?'neg':'pos'));
+    tile.classList.add('cndl'); tile.title = 'clique para ver o gráfico de candles';
+    tile.onclick = () => openChart(e.t, e.n);
+    t1.append(tile);
   }
   m.append(t1);
   usTable(m, 'ETFs', WL.us_etfs || []);
@@ -1066,9 +1232,14 @@ function renderMacro(){
     'IBGE/BCB'+(c.ipca12.data?' · ref. '+String(c.ipca12.data).slice(3):'')));
   if(fx.USDBRL) t1.append(statTile('Dólar', 'R$ '+fxVal(fx.USDBRL.bid), (LIVE.ok?'ao vivo':'fech. '+brDate(MACRO.snapshotEm))));
   const ibv = LIVEIDX.IBOV || MACRO.ibov;
-  if(ibv) t1.append(statTile('Ibovespa', fmtc0.format(ibv.pontos)+' pts',
-    (LIVEIDX.IBOV ? '● B3 às '+(ibv.hora||'') : brDate(ibv.date))+' · '+fmtc2.format(ibv.varDia)+'%',
-    ibv.varDia<0?'neg':'pos'));
+  if(ibv){
+    const tibv = statTile('Ibovespa', fmtc0.format(ibv.pontos)+' pts',
+      (LIVEIDX.IBOV ? '● B3 às '+(ibv.hora||'') : brDate(ibv.date))+' · '+fmtc2.format(ibv.varDia)+'%',
+      ibv.varDia<0?'neg':'pos');
+    tibv.classList.add('cndl'); tibv.title = 'clique para ver o gráfico de candles';
+    tibv.onclick = () => openChart('^BVSP','Ibovespa');
+    t1.append(tibv);
+  }
   if(LIVEIDX.IFIX) t1.append(statTile('IFIX (FIIs)', fmtc0.format(LIVEIDX.IFIX.pontos)+' pts',
     '● B3 às '+(LIVEIDX.IFIX.hora||'')+' · '+fmtc2.format(LIVEIDX.IFIX.varDia)+'%',
     LIVEIDX.IFIX.varDia<0?'neg':'pos'));
@@ -1229,6 +1400,7 @@ function freshRows(){
    ['Ibovespa e IFIX','B3',LIVEIDX.IBOV? '● ao vivo · '+(B3LIVE.at||'') : (MACRO.ibov? dmy(MACRO.ibov.date)+' às '+(MACRO.ibov.hora||'').slice(0,5):'—'),'no navegador · a cada 60 s'],
    ['Cotações B3 — ações e ETFs (ao vivo)','B3 (feed público, ~15 min de defasagem)',B3LIVE.ok? '● ao vivo · '+(B3LIVE.at||'') : 'aguardando primeira consulta','no navegador · a cada 60 s'],
    ['Cotações EUA + lista completa da B3','Yahoo Finance via robô (branch quotes)',QSNAP.updatedAt? 'arquivo de '+relayLocal() : '—','robô a cada 15 min em pregão · página relê a cada 60 s'],
+   ['Candles (gráficos de preço)','Yahoo Finance via robô diário',CANDLES&&CANDLES.updatedAt? 'histórico de '+dmy(CANDLES.updatedAt) : 'carrega ao abrir o 1º gráfico','diário · candle de hoje completado ao vivo'],
    ['Moedas','AwesomeAPI',LIVE.ok? liveTxt : ((c.fx&&c.fx.USDBRL&&c.fx.USDBRL.ts)? dmy(c.fx.USDBRL.ts)+' '+String(c.fx.USDBRL.ts).slice(11,16):snap),'no navegador · a cada 60 s'],
    ['Bitcoin e Ethereum','CoinGecko',LIVE.ok? liveTxt : snap,'no navegador · a cada 60 s'],
    ['Selic, CDI e IPCA 12m','Banco Central (SGS)',LIVE.ok? liveTxt : snap,'no navegador · a cada 5 min'],
