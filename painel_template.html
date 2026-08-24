@@ -998,7 +998,7 @@ async function openChart(sym, titulo){
     return;
   }
   chartNote.textContent = chartNoteTxt(rows);
-  requestAnimationFrame(() => candleChart(chartBox, rows));
+  candleChart(chartBox, rows); // direto: rAF não dispara com a aba em 2º plano
 }
 async function refreshB3charts(sym){ // candle de hoje mais rico p/ ativos B3 abertos no gráfico
   if(/^[A-Z]{4}[0-9]{1,2}$/.test(sym) && !LIVEB3[sym]){
