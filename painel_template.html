@@ -77,6 +77,7 @@
   .rmv{border:none;background:transparent;color:var(--bad);cursor:pointer;font:inherit;font-size:12px;padding:0 4px}
   .cndl{cursor:pointer}
   .qtbl tbody tr.cndl:hover{background:var(--wash)}
+  .badge.on{background:var(--wash);border-color:var(--muted);color:var(--ink);font-weight:700}
   /* ---- mobile ---- */
   .mobsec{display:none;margin:0 0 10px}
   .mobsec select{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
@@ -600,15 +601,13 @@ function openDetail(cvm){
   pb.append(tiles);
 
   // ---- candles diários do ticker principal (troca de ticker quando houver mais de um)
-  pb.append(el('h3','sect','Cotação — candles diários (~3 meses)'));
+  pb.append(el('h3','sect','Cotação — gráfico diário'));
   const cndCard = el('div','card');
   const cndBox = el('div');
   let curTk = t ? t.t : (c.tickers[0] && c.tickers[0].t);
   const drawCnd = () => loadCandles().then(() => {
     if(openCvm !== cvm) return;
-    const rows = candleSeries(curTk);
-    if(rows.length) { candleChart(cndBox, rows); }
-    else { cndBox.textContent=''; cndBox.append(el('div','dim','sem histórico para '+(curTk||'—'))); }
+    chartUI(curTk, cndBox, null);
   });
   if(c.tickers.length > 1){
     const selrow = el('div','badges'); selrow.style.marginBottom = '8px';
@@ -878,7 +877,10 @@ function updateDetailQuotes(){
 }
 
 // ---- candles: histórico diário do robô + candle de hoje ao vivo ----
-let CANDLES = null, CANDLES_ERR = false, chartSym = null, chartBox = null, chartNote = null;
+let CANDLES = null, CANDLES_ERR = false, chartSym = null, chartBox = null, chartNote = null, chartDraw = null;
+const PERIODS = [['1M',31],['3M',93],['6M',186]];
+let chartPrefs = lsGet('chart_prefs') || {p:93, tipo:'candle'};
+if(!PERIODS.some(x=>x[1]===chartPrefs.p)) chartPrefs.p = 93;
 async function loadCandles(){
   if(CANDLES) return CANDLES;
   try{
@@ -911,7 +913,7 @@ function candleSeries(sym){
   }
   return hist;
 }
-function candleChart(container, rows){
+function candleChart(container, rows, tipo){
   container.textContent = '';
   if(!rows || rows.length < 2){ container.append(el('div','dim','sem histórico para este ativo')); return; }
   const W = Math.max(container.clientWidth||600, 320), H = 250, padL=6, padR=52, padT=10, padB=18;
@@ -933,21 +935,31 @@ function candleChart(container, rows){
     tx.setAttribute('x',W-padR+4); tx.setAttribute('y',gy+4); tx.textContent = fmtP(v); svg.append(tx);
   }
   const dtBR = d => new Date(d*864e5).toLocaleDateString('pt-BR',{timeZone:'UTC',day:'2-digit',month:'2-digit'});
+  if(tipo === 'linha'){ // visão em linha: fechamento diário
+    const path = document.createElementNS(svg.namespaceURI,'path');
+    let dd = '';
+    for(let i=0; i<n; i++){ const cx = padL + slot*i + slot/2; dd += (i?'L':'M')+cx.toFixed(1)+','+y(rows[i].c).toFixed(1); }
+    path.setAttribute('d',dd); path.setAttribute('fill','none');
+    path.setAttribute('stroke','var(--s1)'); path.setAttribute('stroke-width','1.8');
+    path.setAttribute('stroke-linejoin','round'); svg.append(path);
+  }
   let mesAnt = new Date(rows[0].t*864e5).getUTCMonth();
   for(let i=0; i<n; i++){
     const r = rows[i], cx = padL + slot*i + slot/2;
-    const cor = r.c >= r.o ? 'var(--good)' : 'var(--bad)';
-    const wick = document.createElementNS(svg.namespaceURI,'line');
-    wick.setAttribute('x1',cx); wick.setAttribute('x2',cx);
-    wick.setAttribute('y1',y(r.h)); wick.setAttribute('y2',y(r.l));
-    wick.setAttribute('stroke',cor); svg.append(wick);
-    const bt = y(Math.max(r.o,r.c)), bb = y(Math.min(r.o,r.c));
-    const body = document.createElementNS(svg.namespaceURI,'rect');
-    body.setAttribute('x',cx-bw/2); body.setAttribute('y',bt);
-    body.setAttribute('width',bw); body.setAttribute('height',Math.max(1, bb-bt));
-    body.setAttribute('fill',cor); body.setAttribute('rx',1);
-    if(r.parcial) body.setAttribute('opacity','.75');
-    svg.append(body);
+    if(tipo !== 'linha'){
+      const cor = r.c >= r.o ? 'var(--good)' : 'var(--bad)';
+      const wick = document.createElementNS(svg.namespaceURI,'line');
+      wick.setAttribute('x1',cx); wick.setAttribute('x2',cx);
+      wick.setAttribute('y1',y(r.h)); wick.setAttribute('y2',y(r.l));
+      wick.setAttribute('stroke',cor); svg.append(wick);
+      const bt = y(Math.max(r.o,r.c)), bb = y(Math.min(r.o,r.c));
+      const body = document.createElementNS(svg.namespaceURI,'rect');
+      body.setAttribute('x',cx-bw/2); body.setAttribute('y',bt);
+      body.setAttribute('width',bw); body.setAttribute('height',Math.max(1, bb-bt));
+      body.setAttribute('fill',cor); body.setAttribute('rx',1);
+      if(r.parcial) body.setAttribute('opacity','.75');
+      svg.append(body);
+    }
     const mes = new Date(r.t*864e5).getUTCMonth();
     if(i>0 && mes!==mesAnt){ mesAnt = mes;
       const tx = document.createElementNS(svg.namespaceURI,'text');
@@ -975,9 +987,41 @@ function candleChart(container, rows){
 }
 function chartNoteTxt(rows){
   const ult = rows[rows.length-1];
-  return 'Diário · ~3 meses · histórico do robô'
+  return 'Diário · histórico do robô'
     + (CANDLES && CANDLES.updatedAt ? ' ('+dmy(CANDLES.updatedAt)+')' : '')
     + (ult && ult.parcial ? (ult.aprox ? ' · hoje ao vivo (abertura aproximada)' : ' · hoje ao vivo com abertura/mín/máx da B3') : '');
+}
+function chartUI(sym, mount, noteEl){ // controles de visão (período + candles/linha) + gráfico
+  mount.textContent = '';
+  if(!candleSeries(sym).length){
+    const msg = CANDLES_ERR ? 'histórico indisponível no momento — tente de novo em instantes'
+                            : 'sem histórico para '+sym+' — o robô diário ainda não coletou este ativo';
+    if(noteEl) noteEl.textContent = msg; else mount.append(el('div','dim',msg));
+    return null;
+  }
+  const bar = el('div','badges'); bar.style.margin = '0 0 8px';
+  const box = el('div');
+  const mk = (lbl, key, apply) => {
+    const b = el('span','badge cndl',lbl); b.dataset.k = key;
+    b.onclick = () => { apply(); lsSet('chart_prefs', chartPrefs); draw(); };
+    bar.append(b);
+  };
+  for(const [lbl,days] of PERIODS) mk(lbl, 'p'+days, () => { chartPrefs.p = days; });
+  mk('Candles','tcandle', () => { chartPrefs.tipo = 'candle'; });
+  mk('Linha','tlinha', () => { chartPrefs.tipo = 'linha'; });
+  const draw = () => {
+    const all = candleSeries(sym);
+    const corte = Math.floor(Date.now()/864e5) - chartPrefs.p;
+    let rows = all.filter(r => r.t >= corte);
+    if(rows.length < 2) rows = all;
+    if(noteEl) noteEl.textContent = chartNoteTxt(rows);
+    candleChart(box, rows, chartPrefs.tipo);
+    for(const b of bar.children)
+      b.classList.toggle('on', b.dataset.k === 'p'+chartPrefs.p || b.dataset.k === 't'+chartPrefs.tipo);
+  };
+  mount.append(bar, box);
+  draw();
+  return draw;
 }
 async function openChart(sym, titulo){
   modalKind = 'chart'; chartSym = sym;
@@ -990,15 +1034,7 @@ async function openChart(sym, titulo){
   await loadCandles();
   if(modalKind !== 'chart' || chartSym !== sym) return; // usuário fechou/trocou
   refreshB3charts(sym); // busca o ao vivo deste símbolo se for B3
-  const rows = candleSeries(sym);
-  if(!rows.length){
-    chartNote.textContent = CANDLES_ERR
-      ? 'histórico indisponível no momento — tente de novo em instantes'
-      : 'sem histórico para '+sym+' — o robô diário ainda não coletou este ativo';
-    return;
-  }
-  chartNote.textContent = chartNoteTxt(rows);
-  candleChart(chartBox, rows); // direto: rAF não dispara com a aba em 2º plano
+  chartDraw = chartUI(sym, chartBox, chartNote); // desenho direto: rAF não dispara com a aba em 2º plano
 }
 async function refreshB3charts(sym){ // candle de hoje mais rico p/ ativos B3 abertos no gráfico
   if(/^[A-Z]{4}[0-9]{1,2}$/.test(sym) && !LIVEB3[sym]){
@@ -1006,9 +1042,7 @@ async function refreshB3charts(sym){ // candle de hoje mais rico p/ ativos B3 ab
   }
 }
 function redrawChart(){
-  if(modalKind !== 'chart' || !chartSym || !chartBox) return;
-  const rows = candleSeries(chartSym);
-  if(rows.length){ chartNote.textContent = chartNoteTxt(rows); candleChart(chartBox, rows); }
+  if(modalKind === 'chart' && typeof chartDraw === 'function') chartDraw();
 }
 
 // ---- view ETFs (B3) ----

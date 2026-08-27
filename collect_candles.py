@@ -3,7 +3,7 @@
 """
 Coletor de candles diários (roda 1x/dia no workflow update.yml).
 Para cada símbolo do painel (B3 completa + watchlists + índices, o mesmo
-universo do collect_quotes), baixa ~3 meses de OHLC diário no endpoint
+universo do collect_quotes), baixa ~6 meses de OHLC diário no endpoint
 público de gráficos do Yahoo Finance e grava data/candles.json.
 
 O candle do dia corrente é completado AO VIVO no navegador (B3/relay),
@@ -30,10 +30,10 @@ CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}"
 def log(*a): print("[candles]", *a, file=sys.stderr)
 
 def fetch_candles(session, ysym):
-    """~3 meses de OHLC diário; devolve lista [[dia,o,h,l,c],...] ou None."""
+    """~6 meses de OHLC diário; devolve lista [[dia,o,h,l,c],...] ou None."""
     try:
         r = session.get(CHART.format(sym=ysym),
-                        params={"range": "3mo", "interval": "1d"}, timeout=(5, 10))
+                        params={"range": "6mo", "interval": "1d"}, timeout=(5, 10))
         r.raise_for_status()
         res = r.json()["chart"]["result"][0]
         ts = res.get("timestamp") or []
