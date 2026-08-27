@@ -45,17 +45,19 @@ jobs:
       - name: Consolidar indicadores por empresa
         run: python process.py
 
-      - name: Gerar painel
+      - name: Gerar painel (interno + versão pública sem marca)
         run: |
           python build_html.py
-          mkdir -p docs
+          python build_public.py
+          mkdir -p docs/p
           cp out/Painel_B3.html docs/index.html
+          cp out/public_index.html docs/p/index.html
 
       - name: Publicar (commit)
         run: |
           git config user.name "painel-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add docs/index.html data/macro_snapshot_prev.json data/b3_companies.json data/quotes.json
+          git add docs/index.html docs/p/index.html data/macro_snapshot_prev.json data/b3_companies.json data/quotes.json
           git add data/candles.json 2>/dev/null || true
           git diff --cached --quiet && echo "sem mudanças" || git commit -m "Atualização automática $(date -u +%F)"
           git push
