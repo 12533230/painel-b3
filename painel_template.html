@@ -588,7 +588,8 @@ function openDetail(cvm){
   const i = c.ind, t = mainTicker(c);
   // tiles com histórico ganham clique (série trimestral no modal)
   const hz = (key, tile) => {
-    if(c.q && c.q.length && indSeries(c, key) && indSeries(c, key).rows.some(r=>r.v!=null)){
+    const s = indSeries(c, key);
+    if(s && s.rows.some(r=>r.v!=null)){
       tile.classList.add('cndl'); tile.title = 'clique para ver o histórico por trimestre';
       tile.onclick = () => openIndChart(c, key);
     }
@@ -682,12 +683,12 @@ function openDetail(cvm){
   if(c.bal){
     pb.append(el('h3','sect','Balanço em '+c.bal.dt.split('-').reverse().join('/')));
     const bt = el('div','tiles');
-    bt.append(statTile('Ativo total', fmtMi(c.bal.ativo)));
-    bt.append(statTile('Patrimônio líquido', fmtMi(c.bal.pl)));
+    bt.append(hz('ativoBal', statTile('Ativo total', fmtMi(c.bal.ativo))));
+    bt.append(hz('plBal', statTile('Patrimônio líquido', fmtMi(c.bal.pl))));
     if(!c.fin){
       bt.append(statTile('Caixa e aplicações', fmtMi(c.bal.caixa)));
       bt.append(statTile('Dívida bruta', fmtMi(c.bal.divB)));
-      bt.append(statTile('Dívida líquida', fmtMi(c.bal.divL), null, cls(c.bal.divL==null?null:-c.bal.divL)));
+      bt.append(hz('divLBal', statTile('Dívida líquida', fmtMi(c.bal.divL), null, cls(c.bal.divL==null?null:-c.bal.divL))));
     }
     pb.append(bt);
   }
@@ -758,9 +759,16 @@ function openDetail(cvm){
       tb2.append(bd); w.append(tb2); exBox.append(w);
       exBox.append(el('div','note','Curadoria manual a partir dos releases da empresa (a CVM aberta não estrutura estes dados). Fonte: '+(fonte||'—')+'.'));
     };
+    // release novo → curadoria fica marcada como desatualizada
+    const ultTri = c.q.length ? c.q[c.q.length-1].p : null;
+    const avisaDesatualizado = periodos => {
+      if(ultTri && periodos.length && periodos[periodos.length-1] < ultTri)
+        exBox.append(el('div','notice','⚠ A empresa já reportou '+ultTri+', mas esta curadoria vai até '+periodos[periodos.length-1]+'. Peça a atualização ("atualiza os segmentos/operacionais") após a temporada de resultados.'));
+    };
     const sg = SEGD && SEGD[c.cvm];
     if(sg && Array.isArray(sg.segmentos) && sg.segmentos.length){
       const periodos = [...new Set(sg.segmentos.flatMap(s=>Object.keys(s.valores||{})))].sort();
+      avisaDesatualizado(periodos);
       const mets = sg.metricas || ['Valor'];
       mets.forEach((met, mi) => {
         mkExTable('Segmentos — '+met+(sg.unidade?' ('+sg.unidade+')':''),
@@ -1138,7 +1146,13 @@ function evOf(c){ // valor da firma = valor de mercado + dívida líquida (R$ mi
 
 // ---- séries históricas de indicadores (CVM trimestral + histórico de balanço "bh")
 const QE_MAP = {'1':'03-31','2':'06-30','3':'09-30','4':'12-31'};
+const MES_Q = {'03':'1','06':'2','09':'3','12':'4'};
 function indSeries(c, key){
+  // séries direto do histórico de balanço (não dependem de DRE)
+  const bhRows = f => (c.bh||[]).map(b => ({p: b.dt.slice(0,4)+'T'+MES_Q[b.dt.slice(5,7)], v: b[f]!=null? b[f] : null}));
+  if(key==='plBal')   return {rows:bhRows('pl'),   fmt:fmtNum, titulo:'Patrimônio líquido por trimestre (R$)', nota:'CVM (balanços)'};
+  if(key==='divLBal') return {rows:bhRows('divL'), fmt:fmtNum, titulo:'Dívida líquida por trimestre (R$)', nota:'CVM (balanços)'};
+  if(key==='ativoBal')return {rows:bhRows('ativo'),fmt:fmtNum, titulo:'Ativo total por trimestre (R$)', nota:'CVM (balanços)'};
   const q = c.q || [];
   if(!q.length) return null;
   const pn = p => (+p.slice(0,4))*4 + (+p.slice(5)); // 2026T2 -> posição sequencial
@@ -1163,6 +1177,7 @@ function indSeries(c, key){
     case 'mgE':  return {rows:mk('mgE'),  fmt:fmtPct, titulo:'Margem EBITDA por trimestre', nota:'CVM (ITR/DFP)'};
     case 'mgL':  return {rows:mk('mgL'),  fmt:fmtPct, titulo:'Margem líquida por trimestre', nota:'CVM (ITR/DFP)'};
     case 'rev12':{ return {rows:rows12(roll('rev')), fmt:fmtNum, titulo:'Receita acumulada 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
+    case 'ebitda12':{ return {rows:rows12(roll('ebitda')), fmt:fmtNum, titulo:'EBITDA acumulado 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
     case 'ni12': { return {rows:rows12(roll('ni')),  fmt:fmtNum, titulo:'Lucro líquido acumulado 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
     case 'roe':  { const r=roll('ni');
       return {rows:q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.pl&&r[i]!=null)? p1(100*r[i]/b.pl):null}; }),
@@ -1190,6 +1205,130 @@ function openIndChart(c, key){
   const box = el('div'); box.style.marginTop = '10px'; ibox.append(box);
   iovl.classList.add('on');
   colChart(box, s.rows, 'var(--s1)', s.fmt);
+  // números junto do gráfico + ferramentas (copiar Excel / baixar PNG)
+  const linhas = s.rows.filter(r => r.v!=null).map(r => [r.p, r.v]);
+  ibox.append(chartTools(() => box.querySelector('svg'),
+    () => ({headers: ['Período', s.titulo], linhas}),
+    () => c.name+' - '+s.titulo));
+  ibox.append(tabelaValores(['Período','Valor'], linhas.map(l => [l[0], s.fmt(l[1])])));
+}
+
+// ---- ferramentas de consultor: copiar dados (Excel) e baixar gráfico em PNG ----
+const numBR = v => v==null ? '' : String(v).replace('.', ','); // decimal pt-BR p/ colar no Excel
+async function copiaTSV(headers, linhas, btn){
+  const tsv = headers.join('\t')+'\n'+linhas.map(l => l.map(numBR).join('\t')).join('\n');
+  try{ await navigator.clipboard.writeText(tsv); if(btn){ const o = btn.textContent; btn.textContent = '✓ copiado'; setTimeout(()=>btn.textContent = o, 1600); } }
+  catch(e){ if(btn) btn.textContent = 'falhou — permita a área de transferência'; }
+}
+function svgToPng(svgEl, nome){
+  const clone = svgEl.cloneNode(true);
+  const orig = svgEl.querySelectorAll('*'), cl = clone.querySelectorAll('*');
+  for(let i=0; i<orig.length; i++){ // resolve cores var(--x) para valores concretos
+    const cs = getComputedStyle(orig[i]);
+    for(const a of ['fill','stroke']){
+      const v = orig[i].getAttribute(a);
+      if(v && v.indexOf('var(') === 0) cl[i].setAttribute(a, cs[a==='fill'?'fill':'stroke']);
+    }
+    if(orig[i].tagName === 'text'){
+      cl[i].setAttribute('fill', cs.fill);
+      cl[i].setAttribute('font-family', 'Arial, sans-serif');
+      cl[i].setAttribute('font-size', cs.fontSize);
+      if(cs.fontWeight && +cs.fontWeight >= 600) cl[i].setAttribute('font-weight', '700');
+    }
+  }
+  const vb = svgEl.viewBox.baseVal, scale = 2;
+  clone.setAttribute('width', vb.width); clone.setAttribute('height', vb.height);
+  const bg = document.createElementNS(svgEl.namespaceURI,'rect');
+  bg.setAttribute('x',0); bg.setAttribute('y',0); bg.setAttribute('width',vb.width); bg.setAttribute('height',vb.height);
+  bg.setAttribute('fill', getComputedStyle(document.body).backgroundColor);
+  clone.insertBefore(bg, clone.firstChild);
+  const img = new Image();
+  img.onload = () => {
+    const cv = document.createElement('canvas');
+    cv.width = vb.width*scale; cv.height = vb.height*scale;
+    const ctx = cv.getContext('2d'); ctx.scale(scale,scale); ctx.drawImage(img,0,0);
+    cv.toBlob(bl => { const a = document.createElement('a'); a.href = URL.createObjectURL(bl);
+      a.download = nome.replace(/[^\wÀ-ú .-]+/g,'_')+'.png'; a.click();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 5000); });
+  };
+  img.src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
+}
+function chartTools(getSvg, getTabela, nome){ // barra com "copiar p/ Excel" e "baixar PNG"
+  const bar = el('div'); bar.style.cssText = 'display:flex;gap:8px;margin:8px 0 0;flex-wrap:wrap';
+  const b1 = el('button','btn','⧉ copiar dados (Excel)');
+  b1.onclick = () => { const t = getTabela(); if(t) copiaTSV(t.headers, t.linhas, b1); };
+  const b2 = el('button','btn','⬇ baixar gráfico (PNG)');
+  b2.onclick = () => { const s = getSvg(); if(s) svgToPng(s, nome()); };
+  bar.append(b1, b2);
+  return bar;
+}
+function tabelaValores(headers, linhas){ // tabela de números junto do gráfico
+  const w = el('div','qtblwrap'); w.style.marginTop = '10px';
+  const t = el('table','qtbl');
+  const hr = el('tr'); for(const h of headers) hr.append(el('th',null,h));
+  const th = el('thead'); th.append(hr); t.append(th);
+  const tb = el('tbody');
+  for(const ln of linhas){ const tr = el('tr'); for(const v of ln) tr.append(el('td',null, v==null?'—':String(v))); tb.append(tr); }
+  t.append(tb); w.append(t);
+  return w;
+}
+
+// ---- gráfico de linhas multi-empresa (comparar históricos) ----
+const SERIE_CORES = ['var(--s1)','var(--s2)','var(--s3)','var(--good)'];
+function multiLineChart(container, series, fmt){
+  container.textContent = '';
+  const ok = series.filter(s => s.rows.some(r => r.v!=null));
+  if(!ok.length){ container.append(el('div','dim','sem dados para as empresas escolhidas')); return; }
+  const perAll = [...new Set(ok.flatMap(s => s.rows.filter(r=>r.v!=null).map(r => r.p)))].sort();
+  const leg = el('div'); leg.style.cssText = 'display:flex;gap:14px;flex-wrap:wrap;margin:0 0 6px;font-size:12px';
+  ok.forEach((s,i) => { const it = el('span'); it.style.fontWeight = '600';
+    const dot = el('span','', '● '); dot.style.color = ''; it.append(dot, document.createTextNode(s.label));
+    dot.style.cssText = 'color:'+SERIE_CORES[i%SERIE_CORES.length]; leg.append(it); });
+  container.append(leg);
+  const W = Math.max(container.clientWidth||760, 320), H = 260, padL = 8, padR = 56, padT = 10, padB = 20;
+  const iw = W-padL-padR, ih = H-padT-padB;
+  let mn = Infinity, mx = -Infinity;
+  for(const s of ok) for(const r of s.rows) if(r.v!=null){ if(r.v<mn) mn=r.v; if(r.v>mx) mx=r.v; }
+  if(!(mx>mn)){ mx = mn+1; }
+  const y = v => padT + ih*(mx-v)/(mx-mn);
+  const xOf = p => padL + iw*(perAll.indexOf(p)+0.5)/perAll.length;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox','0 0 '+W+' '+H); svg.setAttribute('width','100%'); svg.style.display='block';
+  for(let g=0; g<=3; g++){
+    const v = mn+(mx-mn)*g/3, gy = y(v);
+    const l = document.createElementNS(svg.namespaceURI,'line');
+    l.setAttribute('x1',padL); l.setAttribute('x2',W-padR); l.setAttribute('y1',gy); l.setAttribute('y2',gy);
+    l.setAttribute('stroke','var(--grid)'); svg.append(l);
+    const tx = document.createElementNS(svg.namespaceURI,'text');
+    tx.setAttribute('x',W-padR+4); tx.setAttribute('y',gy+4); tx.textContent = fmt(v); svg.append(tx);
+  }
+  for(const p of perAll){ if(p.endsWith('T1') || perAll.length<=5){
+    const tx = document.createElementNS(svg.namespaceURI,'text');
+    tx.setAttribute('x',xOf(p)); tx.setAttribute('y',H-4); tx.setAttribute('text-anchor','middle');
+    tx.textContent = p; svg.append(tx); } }
+  ok.forEach((s,i) => {
+    let dd = '', pen = false;
+    for(const p of perAll){
+      const r = s.rows.find(x => x.p===p);
+      if(!r || r.v==null){ pen = false; continue; }
+      dd += (pen?'L':'M')+xOf(p).toFixed(1)+','+y(r.v).toFixed(1); pen = true;
+    }
+    const path = document.createElementNS(svg.namespaceURI,'path');
+    path.setAttribute('d',dd); path.setAttribute('fill','none');
+    path.setAttribute('stroke',SERIE_CORES[i%SERIE_CORES.length]); path.setAttribute('stroke-width','2');
+    path.setAttribute('stroke-linejoin','round'); svg.append(path);
+  });
+  for(const p of perAll){ // tooltip por período com todas as séries
+    const hit = document.createElementNS(svg.namespaceURI,'rect');
+    hit.setAttribute('x',xOf(p)-iw/perAll.length/2); hit.setAttribute('y',0);
+    hit.setAttribute('width',iw/perAll.length); hit.setAttribute('height',H);
+    hit.setAttribute('fill','transparent');
+    hit.addEventListener('pointermove', e => showTip(e.clientX, e.clientY,
+      [[p,'']].concat(ok.map(s => { const r = s.rows.find(x=>x.p===p); return [s.label, r&&r.v!=null? fmt(r.v):'—']; }))));
+    hit.addEventListener('pointerleave', hideTip);
+    svg.append(hit);
+  }
+  container.append(svg);
 }
 
 // ---- notícias por empresa (data/news.json, robô diário) e curadorias manuais
@@ -1261,11 +1400,19 @@ const CMP_INDS = [
   ['rev12','Receita 12m', c=>c.ind.rev12, fmtMi],
   ['cresc5a','Cresc. receita 5 anos (%)', c=>{const t=mainTicker(c); return t?t.cresc5a:null;}, fmtPct],
 ];
-let cmpSel = lsGet('cmp_sel') || {ind:'roic', setor:'', modo:'rank', dir:'desc', emp:''};
+const HIST_INDS = [
+  ['roe','ROE (%)',fmtPct], ['roic','ROIC (%)',fmtPct],
+  ['mgE','Margem EBITDA (%)',fmtPct], ['mgL','Margem líquida (%)',fmtPct],
+  ['rev12','Receita 12m (R$)',fmtNum], ['ebitda12','EBITDA 12m (R$)',fmtNum],
+  ['ni12','Lucro líquido 12m (R$)',fmtNum], ['dlEbitda','Dív. líq./EBITDA',fmtX],
+];
+let cmpSel = lsGet('cmp_sel') || {ind:'roic', setor:'', modo:'rank', dir:'desc', emp:'', hind:'roe', emps:[]};
 // sane defaults se o localStorage trouxer estado antigo/inválido
 if(!CMP_INDS.some(x=>x[0]===cmpSel.ind)) cmpSel.ind = 'roic';
-if(!['rank','emp'].includes(cmpSel.modo)) cmpSel.modo = 'rank';
+if(!HIST_INDS.some(x=>x[0]===cmpSel.hind)) cmpSel.hind = 'roe';
+if(!['rank','emp','hist'].includes(cmpSel.modo)) cmpSel.modo = 'rank';
 if(!['desc','asc'].includes(cmpSel.dir)) cmpSel.dir = 'desc';
+if(!Array.isArray(cmpSel.emps)) cmpSel.emps = [];
 function renderCmp(){
   const m = $('#cmpview'); m.textContent = '';
   m.append(noticeEl());
@@ -1277,14 +1424,23 @@ function renderCmp(){
     s.onchange = () => { onch(s.value); lsSet('cmp_sel', cmpSel); renderCmp(); };
     return s;
   };
-  bar.append(mkSel(CMP_INDS.map(x=>[x[0],x[1]]), cmpSel.ind, v=>cmpSel.ind=v, 'Indicador'));
+  if(cmpSel.modo==='hist')
+    bar.append(mkSel(HIST_INDS.map(x=>[x[0],x[1]]), cmpSel.hind, v=>cmpSel.hind=v, 'Indicador'));
+  else
+    bar.append(mkSel(CMP_INDS.map(x=>[x[0],x[1]]), cmpSel.ind, v=>cmpSel.ind=v, 'Indicador'));
   const setores = [...new Set(COS.map(c=>c.setor))].sort();
   bar.append(mkSel([['','Todos os setores'],...setores.map(s=>[s,s])], cmpSel.setor, v=>{cmpSel.setor=v; cmpSel.emp='';}, 'Setor'));
-  bar.append(mkSel([['rank','Ranking'],['emp','Empresa × setor']], cmpSel.modo, v=>cmpSel.modo=v, 'Modo'));
+  bar.append(mkSel([['rank','Ranking'],['emp','Empresa × setor'],['hist','Histórico (linhas)']], cmpSel.modo, v=>cmpSel.modo=v, 'Modo'));
   if(cmpSel.modo==='rank')
     bar.append(mkSel([['desc','Maiores'],['asc','Menores']], cmpSel.dir, v=>cmpSel.dir=v, 'Direção'));
   const [key,label,getter,fmt] = CMP_INDS.find(x=>x[0]===cmpSel.ind);
   const escopo = COS.filter(c=>!cmpSel.setor || c.setor===cmpSel.setor);
+  if(cmpSel.modo==='hist'){
+    const cands = escopo.filter(c=>c.q && c.q.length).sort((a,b)=>(a.name||'').localeCompare(b.name||'','pt-BR'));
+    const add = mkSel([['','+ adicionar empresa…'],...cands.filter(c=>!cmpSel.emps.includes(c.cvm)).map(c=>[c.cvm,c.name])],
+      '', v=>{ if(v && cmpSel.emps.length<4) cmpSel.emps.push(v); }, 'Adicionar empresa');
+    bar.append(add);
+  }
   if(cmpSel.modo==='emp'){
     const cands = escopo.filter(c=>getter(c)!=null).sort((a,b)=>(a.name||'').localeCompare(b.name||'','pt-BR'));
     if(!cands.some(c=>c.cvm===cmpSel.emp)) cmpSel.emp = cands.length? cands[0].cvm : '';
@@ -1295,12 +1451,47 @@ function renderCmp(){
   const titulo = el('div','ct'); card.append(titulo);
   const box = el('div'); card.append(box); m.append(card);
   const noteEl2 = el('div','note'); m.append(noteEl2);
-  if(cmpSel.modo==='rank'){
+  if(cmpSel.modo==='hist'){
+    const [hk, hlabel, hfmt] = HIST_INDS.find(x=>x[0]===cmpSel.hind);
+    titulo.textContent = 'Histórico — '+hlabel;
+    // chips das empresas escolhidas
+    const chips = el('div','badges'); chips.style.marginBottom = '8px';
+    for(const cv of cmpSel.emps){
+      const c2 = COS.find(x=>x.cvm===cv); if(!c2) continue;
+      const b = el('span','badge', c2.name+' ');
+      const x = el('button','rmv','✕');
+      x.onclick = () => { cmpSel.emps = cmpSel.emps.filter(z=>z!==cv); lsSet('cmp_sel', cmpSel); renderCmp(); };
+      b.append(x); chips.append(b);
+    }
+    card.insertBefore(chips, box);
+    if(!cmpSel.emps.length){
+      box.append(el('div','dim','adicione até 4 empresas no seletor acima para comparar o histórico'));
+    } else {
+      const series = cmpSel.emps.map(cv => {
+        const c2 = COS.find(x=>x.cvm===cv);
+        const s = c2 && indSeries(c2, hk);
+        return {label: c2? c2.name : cv, rows: (s && s.rows) || []};
+      });
+      multiLineChart(box, series, hfmt);
+      const perAll = [...new Set(series.flatMap(s=>s.rows.filter(r=>r.v!=null).map(r=>r.p)))].sort();
+      const linhas = perAll.map(p => [p, ...series.map(s => { const r = s.rows.find(x=>x.p===p); return r? r.v : null; })]);
+      card.append(chartTools(() => box.querySelector('svg'),
+        () => ({headers: ['Período', ...series.map(s=>s.label)], linhas}),
+        () => 'Histórico '+hlabel));
+      card.append(tabelaValores(['Período', ...series.map(s=>s.label)],
+        linhas.map(l => [l[0], ...l.slice(1).map(v => v==null?null:hfmt(v))])));
+    }
+    noteEl2.textContent = 'Séries trimestrais da CVM (12m móveis onde indicado). Sua seleção fica salva neste navegador. Copie os dados para o Excel ou baixe o gráfico em PNG para usar em slides.';
+  } else if(cmpSel.modo==='rank'){
     let rows = escopo.map(c=>({label:c.name, v:getter(c), cvm:c.cvm})).filter(r=>r.v!=null && isFinite(r.v));
     rows.sort((a,b)=>cmpSel.dir==='asc'? a.v-b.v : b.v-a.v);
     titulo.textContent = (cmpSel.dir==='asc'?'Menores':'Maiores')+' — '+label+(cmpSel.setor?' · '+cmpSel.setor:' · todos os setores');
-    hbarChart(box, rows.slice(0,20), fmt, cvm=>openDetail(cvm));
-    noteEl2.textContent = 'Top 20 de '+rows.length+' empresas com o dado disponível. Clique numa barra para abrir a empresa. Fontes: Fundamentus (múltiplos, último fechamento) e CVM (12 meses).';
+    const mostra20 = rows.slice(0,20);
+    hbarChart(box, mostra20, fmt, cvm=>openDetail(cvm));
+    card.append(chartTools(() => box.querySelector('svg'),
+      () => ({headers: ['Empresa', label], linhas: rows.map(r=>[r.label, r.v])}),
+      () => 'Ranking '+label+(cmpSel.setor?' - '+cmpSel.setor:'')));
+    noteEl2.textContent = 'Top 20 de '+rows.length+' empresas com o dado disponível (o "copiar dados" leva a lista completa). Clique numa barra para abrir a empresa. Fontes: Fundamentus (múltiplos, último fechamento) e CVM (12 meses).';
   } else {
     const emp = COS.find(c=>c.cvm===cmpSel.emp);
     if(!emp){ box.append(el('div','dim','nenhuma empresa com esse indicador neste filtro')); return; }
@@ -1318,6 +1509,9 @@ function renderCmp(){
     }
     titulo.textContent = emp.name+' × setor '+emp.setor+' — '+label;
     hbarChart(box, mostra, fmt, cvm=>openDetail(cvm));
+    card.append(chartTools(() => box.querySelector('svg'),
+      () => ({headers: ['Empresa', label], linhas: rows.map(r=>[r.label, r.v])}),
+      () => emp.name+' vs setor - '+label));
     noteEl2.textContent = emp.name+' é '+(pos>0? pos+'ª de '+rows.length : 'sem dado')+' em '+label+' no setor '+emp.setor+'. Barra laranja = empresa selecionada; barra clara = mediana do setor. Clique numa barra para abrir a empresa.';
   }
   m.append(el('div','foot','Comparações com os dados já carregados no painel (CVM 12 meses + Fundamentus no último fechamento). Uso informativo; não é recomendação de investimento.'));

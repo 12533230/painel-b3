@@ -441,7 +441,7 @@ def build_company(cnpj, meta):
             plq = plq - b["minor"]
         cx = (b.get("caixa") or 0) + (b.get("aplic") or 0)
         dv = b.get("div")
-        bhist.append({"dt": dtb, "pl": fmt_mi(plq),
+        bhist.append({"dt": dtb, "pl": fmt_mi(plq), "ativo": fmt_mi(b.get("ativo")),
                       "divL": fmt_mi(dv - cx) if (dv is not None and not isfin) else None})
 
     lastbal = None
