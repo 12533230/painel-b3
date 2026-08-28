@@ -1451,6 +1451,20 @@ const KPI_FAMILIAS = [
   [/[áa]rea de vendas/i, 'Área de vendas'],
 ];
 const kpiFamilia = nome => { for(const [re, fam] of KPI_FAMILIAS) if(re.test(nome)) return fam; return nome; };
+// unidade canônica: impede comparar % com valor absoluto na mesma barra
+function unidadeCanon(u){
+  const s = (u||'').toLowerCase();
+  if(!s) return '(sem unidade)';
+  if(s.includes('%') || s.includes('p.p')) return '%';
+  if(s.includes('r$')) return 'R$';
+  if(s.includes('us$') || s.includes('usd')) return 'US$';
+  if(/\bx\b|vezes/.test(s)) return 'x (múltiplo)';
+  if(s.includes('ton')) return 'toneladas';
+  if(s.includes('m³') || s.includes('m3')) return 'm³';
+  if(s.includes('gwh') || s.includes('mwh') || s.includes('mw')) return 'energia';
+  if(s.includes('milh') || s.includes('mil ') || s.includes('unidades')) return 'quantidade';
+  return s.slice(0,18);
+}
 function opsIndex(){
   const idx = {};   // família -> [{cvm, empresa, setor, nomeOriginal, unidade, valores}]
   if(!OPD) return idx;
@@ -1461,7 +1475,7 @@ function opsIndex(){
       if(!ind || !ind.nome || !ind.valores) continue;
       const fam = kpiFamilia(ind.nome);
       (idx[fam] = idx[fam] || []).push({cvm, empresa:emp.name, setor:emp.setor,
-        nomeOriginal:ind.nome, unidade:ind.unidade||'', valores:ind.valores});
+        nomeOriginal:ind.nome, unidade:ind.unidade||'', uc:unidadeCanon(ind.unidade), valores:ind.valores});
     }
   }
   return idx;
@@ -1514,7 +1528,16 @@ function renderCmp(){
   const box = el('div'); card.append(box); m.append(card);
   const noteEl2 = el('div','note'); m.append(noteEl2);
   if(cmpSel.modo==='op'){
-    const lista = (OPIDX[cmpSel.opind] || []).filter(x => !cmpSel.setor || x.setor===cmpSel.setor);
+    let lista = (OPIDX[cmpSel.opind] || []).filter(x => !cmpSel.setor || x.setor===cmpSel.setor);
+    // dentro da família, compara só o grupo de unidade dominante (% com %, R$ com R$…)
+    let omitidos = [];
+    if(lista.length > 1){
+      const cont = {};
+      for(const x of lista) cont[x.uc] = (cont[x.uc]||0)+1;
+      const ucDom = Object.entries(cont).sort((a,b)=>b[1]-a[1])[0][0];
+      omitidos = lista.filter(x => x.uc !== ucDom);
+      lista = lista.filter(x => x.uc === ucDom);
+    }
     titulo.textContent = cmpSel.opind ? ('KPI operacional — '+cmpSel.opind) : 'KPIs operacionais';
     if(!lista.length){
       box.append(el('div','dim', OPD ? 'nenhuma empresa curada tem este KPI neste filtro' : 'carregando KPIs…'));
@@ -1541,10 +1564,11 @@ function renderCmp(){
         multiLineChart(h, series.slice(0,4), fmtOp);
       }
       noteEl2.textContent = 'Comparação pelo último período divulgado por cada empresa (o período vai no rótulo). '
-        + (unsDiferentes ? '⚠ As empresas divulgam este KPI em unidades/definições diferentes ('
-            + lista.map(x=>x.empresa+': '+(x.nomeOriginal||'')+(x.unidade?' em '+x.unidade:'')).join(' · ')
-            + ') — compare com cuidado. '
-          : 'Unidade: '+(un||'ver release')+'. ')
+        + 'Unidade: '+(un||'ver release')+'. '
+        + (omitidos.length ? 'Fora do gráfico por reportarem em outra unidade: '
+            + omitidos.map(x=>x.empresa+' ('+(x.unidade||'sem unidade')+')').join(', ')+'. ' : '')
+        + (unsDiferentes ? '⚠ Definições podem variar entre empresas: '
+            + lista.map(x=>x.empresa+' = "'+(x.nomeOriginal||'')+'"').join(' · ')+'. ' : '')
         + 'Fonte: releases das próprias empresas, curadoria verificada.';
     }
   } else if(cmpSel.modo==='hist'){
