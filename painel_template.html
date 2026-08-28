@@ -1410,13 +1410,68 @@ let cmpSel = lsGet('cmp_sel') || {ind:'roic', setor:'', modo:'rank', dir:'desc',
 // sane defaults se o localStorage trouxer estado antigo/inválido
 if(!CMP_INDS.some(x=>x[0]===cmpSel.ind)) cmpSel.ind = 'roic';
 if(!HIST_INDS.some(x=>x[0]===cmpSel.hind)) cmpSel.hind = 'roe';
-if(!['rank','emp','hist'].includes(cmpSel.modo)) cmpSel.modo = 'rank';
+if(!['rank','emp','hist','op'].includes(cmpSel.modo)) cmpSel.modo = 'rank';
+if(typeof cmpSel.opind !== 'string') cmpSel.opind = '';
 if(!['desc','asc'].includes(cmpSel.dir)) cmpSel.dir = 'desc';
 if(!Array.isArray(cmpSel.emps)) cmpSel.emps = [];
+// KPIs operacionais para comparação: cada empresa nomeia do seu jeito, então
+// agrupamos em FAMÍLIAS por palavra-chave (SSS da RD casa com o da Renner).
+const KPI_FAMILIAS = [
+  [/mesmas lojas|same store|sss|msss/i, 'Vendas em mesmas lojas (SSS)'],
+  [/n[uú]mero de (lojas|farm[áa]cias)|lojas em opera|total de lojas/i, 'Número de lojas'],
+  [/digital|e-?commerce|gmv/i, 'Vendas digitais / GMV'],
+  [/ticket m[ée]dio/i, 'Ticket médio'],
+  [/clientes ativos|base de clientes|benefici[áa]rios|acessos/i, 'Clientes / beneficiários'],
+  [/produ[çc][ãa]o/i, 'Produção'],
+  [/vendas? \(|volume vendido|volume de vendas|vendas de/i, 'Volume vendido'],
+  [/volume (movimentado|faturado|transportado)|tku/i, 'Volume movimentado'],
+  [/pre[çc]o (realizado|l[íi]quido|m[ée]dio)|tarifa m[ée]dia/i, 'Preço / tarifa média'],
+  [/cash cost|lifting cost|custo caixa|c1/i, 'Custo caixa (cash cost)'],
+  [/margem ebitda/i, 'Margem EBITDA (empresa)'],
+  [/margem bruta/i, 'Margem bruta (empresa)'],
+  [/roic|retorno sobre o capital/i, 'ROIC (divulgado pela empresa)'],
+  [/d[íi]vida l[íi]quida\s*\/\s*ebitda|alavancagem/i, 'Alavancagem (dív. líq./EBITDA)'],
+  [/capex|investimento/i, 'CAPEX'],
+  [/inadimpl[êe]ncia|npl/i, 'Inadimplência (NPL)'],
+  [/carteira de cr[ée]dito/i, 'Carteira de crédito'],
+  [/basileia/i, 'Índice de Basileia'],
+  [/sinistralidade/i, 'Sinistralidade'],
+  [/[íi]ndice combinado/i, 'Índice combinado'],
+  [/pr[êe]mios/i, 'Prêmios emitidos'],
+  [/efici[êe]ncia/i, 'Índice de eficiência'],
+  [/arpu/i, 'ARPU'],
+  [/churn/i, 'Churn'],
+  [/energia (distribu[íi]da|vendida)|gwh/i, 'Energia distribuída/vendida'],
+  [/perdas/i, 'Perdas'],
+  [/utiliza[çc][ãa]o|fut|ocupa[çc][ãa]o/i, 'Taxa de utilização/ocupação'],
+  [/frota/i, 'Frota'],
+  [/tr[áa]fego|ve[íi]culos equivalentes/i, 'Tráfego'],
+  [/backlog|carteira de pedidos/i, 'Backlog'],
+  [/entregas/i, 'Entregas'],
+  [/[áa]rea de vendas/i, 'Área de vendas'],
+];
+const kpiFamilia = nome => { for(const [re, fam] of KPI_FAMILIAS) if(re.test(nome)) return fam; return nome; };
+function opsIndex(){
+  const idx = {};   // família -> [{cvm, empresa, setor, nomeOriginal, unidade, valores}]
+  if(!OPD) return idx;
+  for(const [cvm, o] of Object.entries(OPD)){
+    if(cvm.startsWith('_') || !o || !Array.isArray(o.indicadores)) continue;
+    const emp = COS.find(c=>c.cvm===cvm); if(!emp) continue;
+    for(const ind of o.indicadores){
+      if(!ind || !ind.nome || !ind.valores) continue;
+      const fam = kpiFamilia(ind.nome);
+      (idx[fam] = idx[fam] || []).push({cvm, empresa:emp.name, setor:emp.setor,
+        nomeOriginal:ind.nome, unidade:ind.unidade||'', valores:ind.valores});
+    }
+  }
+  return idx;
+}
+const ultimoPeriodo = valores => Object.keys(valores||{}).sort().pop();
 function renderCmp(){
   const m = $('#cmpview'); m.textContent = '';
   m.append(noticeEl());
   m.append(el('h3','sect','Comparar empresas e setores'));
+  if(!OPD) loadExtras().then(() => { if(document.body.dataset.view==='cmp') renderCmp(); });
   const bar = el('div','cmpbar');
   const mkSel = (opts, val, onch, aria) => {
     const s = document.createElement('select'); s.setAttribute('aria-label', aria);
@@ -1424,13 +1479,20 @@ function renderCmp(){
     s.onchange = () => { onch(s.value); lsSet('cmp_sel', cmpSel); renderCmp(); };
     return s;
   };
+  const OPIDX = opsIndex();
+  // famílias com 2+ empresas primeiro (comparáveis); depois as demais
+  const opNomes = Object.keys(OPIDX).sort((a,b) => (OPIDX[b].length - OPIDX[a].length) || a.localeCompare(b,'pt-BR'));
   if(cmpSel.modo==='hist')
     bar.append(mkSel(HIST_INDS.map(x=>[x[0],x[1]]), cmpSel.hind, v=>cmpSel.hind=v, 'Indicador'));
-  else
+  else if(cmpSel.modo==='op'){
+    if(!opNomes.some(n=>n===cmpSel.opind)) cmpSel.opind = opNomes[0] || '';
+    bar.append(mkSel(opNomes.length? opNomes.map(n=>[n, n+' ('+OPIDX[n].length+')']) : [['','(nenhuma empresa curada ainda)']],
+      cmpSel.opind, v=>cmpSel.opind=v, 'Indicador operacional'));
+  } else
     bar.append(mkSel(CMP_INDS.map(x=>[x[0],x[1]]), cmpSel.ind, v=>cmpSel.ind=v, 'Indicador'));
   const setores = [...new Set(COS.map(c=>c.setor))].sort();
   bar.append(mkSel([['','Todos os setores'],...setores.map(s=>[s,s])], cmpSel.setor, v=>{cmpSel.setor=v; cmpSel.emp='';}, 'Setor'));
-  bar.append(mkSel([['rank','Ranking'],['emp','Empresa × setor'],['hist','Histórico (linhas)']], cmpSel.modo, v=>cmpSel.modo=v, 'Modo'));
+  bar.append(mkSel([['rank','Ranking'],['emp','Empresa × setor'],['hist','Histórico (linhas)'],['op','KPIs operacionais']], cmpSel.modo, v=>cmpSel.modo=v, 'Modo'));
   if(cmpSel.modo==='rank')
     bar.append(mkSel([['desc','Maiores'],['asc','Menores']], cmpSel.dir, v=>cmpSel.dir=v, 'Direção'));
   const [key,label,getter,fmt] = CMP_INDS.find(x=>x[0]===cmpSel.ind);
@@ -1451,7 +1513,41 @@ function renderCmp(){
   const titulo = el('div','ct'); card.append(titulo);
   const box = el('div'); card.append(box); m.append(card);
   const noteEl2 = el('div','note'); m.append(noteEl2);
-  if(cmpSel.modo==='hist'){
+  if(cmpSel.modo==='op'){
+    const lista = (OPIDX[cmpSel.opind] || []).filter(x => !cmpSel.setor || x.setor===cmpSel.setor);
+    titulo.textContent = cmpSel.opind ? ('KPI operacional — '+cmpSel.opind) : 'KPIs operacionais';
+    if(!lista.length){
+      box.append(el('div','dim', OPD ? 'nenhuma empresa curada tem este KPI neste filtro' : 'carregando KPIs…'));
+      noteEl2.textContent = 'Aparecem aqui os KPIs divulgados por 2 ou mais empresas curadas. Peça "cura o setor X" para ampliar a cobertura.';
+    } else {
+      const un = lista[0].unidade || '';
+      const unsDiferentes = new Set(lista.map(x=>x.unidade||'')).size > 1;
+      const fmtOp = v => nbr2.format(v)+(un && un.length<12 && !unsDiferentes ? ' '+un : '');
+      const rows = lista.map(x => { const p = ultimoPeriodo(x.valores);
+        return {label: x.empresa+' ('+p+')', v: x.valores[p], cvm: x.cvm}; })
+        .filter(r => typeof r.v === 'number' && isFinite(r.v))
+        .sort((a,b)=>b.v-a.v);
+      hbarChart(box, rows, fmtOp, cvm=>openDetail(cvm));
+      card.append(chartTools(() => box.querySelector('svg'),
+        () => ({headers:['Empresa','Período',cmpSel.opind+(un?' ('+un+')':'')],
+                linhas: lista.map(x => { const p = ultimoPeriodo(x.valores); return [x.empresa, p, x.valores[p]]; })}),
+        () => 'KPI '+cmpSel.opind));
+      // histórico do KPI entre as empresas (quando houver 2+ períodos)
+      const series = lista.map(x => ({label:x.empresa,
+        rows: Object.keys(x.valores).sort().map(p => ({p, v: x.valores[p]}))})).filter(s=>s.rows.length>1);
+      if(series.length){
+        const h = el('div'); h.style.marginTop='14px';
+        card.append(el('div','ct','Evolução do KPI'), h);
+        multiLineChart(h, series.slice(0,4), fmtOp);
+      }
+      noteEl2.textContent = 'Comparação pelo último período divulgado por cada empresa (o período vai no rótulo). '
+        + (unsDiferentes ? '⚠ As empresas divulgam este KPI em unidades/definições diferentes ('
+            + lista.map(x=>x.empresa+': '+(x.nomeOriginal||'')+(x.unidade?' em '+x.unidade:'')).join(' · ')
+            + ') — compare com cuidado. '
+          : 'Unidade: '+(un||'ver release')+'. ')
+        + 'Fonte: releases das próprias empresas, curadoria verificada.';
+    }
+  } else if(cmpSel.modo==='hist'){
     const [hk, hlabel, hfmt] = HIST_INDS.find(x=>x[0]===cmpSel.hind);
     titulo.textContent = 'Histórico — '+hlabel;
     // chips das empresas escolhidas
