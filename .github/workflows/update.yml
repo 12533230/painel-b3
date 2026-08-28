@@ -39,8 +39,11 @@ jobs:
           fi
           python collect_quotes.py || echo "cotações falharam — painel usa o quotes.json anterior"
 
-      - name: Coletar candles diários (3 meses, todos os ativos)
+      - name: Coletar candles diários (6 meses, todos os ativos)
         run: python collect_candles.py || echo "candles falharam — painel usa o candles.json anterior"
+
+      - name: Coletar notícias por empresa (Google News)
+        run: python collect_news.py || echo "notícias falharam — painel usa o news.json anterior"
 
       - name: Consolidar indicadores por empresa
         run: python process.py
@@ -58,6 +61,6 @@ jobs:
           git config user.name "painel-bot"
           git config user.email "actions@users.noreply.github.com"
           git add docs/index.html docs/p/index.html data/macro_snapshot_prev.json data/b3_companies.json data/quotes.json
-          git add data/candles.json 2>/dev/null || true
+          git add data/candles.json data/news.json 2>/dev/null || true
           git diff --cached --quiet && echo "sem mudanças" || git commit -m "Atualização automática $(date -u +%F)"
           git push
