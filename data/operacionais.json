@@ -1,11 +1,914 @@
 {
-  "_comment": "Indicadores operacionais (SSS, LTV, CAC, ARPU, churn etc.) — curadoria MANUAL a partir dos releases; não existe fonte gratuita estruturada. Chave = código CVM. O painel mostra a seção 'Indicadores operacionais' no detalhe quando houver entrada, e esses indicadores podem ser citados na comparação entre empresas que os tenham.",
-  "_schema": {
-    "<codigoCVM>": {
-      "fonte": "Release 2T26",
-      "indicadores": [
-        {"nome": "Same Store Sales", "unidade": "%", "valores": {"2026T1": 0, "2026T2": 0}}
-      ]
+ "3980": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/21e1d193-5cab-456d-8bb8-f00a49a43c1c/ea70e796-ede0-c9fd-2e8a-eccd8d0a2f72?origin=2",
+  "indicadores": [
+   {
+    "nome": "Produção de aço bruto (consolidado)",
+    "unidade": "1.000 toneladas",
+    "valores": {
+     "2026T2": 3228,
+     "2026T1": 3149,
+     "2025T2": 3052
     }
+   },
+   {
+    "nome": "Vendas de aço (consolidado)",
+    "unidade": "1.000 toneladas",
+    "valores": {
+     "2026T2": 2908,
+     "2026T1": 2811,
+     "2025T2": 2823
+    }
+   },
+   {
+    "nome": "Taxa de utilização da capacidade de produção (consolidado)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 82
+    }
+   },
+   {
+    "nome": "Margem EBITDA ajustada (consolidado)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 19.2,
+     "2026T1": 17.7,
+     "2025T2": 14.6
+    }
+   },
+   {
+    "nome": "Dívida líquida/EBITDA ajustado",
+    "unidade": "x",
+    "valores": {
+     "2026T2": 0.69,
+     "2026T1": 0.74,
+     "2025T2": 0.85
+    }
+   }
+  ]
+ },
+ "4170": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/53207d1c-63b4-48f1-96b7-19869fae19fe/69d9def3-395b-67c8-7af2-78cff5924cf2?origin=2",
+  "indicadores": [
+   {
+    "nome": "Produção de minério de ferro",
+    "unidade": "mil toneladas (kt)",
+    "valores": {
+     "2026T2": 84255,
+     "2026T1": 69675,
+     "2025T2": 83599
+    }
+   },
+   {
+    "nome": "Vendas de minério de ferro (finos + pelotas + ROM)",
+    "unidade": "mil toneladas (kt)",
+    "valores": {
+     "2026T2": 79747,
+     "2026T1": 68713,
+     "2025T2": 77346
+    }
+   },
+   {
+    "nome": "Preço realizado de finos de minério de ferro (CFR/FOB)",
+    "unidade": "US$/t",
+    "valores": {
+     "2026T2": 95,
+     "2026T1": 95.8,
+     "2025T2": 85.1
+    }
+   },
+   {
+    "nome": "C1 cash cost de finos (ex-compras de terceiros)",
+    "unidade": "US$/t",
+    "valores": {
+     "2026T2": 24.1,
+     "2026T1": 23.6,
+     "2025T2": 22.2
+    }
+   },
+   {
+    "nome": "Produção de cobre",
+    "unidade": "mil toneladas (kt)",
+    "valores": {
+     "2026T2": 98.4,
+     "2026T1": 102.3,
+     "2025T2": 92.6
+    }
+   },
+   {
+    "nome": "Produção de níquel",
+    "unidade": "mil toneladas (kt)",
+    "valores": {
+     "2026T2": 42,
+     "2026T1": 49.3,
+     "2025T2": 40.3
+    }
+   }
+  ]
+ },
+ "5258": {
+  "fonte": "https://ri.rdsaude.com.br/Download.aspx?Arquivo=mkRRUYR4kE%2BVDWWbKdYBJw%3D%3D",
+  "indicadores": [
+   {
+    "nome": "Número de farmácias",
+    "unidade": "unidades",
+    "valores": {
+     "2025T2": 3371,
+     "2025T3": 3453,
+     "2025T4": 3547,
+     "2026T1": 3614,
+     "2026T2": 3687
+    }
+   },
+   {
+    "nome": "Vendas digitais",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2025T2": 2587,
+     "2025T3": 3018,
+     "2025T4": 3554,
+     "2026T1": 3597,
+     "2026T2": 3938
+    }
+   },
+   {
+    "nome": "Penetração digital no varejo",
+    "unidade": "% da receita bruta do varejo",
+    "valores": {
+     "2025T2": 24.1,
+     "2025T3": 26.7,
+     "2025T4": 29.3,
+     "2026T1": 30.2,
+     "2026T2": 31
+    }
+   },
+   {
+    "nome": "Crescimento mesmas lojas (SSS) — Varejo",
+    "unidade": "% a/a",
+    "valores": {
+     "2025T2": 7.3,
+     "2025T3": 9.7,
+     "2025T4": 16.3,
+     "2026T1": 14.3,
+     "2026T2": 12.5
+    }
+   },
+   {
+    "nome": "Crescimento lojas maduras (MSSS) — Varejo",
+    "unidade": "% a/a",
+    "valores": {
+     "2025T2": 5.5,
+     "2025T3": 7.8,
+     "2025T4": 14.5,
+     "2026T1": 12.8,
+     "2026T2": 10.9
+    }
+   },
+   {
+    "nome": "Clientes ativos",
+    "unidade": "milhões",
+    "valores": {
+     "2025T2": 50.3,
+     "2025T3": 51,
+     "2025T4": 51.7,
+     "2026T1": 52.3,
+     "2026T2": 52.8
+    }
+   }
+  ]
+ },
+ "5410": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/50c1bd3e-8ac6-42d9-884f-b9d69f690602/9a78cad5-4da1-b36f-38ec-45060792f84c?origin=2",
+  "indicadores": [
+   {
+    "nome": "ROIC - Retorno sobre o Capital Investido (últimos 12 meses)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 33.6,
+     "2026T1": 33.1,
+     "2025T2": 32.9
+    }
+   },
+   {
+    "nome": "Margem EBITDA",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 21.8,
+     "2026T1": 22.2,
+     "2025T2": 22.1
+    }
+   },
+   {
+    "nome": "Margem Bruta",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 33.2,
+     "2026T1": 31.6,
+     "2025T2": 33.7
+    }
+   },
+   {
+    "nome": "Receita Mercado Externo em US$",
+    "unidade": "US$ milhões (convertido de US$ mil do release)",
+    "valores": {
+     "2026T2": 1221.392,
+     "2026T1": 1122.263,
+     "2025T2": 1065.1
+    }
+   },
+   {
+    "nome": "CAPEX",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 794.9,
+     "2026T1": 622.2,
+     "2025T2": 583.4
+    }
+   },
+   {
+    "nome": "Dólar médio do trimestre",
+    "unidade": "R$/US$",
+    "valores": {
+     "2026T2": 5.05,
+     "2025T2": 5.67
+    }
+   }
+  ]
+ },
+ "8133": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/13154776-9416-4fce-8c46-3e54d45b03a3/e54e5774-e327-da78-654c-df04ac3d6cdb?origin=2",
+  "indicadores": [
+   {
+    "nome": "Vendas em mesmas lojas (SSS) - varejo",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 0.5,
+     "2025T2": 17.3
+    }
+   },
+   {
+    "nome": "GMV Digital (1P + 3P)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 837.6,
+     "2025T2": 740.5
+    }
+   },
+   {
+    "nome": "Penetração do GMV Digital sobre vendas totais",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 16.9,
+     "2025T2": 15.2
+    }
+   },
+   {
+    "nome": "Número total de lojas em operação (Renner + Camicado + Youcom + Ashua)",
+    "unidade": "lojas",
+    "valores": {
+     "2026T2": 723,
+     "2026T1": 715,
+     "2025T4": 717,
+     "2025T3": 694,
+     "2025T2": 691
+    }
+   },
+   {
+    "nome": "Área de vendas média",
+    "unidade": "mil m²",
+    "valores": {
+     "2026T2": 822,
+     "2025T2": 804.5
+    }
+   },
+   {
+    "nome": "Ticket médio total",
+    "unidade": "R$",
+    "valores": {
+     "2026T2": 228.8,
+     "2025T2": 226.9
+    }
+   }
+  ]
+ },
+ "9512": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/857e970b-1bf4-9ea4-093f-b93bfc2bac95?origin=2 (Relatório de Desempenho 2T26 — segmentos) | https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/19a7ace8-ce1a-28a6-ead3-bdc01b7204f7?origin=2 (Relatório de Produção e Vendas 2T26 — KPIs operacionais)",
+  "indicadores": [
+   {
+    "nome": "Produção total de óleo, LGN e gás natural (Brasil + exterior)",
+    "unidade": "mboed",
+    "valores": {
+     "2026T2": 3336,
+     "2026T1": 3225,
+     "2025T2": 2923
+    }
+   },
+   {
+    "nome": "Produção total comercial",
+    "unidade": "mboed",
+    "valores": {
+     "2026T2": 2927,
+     "2026T1": 2831,
+     "2025T2": 2560
+    }
+   },
+   {
+    "nome": "Fator de utilização total do parque de refino (FUT)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 101.2,
+     "2026T1": 95,
+     "2025T2": 91
+    }
+   },
+   {
+    "nome": "Produção total de derivados",
+    "unidade": "mbpd",
+    "valores": {
+     "2026T2": 1918,
+     "2026T1": 1816,
+     "2025T2": 1730
+    }
+   },
+   {
+    "nome": "Volume total de vendas de derivados no mercado interno",
+    "unidade": "mbpd",
+    "valores": {
+     "2026T2": 1742,
+     "2026T1": 1745,
+     "2025T2": 1714
+    }
+   },
+   {
+    "nome": "Exportação de petróleo, derivados e outros",
+    "unidade": "mbpd",
+    "valores": {
+     "2026T2": 1233,
+     "2026T1": 1122,
+     "2025T2": 874
+    }
+   }
+  ]
+ },
+ "13986": {
+  "fonte": "https://s201.q4cdn.com/761980458/files/doc_news/2026/08/Release/Release-de-Resultados_2T26_PT.pdf",
+  "indicadores": [
+   {
+    "nome": "Vendas de celulose",
+    "unidade": "mil t",
+    "valores": {
+     "2026T2": 2897,
+     "2026T1": 2835,
+     "2025T2": 3269
+    }
+   },
+   {
+    "nome": "Vendas de papel",
+    "unidade": "mil t",
+    "valores": {
+     "2026T2": 406,
+     "2026T1": 378,
+     "2025T2": 411
+    }
+   },
+   {
+    "nome": "Preço médio líquido de celulose",
+    "unidade": "US$/t",
+    "valores": {
+     "2026T2": 599,
+     "2026T1": 560,
+     "2025T2": 555
+    }
+   },
+   {
+    "nome": "Preço médio líquido de papel",
+    "unidade": "R$/t",
+    "valores": {
+     "2026T2": 6974,
+     "2026T1": 6933,
+     "2025T2": 7315
+    }
+   },
+   {
+    "nome": "Custo caixa de produção de celulose sem paradas",
+    "unidade": "R$/t",
+    "valores": {
+     "2026T2": 843,
+     "2026T1": 802,
+     "2025T2": 832
+    }
+   },
+   {
+    "nome": "Alavancagem Dívida Líquida/EBITDA Ajustado em US$",
+    "unidade": "x",
+    "valores": {
+     "2026T2": 3.4,
+     "2026T1": 3.3,
+     "2025T2": 3.1
+    }
+   }
+  ]
+ },
+ "17450": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/003f6029-d45a-44ac-9c9e-869fe5df83fc/019d7c48-331a-e6fa-90fc-1a0f01dcccd5?origin=2",
+  "indicadores": [
+   {
+    "nome": "Volume transportado total",
+    "unidade": "TKU milhões",
+    "valores": {
+     "2026T2": 23811,
+     "2025T2": 21827
+    }
+   },
+   {
+    "nome": "Volume de solução logística",
+    "unidade": "TU mil",
+    "valores": {
+     "2026T2": 938,
+     "2025T2": 971
+    }
+   },
+   {
+    "nome": "Tarifa ferroviária consolidada (yield)",
+    "unidade": "R$/'000 TKU",
+    "valores": {
+     "2026T2": 154.8,
+     "2025T2": 158.7
+    }
+   },
+   {
+    "nome": "Volume total em contêineres (Brado)",
+    "unidade": "contêineres",
+    "valores": {
+     "2026T2": 32383,
+     "2025T2": 29491
+    }
+   },
+   {
+    "nome": "Volume transportado Operação Norte",
+    "unidade": "TKU milhões",
+    "valores": {
+     "2026T2": 19393,
+     "2025T2": 17954
+    }
+   },
+   {
+    "nome": "Volume transportado Operação Sul",
+    "unidade": "TKU milhões",
+    "valores": {
+     "2026T2": 3264,
+     "2025T2": 2861
+    }
+   }
+  ]
+ },
+ "18465": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/4282e939-a6dc-401d-a873-e3c28b7e48df/a8ec731a-2a87-ecd0-896c-975c26cd9ef5?origin=2",
+  "indicadores": [
+   {
+    "nome": "Volume vendido Ipiranga",
+    "unidade": "mil m³",
+    "valores": {
+     "2026T2": 6173,
+     "2026T1": 6021,
+     "2025T2": 5733
+    }
+   },
+   {
+    "nome": "Margem EBITDA Ajustado recorrente Ipiranga",
+    "unidade": "R$/m³",
+    "valores": {
+     "2026T2": 451,
+     "2026T1": 276,
+     "2025T2": 118
+    }
+   },
+   {
+    "nome": "Volume GLP Ultragaz",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 418,
+     "2026T1": 405,
+     "2025T2": 432
+    }
+   },
+   {
+    "nome": "Capacidade estática média Ultracargo",
+    "unidade": "mil m³",
+    "valores": {
+     "2026T2": 1156,
+     "2026T1": 1152,
+     "2025T2": 1067
+    }
+   },
+   {
+    "nome": "m³ faturado Ultracargo",
+    "unidade": "mil m³",
+    "valores": {
+     "2026T2": 4421,
+     "2026T1": 4459,
+     "2025T2": 3703
+    }
+   },
+   {
+    "nome": "Volume movimentado Hidrovias",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 4239,
+     "2026T1": 3202,
+     "2025T2": 4922
+    }
+   }
+  ]
+ },
+ "19739": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/08f327aa-e610-4d9d-b683-8ff0f7caae07/ffd204e4-d65f-5649-63a7-f12a8b70f4bd?origin=2",
+  "indicadores": [
+   {
+    "nome": "Frota no final do período (total, Brasil + México)",
+    "unidade": "carros",
+    "valores": {
+     "2026T2": 677163,
+     "2025T2": 632957
+    }
+   },
+   {
+    "nome": "Diária média - Aluguel de Carros Brasil",
+    "unidade": "R$",
+    "valores": {
+     "2026T2": 154.44,
+     "2025T2": 148.93
+    }
+   },
+   {
+    "nome": "Diária média - Gestão de Frotas",
+    "unidade": "R$",
+    "valores": {
+     "2026T2": 108.56,
+     "2025T2": 102.67
+    }
+   },
+   {
+    "nome": "Taxa de utilização - Aluguel de Carros Brasil",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 81.9,
+     "2025T2": 78.6
+    }
+   },
+   {
+    "nome": "Taxa de utilização - Gestão de Frotas",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 96.7,
+     "2025T2": 95.8
+    }
+   },
+   {
+    "nome": "Carros vendidos - Seminovos (total)",
+    "unidade": "carros",
+    "valores": {
+     "2026T2": 92519,
+     "2025T2": 69288
+    }
+   }
+  ]
+ },
+ "19836": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/6aa68515-2422-4cc4-bafa-8870ccdfedb0/52ea1570-a8ec-4c68-49a7-579a7c171481?origin=2",
+  "indicadores": [
+   {
+    "nome": "Rumo — Volume transportado",
+    "unidade": "milhões de RTK (TKU)",
+    "valores": {
+     "2026T2": 23811,
+     "2026T1": 20188,
+     "2025T2": 21827
+    }
+   },
+   {
+    "nome": "Rumo — Margem de contribuição",
+    "unidade": "R$/mil RTK",
+    "valores": {
+     "2026T2": 122,
+     "2026T1": 118,
+     "2025T2": 126
+    }
+   },
+   {
+    "nome": "Compass — Volume de gás natural distribuído",
+    "unidade": "mil m³ (conforme release)",
+    "valores": {
+     "2026T2": 1341,
+     "2026T1": 1247,
+     "2025T2": 1352
+    }
+   },
+   {
+    "nome": "Compass — Volume Marketing & Services",
+    "unidade": "mil m³ (conforme release)",
+    "valores": {
+     "2026T2": 461,
+     "2026T1": 416,
+     "2025T2": 364
+    }
+   },
+   {
+    "nome": "Moove — Volume de vendas de lubrificantes e óleos básicos",
+    "unidade": "mil m³",
+    "valores": {
+     "2026T2": 153,
+     "2026T1": 157,
+     "2025T2": 144
+    }
+   },
+   {
+    "nome": "Moove — Margem EBITDA",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 17,
+     "2026T1": 9.6,
+     "2025T2": 22.5
+    }
+   }
+  ]
+ },
+ "20087": {
+  "fonte": "https://www.embraer.com/media/hu2ij3eq/ri_release_earnings_2t26_pt.pdf",
+  "indicadores": [
+   {
+    "nome": "Entregas totais de aeronaves",
+    "unidade": "aeronaves",
+    "valores": {
+     "2026T2": 65,
+     "2025T2": 61
+    }
+   },
+   {
+    "nome": "Entregas Aviação Comercial",
+    "unidade": "aeronaves (10 E2 + 10 E1)",
+    "valores": {
+     "2026T2": 20
+    }
+   },
+   {
+    "nome": "Entregas Aviação Executiva",
+    "unidade": "aeronaves (24 pequenos + 21 médios)",
+    "valores": {
+     "2026T2": 45
+    }
+   },
+   {
+    "nome": "Entregas Defesa & Segurança",
+    "unidade": "aeronaves",
+    "valores": {
+     "2026T2": 0
+    }
+   },
+   {
+    "nome": "Carteira de pedidos firmes (backlog)",
+    "unidade": "US$ bilhões (moeda original do release; não convertido)",
+    "valores": {
+     "2025T2": 29.7,
+     "2025T3": 31.3,
+     "2025T4": 31.6,
+     "2026T1": 32.1,
+     "2026T2": 34.5
+    }
+   }
+  ]
+ },
+ "22470": {
+  "fonte": "https://ri.magazineluiza.com.br/ListResultados/Download.aspx?Arquivo=dL1FGoA0QI/SvcDvROsA7g==",
+  "indicadores": [
+   {
+    "nome": "Crescimento Vendas Mesmas Lojas Físicas (SSS)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 9.7,
+     "2025T2": 3.5
+    }
+   },
+   {
+    "nome": "Quantidade de Lojas - Final do Período",
+    "unidade": "lojas",
+    "valores": {
+     "2026T2": 1246,
+     "2025T2": 1245
+    }
+   },
+   {
+    "nome": "Participação E-commerce Total nas Vendas Totais",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 64.3,
+     "2025T2": 69.3
+    }
+   },
+   {
+    "nome": "TPV Magalupay - Volume Total de Pagamentos",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 24741,
+     "2025T2": 24594
+    }
+   },
+   {
+    "nome": "TPV Cartão de Crédito (Luizacred)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 15058,
+     "2025T2": 14907
+    }
+   },
+   {
+    "nome": "Área de Vendas - Final do Período",
+    "unidade": "m²",
+    "valores": {
+     "2026T2": 681643,
+     "2025T2": 685502
+    }
+   }
+  ]
+ },
+ "24392": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/6bbd1770-f9f4-44e8-a1b1-d26b7585eec1/2da3a782-e91a-675b-c1ad-9b08af4c71b0?origin=2",
+  "indicadores": [
+   {
+    "nome": "Beneficiários — Planos de Saúde",
+    "unidade": "mil vidas (fim do período)",
+    "valores": {
+     "2026T2": 8668,
+     "2026T1": 8684,
+     "2025T2": 8856
+    }
+   },
+   {
+    "nome": "Beneficiários — Planos Odontológicos",
+    "unidade": "mil vidas (fim do período)",
+    "valores": {
+     "2026T2": 7293,
+     "2026T1": 7190,
+     "2025T2": 7032
+    }
+   },
+   {
+    "nome": "Sinistralidade Caixa (Cash MLR)",
+    "unidade": "% da receita operacional líquida",
+    "valores": {
+     "2026T2": 75.2,
+     "2026T1": 72.2,
+     "2025T2": 73.9
+    }
+   },
+   {
+    "nome": "Ticket médio bruto — Planos de Saúde",
+    "unidade": "R$/mês",
+    "valores": {
+     "2026T2": 305.9,
+     "2026T1": 305,
+     "2025T2": 289.4
+    }
+   },
+   {
+    "nome": "Vidas em avaliação (revisão de portfólio por rentabilidade/inadimplência)",
+    "unidade": "mil vidas",
+    "valores": {
+     "2026T2": 947
+    }
+   }
+  ]
+ },
+ "24821": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/5ecded6f-d02b-4439-bd60-b78400f01f1e/b0571f84-bf03-c349-a6a1-e722c724bac1?origin=2",
+  "indicadores": [
+   {
+    "nome": "Leitos operacionais (fim do período)",
+    "unidade": "leitos",
+    "valores": {
+     "2026T2": 10596,
+     "2026T1": 10486,
+     "2025T2": 10413
+    }
+   },
+   {
+    "nome": "Taxa de ocupação de leitos",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 80.2,
+     "2026T1": 77.5,
+     "2025T2": 82.9
+    }
+   },
+   {
+    "nome": "Cirurgias",
+    "unidade": "mil",
+    "valores": {
+     "2026T2": 150.9,
+     "2026T1": 145.6,
+     "2025T2": 136.5
+    }
+   },
+   {
+    "nome": "Ticket médio (12M, receita bruta / paciente-dia)",
+    "unidade": "R$",
+    "valores": {
+     "2026T2": 12463.1,
+     "2025T2": 11422.1
+    }
+   },
+   {
+    "nome": "Beneficiários saúde e odonto (SulAmérica)",
+    "unidade": "mil",
+    "valores": {
+     "2026T2": 6061,
+     "2026T1": 6009,
+     "2025T2": 5524
+    }
+   },
+   {
+    "nome": "Sinistralidade consolidada SulAmérica (% prêmios ganhos)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 78.1,
+     "2026T1": 77.2,
+     "2025T2": 81.3
+    }
+   }
+  ]
+ },
+ "25372": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/ec14f0ab-c5d4-4b12-a413-b6cc7475ed98/ecd60f65-8e70-bf69-5d12-d9615573ce8f?origin=2",
+  "indicadores": [
+   {
+    "nome": "Número de lojas",
+    "unidade": "lojas",
+    "valores": {
+     "2025T2": 302,
+     "2025T3": 304,
+     "2025T4": 312,
+     "2026T1": 313,
+     "2026T2": 313
+    }
+   },
+   {
+    "nome": "Área de vendas",
+    "unidade": "mil m²",
+    "valores": {
+     "2025T2": 1529,
+     "2025T3": 1540,
+     "2025T4": 1579,
+     "2026T1": 1584,
+     "2026T2": 1584
+    }
+   },
+   {
+    "nome": "Vendas mesmas lojas (a/a, ajustado por efeito calendário)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 0.9
+    }
+   },
+   {
+    "nome": "Crescimento do fluxo mensal de clientes (a/a; >40 milhões de clientes/mês)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 3.4
+    }
+   },
+   {
+    "nome": "Self-checkouts em operação",
+    "unidade": "equipamentos",
+    "valores": {
+     "2025T2": 1209,
+     "2026T2": 1705
+    }
+   },
+   {
+    "nome": "Alavancagem (Dívida Líquida + Recebíveis Descontados / EBITDA Ajustado Pré-IFRS16)",
+    "unidade": "x",
+    "valores": {
+     "2025T2": 3.17,
+     "2026T1": 2.52,
+     "2026T2": 2.37
+    }
+   }
+  ]
+ },
+ "_comment": "Indicadores operacionais (SSS, LTV, CAC, ARPU, churn etc.) — curadoria MANUAL a partir dos releases; não existe fonte gratuita estruturada. Chave = código CVM. O painel mostra a seção 'Indicadores operacionais' no detalhe quando houver entrada, e esses indicadores podem ser citados na comparação entre empresas que os tenham.",
+ "_schema": {
+  "<codigoCVM>": {
+   "fonte": "Release 2T26",
+   "indicadores": [
+    {
+     "nome": "Same Store Sales",
+     "unidade": "%",
+     "valores": {
+      "2026T1": 0,
+      "2026T2": 0
+     }
+    }
+   ]
   }
+ }
 }

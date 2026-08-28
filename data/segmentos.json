@@ -1,13 +1,921 @@
 {
-  "_comment": "Quebra por segmento de negócio (curadoria MANUAL — a CVM aberta não estrutura esses dados; eles vêm dos releases de resultados de cada empresa). Chave = código CVM da empresa. Preencha 'valores' com os números do release e cite a fonte. O painel mostra a seção 'Segmentos de negócio' no detalhe da empresa quando houver entrada aqui.",
-  "_schema": {
-    "<codigoCVM>": {
-      "fonte": "Release 2T26 (link ou descrição)",
-      "unidade": "R$ mi",
-      "metricas": ["Receita", "EBITDA"],
-      "segmentos": [
-        {"nome": "Nome do segmento", "valores": {"2026T1": [0, 0], "2026T2": [0, 0]}}
-      ]
+ "3980": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/21e1d193-5cab-456d-8bb8-f00a49a43c1c/ea70e796-ede0-c9fd-2e8a-eccd8d0a2f72?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita líquida",
+   "EBITDA ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Brasil",
+    "valores": {
+     "2026T2": [
+      6686,
+      705
+     ],
+     "2026T1": [
+      6271,
+      578
+     ],
+     "2025T2": [
+      7317,
+      877
+     ]
     }
+   },
+   {
+    "nome": "América do Norte",
+    "valores": {
+     "2026T2": [
+      10126,
+      2600
+     ],
+     "2026T1": [
+      9349,
+      2252
+     ],
+     "2025T2": [
+      9139,
+      1635
+     ]
+    }
+   },
+   {
+    "nome": "América do Sul",
+    "valores": {
+     "2026T2": [
+      1279,
+      205
+     ],
+     "2026T1": [
+      1396,
+      186
+     ],
+     "2025T2": [
+      1331,
+      149
+     ]
+    }
+   }
+  ]
+ },
+ "4170": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/53207d1c-63b4-48f1-96b7-19869fae19fe/69d9def3-395b-67c8-7af2-78cff5924cf2?origin=2",
+  "unidade": "US$ milhões (release divulgado em dólares; não convertido para R$)",
+  "metricas": [
+   "Receita líquida",
+   "EBITDA ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Soluções de Minério de Ferro",
+    "valores": {
+     "2026T2": [
+      7888,
+      3056
+     ],
+     "2026T1": [
+      6875,
+      2906
+     ],
+     "2025T2": [
+      6963,
+      2977
+     ]
+    }
+   },
+   {
+    "nome": "Soluções de Minério de Ferro — Finos",
+    "valores": {
+     "2026T2": [
+      6641,
+      2561
+     ],
+     "2026T1": [
+      5692,
+      2441
+     ],
+     "2025T2": [
+      5762,
+      2396
+     ]
+    }
+   },
+   {
+    "nome": "Soluções de Minério de Ferro — Pelotas",
+    "valores": {
+     "2026T2": [
+      1062,
+      416
+     ],
+     "2026T1": [
+      1030,
+      479
+     ],
+     "2025T2": [
+      1004,
+      477
+     ]
+    }
+   },
+   {
+    "nome": "Vale Base Metals (Metais para Transição Energética)",
+    "valores": {
+     "2026T2": [
+      2610,
+      1289
+     ],
+     "2026T1": [
+      2383,
+      1197
+     ],
+     "2025T2": [
+      1841,
+      721
+     ]
+    }
+   },
+   {
+    "nome": "Vale Base Metals — Cobre (incl. subprodutos)",
+    "valores": {
+     "2026T2": [
+      1555,
+      1026
+     ],
+     "2026T1": [
+      1414,
+      949
+     ],
+     "2025T2": [
+      958,
+      538
+     ]
+    }
+   },
+   {
+    "nome": "Vale Base Metals — Níquel (incl. subprodutos)",
+    "valores": {
+     "2026T2": [
+      1241,
+      294
+     ],
+     "2026T1": [
+      1184,
+      277
+     ],
+     "2025T2": [
+      1012,
+      201
+     ]
+    }
+   }
+  ]
+ },
+ "5410": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/50c1bd3e-8ac6-42d9-884f-b9d69f690602/9a78cad5-4da1-b36f-38ec-45060792f84c?origin=2",
+  "unidade": "R$ milhões (convertido de R$ mil, escala original do release). EBITDA por segmento não é divulgado pela WEG — apenas ROL por área de negócio, aberta em Mercado Interno e Mercado Externo.",
+  "metricas": [
+   "Receita Líquida - Mercado Interno",
+   "Receita Líquida - Mercado Externo"
+  ],
+  "segmentos": [
+   {
+    "nome": "Equipamentos Eletroeletrônicos Industriais (EEI)",
+    "valores": {
+     "2026T2": [
+      1672.196,
+      3538.729
+     ],
+     "2026T1": [
+      1392.376,
+      3270.203
+     ],
+     "2025T2": [
+      1435.922,
+      3473.032
+     ]
+    }
+   },
+   {
+    "nome": "Geração, Transmissão e Distribuição de Energia (GTD)",
+    "valores": {
+     "2026T2": [
+      1599.007,
+      2131.702
+     ],
+     "2026T1": [
+      1517.989,
+      2112.306
+     ],
+     "2025T2": [
+      2074.985,
+      2014.794
+     ]
+    }
+   },
+   {
+    "nome": "Motores Comerciais e Appliance (MCA)",
+    "valores": {
+     "2026T2": [
+      345.278,
+      432.617
+     ],
+     "2026T1": [
+      331.493,
+      446.979
+     ],
+     "2025T2": [
+      333.692,
+      476.163
+     ]
+    }
+   },
+   {
+    "nome": "Tintas e Vernizes (T&V)",
+    "valores": {
+     "2026T2": [
+      356.072,
+      67.954
+     ],
+     "2026T1": [
+      330.607,
+      66.36
+     ],
+     "2025T2": [
+      331.136,
+      67.503
+     ]
+    }
+   }
+  ]
+ },
+ "8133": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/13154776-9416-4fce-8c46-3e54d45b03a3/e54e5774-e327-da78-654c-df04ac3d6cdb?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita",
+   "EBITDA / Resultado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Varejo",
+    "valores": {
+     "2026T2": [
+      3689.2,
+      791.2
+     ],
+     "2025T2": [
+      3649.7,
+      773.4
+     ]
+    }
+   },
+   {
+    "nome": "Serviços Financeiros (Realize)",
+    "valores": {
+     "2026T2": [
+      509.2,
+      53.5
+     ],
+     "2025T2": [
+      519.5,
+      118.5
+     ]
+    }
+   }
+  ]
+ },
+ "9512": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/857e970b-1bf4-9ea4-093f-b93bfc2bac95?origin=2 (Relatório de Desempenho 2T26 — segmentos) | https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/19a7ace8-ce1a-28a6-ead3-bdc01b7204f7?origin=2 (Relatório de Produção e Vendas 2T26 — KPIs operacionais)",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita de vendas",
+   "EBITDA ajustado do segmento"
+  ],
+  "segmentos": [
+   {
+    "nome": "Exploração e Produção",
+    "valores": {
+     "2026T2": [
+      114940,
+      80041
+     ],
+     "2026T1": [
+      84047,
+      54165
+     ],
+     "2025T2": [
+      81606,
+      50725
+     ]
+    }
+   },
+   {
+    "nome": "Refino, Transporte e Comercialização",
+    "valores": {
+     "2026T2": [
+      163193,
+      17938
+     ],
+     "2026T1": [
+      117178,
+      20192
+     ],
+     "2025T2": [
+      112104,
+      6078
+     ]
+    }
+   },
+   {
+    "nome": "Gás e Energias de Baixo Carbono",
+    "valores": {
+     "2026T2": [
+      12150,
+      2122
+     ],
+     "2026T1": [
+      11590,
+      1751
+     ],
+     "2025T2": [
+      12320,
+      1347
+     ]
+    }
+   }
+  ]
+ },
+ "13986": {
+  "fonte": "https://s201.q4cdn.com/761980458/files/doc_news/2026/08/Release/Release-de-Resultados_2T26_PT.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Celulose",
+    "valores": {
+     "2026T2": [
+      8756,
+      4184
+     ],
+     "2026T1": [
+      8346,
+      4056
+     ],
+     "2025T2": [
+      10288,
+      5378
+     ]
+    }
+   },
+   {
+    "nome": "Papel (inclui tissue e Suzano Packaging US)",
+    "valores": {
+     "2026T2": [
+      2834,
+      521
+     ],
+     "2026T1": [
+      2623,
+      524
+     ],
+     "2025T2": [
+      3008,
+      709
+     ]
+    }
+   }
+  ]
+ },
+ "17450": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/003f6029-d45a-44ac-9c9e-869fe5df83fc/019d7c48-331a-e6fa-90fc-1a0f01dcccd5?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita operacional líquida",
+   "EBITDA ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Operação Norte (Malha Norte, Paulista, Central e Oeste)",
+    "valores": {
+     "2026T2": [
+      3161,
+      1971
+     ],
+     "2025T2": [
+      3038,
+      1982
+     ]
+    }
+   },
+   {
+    "nome": "Operação Sul (Malha Sul)",
+    "valores": {
+     "2026T2": [
+      556,
+      245
+     ],
+     "2025T2": [
+      484,
+      248
+     ]
+    }
+   },
+   {
+    "nome": "Operação de Contêineres (incl. Brado Logística)",
+    "valores": {
+     "2026T2": [
+      223,
+      51
+     ],
+     "2025T2": [
+      189,
+      49
+     ]
+    }
+   }
+  ]
+ },
+ "18465": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/4282e939-a6dc-401d-a873-e3c28b7e48df/a8ec731a-2a87-ecd0-896c-975c26cd9ef5?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita líquida",
+   "EBITDA Ajustado",
+   "EBITDA Ajustado recorrente"
+  ],
+  "segmentos": [
+   {
+    "nome": "Ipiranga",
+    "valores": {
+     "2026T2": [
+      37462,
+      2773,
+      2782
+     ],
+     "2026T1": [
+      33110,
+      1657,
+      1665
+     ],
+     "2025T2": [
+      30296,
+      1199,
+      678
+     ]
+    }
+   },
+   {
+    "nome": "Ultragaz",
+    "valores": {
+     "2026T2": [
+      3194,
+      344,
+      468
+     ],
+     "2026T1": [
+      2965,
+      385,
+      385
+     ],
+     "2025T2": [
+      3127,
+      442,
+      442
+     ]
+    }
+   },
+   {
+    "nome": "Ultracargo",
+    "valores": {
+     "2026T2": [
+      265,
+      159,
+      159
+     ],
+     "2026T1": [
+      276,
+      165,
+      165
+     ],
+     "2025T2": [
+      247,
+      141,
+      141
+     ]
+    }
+   },
+   {
+    "nome": "Hidrovias do Brasil",
+    "valores": {
+     "2026T2": [
+      664,
+      322,
+      322
+     ],
+     "2026T1": [
+      445,
+      194,
+      182
+     ],
+     "2025T2": [
+      684,
+      304,
+      348
+     ]
+    }
+   }
+  ]
+ },
+ "19739": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/08f327aa-e610-4d9d-b683-8ff0f7caae07/ffd204e4-d65f-5649-63a7-f12a8b70f4bd?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita líquida",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "Aluguel de Carros e Franchising (Brasil)",
+    "valores": {
+     "2026T2": [
+      2736.2,
+      1850.3
+     ],
+     "2025T2": [
+      2461.4,
+      1637.9
+     ]
+    }
+   },
+   {
+    "nome": "Gestão de Frotas",
+    "valores": {
+     "2026T2": [
+      2379.4,
+      1799.3
+     ],
+     "2025T2": [
+      2248.1,
+      1595.8
+     ]
+    }
+   },
+   {
+    "nome": "Seminovos (Brasil)",
+    "valores": {
+     "2026T2": [
+      7144.3,
+      137.7
+     ],
+     "2025T2": [
+      5141.3,
+      84.8
+     ]
+    }
+   }
+  ]
+ },
+ "19836": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/6aa68515-2422-4cc4-bafa-8870ccdfedb0/52ea1570-a8ec-4c68-49a7-579a7c171481?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita líquida",
+   "EBITDA ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Rumo",
+    "valores": {
+     "2026T2": [
+      3940,
+      2267
+     ],
+     "2026T1": [
+      null,
+      1745
+     ],
+     "2025T2": [
+      null,
+      2279
+     ]
+    }
+   },
+   {
+    "nome": "Compass",
+    "valores": {
+     "2026T2": [
+      3935,
+      1275
+     ],
+     "2026T1": [
+      null,
+      1329
+     ],
+     "2025T2": [
+      null,
+      1216
+     ]
+    }
+   },
+   {
+    "nome": "Moove",
+    "valores": {
+     "2026T2": [
+      2784,
+      475
+     ],
+     "2026T1": [
+      2457,
+      236
+     ],
+     "2025T2": [
+      2246,
+      505
+     ]
+    }
+   },
+   {
+    "nome": "Radar",
+    "valores": {
+     "2026T2": [
+      112,
+      -29
+     ],
+     "2026T1": [
+      128,
+      103
+     ],
+     "2025T2": [
+      184,
+      134
+     ]
+    }
+   }
+  ]
+ },
+ "20087": {
+  "fonte": "https://www.embraer.com/media/hu2ij3eq/ri_release_earnings_2t26_pt.pdf",
+  "unidade": "Receita em R$ milhões (lida diretamente do release em reais, sem conversão). A Embraer NÃO divulga EBITDA por segmento; divulga a margem EBIT ajustada (%) por segmento, reportada aqui como 2ª métrica. O release traz comparativo apenas 2T26 vs 2T25 (sem 1T26 por segmento).",
+  "metricas": [
+   "Receita líquida",
+   "Margem EBIT ajustada (%)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Aviação Comercial",
+    "valores": {
+     "2026T2": [
+      3183,
+      2.9
+     ],
+     "2025T2": [
+      3245,
+      4.2
+     ]
+    }
+   },
+   {
+    "nome": "Aviação Executiva",
+    "valores": {
+     "2026T2": [
+      3677,
+      23.6
+     ],
+     "2025T2": [
+      3091,
+      14.6
+     ]
+    }
+   },
+   {
+    "nome": "Defesa & Segurança",
+    "valores": {
+     "2026T2": [
+      1544,
+      12
+     ],
+     "2025T2": [
+      1260,
+      9.3
+     ]
+    }
+   },
+   {
+    "nome": "Serviços & Suporte",
+    "valores": {
+     "2026T2": [
+      2854,
+      18.8
+     ],
+     "2025T2": [
+      2582,
+      15.6
+     ]
+    }
+   },
+   {
+    "nome": "Outros",
+    "valores": {
+     "2026T2": [
+      78,
+      null
+     ],
+     "2025T2": [
+      93,
+      null
+     ]
+    }
+   }
+  ]
+ },
+ "22470": {
+  "fonte": "https://ri.magazineluiza.com.br/ListResultados/Download.aspx?Arquivo=dL1FGoA0QI/SvcDvROsA7g==",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Vendas Totais"
+  ],
+  "segmentos": [
+   {
+    "nome": "Lojas Físicas",
+    "valores": {
+     "2026T2": [
+      5183.2
+     ],
+     "2025T2": [
+      4697.8
+     ]
+    }
+   },
+   {
+    "nome": "E-commerce Tradicional (1P)",
+    "valores": {
+     "2026T2": [
+      5759.3
+     ],
+     "2025T2": [
+      6508.8
+     ]
+    }
+   },
+   {
+    "nome": "Marketplace (3P)",
+    "valores": {
+     "2026T2": [
+      3571.5
+     ],
+     "2025T2": [
+      4085.3
+     ]
+    }
+   },
+   {
+    "nome": "E-commerce Total",
+    "valores": {
+     "2026T2": [
+      9330.9
+     ],
+     "2025T2": [
+      10594.1
+     ]
+    }
+   },
+   {
+    "nome": "Vendas Totais (Consolidado)",
+    "valores": {
+     "2026T2": [
+      14514.1
+     ],
+     "2025T2": [
+      15291.9
+     ]
+    }
+   }
+  ]
+ },
+ "24392": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/6bbd1770-f9f4-44e8-a1b1-d26b7585eec1/2da3a782-e91a-675b-c1ad-9b08af4c71b0?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Bruta"
+  ],
+  "segmentos": [
+   {
+    "nome": "Planos de Saúde",
+    "valores": {
+     "2026T2": [
+      7791.9
+     ],
+     "2026T1": [
+      7785.5
+     ],
+     "2025T2": [
+      7524.3
+     ]
+    }
+   },
+   {
+    "nome": "Planos Odontológicos",
+    "valores": {
+     "2026T2": [
+      226.3
+     ],
+     "2026T1": [
+      222
+     ],
+     "2025T2": [
+      230
+     ]
+    }
+   },
+   {
+    "nome": "Serviços Médico-hospitalares",
+    "valores": {
+     "2026T2": [
+      242.5
+     ],
+     "2026T1": [
+      215.1
+     ],
+     "2025T2": [
+      217
+     ]
+    }
+   }
+  ]
+ },
+ "24821": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/5ecded6f-d02b-4439-bd60-b78400f01f1e/b0571f84-bf03-c349-a6a1-e722c724bac1?origin=2",
+  "unidade": "R$ milhões (visão gerencial ex-IFRS 17, antes de eliminações intercompany; EBITDA SulAmérica é o reportado — o ajustado pelo resultado financeiro de ativos vinculados foi R$ 1.117,3 mi no 2026T2)",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "Hospitais, Oncologia e Outros (Rede D'Or)",
+    "valores": {
+     "2026T2": [
+      8737.3,
+      2291.5
+     ],
+     "2026T1": [
+      8096.5,
+      2119.5
+     ],
+     "2025T2": [
+      7960.8,
+      2058.5
+     ]
+    }
+   },
+   {
+    "nome": "SulAmérica (Seguros, Previdência e Gestão de Ativos)",
+    "valores": {
+     "2026T2": [
+      8705.9,
+      612.1
+     ],
+     "2026T1": [
+      8685.4,
+      849.9
+     ],
+     "2025T2": [
+      8147.7,
+      399
+     ]
+    }
+   }
+  ]
+ },
+ "_comment": "Quebra por segmento de negócio (curadoria MANUAL — a CVM aberta não estrutura esses dados; eles vêm dos releases de resultados de cada empresa). Chave = código CVM da empresa. Preencha 'valores' com os números do release e cite a fonte. O painel mostra a seção 'Segmentos de negócio' no detalhe da empresa quando houver entrada aqui.",
+ "_schema": {
+  "<codigoCVM>": {
+   "fonte": "Release 2T26 (link ou descrição)",
+   "unidade": "R$ mi",
+   "metricas": [
+    "Receita",
+    "EBITDA"
+   ],
+   "segmentos": [
+    {
+     "nome": "Nome do segmento",
+     "valores": {
+      "2026T1": [
+       0,
+       0
+      ],
+      "2026T2": [
+       0,
+       0
+      ]
+     }
+    }
+   ]
   }
+ }
 }
