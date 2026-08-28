@@ -1,0 +1,11 @@
+{
+  "_comment": "Indicadores operacionais (SSS, LTV, CAC, ARPU, churn etc.) — curadoria MANUAL a partir dos releases; não existe fonte gratuita estruturada. Chave = código CVM. O painel mostra a seção 'Indicadores operacionais' no detalhe quando houver entrada, e esses indicadores podem ser citados na comparação entre empresas que os tenham.",
+  "_schema": {
+    "<codigoCVM>": {
+      "fonte": "Release 2T26",
+      "indicadores": [
+        {"nome": "Same Store Sales", "unidade": "%", "valores": {"2026T1": 0, "2026T2": 0}}
+      ]
+    }
+  }
+}

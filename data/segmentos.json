@@ -1,0 +1,13 @@
+{
+  "_comment": "Quebra por segmento de negócio (curadoria MANUAL — a CVM aberta não estrutura esses dados; eles vêm dos releases de resultados de cada empresa). Chave = código CVM da empresa. Preencha 'valores' com os números do release e cite a fonte. O painel mostra a seção 'Segmentos de negócio' no detalhe da empresa quando houver entrada aqui.",
+  "_schema": {
+    "<codigoCVM>": {
+      "fonte": "Release 2T26 (link ou descrição)",
+      "unidade": "R$ mi",
+      "metricas": ["Receita", "EBITDA"],
+      "segmentos": [
+        {"nome": "Nome do segmento", "valores": {"2026T1": [0, 0], "2026T2": [0, 0]}}
+      ]
+    }
+  }
+}
