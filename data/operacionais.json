@@ -1,4 +1,237 @@
 {
+ "906": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/80f2e993-0a30-421a-9470-a4d5c8ad5e9f/b7c34f8d-92f6-7ba4-f408-d518a7211a7a?origin=2",
+  "indicadores": [
+   {
+    "nome": "Carteira de Crédito Expandida",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 1136640,
+     "2026T1": 1089896,
+     "2025T2": 1018426
+    }
+   },
+   {
+    "nome": "Índice de Inadimplência acima de 90 dias (Em Atraso > 90 dias / Carteira de Crédito)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 4.3,
+     "2026T1": 4.2,
+     "2025T2": 4.1
+    }
+   },
+   {
+    "nome": "Índice de Basileia - Índice Total (Conglomerado Prudencial)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 15.5,
+     "2026T1": 14.9,
+     "2025T2": 15.5
+    }
+   },
+   {
+    "nome": "ROAE (Retorno Anualizado sobre PL Médio) - trimestral",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 16.2,
+     "2026T1": 15.8,
+     "2025T2": 14.6
+    }
+   },
+   {
+    "nome": "Margem Financeira Total",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 20872,
+     "2026T1": 20051,
+     "2025T2": 18044
+    }
+   },
+   {
+    "nome": "Índice de Eficiência Operacional (IEO) - trimestral",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 46.5,
+     "2026T1": 46.9,
+     "2025T2": 49.9
+    }
+   }
+  ]
+ },
+ "1023": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/5760dff3-15e1-4962-9e81-322a0b3d0bbd/baf82bc7-3aa3-a91d-72c4-fdbde495644c?origin=2",
+  "indicadores": [
+   {
+    "nome": "Carteira de Crédito Expandida",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 1313157,
+     "2026T1": 1305528,
+     "2025T2": 1294296
+    }
+   },
+   {
+    "nome": "Inadimplência +90 dias (INAD+90d)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 5.61,
+     "2026T1": 5.05,
+     "2025T2": 3.96
+    }
+   },
+   {
+    "nome": "Índice de Basileia",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 13.91,
+     "2026T1": 14.23,
+     "2025T2": 14.14
+    }
+   },
+   {
+    "nome": "Retorno sobre Patrimônio Líquido (RSPL/ROE)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 8.3,
+     "2026T1": 7.3,
+     "2025T2": 8.4
+    }
+   },
+   {
+    "nome": "Margem Financeira Bruta",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 27483,
+     "2026T1": 27426,
+     "2025T2": 25080
+    }
+   },
+   {
+    "nome": "Índice de Eficiência 12 meses",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 28,
+     "2026T1": 28,
+     "2025T2": 27
+    }
+   }
+  ]
+ },
+ "2437": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/abb77a17-3348-4bc7-849a-154998e06ca3/9063e4cb-d112-29e3-23a8-00354c952a4a?origin=2",
+  "indicadores": [
+   {
+    "nome": "Capacidade Instalada de Geração",
+    "unidade": "MW",
+    "valores": {
+     "2026T2": 44430,
+     "2026T1": 44026,
+     "2025T2": 44368
+    }
+   },
+   {
+    "nome": "Geração Líquida de Energia",
+    "unidade": "TWh",
+    "valores": {
+     "2026T2": 41.1,
+     "2026T1": 44.4,
+     "2025T2": 38.7
+    }
+   },
+   {
+    "nome": "Energia Vendida no ACL (Mercado Livre)",
+    "unidade": "TWh",
+    "valores": {
+     "2026T2": 15,
+     "2026T1": 14.6,
+     "2025T2": 16.6
+    }
+   },
+   {
+    "nome": "Preço Médio ACL",
+    "unidade": "R$/MWh",
+    "valores": {
+     "2026T2": 191.11,
+     "2026T1": 193.02,
+     "2025T2": 153.67
+    }
+   },
+   {
+    "nome": "Linhas de Transmissão",
+    "unidade": "km",
+    "valores": {
+     "2026T2": 74829,
+     "2026T1": 74829,
+     "2025T2": 73774
+    }
+   },
+   {
+    "nome": "RAP Homologada (ciclo regulatório em curso)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 16839,
+     "2026T1": 16824,
+     "2025T2": 17209
+    }
+   }
+  ]
+ },
+ "2453": {
+  "fonte": "https://ri.cemig.com.br/docs/Cemig-2026-06-30-THtJzCB9.pdf",
+  "indicadores": [
+   {
+    "nome": "Energia distribuída (Cemig D, inclui energia compensada de GD)",
+    "unidade": "MWh",
+    "valores": {
+     "2026T2": 13487648,
+     "2026T1": 13454458,
+     "2025T2": 13331108
+    }
+   },
+   {
+    "nome": "Energia vendida Cemig GT + Holding (excluindo energia liquidada na CCEE)",
+    "unidade": "MWh",
+    "valores": {
+     "2026T2": 10916837,
+     "2026T1": 10653535,
+     "2025T2": 11243037
+    }
+   },
+   {
+    "nome": "Volume total de gás distribuído (Gasmig)",
+    "unidade": "mil m³",
+    "valores": {
+     "2026T2": 229845,
+     "2026T1": 244498,
+     "2025T2": 276986
+    }
+   },
+   {
+    "nome": "Perdas de energia totais (janela móvel 12 meses; meta regulatória 11,48%)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 11.4
+    }
+   },
+   {
+    "nome": "DEC - Duração Equivalente de Interrupção por Consumidor (janela 12 meses; limite regulatório 9,26h)",
+    "unidade": "horas",
+    "valores": {
+     "2026T2": 8.43,
+     "2026T1": 8.75
+    }
+   },
+   {
+    "nome": "Base de clientes faturados Cemig D (cativos + livres)",
+    "unidade": "clientes",
+    "valores": {
+     "2026T2": 9635247,
+     "2026T1": 9623098,
+     "2025T2": 9487204
+    }
+   }
+  ]
+ },
  "3980": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/21e1d193-5cab-456d-8bb8-f00a49a43c1c/ea70e796-ede0-c9fd-2e8a-eccd8d0a2f72?origin=2",
   "indicadores": [
@@ -235,6 +468,57 @@
    }
   ]
  },
+ "7617": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/afd9200b-9b01-4d1c-bdd9-9b2c1e9b3b4d/68055d0d-aa63-8b36-872c-f27026a2a42e?origin=2",
+  "indicadores": [
+   {
+    "nome": "Carteira de crédito – Itaú Unibanco (com garantias financeiras prestadas e títulos privados)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 1522276,
+     "2025T2": 1388715
+    }
+   },
+   {
+    "nome": "Índice de Capital Nível I – Itaú Unibanco",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 13.8,
+     "2025T2": 14.6
+    }
+   },
+   {
+    "nome": "Índice de eficiência – Itaú Unibanco (consolidado, modelo gerencial BRGAAP)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 37.4
+    }
+   },
+   {
+    "nome": "ROE recorrente sobre PL médio – Itaúsa (holding)",
+    "unidade": "% a.a.",
+    "valores": {
+     "2026T2": 18.7,
+     "2025T2": 18.3
+    }
+   },
+   {
+    "nome": "Valor de mercado do portfólio (NAV)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 189353,
+     "2025T2": 159295
+    }
+   },
+   {
+    "nome": "Desconto de holding",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 20.8
+    }
+   }
+  ]
+ },
  "8133": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/13154776-9416-4fce-8c46-3e54d45b03a3/e54e5774-e327-da78-654c-df04ac3d6cdb?origin=2",
   "indicadores": [
@@ -350,6 +634,65 @@
    }
   ]
  },
+ "12653": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/1c41fa99-efe7-4e72-81dd-5b571f5aa376/1c433925-a2b4-39b8-9193-db7a1ff0a2e0?origin=2",
+  "indicadores": [
+   {
+    "nome": "Produção líquida total (celulose + papéis)",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 1120,
+     "2026T1": 1047,
+     "2025T2": 1107
+    }
+   },
+   {
+    "nome": "Volume total de vendas (ex-madeira)",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 1018,
+     "2026T1": 1016,
+     "2025T2": 1011
+    }
+   },
+   {
+    "nome": "Preço líquido realizado - Celulose Total",
+    "unidade": "US$/tonelada",
+    "valores": {
+     "2026T2": 742,
+     "2026T1": 668,
+     "2025T2": 710
+    }
+   },
+   {
+    "nome": "Preço líquido realizado - Papéis",
+    "unidade": "R$/tonelada",
+    "valores": {
+     "2026T2": 4772,
+     "2026T1": 4738,
+     "2025T2": 4974
+    }
+   },
+   {
+    "nome": "Preço líquido realizado - Embalagens",
+    "unidade": "R$/tonelada",
+    "valores": {
+     "2026T2": 7018,
+     "2026T1": 6947,
+     "2025T2": 6849
+    }
+   },
+   {
+    "nome": "Custo caixa total por tonelada (excluindo efeitos de parada geral)",
+    "unidade": "R$/tonelada",
+    "valores": {
+     "2026T2": 3204,
+     "2026T1": 3195,
+     "2025T2": 3148
+    }
+   }
+  ]
+ },
  "13986": {
   "fonte": "https://s201.q4cdn.com/761980458/files/doc_news/2026/08/Release/Release-de-Resultados_2T26_PT.pdf",
   "indicadores": [
@@ -409,6 +752,246 @@
    }
   ]
  },
+ "14311": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/16a31b1b-5ecd-4214-a2e0-308a2393e330/8a327785-31db-2172-47a1-4ad21f404eba?origin=2",
+  "indicadores": [
+   {
+    "nome": "Preço médio de venda de energia do portfólio Copel GeT",
+    "unidade": "R$/MWh",
+    "valores": {
+     "2026T2": 198.99,
+     "2025T2": 187.1
+    }
+   }
+  ]
+ },
+ "14443": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/9e47ee51-f833-4a23-af98-2bac9e54e0b3/de280a94-7fcb-2184-1e27-26e46650843f?origin=2",
+  "indicadores": [
+   {
+    "nome": "Volume faturado total (Total Geral Consolidado)",
+    "unidade": "milhões de m³",
+    "valores": {
+     "2026T2": 1108,
+     "2025T2": 1099
+    }
+   },
+   {
+    "nome": "Tarifa média consolidada",
+    "unidade": "R$/m³",
+    "valores": {
+     "2026T2": 6.01,
+     "2025T2": 5.49
+    }
+   },
+   {
+    "nome": "Ligações ativas de água",
+    "unidade": "mil ligações",
+    "valores": {
+     "2026T2": 9487,
+     "2025T2": 9506
+    }
+   },
+   {
+    "nome": "Ligações ativas de esgoto",
+    "unidade": "mil ligações",
+    "valores": {
+     "2026T2": 8230,
+     "2025T2": 8239
+    }
+   },
+   {
+    "nome": "PDD / PECLD (Perdas Estimadas com Créditos de Liquidação Duvidosa)",
+    "unidade": "R$ milhões (despesa, valor em módulo)",
+    "valores": {
+     "2026T2": 164,
+     "2025T2": 195
+    }
+   },
+   {
+    "nome": "Funcionários no final do período",
+    "unidade": "número de colaboradores",
+    "valores": {
+     "2026T2": 8914,
+     "2025T2": 9190
+    }
+   },
+   {
+    "nome": "Funcionários - média simples do período",
+    "unidade": "número de colaboradores",
+    "valores": {
+     "2026T2": 8961,
+     "2025T2": 9305
+    }
+   }
+  ]
+ },
+ "15253": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/60f49a2d-bd8c-4fd9-95ab-bdf833097a83/c4a851a2-10c3-3c55-3d68-fcf7f6306b96?origin=2",
+  "indicadores": [
+   {
+    "nome": "Mercado total",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 10983,
+     "2025T2": 10514
+    }
+   },
+   {
+    "nome": "Mercado cativo faturado",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 6814,
+     "2025T2": 6988
+    }
+   },
+   {
+    "nome": "Mercado TUSD",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 3218,
+     "2025T2": 2952
+    }
+   },
+   {
+    "nome": "Perdas totais de energia - Energisa Consolidada (12 meses, % da energia injetada) - lido no release de distribuição, não consta da fonte primária",
+    "unidade": "% da energia injetada",
+    "valores": {
+     "2026T2": 12.28,
+     "2026T1": 12.19,
+     "2025T2": 12.04
+    }
+   },
+   {
+    "nome": "Taxa de inadimplência / PPECLD sobre fornecimento faturado - Energisa Consolidada (12 meses) - lido no release de distribuição, não consta da fonte primária",
+    "unidade": "% do fornecimento faturado",
+    "valores": {
+     "2026T2": 0.56,
+     "2025T2": 1.41
+    }
+   },
+   {
+    "nome": "Universalização - novos clientes conectados (Painel ASG)",
+    "unidade": "nº de clientes",
+    "valores": {
+     "2026T2": 57355,
+     "2025T2": 49643
+    }
+   }
+  ]
+ },
+ "16659": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/b77a3922-d280-4451-b3ee-0afec4577834/4432e300-316c-530a-bf34-b5ac18038e09?origin=2",
+  "indicadores": [
+   {
+    "nome": "Índice Combinado Ampliado — Vertical Porto Seguro",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 85.3,
+     "2026T1": 85.1,
+     "2025T2": 85.7
+    }
+   },
+   {
+    "nome": "Sinistralidade — Auto",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 56.7,
+     "2026T1": 58.5,
+     "2025T2": 58.5
+    }
+   },
+   {
+    "nome": "Sinistralidade — Seguro Saúde + Odonto",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 76.9,
+     "2026T1": 68.9,
+     "2025T2": 77.3
+    }
+   },
+   {
+    "nome": "Prêmios Emitidos — Auto",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 4220.9,
+     "2026T1": 4100.6,
+     "2025T2": 3911.7
+    }
+   },
+   {
+    "nome": "Resultado Financeiro e Patrimonial (consolidado)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 387.1,
+     "2026T1": 306.9,
+     "2025T2": 376
+    }
+   },
+   {
+    "nome": "Carteira de Crédito — Porto Bank (0-360d + 361-540d)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 23452,
+     "2026T1": 22856,
+     "2025T2": 20923
+    }
+   }
+  ]
+ },
+ "17329": {
+  "fonte": "https://www.engie.com.br/wp-content/uploads/2026/08/260805-Release-de-Resultados-2T26.pdf",
+  "indicadores": [
+   {
+    "nome": "Energia vendida em contratos (líquida de operações de trading)",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 10597,
+     "2025T2": 9290
+    }
+   },
+   {
+    "nome": "Produção bruta de energia elétrica (usinas operadas)",
+    "unidade": "MW médios",
+    "valores": {
+     "2026T2": 4355,
+     "2025T2": 4088
+    }
+   },
+   {
+    "nome": "Preço líquido médio de venda de energia (líquido de impostos sobre a venda e operações de trading)",
+    "unidade": "R$/MWh",
+    "valores": {
+     "2026T2": 208.28,
+     "2025T2": 217.01
+    }
+   },
+   {
+    "nome": "Índice de disponibilidade interna - usinas hidrelétricas (considerando paradas programadas e forçadas)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 98.9,
+     "2025T2": 93.4
+    }
+   },
+   {
+    "nome": "Índice de disponibilidade energética interna - usinas eólicas",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 94.5,
+     "2025T2": 92.4
+    }
+   },
+   {
+    "nome": "Índice de disponibilidade energética - usinas fotovoltaicas",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 96.7,
+     "2025T2": 96.3
+    }
+   }
+  ]
+ },
  "17450": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/003f6029-d45a-44ac-9c9e-869fe5df83fc/019d7c48-331a-e6fa-90fc-1a0f01dcccd5?origin=2",
   "indicadores": [
@@ -458,6 +1041,59 @@
     "valores": {
      "2026T2": 3264,
      "2025T2": 2861
+    }
+   }
+  ]
+ },
+ "17671": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/24165f81-24d6-4648-bf9f-66712905d5a2/a5722e85-0af4-69bb-d2b6-ca7775f2839f?origin=2",
+  "indicadores": [
+   {
+    "nome": "Total de acessos móveis",
+    "unidade": "mil acessos",
+    "valores": {
+     "2026T2": 105131,
+     "2025T2": 102450
+    }
+   },
+   {
+    "nome": "Acessos móveis pós-pago",
+    "unidade": "mil acessos",
+    "valores": {
+     "2026T2": 73218,
+     "2025T2": 68468
+    }
+   },
+   {
+    "nome": "Total de acessos fixos",
+    "unidade": "mil acessos",
+    "valores": {
+     "2026T2": 13678,
+     "2025T2": 13739
+    }
+   },
+   {
+    "nome": "Acessos FTTH (casas conectadas)",
+    "unidade": "mil acessos",
+    "valores": {
+     "2026T2": 8205,
+     "2025T2": 7370
+    }
+   },
+   {
+    "nome": "ARPU móvel pós-pago (ex-M2M e ex-Dongles)",
+    "unidade": "R$/mês",
+    "valores": {
+     "2026T2": 53.9,
+     "2025T2": 53.5
+    }
+   },
+   {
+    "nome": "Churn mensal pós-pago (ex-M2M e ex-Dongles)",
+    "unidade": "% ao mês",
+    "valores": {
+     "2026T2": 1,
+     "2025T2": 1.1
     }
    }
   ]
@@ -517,6 +1153,229 @@
      "2026T2": 4239,
      "2026T1": 3202,
      "2025T2": 4922
+    }
+   }
+  ]
+ },
+ "18660": {
+  "fonte": "https://ri.cpfl.com.br/Download.aspx?Arquivo=V9nPRClCfYq%2F57zASRNUmw%3D%3D&linguagem=pt",
+  "indicadores": [
+   {
+    "nome": "Energia consumida na área de concessão",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 19933,
+     "2025T2": 19164
+    }
+   },
+   {
+    "nome": "Energia consumida - Mercado Cativo",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 8984,
+     "2025T2": 8983
+    }
+   },
+   {
+    "nome": "Energia consumida - Cliente Livre",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 9455,
+     "2025T2": 8991
+    }
+   },
+   {
+    "nome": "Compensação de GD",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 1494,
+     "2025T2": 1190
+    }
+   },
+   {
+    "nome": "Energia gerada (total do portfólio)",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 2305,
+     "2025T2": 2641
+    }
+   },
+   {
+    "nome": "PDD / Receita bruta de fornecimento",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 1.08
+    }
+   }
+  ]
+ },
+ "18821": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/8516d569-e11b-4864-a777-68eca8245423/b69d1ac9-863e-e4a2-6a8b-52fe88ac54a9?origin=2",
+  "indicadores": [
+   {
+    "nome": "Rodovias - Veiculos Equivalentes (Consolidado IFRS)",
+    "unidade": "milhoes de veiculos equivalentes",
+    "valores": {
+     "2025T2": 252.8,
+     "2026T2": 363
+    }
+   },
+   {
+    "nome": "Rodovias - Veiculos Equivalentes (Total Comparavel)",
+    "unidade": "veiculos equivalentes (unidades)",
+    "valores": {
+     "2025T2": 237464012,
+     "2026T2": 246433003
+    }
+   },
+   {
+    "nome": "Rodovias - Tarifa Media (Consolidado IFRS)",
+    "unidade": "R$ por veiculo equivalente",
+    "valores": {
+     "2025T2": 8.6,
+     "2026T2": 7.6
+    }
+   },
+   {
+    "nome": "Rodovias - Tarifa Media (Total Comparavel)",
+    "unidade": "R$ por veiculo equivalente",
+    "valores": {
+     "2025T2": 8.6,
+     "2026T2": 8.9
+    }
+   },
+   {
+    "nome": "Trilhos - Passageiros Transportados (Consolidado IFRS)",
+    "unidade": "milhoes de passageiros",
+    "valores": {
+     "2025T2": 188.9,
+     "2026T2": 192.3
+    }
+   },
+   {
+    "nome": "Capex (investimentos realizados)",
+    "unidade": "R$ milhoes",
+    "valores": {
+     "2025T2": 1617,
+     "2026T2": 1831
+    }
+   }
+  ]
+ },
+ "19348": {
+  "fonte": "https://www.itau.com.br/download-file/v2/d/42787847-4cf6-4461-94a5-40ed237dca33/e950fa46-4ba0-6db4-e324-23883f242e73?origin=2",
+  "indicadores": [
+   {
+    "nome": "Carteira de crédito ampliada (Total de Operações de Crédito com Garantias Financeiras Prestadas e Títulos Privados)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 1522385,
+     "2026T1": 1482699,
+     "2025T2": 1389076
+    }
+   },
+   {
+    "nome": "Índice de Inadimplência (90 dias) - Total (NPL 90, inclui TVM)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 1.9,
+     "2026T1": 1.9,
+     "2025T2": 1.9
+    }
+   },
+   {
+    "nome": "Índice de Basileia Consolidado Prudencial",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 15.4,
+     "2026T1": 14.8,
+     "2025T2": 16.5
+    }
+   },
+   {
+    "nome": "Retorno Recorrente Gerencial sobre o Patrimônio Líquido Médio anualizado - Consolidado (ROE)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 24.3,
+     "2026T1": 24.8,
+     "2025T2": 23.3
+    }
+   },
+   {
+    "nome": "Margem Financeira Gerencial",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 33488,
+     "2026T1": 32326,
+     "2025T2": 31846
+    }
+   },
+   {
+    "nome": "Índice de Eficiência (IE)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 37.4,
+     "2026T1": 37.1,
+     "2025T2": 38
+    }
+   }
+  ]
+ },
+ "19445": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/8bdb3906-0618-4e78-bbe3-a0be9f02d8cc/593a3c7c-b8bf-7563-c94b-ee4e73db7d79?origin=2",
+  "indicadores": [
+   {
+    "nome": "Volume medido de água",
+    "unidade": "milhões de m³",
+    "valores": {
+     "2026T2": 173.027,
+     "2026T1": 170.169,
+     "2025T2": 171.336
+    }
+   },
+   {
+    "nome": "Volume medido de esgoto",
+    "unidade": "milhões de m³",
+    "valores": {
+     "2026T2": 123.506,
+     "2026T1": 118.296,
+     "2025T2": 119.228
+    }
+   },
+   {
+    "nome": "Índice de perdas na distribuição (últimos 12 meses)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 35,
+     "2026T1": 34.7,
+     "2025T2": 37.6
+    }
+   },
+   {
+    "nome": "Ligações de água",
+    "unidade": "mil unidades",
+    "valores": {
+     "2026T2": 4821,
+     "2026T1": 4811,
+     "2025T2": 4754
+    }
+   },
+   {
+    "nome": "Índice de cobertura de esgoto (coletado e tratado)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 80.1,
+     "2026T1": 80.4,
+     "2025T2": 78.2
+    }
+   },
+   {
+    "nome": "PDD (perda por redução ao valor recuperável de contas a receber)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 65.46,
+     "2026T1": 73.577,
+     "2025T2": 64.432
     }
    }
   ]
@@ -633,6 +1492,117 @@
    }
   ]
  },
+ "19992": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d3be5d49-62e7-4def-a3e1-ab25ff09f153/29ca7a02-e9c5-d3b1-6d1e-578cf0ac69d8?origin=2",
+  "indicadores": [
+   {
+    "nome": "ARR (Annual Recurring Revenue)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 7742.3,
+     "2026T1": 7533.7,
+     "2025T2": 6793.7
+    }
+   },
+   {
+    "nome": "Adição Líquida de ARR",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 209
+    }
+   },
+   {
+    "nome": "Taxa de Retenção",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 97.3,
+     "2026T1": 97.8,
+     "2025T2": 97.9
+    }
+   },
+   {
+    "nome": "Receita Recorrente",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 1781.3,
+     "2026T1": 1736.4,
+     "2025T2": 1544.5
+    }
+   },
+   {
+    "nome": "% Receita Recorrente (Receita Recorrente / Receita Líquida)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 92.8,
+     "2026T1": 91.9,
+     "2025T2": 91.1
+    }
+   },
+   {
+    "nome": "TPV - Pix Techfin",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 2837,
+     "2026T1": 2753.4,
+     "2025T2": 2165.5
+    }
+   }
+  ]
+ },
+ "20010": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/62b21cba-838c-49a4-aaef-e0fb2350c169/b1f651f0-9cd8-d2e0-87f0-498cd4b24f8b?origin=2",
+  "indicadores": [
+   {
+    "nome": "Energia Injetada Bruta Total (distribuição, 7 concessões)",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 18994,
+     "2025T2": 18143
+    }
+   },
+   {
+    "nome": "Energia Faturada (distribuição, 7 concessões)",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 13569,
+     "2025T2": 13384
+    }
+   },
+   {
+    "nome": "Mercado Fio B",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 14512,
+     "2025T2": 13923
+    }
+   },
+   {
+    "nome": "Número de Consumidores",
+    "unidade": "mil consumidores",
+    "valores": {
+     "2026T2": 14993,
+     "2025T2": 14568
+    }
+   },
+   {
+    "nome": "Perdas Totais Consolidadas (12 meses)",
+    "unidade": "% (regulatório 2026T2: 18,9%)",
+    "valores": {
+     "2026T2": 17.9,
+     "2026T1": 18,
+     "2025T2": 18.1
+    }
+   },
+   {
+    "nome": "PECLD / ROB Consolidado (ex-receita de construção)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 1.26,
+     "2025T2": 1.11
+    }
+   }
+  ]
+ },
  "20087": {
   "fonte": "https://www.embraer.com/media/hu2ij3eq/ri_release_earnings_2t26_pt.pdf",
   "indicadores": [
@@ -674,6 +1644,356 @@
      "2025T4": 31.6,
      "2026T1": 32.1,
      "2026T2": 34.5
+    }
+   }
+  ]
+ },
+ "20125": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/c504a4a5-75e7-4404-8af7-524b50cd7e11/5f967584-b370-d17f-328a-9991fafea1c8?origin=2",
+  "indicadores": [
+   {
+    "nome": "Beneficiários - planos de saúde (médico-hospitalares)",
+    "unidade": "mil vidas",
+    "valores": {
+     "2026T2": 4075,
+     "2026T1": 3976,
+     "2025T2": 3774
+    }
+   },
+   {
+    "nome": "Beneficiários - planos odontológicos",
+    "unidade": "mil vidas",
+    "valores": {
+     "2026T2": 9535,
+     "2026T1": 9404,
+     "2025T2": 8981
+    }
+   },
+   {
+    "nome": "Sinistralidade consolidada",
+    "unidade": "% dos prêmios ganhos",
+    "valores": {
+     "2026T2": 83.8,
+     "2026T1": 79,
+     "2025T2": 82.2
+    }
+   },
+   {
+    "nome": "Sinistralidade dental",
+    "unidade": "% da receita",
+    "valores": {
+     "2026T2": 37.5,
+     "2026T1": 32.7,
+     "2025T2": 36.7
+    }
+   },
+   {
+    "nome": "Tíquete médio saúde ex-administrados",
+    "unidade": "R$/vida/mês",
+    "valores": {
+     "2026T2": 1135,
+     "2026T1": 1134,
+     "2025T2": 1114
+    }
+   },
+   {
+    "nome": "Tíquete médio dental",
+    "unidade": "R$/vida/mês",
+    "valores": {
+     "2026T2": 22.5,
+     "2026T1": 22.5,
+     "2025T2": 22.7
+    }
+   }
+  ]
+ },
+ "20532": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/a2595886-9fbb-4339-8a38-71d6ce7c7d36/5395e890-a68c-8c25-7c30-399ec6928c53?origin=2",
+  "indicadores": [
+   {
+    "nome": "Carteira de crédito ampliada",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 714769,
+     "2026T1": 705582,
+     "2025T2": 675523
+    }
+   },
+   {
+    "nome": "Índice de inadimplência acima de 90 dias (carteira expandida)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 3.3,
+     "2026T1": 3.3,
+     "2025T2": 2.6
+    }
+   },
+   {
+    "nome": "Índice de Basileia (BIS)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 15.3,
+     "2026T1": 15.2,
+     "2025T2": 15
+    }
+   },
+   {
+    "nome": "ROAE gerencial recorrente excluindo ágio (anualizado)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 12.5,
+     "2026T1": 16,
+     "2025T2": 16.4
+    }
+   },
+   {
+    "nome": "Margem financeira bruta",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 15341,
+     "2026T1": 15812,
+     "2025T2": 15396
+    }
+   },
+   {
+    "nome": "Índice de eficiência",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 39.3,
+     "2026T1": 37.7,
+     "2025T2": 36.8
+    }
+   }
+  ]
+ },
+ "20788": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/046e3a67-965a-4246-ac46-a0ca4760b186/bf64bbb1-0b12-335c-a79b-0754bdf1299c?origin=2",
+  "indicadores": [
+   {
+    "nome": "Volume total vendido (consolidado)",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 1969,
+     "2026T1": 1949,
+     "2025T2": 1939
+    }
+   },
+   {
+    "nome": "Volume vendido - mercado interno",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 1253,
+     "2026T1": 1220,
+     "2025T2": 1293
+    }
+   },
+   {
+    "nome": "Volume vendido - mercado externo (exportações)",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 716,
+     "2026T1": 729,
+     "2025T2": 646
+    }
+   },
+   {
+    "nome": "Preço médio de venda - Beef América do Norte",
+    "unidade": "US$/kg",
+    "valores": {
+     "2026T2": 7.86,
+     "2025T2": 6.98
+    }
+   },
+   {
+    "nome": "Alavancagem - Dívida Líquida / EBITDA Ajustado UDM (em R$)",
+    "unidade": "x (vezes)",
+    "valores": {
+     "2026T2": 3.41,
+     "2026T1": 3.37,
+     "2025T2": 2.74
+    }
+   },
+   {
+    "nome": "Sinergias capturadas na integração Marfrig-BRF",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 158
+    }
+   }
+  ]
+ },
+ "21237": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/6c663f3b-ae5a-4692-81d3-ab23ee84c1de/3575e2a1-2720-afc4-224b-9e318ce4cc5c?origin=2",
+  "indicadores": [
+   {
+    "nome": "Produção de gás natural – Bacia do Parnaíba",
+    "unidade": "Bi m³",
+    "valores": {
+     "2026T2": 0.42,
+     "2026T1": 0.45,
+     "2025T2": 0.31
+    }
+   },
+   {
+    "nome": "Reservas remanescentes de gás natural – Bacia do Parnaíba",
+    "unidade": "Bi m³",
+    "valores": {
+     "2026T2": 37.1,
+     "2026T1": 37.5,
+     "2025T2": 35.7
+    }
+   },
+   {
+    "nome": "Produção de gás natural – Bacia do Amazonas",
+    "unidade": "Bi m³",
+    "valores": {
+     "2026T2": 0.05,
+     "2026T1": 0.06,
+     "2025T2": 0.06
+    }
+   },
+   {
+    "nome": "Volume de gás vendido – Comercialização Off-Grid SSLNG (Parnaíba)",
+    "unidade": "MM m³ de gás natural",
+    "valores": {
+     "2026T2": 29.6,
+     "2026T1": 35.8,
+     "2025T2": 35.7
+    }
+   },
+   {
+    "nome": "Geração líquida – UTE Parnaíba I",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 786,
+     "2026T1": 598,
+     "2025T2": 455
+    }
+   },
+   {
+    "nome": "Despacho – UTE Parnaíba I",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 56,
+     "2026T1": 43,
+     "2025T2": 32
+    }
+   }
+  ]
+ },
+ "21610": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/5fd7b7d8-54a1-472d-8426-eb896ad8a3c4/b6643170-1686-52a1-2eda-a7817cf64c2d?origin=2",
+  "indicadores": [
+   {
+    "nome": "ADTV Ações à Vista - Total (volume financeiro médio diário, Renda Variável)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 31310,
+     "2025T2": 26067,
+     "2026T1": 34808
+    }
+   },
+   {
+    "nome": "Margem de negociação e pós-negociação - mercado à vista de ações",
+    "unidade": "bps",
+    "valores": {
+     "2026T2": 3.074,
+     "2025T2": 3.159,
+     "2026T1": 2.944
+    }
+   },
+   {
+    "nome": "ADV total de Derivativos (volume médio diário)",
+    "unidade": "milhares de contratos",
+    "valores": {
+     "2026T2": 11098,
+     "2025T2": 12107,
+     "2026T1": 13173
+    }
+   },
+   {
+    "nome": "RPC média de Derivativos (receita por contrato)",
+    "unidade": "R$ por contrato",
+    "valores": {
+     "2026T2": 1.18,
+     "2025T2": 1.134,
+     "2026T1": 1.103
+    }
+   },
+   {
+    "nome": "Nº de investidores na Depositária (CPFs individuais, média)",
+    "unidade": "milhares",
+    "valores": {
+     "2026T2": 5667,
+     "2025T2": 5335,
+     "2026T1": 5576
+    }
+   },
+   {
+    "nome": "Tesouro Direto - nº de investidores (média)",
+    "unidade": "milhares",
+    "valores": {
+     "2026T2": 3458,
+     "2025T2": 3014,
+     "2026T1": 3377
+    }
+   }
+  ]
+ },
+ "22187": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/cecb3d3e-6bd6-4edd-b9b3-3cacde780cac/92a74c23-4a5f-3a21-9da2-72a4fbc7982c?origin=2",
+  "indicadores": [
+   {
+    "nome": "Producao media diaria total PRIO",
+    "unidade": "boe/d",
+    "valores": {
+     "2026T2": 172016,
+     "2026T1": 155355,
+     "2025T2": 100095
+    }
+   },
+   {
+    "nome": "Lifting cost PRIO",
+    "unidade": "US$/bbl",
+    "valores": {
+     "2026T2": 8.9,
+     "2026T1": 9.4,
+     "2025T2": 13.8
+    }
+   },
+   {
+    "nome": "Offtakes (volume vendido) total PRIO",
+    "unidade": "kbbl",
+    "valores": {
+     "2026T2": 15252,
+     "2026T1": 14849,
+     "2025T2": 8172
+    }
+   },
+   {
+    "nome": "Preco medio realizado - Brent de referencia",
+    "unidade": "US$/bbl",
+    "valores": {
+     "2026T2": 94.6,
+     "2026T1": 83.5,
+     "2025T2": 65.84
+    }
+   },
+   {
+    "nome": "Brent medio do periodo",
+    "unidade": "US$/bbl",
+    "valores": {
+     "2026T2": 96.68,
+     "2026T1": 78.38,
+     "2025T2": 66.71
+    }
+   },
+   {
+    "nome": "Desconto consolidado (preco equivalente FOB vs Brent de referencia)",
+    "unidade": "US$/bbl",
+    "valores": {
+     "2026T2": 6.91,
+     "2026T1": 8.15
     }
    }
   ]
@@ -727,6 +2047,287 @@
     "valores": {
      "2026T2": 681643,
      "2025T2": 685502
+    }
+   }
+  ]
+ },
+ "22616": {
+  "fonte": "https://d169uzu5o4xu1k.cloudfront.net/78a5a309-f13a-41ed-a7d1-814e37b63259/2026/6f150811-626f-4b9e-8199-7471adbe3e5e.pdf",
+  "indicadores": [
+   {
+    "nome": "Carteira de crédito ampliada (broader credit portfolio)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 406815,
+     "2026T1": 392364,
+     "2025T2": 325436
+    }
+   },
+   {
+    "nome": "Índice de Basileia (BIS capital ratio)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 16,
+     "2026T1": 15.9,
+     "2025T2": 16.2
+    }
+   },
+   {
+    "nome": "CET1 (Common Equity Tier 1)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 11.6,
+     "2026T1": 11.4,
+     "2025T2": 12
+    }
+   },
+   {
+    "nome": "ROAE ajustado anualizado",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 26.7,
+     "2026T1": 26.6,
+     "2025T2": 27.2
+    }
+   },
+   {
+    "nome": "Índice de eficiência (cost-to-income ajustado)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 37.1,
+     "2026T1": 38.1,
+     "2025T2": 38.5
+    }
+   },
+   {
+    "nome": "AuM + WuM (ativos sob gestão e administração + wealth)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 2675300,
+     "2026T1": 2594300,
+     "2025T2": 2146500
+    }
+   }
+  ]
+ },
+ "23159": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d4ee6df5-1dd8-4fb5-b518-e05397c304e4/9d131b94-6415-4fa8-d78c-99319c643d26?origin=2",
+  "indicadores": [
+   {
+    "nome": "Prêmios emitidos (Brasilseg)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 3549.9,
+     "2026T1": 3942.9,
+     "2025T2": 3731.7
+    }
+   },
+   {
+    "nome": "Índice de sinistralidade (Brasilseg)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 21.8,
+     "2026T1": 23.9,
+     "2025T2": 21.5
+    }
+   },
+   {
+    "nome": "Índice combinado (Brasilseg)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 64.4,
+     "2026T1": 67.1,
+     "2025T2": 63.2
+    }
+   },
+   {
+    "nome": "Volume médio das reservas de previdência (Brasilprev)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 491055.2,
+     "2026T1": 476532.8,
+     "2025T2": 444372.8
+    }
+   },
+   {
+    "nome": "Índice de resgate (Brasilprev)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 8.3,
+     "2026T1": 7.9,
+     "2025T2": 10.6
+    }
+   },
+   {
+    "nome": "Resultado financeiro consolidado (BB Seguridade + investidas, líquido de impostos)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 386.2,
+     "2026T1": 523,
+     "2025T2": 464
+    }
+   }
+  ]
+ },
+ "23264": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/c8182463-4b7e-408c-9d0f-42797662435e/7abe43b3-913c-7775-c393-ceb89777d32a?origin=2",
+  "indicadores": [
+   {
+    "nome": "Volume total vendido",
+    "unidade": "mil hl ('000 hl)",
+    "valores": {
+     "2026T2": 39727.9,
+     "2025T2": 39569.3
+    }
+   },
+   {
+    "nome": "Volume vendido - Cerveja Brasil",
+    "unidade": "mil hl ('000 hl)",
+    "valores": {
+     "2026T2": 21034.9,
+     "2025T2": 20042.3
+    }
+   },
+   {
+    "nome": "Receita líquida por hectolitro (NR/hl) - consolidado",
+    "unidade": "R$/hl",
+    "valores": {
+     "2026T2": 507.2,
+     "2025T2": 507.7
+    }
+   },
+   {
+    "nome": "Receita líquida por hectolitro ex-marketplace (NR/hl excl. produtos não-Ambev no marketplace)",
+    "unidade": "R$/hl",
+    "valores": {
+     "2026T2": 496.7
+    }
+   },
+   {
+    "nome": "Cash COGS por hectolitro (CPV caixa, excl. depreciação e amortização) - consolidado",
+    "unidade": "R$/hl (valor negativo = custo, conforme publicado)",
+    "valores": {
+     "2026T2": -224,
+     "2025T2": -231.1
+    }
+   },
+   {
+    "nome": "Margem EBITDA normalizado - consolidada",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 31.6,
+     "2025T2": 30.6
+    }
+   }
+  ]
+ },
+ "23795": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/3972906b-e50b-4f74-ab74-4d0d32125d11/460a0d8d-9a1d-b81b-5b0d-ebbf391e4cd4?origin=2",
+  "indicadores": [
+   {
+    "nome": "Prêmios Emitidos - Seguros (consolidado, visão gerencial)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 2490.7,
+     "2026T1": 2460.7,
+     "2025T2": 2381.6
+    }
+   },
+   {
+    "nome": "Índice de Sinistralidade - Seguros (consolidado)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 24.2,
+     "2026T1": 22.5,
+     "2025T2": 25.1
+    }
+   },
+   {
+    "nome": "Índice Combinado (IC) - visão agrupada das participações",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 57.6
+    }
+   },
+   {
+    "nome": "Índice Combinado Ampliado (ICA) - visão agrupada das participações",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 50.6
+    }
+   },
+   {
+    "nome": "Receitas de planos de previdência (contribuições recebidas de renda + prêmios emitidos de risco) - Caixa Vida e Previdência",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 6698.4,
+     "2026T1": 6651.8,
+     "2025T2": 5689.5
+    }
+   },
+   {
+    "nome": "Resultado Financeiro (visão agrupada das participações, líquido de tributos, na proporção CAIXA Seguridade)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 401.8
+    }
+   }
+  ]
+ },
+ "24295": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d243bdaa-0468-4f64-8c09-ba0bcee9789b/36213875-dcba-f137-2545-3f3eaa493e36?origin=2",
+  "indicadores": [
+   {
+    "nome": "Volume de vendas total",
+    "unidade": "mil m³",
+    "valores": {
+     "2026T2": 9053,
+     "2026T1": 8737,
+     "2025T2": 8725
+    }
+   },
+   {
+    "nome": "Número total de postos de serviços (rede embandeirada)",
+    "unidade": "postos",
+    "valores": {
+     "2026T2": 7556,
+     "2026T1": 7514,
+     "2025T2": 7989
+    }
+   },
+   {
+    "nome": "Novos postos embandeirados no trimestre",
+    "unidade": "postos",
+    "valores": {
+     "2026T2": 230,
+     "2026T1": 155
+    }
+   },
+   {
+    "nome": "Margem EBITDA Ajustada Recorrente (Vibra Distribuição)",
+    "unidade": "R$/m³",
+    "valores": {
+     "2026T2": 456,
+     "2026T1": 258,
+     "2025T2": 113
+    }
+   },
+   {
+    "nome": "ROIC (Vibra Distribuição)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 27.1,
+     "2026T1": 18.6,
+     "2025T2": 14.1
+    }
+   },
+   {
+    "nome": "Energia gerada - Geração Centralizada (Comerc)",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 487,
+     "2026T1": 563,
+     "2025T2": 536
     }
    }
   ]
@@ -891,6 +2492,61 @@
      "2025T2": 3.17,
      "2026T1": 2.52,
      "2026T2": 2.37
+    }
+   }
+  ]
+ },
+ "25585": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/9e56a180-7ba5-412d-ab60-44ca855d1d3d/1a02e5fb-0331-5f51-8637-33ece813b87f?origin=2",
+  "indicadores": [
+   {
+    "nome": "Produção de Minério de Ferro (incluindo compras de terceiros)",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 10880,
+     "2026T1": 10058,
+     "2025T2": 11591
+    }
+   },
+   {
+    "nome": "Volume de Vendas de minério de ferro",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 11849,
+     "2026T1": 9636,
+     "2025T2": 11833
+    }
+   },
+   {
+    "nome": "Embarques de minério de ferro no TECAR",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 9746
+    }
+   },
+   {
+    "nome": "Receita Líquida Unitária",
+    "unidade": "US$/tonelada",
+    "valores": {
+     "2026T2": 49.09
+    }
+   },
+   {
+    "nome": "C1",
+    "unidade": "US$/tonelada",
+    "valores": {
+     "2026T2": 24,
+     "2026T1": 23.1,
+     "2025T2": 20.8
+    }
+   },
+   {
+    "nome": "Frete marítimo de referência - rota BCI C3 (Tubarão-Qingdao), frete médio do trimestre",
+    "unidade": "US$/tonelada",
+    "valores": {
+     "2026T2": 33.98,
+     "2026T1": 24.83,
+     "2025T2": 20.85
     }
    }
   ]

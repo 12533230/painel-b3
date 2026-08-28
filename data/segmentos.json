@@ -1,4 +1,181 @@
 {
+ "1023": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/5760dff3-15e1-4962-9e81-322a0b3d0bbd/baf82bc7-3aa3-a91d-72c4-fdbde495644c?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receitas de Prestação de Serviços"
+  ],
+  "segmentos": [
+   {
+    "nome": "Administração de Fundos",
+    "valores": {
+     "2026T2": [
+      2882
+     ],
+     "2026T1": [
+      2712
+     ],
+     "2025T2": [
+      2568
+     ]
+    }
+   },
+   {
+    "nome": "Seguros, Previdência e Capitalização",
+    "valores": {
+     "2026T2": [
+      1471
+     ],
+     "2026T1": [
+      1540
+     ],
+     "2025T2": [
+      1483
+     ]
+    }
+   },
+   {
+    "nome": "Conta Corrente",
+    "valores": {
+     "2026T2": [
+      1426
+     ],
+     "2026T1": [
+      1326
+     ],
+     "2025T2": [
+      1342
+     ]
+    }
+   },
+   {
+    "nome": "Taxas de Administração de Consórcios",
+    "valores": {
+     "2026T2": [
+      984
+     ],
+     "2026T1": [
+      932
+     ],
+     "2025T2": [
+      863
+     ]
+    }
+   },
+   {
+    "nome": "Renda de Cartões",
+    "valores": {
+     "2026T2": [
+      515
+     ],
+     "2026T1": [
+      528
+     ],
+     "2025T2": [
+      509
+     ]
+    }
+   },
+   {
+    "nome": "Operações de Crédito e Garantias",
+    "valores": {
+     "2026T2": [
+      421
+     ],
+     "2026T1": [
+      402
+     ],
+     "2025T2": [
+      469
+     ]
+    }
+   },
+   {
+    "nome": "Cobrança",
+    "valores": {
+     "2026T2": [
+      276
+     ],
+     "2026T1": [
+      277
+     ],
+     "2025T2": [
+      292
+     ]
+    }
+   },
+   {
+    "nome": "Arrecadações",
+    "valores": {
+     "2026T2": [
+      251
+     ],
+     "2026T1": [
+      243
+     ],
+     "2025T2": [
+      246
+     ]
+    }
+   },
+   {
+    "nome": "Rendas do Mercado de Capitais",
+    "valores": {
+     "2026T2": [
+      138
+     ],
+     "2026T1": [
+      132
+     ],
+     "2025T2": [
+      200
+     ]
+    }
+   },
+   {
+    "nome": "Tes. Nac. e Adm. de Fundos Oficiais",
+    "valores": {
+     "2026T2": [
+      80
+     ],
+     "2026T1": [
+      70
+     ],
+     "2025T2": [
+      79
+     ]
+    }
+   },
+   {
+    "nome": "Demais",
+    "valores": {
+     "2026T2": [
+      681
+     ],
+     "2026T1": [
+      659
+     ],
+     "2025T2": [
+      702
+     ]
+    }
+   },
+   {
+    "nome": "Total - Receitas de Prestação de Serviços",
+    "valores": {
+     "2026T2": [
+      9125
+     ],
+     "2026T1": [
+      8821
+     ],
+     "2025T2": [
+      8754
+     ]
+    }
+   }
+  ]
+ },
  "3980": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/21e1d193-5cab-456d-8bb8-f00a49a43c1c/ea70e796-ede0-c9fd-2e8a-eccd8d0a2f72?origin=2",
   "unidade": "R$ milhões",
@@ -250,6 +427,358 @@
    }
   ]
  },
+ "7617": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/afd9200b-9b01-4d1c-bdd9-9b2c1e9b3b4d/68055d0d-aa63-8b36-872c-f27026a2a42e?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "resultado_recorrente_itausa (contribuição da investida ao lucro recorrente da holding, via equivalência patrimonial / valor justo)",
+   "receita_liquida_100pct (Receita Líquida da investida, base 100%)",
+   "ebitda_100pct (EBITDA da investida, base 100%)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Setor Financeiro (total)",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": 4468,
+       "receita_liquida_100pct": null,
+       "ebitda_100pct": null
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": 4118,
+       "receita_liquida_100pct": null,
+       "ebitda_100pct": null
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Itaú Unibanco",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": 4468,
+       "receita_liquida_100pct": 48391,
+       "ebitda_100pct": null,
+       "obs_receita": "Produto Bancário (IFRS)",
+       "lucro_liquido_recorrente_100pct": 12096
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": 4118,
+       "receita_liquida_100pct": 41309,
+       "ebitda_100pct": null,
+       "obs_receita": "Produto Bancário (IFRS)",
+       "lucro_liquido_recorrente_100pct": 11187
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Setor Não Financeiro (total)",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": 141,
+       "receita_liquida_100pct": null,
+       "ebitda_100pct": null
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": 193,
+       "receita_liquida_100pct": null,
+       "ebitda_100pct": null
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Dexco",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": 2,
+       "receita_liquida_100pct": 2232,
+       "ebitda_100pct": 576,
+       "obs_ebitda": "EBITDA Ajustado e Recorrente"
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": 9,
+       "receita_liquida_100pct": 2122,
+       "ebitda_100pct": 536,
+       "obs_ebitda": "EBITDA Ajustado e Recorrente"
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Dexco — Divisão Madeira",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": null,
+       "receita_liquida_100pct": 1570,
+       "ebitda_100pct": null
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": null,
+       "receita_liquida_100pct": 1432,
+       "ebitda_100pct": null
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Dexco — Divisão Metais e Louças",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": null,
+       "receita_liquida_100pct": 471,
+       "ebitda_100pct": null
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": null,
+       "receita_liquida_100pct": 474,
+       "ebitda_100pct": null
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Dexco — Divisão Revestimentos Cerâmicos",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": null,
+       "receita_liquida_100pct": 190,
+       "ebitda_100pct": null
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": null,
+       "receita_liquida_100pct": 215,
+       "ebitda_100pct": null
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Alpargatas",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": 55,
+       "receita_liquida_100pct": 1226,
+       "ebitda_100pct": 286,
+       "obs_ebitda": "EBITDA Recorrente; margem 23,3%"
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": 30,
+       "receita_liquida_100pct": 1101,
+       "ebitda_100pct": 193,
+       "obs_ebitda": "EBITDA Recorrente; margem 17,5%"
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Motiva",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": 69,
+       "receita_liquida_100pct": 3737,
+       "ebitda_100pct": 2445,
+       "obs_receita": "Receita Líquida Ajustada (sem construção)",
+       "obs_ebitda": "EBITDA Ajustado e Recorrente; margem 65,4%"
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": 41,
+       "receita_liquida_100pct": 3100,
+       "ebitda_100pct": 1894,
+       "obs_receita": "Receita Líquida Ajustada (sem construção)",
+       "obs_ebitda": "EBITDA Ajustado e Recorrente; margem 61,1%"
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Motiva — Rodovias",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": null,
+       "receita_liquida_100pct": 2641,
+       "ebitda_100pct": null
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": null,
+       "receita_liquida_100pct": 2092,
+       "ebitda_100pct": null
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Motiva — Trilhos",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": null,
+       "receita_liquida_100pct": 1096,
+       "ebitda_100pct": null
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": null,
+       "receita_liquida_100pct": 1002,
+       "ebitda_100pct": null
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Aegea Saneamento",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": -14,
+       "receita_liquida_100pct": 3198,
+       "ebitda_100pct": 2037,
+       "obs_ebitda": "EBITDA Recorrente (Consolidado); margem 63,7%"
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": -21,
+       "receita_liquida_100pct": 2776,
+       "ebitda_100pct": 1400,
+       "obs_ebitda": "EBITDA Recorrente (Consolidado); margem 50,4%; 2T25 reapresentado"
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Copa Energia",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": 102,
+       "receita_liquida_100pct": 3014,
+       "ebitda_100pct": 365,
+       "obs_ebitda": "EBITDA Recorrente (números não auditados)"
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": 87,
+       "receita_liquida_100pct": 2955,
+       "ebitda_100pct": 304,
+       "obs_ebitda": "EBITDA Recorrente (números não auditados)"
+      }
+     ]
+    }
+   },
+   {
+    "nome": "NTS",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": -68,
+       "receita_liquida_100pct": 1861,
+       "ebitda_100pct": 1597,
+       "obs_resultado": "integralmente variação do valor justo; ativo financeiro, não usa equivalência patrimonial"
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": 45,
+       "receita_liquida_100pct": 1977,
+       "ebitda_100pct": 1857,
+       "obs_resultado": "integralmente variação do valor justo"
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Outras empresas (Itautec e ITH Zux Cayman)",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": -5,
+       "receita_liquida_100pct": null,
+       "ebitda_100pct": null
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": 2,
+       "receita_liquida_100pct": null,
+       "ebitda_100pct": null
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Outros resultados (amortização de mais-valia dos PPAs)",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": -41,
+       "receita_liquida_100pct": null,
+       "ebitda_100pct": null
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": -46,
+       "receita_liquida_100pct": null,
+       "ebitda_100pct": null
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Resultado Próprio da holding (despesas administrativas, tributárias, doações e outras)",
+    "valores": {
+     "2026T2": [
+      {
+       "resultado_recorrente_itausa": -221,
+       "receita_liquida_100pct": null,
+       "ebitda_100pct": null
+      }
+     ],
+     "2025T2": [
+      {
+       "resultado_recorrente_itausa": -173,
+       "receita_liquida_100pct": null,
+       "ebitda_100pct": null
+      }
+     ]
+    }
+   }
+  ]
+ },
  "8133": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/13154776-9416-4fce-8c46-3e54d45b03a3/e54e5774-e327-da78-654c-df04ac3d6cdb?origin=2",
   "unidade": "R$ milhões",
@@ -347,6 +876,170 @@
    }
   ]
  },
+ "12653": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/1c41fa99-efe7-4e72-81dd-5b571f5aa376/1c433925-a2b4-39b8-9193-db7a1ff0a2e0?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA (divulgado apenas para Celulose, no texto do release)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Florestal (Madeira)",
+    "valores": {
+     "2026T2": [
+      145
+     ],
+     "2026T1": [
+      173
+     ],
+     "2025T2": [
+      83
+     ]
+    }
+   },
+   {
+    "nome": "Celulose - Fibra Curta",
+    "valores": {
+     "2026T2": [
+      861
+     ],
+     "2026T1": [
+      887
+     ],
+     "2025T2": [
+      924
+     ]
+    }
+   },
+   {
+    "nome": "Celulose - Fibra Longa/Fluff",
+    "valores": {
+     "2026T2": [
+      585
+     ],
+     "2026T1": [
+      522
+     ],
+     "2025T2": [
+      663
+     ]
+    }
+   },
+   {
+    "nome": "Papéis",
+    "valores": {
+     "2026T2": [
+      1714
+     ],
+     "2026T1": [
+      1689
+     ],
+     "2025T2": [
+      1715
+     ]
+    }
+   },
+   {
+    "nome": "Papéis - Papel-Cartão",
+    "valores": {
+     "2026T2": [
+      1183
+     ],
+     "2026T1": [
+      1102
+     ],
+     "2025T2": [
+      1124
+     ]
+    }
+   },
+   {
+    "nome": "Papéis - Containerboard",
+    "valores": {
+     "2026T2": [
+      531
+     ],
+     "2026T1": [
+      588
+     ],
+     "2025T2": [
+      591
+     ]
+    }
+   },
+   {
+    "nome": "Embalagens",
+    "valores": {
+     "2026T2": [
+      1915
+     ],
+     "2026T1": [
+      1794
+     ],
+     "2025T2": [
+      1860
+     ]
+    }
+   },
+   {
+    "nome": "Embalagens - Papelão Ondulado",
+    "valores": {
+     "2026T2": [
+      1586
+     ],
+     "2026T1": [
+      1486
+     ],
+     "2025T2": [
+      1514
+     ]
+    }
+   },
+   {
+    "nome": "Embalagens - Sacos Industriais",
+    "valores": {
+     "2026T2": [
+      328
+     ],
+     "2026T1": [
+      307
+     ],
+     "2025T2": [
+      346
+     ]
+    }
+   },
+   {
+    "nome": "Outros (subprodutos e hedge accounting)",
+    "valores": {
+     "2026T2": [
+      -69
+     ],
+     "2026T1": [
+      -119
+     ],
+     "2025T2": [
+      2
+     ]
+    }
+   },
+   {
+    "nome": "Receita Líquida Total",
+    "valores": {
+     "2026T2": [
+      5151
+     ],
+     "2026T1": [
+      4946
+     ],
+     "2025T2": [
+      5247
+     ]
+    }
+   }
+  ]
+ },
  "13986": {
   "fonte": "https://s201.q4cdn.com/761980458/files/doc_news/2026/08/Release/Release-de-Resultados_2T26_PT.pdf",
   "unidade": "R$ milhões",
@@ -386,6 +1079,229 @@
      "2025T2": [
       3008,
       709
+     ]
+    }
+   }
+  ]
+ },
+ "16659": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/b77a3922-d280-4451-b3ee-0afec4577834/4432e300-316c-530a-bf34-b5ac18038e09?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Total",
+   "Lucro Líquido",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "Vertical Porto Seguro (Auto, Patrimonial, Vida, Uruguay e Demais Seguros)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Total": 5888.9,
+       "Lucro Líquido": 455.8
+      }
+     ],
+     "2026T1": [
+      {
+       "Receita Total": 5707.7,
+       "Lucro Líquido": 467.1
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Total": 5430,
+       "Lucro Líquido": 434.4
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Vertical Porto Saúde",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Total": 2343.3,
+       "Lucro Líquido": 143.9
+      }
+     ],
+     "2026T1": [
+      {
+       "Receita Total": 2260.8,
+       "Lucro Líquido": 215.7
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Total": 2047.8,
+       "Lucro Líquido": 105.5
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Vertical Porto Bank",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Total": 1872,
+       "Lucro Líquido": 137.8
+      }
+     ],
+     "2026T1": [
+      {
+       "Receita Total": 1859.4,
+       "Lucro Líquido": 211.5
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Total": 1662.7,
+       "Lucro Líquido": 204.1
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Vertical Porto Serviço",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Total": 659,
+       "Lucro Líquido": 50.2,
+       "EBITDA": 95.2
+      }
+     ],
+     "2026T1": [
+      {
+       "Receita Total": 673.9,
+       "Lucro Líquido": 53,
+       "EBITDA": 101.3
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Total": 624.4,
+       "Lucro Líquido": 45.1,
+       "EBITDA": 101.4
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Controladora e Demais",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Total": 139.9,
+       "Lucro Líquido": 91.8
+      }
+     ],
+     "2026T1": [
+      {
+       "Lucro Líquido": 186.8
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Total": 114.9,
+       "Lucro Líquido": 89
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "17329": {
+  "fonte": "https://www.engie.com.br/wp-content/uploads/2026/08/260805-Release-de-Resultados-2T26.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Operacional Líquida",
+   "Ebitda Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Geração e venda de energia elétrica do portfólio da Companhia",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Operacional Líquida": 2707,
+       "Ebitda Ajustado": 1640
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Operacional Líquida": 2280,
+       "Ebitda Ajustado": 1373
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Transmissão de energia elétrica",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Operacional Líquida": 689,
+       "Ebitda Ajustado": 409
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Operacional Líquida": 740,
+       "Ebitda Ajustado": 296
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Trading de energia",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Operacional Líquida": 115,
+       "Ebitda Ajustado": 0
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Operacional Líquida": 66,
+       "Ebitda Ajustado": -2
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Transporte de gás (TAG - equivalência patrimonial, participação de 17,5%)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Operacional Líquida": 0,
+       "Ebitda Ajustado": 130
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Operacional Líquida": 0,
+       "Ebitda Ajustado": 199
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Consolidado",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Operacional Líquida": 3511,
+       "Ebitda Ajustado": 2179
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Operacional Líquida": 3086,
+       "Ebitda Ajustado": 1866
+      }
      ]
     }
    }
@@ -435,6 +1351,114 @@
      "2025T2": [
       189,
       49
+     ]
+    }
+   }
+  ]
+ },
+ "17671": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/24165f81-24d6-4648-bf9f-66712905d5a2/a5722e85-0af4-69bb-d2b6-ca7775f2839f?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida"
+  ],
+  "segmentos": [
+   {
+    "nome": "Consolidado — Receita Operacional Líquida",
+    "valores": {
+     "2026T2": [
+      15757
+     ],
+     "2025T2": [
+      14645
+     ]
+    }
+   },
+   {
+    "nome": "Negócio Móvel — Receita de Serviço Móvel",
+    "valores": {
+     "2026T2": [
+      10183
+     ],
+     "2025T2": [
+      9555
+     ]
+    }
+   },
+   {
+    "nome": "Negócio Móvel — Pós-pago (inclui M2M, dongles, atacado e outros)",
+    "valores": {
+     "2026T2": [
+      8859
+     ],
+     "2025T2": [
+      8214
+     ]
+    }
+   },
+   {
+    "nome": "Negócio Móvel — Pré-pago",
+    "valores": {
+     "2026T2": [
+      1324
+     ],
+     "2025T2": [
+      1341
+     ]
+    }
+   },
+   {
+    "nome": "Negócio Móvel — Receita de Aparelhos e Eletrônicos",
+    "valores": {
+     "2026T2": [
+      1048
+     ],
+     "2025T2": [
+      820
+     ]
+    }
+   },
+   {
+    "nome": "Negócio Fixo — Receita Líquida Fixa",
+    "valores": {
+     "2026T2": [
+      4527
+     ],
+     "2025T2": [
+      4270
+     ]
+    }
+   },
+   {
+    "nome": "Negócio Fixo — FTTH",
+    "valores": {
+     "2026T2": [
+      2147
+     ],
+     "2025T2": [
+      1940
+     ]
+    }
+   },
+   {
+    "nome": "Negócio Fixo — Dados Corporativos, TIC e Serviços Digitais",
+    "valores": {
+     "2026T2": [
+      1467
+     ],
+     "2025T2": [
+      1361
+     ]
+    }
+   },
+   {
+    "nome": "Negócio Fixo — Outras Receitas Fixas (Voz, xDSL, FTTC e IPTV)",
+    "valores": {
+     "2026T2": [
+      913
+     ],
+     "2025T2": [
+      969
      ]
     }
    }
@@ -526,6 +1550,325 @@
       684,
       304,
       348
+     ]
+    }
+   }
+  ]
+ },
+ "18660": {
+  "fonte": "https://ri.cpfl.com.br/Download.aspx?Arquivo=V9nPRClCfYq%2F57zASRNUmw%3D%3D&linguagem=pt",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "Distribuição",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": 9229,
+       "EBITDA": 2301
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": 8816,
+       "EBITDA": 2066
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Geração & Gestão de Energia",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": 1525,
+       "EBITDA": 767
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": 1666,
+       "EBITDA": 737
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Transmissão",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": 699,
+       "EBITDA": 400
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": 423,
+       "EBITDA": 171
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Serviços & Outros",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": 334,
+       "EBITDA": 88
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": 306,
+       "EBITDA": 55
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Eliminações e Outros",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": -679
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": -662
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Consolidado",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": 11107,
+       "EBITDA": 3556
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": 10549,
+       "EBITDA": 3028
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "18821": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/8516d569-e11b-4864-a777-68eca8245423/b69d1ac9-863e-e4a2-6a8b-52fe88ac54a9?origin=2",
+  "unidade": "R$ milhoes (margem em %)",
+  "metricas": [
+   "Receita Liquida Ajustada (sem receita de construcao)",
+   "EBITDA Ajustado",
+   "Margem EBITDA Ajustada (%)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Rodovias",
+    "valores": {
+     "2025T2": [
+      {
+       "receitaLiquidaAjustada": 1998,
+       "ebitdaAjustado": 1540,
+       "margemEbitdaAjustadaPct": 77.1
+      }
+     ],
+     "2026T2": [
+      {
+       "receitaLiquidaAjustada": 2535,
+       "ebitdaAjustado": 1995,
+       "margemEbitdaAjustadaPct": 78.7
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Trilhos",
+    "valores": {
+     "2025T2": [
+      {
+       "receitaLiquidaAjustada": 1002,
+       "ebitdaAjustado": 582,
+       "margemEbitdaAjustadaPct": 58.1
+      }
+     ],
+     "2026T2": [
+      {
+       "receitaLiquidaAjustada": 1096,
+       "ebitdaAjustado": 696,
+       "margemEbitdaAjustadaPct": 63.5
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Outros (Holdings e CSC)",
+    "valores": {
+     "2025T2": [
+      {
+       "receitaLiquidaAjustada": null,
+       "ebitdaAjustado": -300,
+       "margemEbitdaAjustadaPct": null
+      }
+     ],
+     "2026T2": [
+      {
+       "receitaLiquidaAjustada": null,
+       "ebitdaAjustado": -321,
+       "margemEbitdaAjustadaPct": null
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Consolidado Motiva (ex-Aeroportos)",
+    "valores": {
+     "2025T2": [
+      {
+       "receitaLiquidaAjustada": 3006,
+       "ebitdaAjustado": 1822,
+       "margemEbitdaAjustadaPct": 60.6
+      }
+     ],
+     "2026T2": [
+      {
+       "receitaLiquidaAjustada": 3631,
+       "ebitdaAjustado": 2370,
+       "margemEbitdaAjustadaPct": 65.3
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "19348": {
+  "fonte": "https://www.itau.com.br/download-file/v2/d/42787847-4cf6-4461-94a5-40ed237dca33/e950fa46-4ba0-6db4-e324-23883f242e73?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Produto Bancário",
+   "Margem Financeira Gerencial",
+   "Resultado Recorrente Gerencial"
+  ],
+  "segmentos": [
+   {
+    "nome": "Negócios de Varejo",
+    "valores": {
+     "2025T2": [
+      28361,
+      18610,
+      4941
+     ],
+     "2026T1": [
+      29439,
+      19567,
+      5493
+     ],
+     "2026T2": [
+      30243,
+      20251,
+      5491
+     ]
+    }
+   },
+   {
+    "nome": "Negócios de Atacado",
+    "valores": {
+     "2025T2": [
+      15138,
+      11094,
+      5392
+     ],
+     "2026T1": [
+      15094,
+      10782,
+      5646
+     ],
+     "2026T2": [
+      15225,
+      10969,
+      5614
+     ]
+    }
+   },
+   {
+    "nome": "Atividades com Mercado + Corporação",
+    "valores": {
+     "2025T2": [
+      2330,
+      2142,
+      1175
+     ],
+     "2026T1": [
+      2289,
+      1977,
+      1143
+     ],
+     "2026T2": [
+      2517,
+      2269,
+      1302
+     ]
+    }
+   }
+  ]
+ },
+ "19445": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/8bdb3906-0618-4e78-bbe3-a0be9f02d8cc/593a3c7c-b8bf-7563-c94b-ee4e73db7d79?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Bruta"
+  ],
+  "segmentos": [
+   {
+    "nome": "Água",
+    "valores": {
+     "2026T2": [
+      1409.127
+     ],
+     "2026T1": [
+      1393.07
+     ],
+     "2025T2": [
+      1302.622
+     ]
+    }
+   },
+   {
+    "nome": "Esgoto",
+    "valores": {
+     "2026T2": [
+      740.958
+     ],
+     "2026T1": [
+      728.433
+     ],
+     "2025T2": [
+      671.709
+     ]
+    }
+   },
+   {
+    "nome": "Resíduos Sólidos",
+    "valores": {
+     "2026T2": [
+      1.515
+     ],
+     "2026T1": [
+      1.571
+     ],
+     "2025T2": [
+      1.499
      ]
     }
    }
@@ -658,6 +2001,133 @@
    }
   ]
  },
+ "19992": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d3be5d49-62e7-4def-a3e1-ab25ff09f153/29ca7a02-e9c5-d3b1-6d1e-578cf0ac69d8?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Consolidado (Gestão + Linx + RD Station) — pro-forma",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": 1919.7,
+       "EBITDA Ajustado": 486.8
+      }
+     ],
+     "2026T1": [
+      {
+       "Receita Líquida": 1889.1,
+       "EBITDA Ajustado": 497.1
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": 1694.8,
+       "EBITDA Ajustado": 397.5
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Techfin (JV com Itaú apresentada a 100%; consolidada a 50% via equivalência patrimonial)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": 152.2,
+       "EBITDA Ajustado": -5
+      }
+     ],
+     "2026T1": [
+      {
+       "Receita Líquida": 145.1,
+       "EBITDA Ajustado": 3
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": 126.4,
+       "EBITDA Ajustado": 2.4
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "20010": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/62b21cba-838c-49a4-aaef-e0fb2350c169/b1f651f0-9cd8-d2e0-87f0-498cd4b24f8b?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Distribuição",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": 12952,
+       "EBITDA Ajustado": 2570
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": 11558,
+       "EBITDA Ajustado": 2383
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Renováveis (Echoenergia: Echo Participações + Echo Crescimento)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": 301.3,
+       "EBITDA Ajustado": 134.6
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": 360,
+       "EBITDA Ajustado": 180.2
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Saneamento (CSA)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita Líquida": 41.8,
+       "EBITDA Ajustado": 6.6
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita Líquida": 38.8,
+       "EBITDA Ajustado": 7.3
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Equatorial Serviços",
+    "valores": {
+     "2026T2": [
+      {
+       "EBITDA Ajustado": 39.8
+      }
+     ]
+    }
+   }
+  ]
+ },
  "20087": {
   "fonte": "https://www.embraer.com/media/hu2ij3eq/ri_release_earnings_2t26_pt.pdf",
   "unidade": "Receita em R$ milhões (lida diretamente do release em reais, sem conversão). A Embraer NÃO divulga EBITDA por segmento; divulga a margem EBIT ajustada (%) por segmento, reportada aqui como 2ª métrica. O release traz comparativo apenas 2T26 vs 2T25 (sem 1T26 por segmento).",
@@ -733,6 +2203,387 @@
    }
   ]
  },
+ "20125": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/c504a4a5-75e7-4404-8af7-524b50cd7e11/5f967584-b370-d17f-328a-9991fafea1c8?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita",
+   "Resultado das operações",
+   "Lucro líquido"
+  ],
+  "segmentos": [
+   {
+    "nome": "Bradesco Saúde (planos médico-hospitalares)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita": 13132,
+       "Resultado das operações": 2200,
+       "Lucro líquido": 923
+      }
+     ],
+     "2026T1": [
+      {
+       "Lucro líquido": 1132
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita": 11774,
+       "Resultado das operações": 2074,
+       "Lucro líquido": 673
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Odontoprev (planos odontológicos)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita": 635.3,
+       "Lucro líquido": 115.7
+      }
+     ],
+     "2026T1": [
+      {
+       "Lucro líquido": 151
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita": 601.8,
+       "Lucro líquido": 146.2
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Atlântica Hospitais e Participações",
+    "valores": {
+     "2026T2": [
+      {
+       "Lucro líquido": 63.5
+      }
+     ],
+     "2026T1": [
+      {
+       "Lucro líquido": 8.3
+      }
+     ],
+     "2025T2": [
+      {
+       "Lucro líquido": 15.4
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Diagnóstico e Healthtechs (Fleury 24,85%, Orizon, Kortex)",
+    "valores": {
+     "2026T2": [
+      {
+       "Lucro líquido": 7
+      }
+     ],
+     "2026T1": [
+      {
+       "Lucro líquido": 16
+      }
+     ],
+     "2025T2": [
+      {
+       "Lucro líquido": 55
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "20788": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/046e3a67-965a-4246-ac46-a0ca4760b186/bf64bbb1-0b12-335c-a79b-0754bdf1299c?origin=2",
+  "unidade": "R$ milhões (Beef América do Norte e Sadia Halal reportados pela empresa em US$ milhões, mantidos em US$); volume em mil toneladas; margem em %",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado",
+   "Margem EBITDA Ajustada (%)",
+   "Volume (mil toneladas)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Beef América do Norte (National Beef)",
+    "valores": {
+     "2026T2": [
+      null,
+      null,
+      null,
+      null
+     ]
+    }
+   }
+  ]
+ },
+ "21610": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/5fd7b7d8-54a1-472d-8426-eb896ad8a3c4/b6643170-1686-52a1-2eda-a7817cf64c2d?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita bruta"
+  ],
+  "segmentos": [
+   {
+    "nome": "Mercados",
+    "valores": {
+     "2026T2": [
+      2034.5
+     ],
+     "2025T2": [
+      1866.6
+     ],
+     "2026T1": [
+      2153.3
+     ]
+    }
+   },
+   {
+    "nome": "Mercados — Derivativos",
+    "valores": {
+     "2026T2": [
+      881.5
+     ],
+     "2025T2": [
+      893
+     ],
+     "2026T1": [
+      965.5
+     ]
+    }
+   },
+   {
+    "nome": "Mercados — Renda Variável",
+    "valores": {
+     "2026T2": [
+      692.3
+     ],
+     "2025T2": [
+      565.1
+     ],
+     "2026T1": [
+      749.2
+     ]
+    }
+   },
+   {
+    "nome": "Mercados — Renda Fixa e Crédito",
+    "valores": {
+     "2026T2": [
+      385.5
+     ],
+     "2025T2": [
+      328.9
+     ],
+     "2026T1": [
+      362.1
+     ]
+    }
+   },
+   {
+    "nome": "Mercados — Empréstimo de Ativos",
+    "valores": {
+     "2026T2": [
+      75.2
+     ],
+     "2025T2": [
+      79.6
+     ],
+     "2026T1": [
+      76.5
+     ]
+    }
+   },
+   {
+    "nome": "Soluções para Mercado de Capitais",
+    "valores": {
+     "2026T2": [
+      201
+     ],
+     "2025T2": [
+      159.8
+     ],
+     "2026T1": [
+      201.7
+     ]
+    }
+   },
+   {
+    "nome": "Soluções para Mercado de Capitais — Dados para Mercado de Capitais",
+    "valores": {
+     "2026T2": [
+      99
+     ],
+     "2025T2": [
+      77.1
+     ],
+     "2026T1": [
+      96.5
+     ]
+    }
+   },
+   {
+    "nome": "Soluções para Mercado de Capitais — Depositária para Mercado à Vista",
+    "valores": {
+     "2026T2": [
+      59
+     ],
+     "2025T2": [
+      48.5
+     ],
+     "2026T1": [
+      70.1
+     ]
+    }
+   },
+   {
+    "nome": "Soluções para Mercado de Capitais — Listagem e Soluções para Emissores",
+    "valores": {
+     "2026T2": [
+      43
+     ],
+     "2025T2": [
+      34.2
+     ],
+     "2026T1": [
+      35.1
+     ]
+    }
+   },
+   {
+    "nome": "Soluções Analíticas de Dados (Trillia)",
+    "valores": {
+     "2026T2": [
+      315.2
+     ],
+     "2025T2": [
+      258.3
+     ],
+     "2026T1": [
+      317.5
+     ]
+    }
+   },
+   {
+    "nome": "Soluções Analíticas de Dados (Trillia) — Veículos e Imobiliário",
+    "valores": {
+     "2026T2": [
+      175.9
+     ],
+     "2025T2": [
+      132.9
+     ],
+     "2026T1": [
+      177.6
+     ]
+    }
+   },
+   {
+    "nome": "Soluções Analíticas de Dados (Trillia) — Plataformas e Dados Analíticos",
+    "valores": {
+     "2026T2": [
+      139.3
+     ],
+     "2025T2": [
+      125.4
+     ],
+     "2026T1": [
+      139.9
+     ]
+    }
+   },
+   {
+    "nome": "Tecnologia e Plataformas",
+    "valores": {
+     "2026T2": [
+      526.8
+     ],
+     "2025T2": [
+      455.5
+     ],
+     "2026T1": [
+      525.1
+     ]
+    }
+   },
+   {
+    "nome": "Tecnologia e Plataformas — Tecnologia",
+    "valores": {
+     "2026T2": [
+      346.6
+     ],
+     "2025T2": [
+      314.4
+     ],
+     "2026T1": [
+      342.2
+     ]
+    }
+   },
+   {
+    "nome": "Tecnologia e Plataformas — Serviços de Apoio ao Mercado",
+    "valores": {
+     "2026T2": [
+      162.7
+     ],
+     "2025T2": [
+      123.8
+     ],
+     "2026T1": [
+      158.9
+     ]
+    }
+   },
+   {
+    "nome": "Tecnologia e Plataformas — Outros",
+    "valores": {
+     "2026T2": [
+      17.5
+     ],
+     "2025T2": [
+      17.3
+     ],
+     "2026T1": [
+      24
+     ]
+    }
+   },
+   {
+    "nome": "Outras receitas",
+    "valores": {
+     "2026T2": [
+      4
+     ],
+     "2025T2": [
+      5.6
+     ],
+     "2026T1": [
+      4.2
+     ]
+    }
+   },
+   {
+    "nome": "Receita Bruta Total",
+    "valores": {
+     "2026T2": [
+      3081.4
+     ],
+     "2025T2": [
+      2745.8
+     ],
+     "2026T1": [
+      3201.7
+     ]
+    }
+   }
+  ]
+ },
  "22470": {
   "fonte": "https://ri.magazineluiza.com.br/ListResultados/Download.aspx?Arquivo=dL1FGoA0QI/SvcDvROsA7g==",
   "unidade": "R$ milhões",
@@ -792,6 +2643,601 @@
      ],
      "2025T2": [
       15291.9
+     ]
+    }
+   }
+  ]
+ },
+ "22616": {
+  "fonte": "https://d169uzu5o4xu1k.cloudfront.net/78a5a309-f13a-41ed-a7d1-814e37b63259/2026/6f150811-626f-4b9e-8199-7471adbe3e5e.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Investment Banking",
+    "valores": {
+     "2026T2": [
+      421.4
+     ],
+     "2026T1": [
+      628
+     ],
+     "2025T2": [
+      782.1
+     ]
+    }
+   },
+   {
+    "nome": "Corporate Lending & Business Banking",
+    "valores": {
+     "2026T2": [
+      2500
+     ],
+     "2026T1": [
+      2332.3
+     ],
+     "2025T2": [
+      2106.8
+     ]
+    }
+   },
+   {
+    "nome": "Sales & Trading",
+    "valores": {
+     "2026T2": [
+      1858.4
+     ],
+     "2026T1": [
+      1877
+     ],
+     "2025T2": [
+      1913
+     ]
+    }
+   },
+   {
+    "nome": "Asset Management",
+    "valores": {
+     "2026T2": [
+      793.5
+     ],
+     "2026T1": [
+      783.4
+     ],
+     "2025T2": [
+      624.1
+     ]
+    }
+   },
+   {
+    "nome": "Wealth Management & Personal Banking",
+    "valores": {
+     "2026T2": [
+      1447.5
+     ],
+     "2026T1": [
+      1516
+     ],
+     "2025T2": [
+      1239
+     ]
+    }
+   },
+   {
+    "nome": "Consumer Finance & Banking",
+    "valores": {
+     "2026T2": [
+      1545.7
+     ],
+     "2026T1": [
+      1125
+     ],
+     "2025T2": [
+      889.7
+     ]
+    }
+   },
+   {
+    "nome": "Interest & Others",
+    "valores": {
+     "2026T2": [
+      1804.7
+     ],
+     "2026T1": [
+      1706
+     ],
+     "2025T2": [
+      1396
+     ]
+    }
+   },
+   {
+    "nome": "Total de receitas",
+    "valores": {
+     "2026T2": [
+      10371.2
+     ],
+     "2026T1": [
+      9968
+     ],
+     "2025T2": [
+      8951
+     ]
+    }
+   }
+  ]
+ },
+ "23159": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d4ee6df5-1dd8-4fb5-b518-e05397c304e4/9d131b94-6415-4fa8-d78c-99319c643d26?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita (linha de topo divulgada, 100% da investida)",
+   "Resultado operacional não decorrente de juros (100% da investida)",
+   "Lucro líquido gerencial (100% da investida)",
+   "Contribuição ao resultado da BB Seguridade (equivalência patrimonial)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Brasilseg (seguros - risco)",
+    "valores": {
+     "2025T2": [
+      3731.7,
+      1351.8,
+      1257.9,
+      939
+     ],
+     "2026T1": [
+      3942.9,
+      1179.3,
+      1112.1,
+      829.5
+     ],
+     "2026T2": [
+      3549.9,
+      1292.1,
+      1231.9,
+      919.3
+     ]
+    }
+   },
+   {
+    "nome": "Brasilprev (previdência - acumulação)",
+    "valores": {
+     "2025T2": [
+      9772.6,
+      551.6,
+      415.6,
+      312
+     ],
+     "2026T1": [
+      14602,
+      599.7,
+      538.1,
+      403.9
+     ],
+     "2026T2": [
+      10166.1,
+      614.4,
+      337.4,
+      253.4
+     ]
+    }
+   },
+   {
+    "nome": "Brasilcap (capitalização - acumulação)",
+    "valores": {
+     "2025T2": [
+      1849.1,
+      3.8,
+      73.7,
+      49.2
+     ],
+     "2026T1": [
+      1784.5,
+      -2,
+      104.6,
+      69.9
+     ],
+     "2026T2": [
+      1618.5,
+      -6,
+      74.7,
+      49.9
+     ]
+    }
+   },
+   {
+    "nome": "Brasildental (odontológico)",
+    "valores": {
+     "2025T2": [
+      30.9,
+      8.5,
+      6,
+      4.5
+     ],
+     "2026T1": [
+      20.2,
+      4.9,
+      3.4,
+      3.9
+     ],
+     "2026T2": [
+      31.2,
+      8.5,
+      6.3,
+      4.7
+     ]
+    }
+   },
+   {
+    "nome": "BB Corretora (distribuição)",
+    "valores": {
+     "2025T2": [
+      1409.9,
+      1166.4,
+      883.8,
+      883.8
+     ],
+     "2026T1": [
+      1420,
+      1173,
+      875.6,
+      875.6
+     ],
+     "2026T2": [
+      1371.1,
+      1127.1,
+      858.4,
+      858.4
+     ]
+    }
+   }
+  ]
+ },
+ "23264": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/c8182463-4b7e-408c-9d0f-42797662435e/7abe43b3-913c-7775-c393-ceb89777d32a?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita líquida",
+   "EBITDA normalizado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Brasil Cerveja (Brazil Beer)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita líquida": 9791.1,
+       "EBITDA normalizado": 3275.2
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita líquida": 8989.6,
+       "EBITDA normalizado": 2868.7
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Brasil NAB (não alcoólicos)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita líquida": 2060.5,
+       "EBITDA normalizado": 610.7
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita líquida": 2031.2,
+       "EBITDA normalizado": 534.2
+      }
+     ]
+    }
+   },
+   {
+    "nome": "CAC (América Central e Caribe)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita líquida": 2317.5,
+       "EBITDA normalizado": 1013.6
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita líquida": 2784.6,
+       "EBITDA normalizado": 1194.5
+      }
+     ]
+    }
+   },
+   {
+    "nome": "LAS (América Latina Sul)",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita líquida": 3226.2,
+       "EBITDA normalizado": 601.8
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita líquida": 3295.2,
+       "EBITDA normalizado": 616.1
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Canadá",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita líquida": 2753.7,
+       "EBITDA normalizado": 875.3
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita líquida": 2989.7,
+       "EBITDA normalizado": 939.2
+      }
+     ]
+    }
+   },
+   {
+    "nome": "Ambev consolidado",
+    "valores": {
+     "2026T2": [
+      {
+       "Receita líquida": 20148.9,
+       "EBITDA normalizado": 6376.7
+      }
+     ],
+     "2025T2": [
+      {
+       "Receita líquida": 20090.2,
+       "EBITDA normalizado": 6152.7
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "23795": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/3972906b-e50b-4f74-ab74-4d0d32125d11/460a0d8d-9a1d-b81b-5b0d-ebbf391e4cd4?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Prêmios Emitidos (Negócios de Seguros, por ramo)",
+   "Receita Operacional (Negócios de Acumulação, por segmento)",
+   "Receitas com Comissionamento (Negócios de Distribuição, DRE gerencial da holding)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Seguros - Habitacional (prêmios emitidos)",
+    "valores": {
+     "2026T2": [
+      1122.5
+     ],
+     "2026T1": [
+      1087.4
+     ],
+     "2025T2": [
+      984.6
+     ]
+    }
+   },
+   {
+    "nome": "Seguros - Residencial (prêmios emitidos)",
+    "valores": {
+     "2026T2": [
+      279.1
+     ],
+     "2026T1": [
+      282.6
+     ],
+     "2025T2": [
+      280.2
+     ]
+    }
+   },
+   {
+    "nome": "Seguros - Prestamista (prêmios emitidos)",
+    "valores": {
+     "2026T2": [
+      299.6
+     ],
+     "2026T1": [
+      298.9
+     ],
+     "2025T2": [
+      332.9
+     ]
+    }
+   },
+   {
+    "nome": "Seguros - Vida (prêmios emitidos)",
+    "valores": {
+     "2026T2": [
+      560
+     ],
+     "2026T1": [
+      551.8
+     ],
+     "2025T2": [
+      596.4
+     ]
+    }
+   },
+   {
+    "nome": "Seguros - Outros Não Estratégicos (prêmios emitidos)",
+    "valores": {
+     "2026T2": [
+      175.3
+     ],
+     "2026T1": [
+      188.8
+     ],
+     "2025T2": [
+      112
+     ]
+    }
+   },
+   {
+    "nome": "Seguros - Assistência (prêmios emitidos)",
+    "valores": {
+     "2026T2": [
+      54.2
+     ],
+     "2026T1": [
+      51.1
+     ],
+     "2025T2": [
+      75.5
+     ]
+    }
+   },
+   {
+    "nome": "Seguros - TOTAL (prêmios emitidos)",
+    "valores": {
+     "2026T2": [
+      2490.7
+     ],
+     "2026T1": [
+      2460.7
+     ],
+     "2025T2": [
+      2381.6
+     ]
+    }
+   },
+   {
+    "nome": "Acumulação - Previdência (receita operacional)",
+    "valores": {
+     "2026T2": [
+      552.2
+     ],
+     "2026T1": [
+      538.4
+     ],
+     "2025T2": [
+      500.2
+     ]
+    }
+   },
+   {
+    "nome": "Acumulação - Capitalização (receita operacional)",
+    "valores": {
+     "2026T2": [
+      162.4
+     ],
+     "2026T1": [
+      163.9
+     ],
+     "2025T2": [
+      150
+     ]
+    }
+   },
+   {
+    "nome": "Acumulação - Consórcio (receita operacional)",
+    "valores": {
+     "2026T2": [
+      259.4
+     ],
+     "2026T1": [
+      267.2
+     ],
+     "2025T2": [
+      275.6
+     ]
+    }
+   },
+   {
+    "nome": "Acumulação - TOTAL (receita operacional)",
+    "valores": {
+     "2026T2": [
+      973.9
+     ],
+     "2026T1": [
+      969.5
+     ],
+     "2025T2": [
+      925.8
+     ]
+    }
+   },
+   {
+    "nome": "Distribuição - Corretagem/Interm. de Prod. de Seguridade (receita, holding)",
+    "valores": {
+     "2026T2": [
+      573.8
+     ],
+     "2026T1": [
+      578.8
+     ],
+     "2025T2": [
+      541.9
+     ]
+    }
+   },
+   {
+    "nome": "Distribuição - Acesso à Rede de Distribuição/Uso da Marca - BDF (receita, holding)",
+    "valores": {
+     "2026T2": [
+      41.5
+     ],
+     "2026T1": [
+      41.9
+     ],
+     "2025T2": [
+      43.3
+     ]
+    }
+   },
+   {
+    "nome": "Distribuição - TOTAL Receitas com Comissionamento (holding)",
+    "valores": {
+     "2026T2": [
+      615.3
+     ],
+     "2026T1": [
+      620.7
+     ],
+     "2025T2": [
+      585.1
+     ]
+    }
+   },
+   {
+    "nome": "Memo: Receitas Operacionais consolidadas da holding CAIXA Seguridade (DRE gerencial)",
+    "valores": {
+     "2026T2": [
+      1500
+     ],
+     "2026T1": [
+      1523.7
+     ],
+     "2025T2": [
+      1382.3
+     ]
+    }
+   },
+   {
+    "nome": "Memo: Resultado de Investimentos em Participações Societárias - MEP (holding)",
+    "valores": {
+     "2026T2": [
+      884.7
+     ],
+     "2026T1": [
+      903.1
+     ],
+     "2025T2": [
+      797.2
      ]
     }
    }
@@ -887,6 +3333,43 @@
      "2025T2": [
       8147.7,
       399
+     ]
+    }
+   }
+  ]
+ },
+ "25585": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/9e56a180-7ba5-412d-ab60-44ca855d1d3d/1a02e5fb-0331-5f51-8637-33ece813b87f?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida de Vendas"
+  ],
+  "segmentos": [
+   {
+    "nome": "Mercado Interno",
+    "valores": {
+     "2026T2": [
+      354.336
+     ],
+     "2026T1": [
+      296.61
+     ],
+     "2025T2": [
+      401.745
+     ]
+    }
+   },
+   {
+    "nome": "Mercado Externo",
+    "valores": {
+     "2026T2": [
+      3258.868
+     ],
+     "2026T1": [
+      3407.523
+     ],
+     "2025T2": [
+      3636.457
      ]
     }
    }
