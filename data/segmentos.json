@@ -431,9 +431,9 @@
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/afd9200b-9b01-4d1c-bdd9-9b2c1e9b3b4d/68055d0d-aa63-8b36-872c-f27026a2a42e?origin=2",
   "unidade": "R$ milhões",
   "metricas": [
-   "resultado_recorrente_itausa (contribuição da investida ao lucro recorrente da holding, via equivalência patrimonial / valor justo)",
-   "receita_liquida_100pct (Receita Líquida da investida, base 100%)",
-   "ebitda_100pct (EBITDA da investida, base 100%)"
+   "Resultado recorrente (contribuição à holding)",
+   "Receita líquida da investida (100%)",
+   "EBITDA da investida (100%)"
   ],
   "segmentos": [
    {
