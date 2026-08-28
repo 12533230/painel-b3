@@ -45,10 +45,11 @@ for c in b3["companies"]:
     mkt = (c.get("mkt") or "").strip()
     if mkt in EXCL_MKT:
         continue
+    # todas as listadas em bolsa entram, mesmo sem ticker negociado/cotação
     tickers = sorted({t for t in (c.get("codes") or []) if TICKER_RE.match(t)})
-    if not tickers or c.get("hasQ") != "S":
-        continue
     cnpj = norm_cnpj(c.get("cnpj"))
+    if not cnpj or not c.get("codeCVM"):
+        continue
     universe[cnpj] = {
         "cvm": str(int(c["codeCVM"])), "root": c["issuer"], "name": c.get("trad") or c.get("name"),
         "fullName": c.get("name"), "cnpj": cnpj, "setor": setor, "subsetor": subsetor,
@@ -130,6 +131,29 @@ def load_all(kind, flow=False):
     con = pd.concat(frames_con, ignore_index=True) if frames_con else pd.DataFrame()
     ind = pd.concat(frames_ind, ignore_index=True) if frames_ind else pd.DataFrame()
     return con, ind
+
+# ------------------------------------------------- documentos (link por entrega)
+# os CSVs "master" (itr_cia_aberta_YYYY.csv) trazem ID_DOC/LINK_DOC por entrega
+doc_frames = []
+for y in YEARS_ITR:
+    p = CVM / f"itr_cia_aberta_{y}.csv"
+    if p.exists():
+        doc_frames.append(pd.read_csv(p, sep=";", encoding="latin1", dtype=str))
+for y in YEARS_DFP:
+    p = CVM / f"dfp_cia_aberta_{y}.csv"
+    if p.exists():
+        doc_frames.append(pd.read_csv(p, sep=";", encoding="latin1", dtype=str))
+DOCID = {}
+if doc_frames:
+    docs = pd.concat(doc_frames, ignore_index=True)
+    docs["CNPJ"] = docs["CNPJ_CIA"].map(norm_cnpj)
+    docs["V"] = pd.to_numeric(docs["VERSAO"], errors="coerce").fillna(1)
+    docs = docs.sort_values("V").groupby(["CNPJ", "DT_REFER"]).tail(1)
+    for _, r in docs.iterrows():
+        did = str(r.get("ID_DOC") or "").strip()
+        if did:
+            DOCID[(r["CNPJ"], r["DT_REFER"])] = did
+print(f"documentos com link: {len(DOCID)}", file=sys.stderr)
 
 print("carregando DRE...", file=sys.stderr)
 dre_con, dre_ind = load_all("DRE", flow=True)
@@ -304,12 +328,14 @@ def bal_values(sub_a, sub_p):
 
 # ------------------------------------------------------------- capital/mktcap
 cap_frames = []
-for y in (2026, 2025, 2024):
+for y in sorted(set(YEARS_ITR + YEARS_DFP), reverse=True):
     for pref in ("itr", "dfp"):
         p = CVM / f"{pref}_cia_aberta_composicao_capital_{y}.csv"
         if p.exists():
             cf = pd.read_csv(p, sep=";", encoding="latin1", dtype=str)
             cap_frames.append(cf)
+if not cap_frames:
+    sys.exit("composição de capital ausente — abortando (mktcap ficaria todo vazio)")
 cap = pd.concat(cap_frames, ignore_index=True)
 CNPJ8 = {c[:8]: c for c in CNPJS}
 cap["CNPJ"] = cap["CNPJ_CIA"].map(norm_cnpj).str[:8].map(CNPJ8)
@@ -342,11 +368,6 @@ def build_company(cnpj, meta):
     dfc = pick(dfc_con, dfc_ind, cnpj)
     subd = dfc[dfc["CNPJ"] == cnpj]
     da_q = da_values(subd[subd["SRC"].str.startswith("ITR")])
-    # T4 D&A: DFP YTD - ITR T3
-    da_ytd_dfp = da_values(subd[subd["SRC"].str.startswith("DFP")])  # q==4 -> precisa de ytd
-    # da_values já converte p/ trimestre quando tem sequência; para DFP só temos o ano cheio:
-    for _, r in subd[subd["SRC"].str.startswith("DFP")].iterrows():
-        pass  # tratado abaixo de forma agregada
 
     # D&A anual (DFP) para derivar T4
     da_year = {}
@@ -389,12 +410,16 @@ def build_company(cnpj, meta):
         ni = nic if (nic is not None and nic != 0) else d.get("ni")
         da = da_q.get((y, q))
         ebitda = (ebit + da) if (ebit is not None and da is not None and not isfin) else None
-        qlist.append({
+        item = {
             "p": f"{y}T{q}", "rev": fmt_mi(rev), "ebit": fmt_mi(ebit) if not isfin else None,
             "ebitda": fmt_mi(ebitda), "ni": fmt_mi(ni),
             "mgE": round(100 * ebitda / rev, 1) if (ebitda and rev) else None,
             "mgL": round(100 * ni / rev, 1) if (ni is not None and rev) else None,
-        })
+        }
+        doc = DOCID.get((cnpj, f"{y}-{QEND[q]}"))
+        if doc:
+            item["doc"] = doc  # ID do documento na CVM (ITR do tri; DFP no T4)
+        qlist.append(item)
     # últimos 4 trimestres p/ 12m
     have = {c["p"]: c for c in qlist}
     keys = [f"{y}T{q}" for (y, q) in QUARTERS]
@@ -403,6 +428,21 @@ def build_company(cnpj, meta):
         vals = [c[f] for c in last4 if c.get(f) is not None]
         return round(sum(vals), 1) if len(vals) == 4 else None
     rev12, ebit12, ebitda12, ni12 = s12("rev"), s12("ebit"), s12("ebitda"), s12("ni")
+
+    # histórico de balanço por trimestre (p/ séries de ROE/ROIC/dívida no painel)
+    QENDS = {"03-31", "06-30", "09-30", "12-31"}
+    bhist = []
+    for dtb in sorted(bal.keys()):
+        if dtb[5:] not in QENDS:
+            continue
+        b = bal[dtb]
+        plq = b.get("pl")
+        if plq is not None and b.get("minor") is not None:
+            plq = plq - b["minor"]
+        cx = (b.get("caixa") or 0) + (b.get("aplic") or 0)
+        dv = b.get("div")
+        bhist.append({"dt": dtb, "pl": fmt_mi(plq),
+                      "divL": fmt_mi(dv - cx) if (dv is not None and not isfin) else None})
 
     lastbal = None
     if bal:
@@ -470,8 +510,10 @@ def build_company(cnpj, meta):
     if mcap:
         ind["mktCap"] = fmt_mi(mcap)
         if ni12 and ni12 > 0: ind["plCalc"] = round(mcap / 1e6 / ni12, 1)
-        if lastbal and lastbal.get("divL") is not None and ebitda12:
-            ind["evEbitda"] = round((mcap / 1e6 + lastbal["divL"]) / ebitda12, 1)
+        if lastbal and lastbal.get("divL") is not None:
+            ind["ev"] = round(mcap / 1e6 + lastbal["divL"], 1)  # valor da firma (EV)
+            if ebitda12:
+                ind["evEbitda"] = round((mcap / 1e6 + lastbal["divL"]) / ebitda12, 1)
 
     tk = []
     for t in meta["tickers"]:
@@ -481,8 +523,9 @@ def build_company(cnpj, meta):
     links = {
         "b3": f"https://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/renda-variavel/empresas-listadas.htm?codigoCvm={meta['cvm']}",
         "cvm": f"https://www.rad.cvm.gov.br/ENET/frmConsultaExternaCVM.aspx?codigoCVM={meta['cvm']}",
-        "fund": f"https://www.fundamentus.com.br/detalhes.php?papel={meta['tickers'][0]}",
     }
+    if meta["tickers"]:
+        links["fund"] = f"https://www.fundamentus.com.br/detalhes.php?papel={meta['tickers'][0]}"
     if meta["site"]:
         site = meta["site"]
         if not site.startswith("http"): site = "https://" + site
@@ -490,7 +533,7 @@ def build_company(cnpj, meta):
     return {
         **{k: meta[k] for k in ("root", "name", "fullName", "cnpj", "cvm", "setor", "subsetor", "segmento", "listagem")},
         "fin": isfin, "con": cnpj in HAS_CON,
-        "tickers": tk, "q": qlist, "bal": lastbal, "ind": ind, "links": links,
+        "tickers": tk, "q": qlist, "bal": lastbal, "bh": bhist, "ind": ind, "links": links,
     }
 
 companies = []
@@ -500,8 +543,7 @@ for cnpj, meta in universe.items():
     except Exception as e:
         print("ERRO", meta["root"], repr(e), file=sys.stderr)
 
-# só entra no painel quem tem ALGUM dado (trimestre ou ticker com cotação)
-companies = [c for c in companies if c["q"] or c["tickers"]]
+# todas as listadas em bolsa entram; sem dado nenhum a linha mostra "—"
 companies.sort(key=lambda c: (c["setor"], c["subsetor"], c["segmento"], c["name"] or ""))
 
 panel = {
@@ -512,5 +554,5 @@ panel = {
     "companies": companies,
 }
 (OUT / "painel_data.json").write_text(json.dumps(panel, ensure_ascii=False), encoding="utf-8")
-n26 = sum(1 for c in companies if any(x["p"].startswith("2026") for x in c["q"]))
-print(f"OK {len(companies)} empresas no painel | {n26} com trimestre 2026 | JSON: {(OUT/'painel_data.json').stat().st_size/1024:.0f} KB", file=sys.stderr)
+ncur = sum(1 for c in companies if any(x["p"].startswith(str(YCUR)) for x in c["q"]))
+print(f"OK {len(companies)} empresas no painel | {ncur} com trimestre {YCUR} | JSON: {(OUT/'painel_data.json').stat().st_size/1024:.0f} KB", file=sys.stderr)

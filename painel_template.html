@@ -69,11 +69,14 @@
   .wrap{display:grid;grid-template-columns:270px 1fr;gap:0;min-height:calc(100vh - 90px)}
   @media(max-width:900px){.wrap{grid-template-columns:1fr}.side{display:none}}
   .side{border-right:1px solid var(--grid);padding:14px 10px 40px;overflow-y:auto;max-height:calc(100vh - 92px);position:sticky;top:92px}
-  body[data-view="macro"] .wrap,body[data-view="etf"] .wrap,body[data-view="eua"] .wrap{display:none}
-  #macroview,#etfview,#euaview{display:none;padding:16px 18px 60px;max-width:1280px;margin:0 auto}
+  body[data-view="macro"] .wrap,body[data-view="etf"] .wrap,body[data-view="eua"] .wrap,body[data-view="cmp"] .wrap{display:none}
+  #macroview,#etfview,#euaview,#cmpview{display:none;padding:16px 18px 60px;max-width:1280px;margin:0 auto}
   body[data-view="macro"] #macroview{display:block}
   body[data-view="etf"] #etfview{display:block}
   body[data-view="eua"] #euaview{display:block}
+  body[data-view="cmp"] #cmpview{display:block}
+  .cmpbar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+  .cmpbar select{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;max-width:100%}
   .rmv{border:none;background:transparent;color:var(--bad);cursor:pointer;font:inherit;font-size:12px;padding:0 4px}
   .cndl{cursor:pointer}
   .qtbl tbody tr.cndl:hover{background:var(--wash)}
@@ -222,7 +225,7 @@
   <img class="logo" alt="Insignia Partners" src="data:image/png;base64,__LOGO__">
   <span class="div"></span>
   <h1>Painel B3</h1>
-  <div class="nav"><button id="nav-emp" class="on">Empresas</button><button id="nav-etf">ETFs</button><button id="nav-eua">EUA</button><button id="nav-mac">Brasil &amp; Macro</button></div>
+  <div class="nav"><button id="nav-emp" class="on">Empresas</button><button id="nav-cmp">Comparar</button><button id="nav-etf">ETFs</button><button id="nav-eua">EUA</button><button id="nav-mac">Brasil &amp; Macro</button></div>
   <span class="src" id="srcline"></span>
   <span class="sp"></span>
   <div class="search">
@@ -252,6 +255,7 @@
 <main id="macroview"></main>
 <main id="etfview"></main>
 <main id="euaview"></main>
+<main id="cmpview"></main>
 
 <div class="iovl" id="iovl"><div class="ibox" id="ibox" role="dialog" aria-label="Dados, fontes e atualizações"></div></div>
 
@@ -370,6 +374,7 @@ const COLS = [
   ['cot','Cotação', c=>{const t=mainTicker(c); if(!t) return null; const q=getQ(t.t); return q&&q.p!=null?q.p:t.cot;}],
   ['var','Var. dia', c=>{const t=mainTicker(c); if(!t) return null; const q=getQ(t.t); return q?q.pct:null;}],
   ['mktCap','Valor mercado', c=>c.ind.mktCap],
+  ['ev','Valor firma (EV)', c=>evOf(c)],
   ['pl','P/L', c=>{const t=mainTicker(c); return t?t.pl:null;}],
   ['pvp','P/VP', c=>{const t=mainTicker(c); return t?t.pvp:null;}],
   ['evebitda','EV/EBITDA', c=>{const t=mainTicker(c); return t?t.evebitda:null;}],
@@ -411,6 +416,7 @@ function renderList(list){
     tr.append(tdc, tdv);
     if(t) LISTROWS.push({tk:t.t, tdc, tdv});
     tr.append(el('td', c.ind.mktCap?'':'dim', fmtMi(c.ind.mktCap)));
+    tr.append(el('td', evOf(c)!=null?'':'dim', fmtMi(evOf(c))));
     tr.append(el('td', cls(t&&t.pl), fmtX(t&&t.pl)));
     tr.append(el('td', cls(t&&t.pvp), fmtX(t&&t.pvp)));
     tr.append(el('td', cls(t&&t.evebitda), c.fin?'—':fmtX(t&&t.evebitda)));
@@ -570,7 +576,7 @@ function openDetail(cvm){
   const mklink=(href,txt)=>{const a=el('a',null,txt); a.href=href; a.target='_blank'; a.rel='noopener'; return a;};
   lk.append(mklink(c.links.cvm,'Documentos CVM (ITR/DFP/release) ↗'));
   lk.append(mklink('https://www.google.com/search?q='+encodeURIComponent(c.name+' relações com investidores central de resultados'),'Central de resultados / RI ↗'));
-  lk.append(mklink(c.links.fund,'Fundamentus ↗'));
+  if(c.links.fund) lk.append(mklink(c.links.fund,'Fundamentus ↗'));
   if(c.links.ri) lk.append(mklink(c.links.ri,'Site ↗'));
   ph.append(lk);
   panel.append(ph);
@@ -580,7 +586,16 @@ function openDetail(cvm){
   pb.append(el('h3','sect','Indicadores — últimos 12 meses e balanço mais recente'));
   const tiles = el('div','tiles');
   const i = c.ind, t = mainTicker(c);
+  // tiles com histórico ganham clique (série trimestral no modal)
+  const hz = (key, tile) => {
+    if(c.q && c.q.length && indSeries(c, key) && indSeries(c, key).rows.some(r=>r.v!=null)){
+      tile.classList.add('cndl'); tile.title = 'clique para ver o histórico por trimestre';
+      tile.onclick = () => openIndChart(c, key);
+    }
+    return tile;
+  };
   tiles.append(statTile('Valor de mercado', fmtMi(i.mktCap), i.mktCap?'calculado (ações × cotação)':'sem dado'));
+  tiles.append(statTile('Valor da firma (EV)', fmtMi(evOf(c)), evOf(c)!=null?'mercado + dívida líquida':'precisa de mktcap e dívida'));
   tiles.append(statTile('P/L', fmtX(t&&t.pl), 'Fundamentus · '+(t?t.t:'—'), cls(t&&t.pl)));
   tiles.append(statTile('P/VP', fmtX(t&&t.pvp), 'Fundamentus'));
   if(!c.fin){
@@ -588,16 +603,16 @@ function openDetail(cvm){
     tiles.append(statTile('EV/EBIT', fmtX(t&&t.evebit), 'Fundamentus'));
   }
   tiles.append(statTile('Div. Yield', fmtPct(t&&t.dy), 'Fundamentus', 'pos'));
-  tiles.append(statTile('ROE', fmtPct(i.roe!=null?i.roe:(t&&t.roe)), i.roe!=null?'CVM · lucro 12m / PL':'Fundamentus', cls(i.roe!=null?i.roe:(t&&t.roe))));
+  tiles.append(hz('roe', statTile('ROE', fmtPct(i.roe!=null?i.roe:(t&&t.roe)), i.roe!=null?'CVM · lucro 12m / PL':'Fundamentus', cls(i.roe!=null?i.roe:(t&&t.roe)))));
   if(!c.fin){
-    tiles.append(statTile('ROIC', fmtPct(t&&t.roic!=null?t.roic:i.roic), t&&t.roic!=null?'Fundamentus':'CVM (aprox.)', cls(t&&t.roic!=null?t.roic:i.roic)));
-    tiles.append(statTile('Dív. líq./EBITDA', fmtX(i.dlEbitda), 'CVM · 12m', i.dlEbitda!=null&&i.dlEbitda>3?'neg':null));
+    tiles.append(hz('roic', statTile('ROIC', fmtPct(t&&t.roic!=null?t.roic:i.roic), t&&t.roic!=null?'Fundamentus':'CVM (aprox.)', cls(t&&t.roic!=null?t.roic:i.roic))));
+    tiles.append(hz('dlEbitda', statTile('Dív. líq./EBITDA', fmtX(i.dlEbitda), 'CVM · 12m', i.dlEbitda!=null&&i.dlEbitda>3?'neg':null)));
     tiles.append(statTile('Dív. líq./Patrimônio', i.dlPl==null?'—':nbr2.format(i.dlPl), 'CVM'));
-    tiles.append(statTile('Margem EBITDA 12m', fmtPct(i.mgE12), 'CVM'));
+    tiles.append(hz('mgE', statTile('Margem EBITDA 12m', fmtPct(i.mgE12), 'CVM')));
   }
-  tiles.append(statTile('Margem líquida 12m', fmtPct(i.mgL12), 'CVM', cls(i.mgL12)));
-  tiles.append(statTile('Receita 12m', fmtMi(i.rev12), 'CVM'));
-  tiles.append(statTile('Lucro líquido 12m', fmtMi(i.ni12), 'CVM', cls(i.ni12)));
+  tiles.append(hz('mgL', statTile('Margem líquida 12m', fmtPct(i.mgL12), 'CVM', cls(i.mgL12))));
+  tiles.append(hz('rev12', statTile('Receita 12m', fmtMi(i.rev12), 'CVM')));
+  tiles.append(hz('ni12', statTile('Lucro líquido 12m', fmtMi(i.ni12), 'CVM', cls(i.ni12))));
   pb.append(tiles);
 
   // ---- candles diários do ticker principal (troca de ticker quando houver mais de um)
@@ -643,7 +658,15 @@ function openDetail(cvm){
   const tb = el('tbody');
   for(const q of [...qd].reverse()){
     const tr = el('tr');
-    tr.append(el('td',null,q.p));
+    const tdp = el('td');
+    if(q.doc){ // link direto para o documento (ITR/DFP) entregue à CVM
+      const a = el('a',null,q.p+' ↗');
+      a.href = 'https://www.rad.cvm.gov.br/ENET/frmGerenciaPaginaFRE.aspx?NumeroSequencialDocumento='+encodeURIComponent(q.doc)+'&CodigoTipoInstituicao=1';
+      a.target = '_blank'; a.rel = 'noopener'; a.title = 'abrir o relatório deste trimestre na CVM';
+      a.style.color = 'var(--link)'; a.style.fontWeight = '600';
+      tdp.append(a);
+    } else tdp.textContent = q.p;
+    tr.append(tdp);
     tr.append(el('td',null,fmtNum(q.rev)));
     tr.append(el('td',cls(q.ebit),fmtNum(q.ebit)));
     tr.append(el('td',cls(q.ebitda),fmtNum(q.ebitda)));
@@ -694,6 +717,67 @@ function openDetail(cvm){
     }
     tt.append(tbb); tw.append(tt); pb.append(tw);
   }
+
+  // ---- notícias da empresa (robô diário · Google News)
+  pb.append(el('h3','sect','Notícias recentes'));
+  const nwCard = el('div','card');
+  const nwBox = el('div','dim','carregando notícias…');
+  nwCard.append(nwBox); pb.append(nwCard);
+  loadNews().then(() => {
+    if(openCvm !== cvm) return;
+    nwBox.textContent = ''; nwBox.className = '';
+    const itens = (NEWSD && NEWSD.n && NEWSD.n[c.cvm]) || [];
+    const safeU = u => { try{ const x = new URL(u); return ['https:','http:'].includes(x.protocol) ? x.href : null; }catch(e){ return null; } };
+    for(const nn of itens){
+      const hu = safeU(nn.u);
+      if(!hu) continue; // só http/https — news.json é dado externo
+      const it = el('div','newsit');
+      const a = el('a',null,nn.t); a.href = hu; a.target = '_blank'; a.rel = 'noopener'; it.append(a);
+      const meta = el('div','newsmeta'); meta.append(el('span',null,(nn.src||'')+(nn.d?' · '+nn.d:''))); it.append(meta);
+      nwBox.append(it);
+    }
+    if(!itens.length) nwBox.append(el('div','dim','sem notícias coletadas para esta empresa'));
+    const more = el('a',null,'ver mais no Google News ↗');
+    more.href = 'https://news.google.com/search?q='+encodeURIComponent('"'+c.name+'" B3')+'&hl=pt-BR&gl=BR&ceid=BR:pt-419';
+    more.target = '_blank'; more.rel = 'noopener'; more.style.cssText = 'font-weight:700;color:var(--link);text-decoration:none';
+    const wrap = el('div'); wrap.style.margin = '8px 10px'; wrap.append(more); nwBox.append(wrap);
+    nwBox.append(el('div','note','Google News'+(NEWSD&&NEWSD.updatedAt?' · coletado em '+dmy(NEWSD.updatedAt):'')+' · manchetes de veículos diversos; não são curadoria nem recomendação.'));
+  });
+
+  // ---- segmentos de negócio e indicadores operacionais (curadoria manual, quando houver)
+  const exBox = el('div'); pb.append(exBox);
+  loadExtras().then(() => {
+    if(openCvm !== cvm) return;
+    const mkExTable = (titulo, header, linhas, fonte) => {
+      exBox.append(el('h3','sect',titulo));
+      const w = el('div','qtblwrap'); const tb2 = el('table','qtbl');
+      const hr2 = el('tr'); for(const h of header) hr2.append(el('th',null,h));
+      const th2 = el('thead'); th2.append(hr2); tb2.append(th2);
+      const bd = el('tbody');
+      for(const ln of linhas){ const tr2 = el('tr'); ln.forEach((v,ix)=>tr2.append(el('td',null,v==null?'—':String(v)))); bd.append(tr2); }
+      tb2.append(bd); w.append(tb2); exBox.append(w);
+      exBox.append(el('div','note','Curadoria manual a partir dos releases da empresa (a CVM aberta não estrutura estes dados). Fonte: '+(fonte||'—')+'.'));
+    };
+    const sg = SEGD && SEGD[c.cvm];
+    if(sg && Array.isArray(sg.segmentos) && sg.segmentos.length){
+      const periodos = [...new Set(sg.segmentos.flatMap(s=>Object.keys(s.valores||{})))].sort();
+      const mets = sg.metricas || ['Valor'];
+      mets.forEach((met, mi) => {
+        mkExTable('Segmentos — '+met+(sg.unidade?' ('+sg.unidade+')':''),
+          ['Segmento', ...periodos],
+          sg.segmentos.map(s => [s.nome, ...periodos.map(p => (s.valores&&s.valores[p])? s.valores[p][mi] : null)]),
+          sg.fonte);
+      });
+    }
+    const op = OPD && OPD[c.cvm];
+    if(op && Array.isArray(op.indicadores) && op.indicadores.length){
+      const periodos = [...new Set(op.indicadores.flatMap(x=>Object.keys(x.valores||{})))].sort();
+      mkExTable('Indicadores operacionais',
+        ['Indicador', ...periodos],
+        op.indicadores.map(x => [x.nome+(x.unidade?' ('+x.unidade+')':''), ...periodos.map(p => x.valores? x.valores[p] : null)]),
+        op.fonte);
+    }
+  });
 
   pb.append(el('div','foot','Insignia Partners · painel interno. Fontes: demonstrações ITR/DFP nos Dados Abertos da CVM (valores em R$; consolidado quando disponível) · classificação setorial oficial da B3 · cotações e múltiplos Fundamentus. EBITDA = EBIT + depreciação/amortização (DFC). ROIC CVM = EBIT 12m × (1−34%) ÷ (PL + dívida líquida). Indicadores de bancos/seguradoras seguem lógica própria — EBITDA e dívida não se aplicam. Atualizado em '+DB.updatedAt+'. Uso informativo; não é recomendação de investimento.'));
   panel.append(pb);
@@ -1043,6 +1127,200 @@ async function refreshB3charts(sym){ // candle de hoje mais rico p/ ativos B3 ab
 }
 function redrawChart(){
   if(modalKind === 'chart' && typeof chartDraw === 'function') chartDraw();
+}
+
+// ================= VALOR DA FIRMA, HISTÓRICO DE INDICADORES, NOTÍCIAS, COMPARAR =================
+function evOf(c){ // valor da firma = valor de mercado + dívida líquida (R$ mi)
+  if(c.ind && c.ind.ev != null) return c.ind.ev;
+  if(c.ind && c.ind.mktCap != null && c.bal && c.bal.divL != null) return +(c.ind.mktCap + c.bal.divL).toFixed(1);
+  return null;
+}
+
+// ---- séries históricas de indicadores (CVM trimestral + histórico de balanço "bh")
+const QE_MAP = {'1':'03-31','2':'06-30','3':'09-30','4':'12-31'};
+function indSeries(c, key){
+  const q = c.q || [];
+  if(!q.length) return null;
+  const pn = p => (+p.slice(0,4))*4 + (+p.slice(5)); // 2026T2 -> posição sequencial
+  const byP = {}; for(const x of q) byP[pn(x.p)] = x;
+  const roll = f => q.map(x => { // soma móvel de 4 TRIMESTRES CONSECUTIVOS (lacuna de entrega => null)
+    const n0 = pn(x.p); let s = 0;
+    for(let k = n0-3; k <= n0; k++){
+      const it = byP[k];
+      if(!it || it[f]==null) return null;
+      s += it[f];
+    }
+    return +s.toFixed(1);
+  });
+  const balAt = p => {
+    if(!c.bh || !c.bh.length) return null;
+    return c.bh.find(b => b.dt === p.slice(0,4)+'-'+QE_MAP[p.slice(5)]) || null;
+  };
+  const mk = f => q.map(x=>({p:x.p, v:x[f]!=null?x[f]:null}));
+  const rows12 = arr => q.map((x,i)=>({p:x.p, v:arr[i]}));
+  const p1 = v => v==null?null:+v.toFixed(1);
+  switch(key){
+    case 'mgE':  return {rows:mk('mgE'),  fmt:fmtPct, titulo:'Margem EBITDA por trimestre', nota:'CVM (ITR/DFP)'};
+    case 'mgL':  return {rows:mk('mgL'),  fmt:fmtPct, titulo:'Margem líquida por trimestre', nota:'CVM (ITR/DFP)'};
+    case 'rev12':{ return {rows:rows12(roll('rev')), fmt:fmtNum, titulo:'Receita acumulada 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
+    case 'ni12': { return {rows:rows12(roll('ni')),  fmt:fmtNum, titulo:'Lucro líquido acumulado 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
+    case 'roe':  { const r=roll('ni');
+      return {rows:q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.pl&&r[i]!=null)? p1(100*r[i]/b.pl):null}; }),
+              fmt:fmtPct, titulo:'ROE — lucro 12m ÷ PL do trimestre', nota:'CVM · precisa do histórico de balanço'}; }
+    case 'roic': { const r=roll('ebit');
+      return {rows:q.map((x,i)=>{ const b=balAt(x.p);
+        if(!b||b.pl==null||r[i]==null) return {p:x.p,v:null};
+        const inv=b.pl+Math.max(b.divL||0,0);
+        return {p:x.p, v:inv? p1(100*(r[i]*0.66)/inv):null}; }),
+              fmt:fmtPct, titulo:'ROIC — EBIT 12m × (1−34%) ÷ capital investido', nota:'CVM · aproximação'}; }
+    case 'dlEbitda': { const r=roll('ebitda');
+      return {rows:q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.divL!=null&&r[i])? +(b.divL/r[i]).toFixed(2):null}; }),
+              fmt:fmtX, titulo:'Dívida líquida ÷ EBITDA 12m', nota:'CVM'}; }
+  }
+  return null;
+}
+function openIndChart(c, key){
+  const s = indSeries(c, key);
+  if(!s || !s.rows.some(r=>r.v!=null)) return;
+  modalKind = 'chart'; chartDraw = null; chartSym = null;
+  ibox.textContent = '';
+  const x = el('button','btn x2','✕ fechar'); x.onclick = closeInfo; ibox.append(x);
+  ibox.append(el('h2',null, c.name+' — '+s.titulo));
+  ibox.append(el('div','note','Fonte: '+s.nota+' · série disponível desde que a empresa entrega ITR/DFP no período coberto pelo painel.'));
+  const box = el('div'); box.style.marginTop = '10px'; ibox.append(box);
+  iovl.classList.add('on');
+  colChart(box, s.rows, 'var(--s1)', s.fmt);
+}
+
+// ---- notícias por empresa (data/news.json, robô diário) e curadorias manuais
+let NEWSD = null, SEGD = null, OPD = null;
+async function loadNews(){
+  if(NEWSD) return NEWSD;
+  try{ NEWSD = await jj('https://raw.githubusercontent.com/'+REPO+'/main/data/news.json?v='+Math.floor(Date.now()/36e5), 20000); }
+  catch(e){ NEWSD = {n:{}}; }
+  return NEWSD;
+}
+async function loadExtras(){
+  if(SEGD && OPD) return;
+  const g = async f => { try{ return await jj('https://raw.githubusercontent.com/'+REPO+'/main/data/'+f+'?v='+Math.floor(Date.now()/36e5), 15000); }catch(e){ return {}; } };
+  [SEGD, OPD] = await Promise.all([g('segmentos.json'), g('operacionais.json')]);
+}
+
+// ---- gráfico de barras horizontais (comparações) ----
+function hbarChart(container, rows, fmt, onclickRow){
+  container.textContent = '';
+  if(!rows.length){ container.append(el('div','dim','sem dados para este filtro')); return; }
+  const W = Math.max(container.clientWidth||760, 320);
+  const rowH = 26, padT = 4, padB = 4;
+  const labelW = Math.min(230, Math.round(W*0.34)), valW = 90;
+  const H = padT + padB + rows.length*rowH;
+  const iw = Math.max(40, W - labelW - valW - 14);
+  const maxV = Math.max(...rows.map(r=>Math.abs(r.v))) || 1;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox','0 0 '+W+' '+H); svg.setAttribute('width','100%'); svg.style.display='block';
+  rows.forEach((r,i)=>{
+    const y = padT + i*rowH;
+    const t = document.createElementNS(svg.namespaceURI,'text');
+    t.setAttribute('x',labelW-6); t.setAttribute('y',y+17); t.setAttribute('text-anchor','end');
+    if(r.hl) t.setAttribute('class','val');
+    t.textContent = r.label.length>34 ? r.label.slice(0,33)+'…' : r.label; svg.append(t);
+    const bw = Math.max(2, iw*Math.abs(r.v)/maxV);
+    const bar = document.createElementNS(svg.namespaceURI,'rect');
+    bar.setAttribute('x',labelW); bar.setAttribute('y',y+4);
+    bar.setAttribute('width',bw); bar.setAttribute('height',18); bar.setAttribute('rx',3);
+    bar.setAttribute('fill', r.hl ? 'var(--s2)' : (r.v<0 ? 'var(--bad)' : 'var(--s1)'));
+    if(r.med) bar.setAttribute('opacity','.45');
+    svg.append(bar);
+    const v = document.createElementNS(svg.namespaceURI,'text');
+    v.setAttribute('x',labelW+bw+6); v.setAttribute('y',y+17); v.setAttribute('class','val');
+    v.textContent = fmt(r.v); svg.append(v);
+    if(onclickRow && r.cvm){
+      const hit = document.createElementNS(svg.namespaceURI,'rect');
+      hit.setAttribute('x',0); hit.setAttribute('y',y); hit.setAttribute('width',W); hit.setAttribute('height',rowH);
+      hit.setAttribute('fill','transparent'); hit.style.cursor='pointer';
+      hit.addEventListener('click', ()=>onclickRow(r.cvm));
+      svg.append(hit);
+    }
+  });
+  container.append(svg);
+}
+
+// ---- view Comparar ----
+const CMP_INDS = [
+  ['roic','ROIC (%)', c=>{const t=mainTicker(c); return (t&&t.roic!=null)?t.roic:(c.ind.roic!=null?c.ind.roic:null);}, fmtPct],
+  ['roe','ROE (%)', c=>c.ind.roe!=null?c.ind.roe:(mainTicker(c)?mainTicker(c).roe:null), fmtPct],
+  ['evebitda','EV/EBITDA', c=>{const t=mainTicker(c); const v=(t&&t.evebitda>0)?t.evebitda:(c.ind.evEbitda>0?c.ind.evEbitda:null); return v;}, fmtX],
+  ['pl','P/L', c=>{const t=mainTicker(c); return (t&&t.pl>0)?t.pl:null;}, fmtX],
+  ['pvp','P/VP', c=>{const t=mainTicker(c); return (t&&t.pvp>0)?t.pvp:null;}, fmtX],
+  ['dy','Div. Yield (%)', c=>{const t=mainTicker(c); return t?t.dy:null;}, fmtPct],
+  ['mgE12','Margem EBITDA 12m (%)', c=>c.ind.mgE12, fmtPct],
+  ['mgL12','Margem líquida 12m (%)', c=>c.ind.mgL12, fmtPct],
+  ['dlEbitda','Dív. líq./EBITDA', c=>c.ind.dlEbitda, fmtX],
+  ['mktCap','Valor de mercado', c=>c.ind.mktCap, fmtMi],
+  ['ev','Valor da firma (EV)', c=>evOf(c), fmtMi],
+  ['rev12','Receita 12m', c=>c.ind.rev12, fmtMi],
+  ['cresc5a','Cresc. receita 5 anos (%)', c=>{const t=mainTicker(c); return t?t.cresc5a:null;}, fmtPct],
+];
+let cmpSel = lsGet('cmp_sel') || {ind:'roic', setor:'', modo:'rank', dir:'desc', emp:''};
+// sane defaults se o localStorage trouxer estado antigo/inválido
+if(!CMP_INDS.some(x=>x[0]===cmpSel.ind)) cmpSel.ind = 'roic';
+if(!['rank','emp'].includes(cmpSel.modo)) cmpSel.modo = 'rank';
+if(!['desc','asc'].includes(cmpSel.dir)) cmpSel.dir = 'desc';
+function renderCmp(){
+  const m = $('#cmpview'); m.textContent = '';
+  m.append(noticeEl());
+  m.append(el('h3','sect','Comparar empresas e setores'));
+  const bar = el('div','cmpbar');
+  const mkSel = (opts, val, onch, aria) => {
+    const s = document.createElement('select'); s.setAttribute('aria-label', aria);
+    for(const [v,l] of opts){ const o = el('option',null,l); o.value = v; if(v===val) o.selected = true; s.append(o); }
+    s.onchange = () => { onch(s.value); lsSet('cmp_sel', cmpSel); renderCmp(); };
+    return s;
+  };
+  bar.append(mkSel(CMP_INDS.map(x=>[x[0],x[1]]), cmpSel.ind, v=>cmpSel.ind=v, 'Indicador'));
+  const setores = [...new Set(COS.map(c=>c.setor))].sort();
+  bar.append(mkSel([['','Todos os setores'],...setores.map(s=>[s,s])], cmpSel.setor, v=>{cmpSel.setor=v; cmpSel.emp='';}, 'Setor'));
+  bar.append(mkSel([['rank','Ranking'],['emp','Empresa × setor']], cmpSel.modo, v=>cmpSel.modo=v, 'Modo'));
+  if(cmpSel.modo==='rank')
+    bar.append(mkSel([['desc','Maiores'],['asc','Menores']], cmpSel.dir, v=>cmpSel.dir=v, 'Direção'));
+  const [key,label,getter,fmt] = CMP_INDS.find(x=>x[0]===cmpSel.ind);
+  const escopo = COS.filter(c=>!cmpSel.setor || c.setor===cmpSel.setor);
+  if(cmpSel.modo==='emp'){
+    const cands = escopo.filter(c=>getter(c)!=null).sort((a,b)=>(a.name||'').localeCompare(b.name||'','pt-BR'));
+    if(!cands.some(c=>c.cvm===cmpSel.emp)) cmpSel.emp = cands.length? cands[0].cvm : '';
+    bar.append(mkSel(cands.map(c=>[c.cvm,c.name]), cmpSel.emp, v=>cmpSel.emp=v, 'Empresa'));
+  }
+  m.append(bar);
+  const card = el('div','card');
+  const titulo = el('div','ct'); card.append(titulo);
+  const box = el('div'); card.append(box); m.append(card);
+  const noteEl2 = el('div','note'); m.append(noteEl2);
+  if(cmpSel.modo==='rank'){
+    let rows = escopo.map(c=>({label:c.name, v:getter(c), cvm:c.cvm})).filter(r=>r.v!=null && isFinite(r.v));
+    rows.sort((a,b)=>cmpSel.dir==='asc'? a.v-b.v : b.v-a.v);
+    titulo.textContent = (cmpSel.dir==='asc'?'Menores':'Maiores')+' — '+label+(cmpSel.setor?' · '+cmpSel.setor:' · todos os setores');
+    hbarChart(box, rows.slice(0,20), fmt, cvm=>openDetail(cvm));
+    noteEl2.textContent = 'Top 20 de '+rows.length+' empresas com o dado disponível. Clique numa barra para abrir a empresa. Fontes: Fundamentus (múltiplos, último fechamento) e CVM (12 meses).';
+  } else {
+    const emp = COS.find(c=>c.cvm===cmpSel.emp);
+    if(!emp){ box.append(el('div','dim','nenhuma empresa com esse indicador neste filtro')); return; }
+    const peers = COS.filter(c=>c.setor===emp.setor);
+    let rows = peers.map(c=>({label:c.name, v:getter(c), cvm:c.cvm, hl:c.cvm===emp.cvm})).filter(r=>r.v!=null && isFinite(r.v));
+    rows.sort((a,b)=>b.v-a.v);
+    const pos = rows.findIndex(r=>r.hl)+1;
+    const mediana = med(rows.map(r=>r.v));
+    let mostra = rows.slice(0,15);
+    if(!mostra.some(r=>r.hl)){ const eu = rows.find(r=>r.hl); if(eu) mostra = mostra.slice(0,14).concat([eu]); }
+    if(mediana!=null){
+      const ins = mostra.findIndex(r=>r.v<mediana);
+      const medRow = {label:'· mediana do setor', v:+mediana.toFixed(2), med:true};
+      if(ins<0) mostra.push(medRow); else mostra.splice(ins,0,medRow);
+    }
+    titulo.textContent = emp.name+' × setor '+emp.setor+' — '+label;
+    hbarChart(box, mostra, fmt, cvm=>openDetail(cvm));
+    noteEl2.textContent = emp.name+' é '+(pos>0? pos+'ª de '+rows.length : 'sem dado')+' em '+label+' no setor '+emp.setor+'. Barra laranja = empresa selecionada; barra clara = mediana do setor. Clique numa barra para abrir a empresa.';
+  }
+  m.append(el('div','foot','Comparações com os dados já carregados no painel (CVM 12 meses + Fundamentus no último fechamento). Uso informativo; não é recomendação de investimento.'));
 }
 
 // ---- view ETFs (B3) ----
@@ -1435,6 +1713,8 @@ function freshRows(){
    ['Cotações B3 — ações e ETFs (ao vivo)','B3 (feed público, ~15 min de defasagem)',B3LIVE.ok? '● ao vivo · '+(B3LIVE.at||'') : 'aguardando primeira consulta','no navegador · a cada 60 s'],
    ['Cotações EUA + lista completa da B3','Yahoo Finance via robô (branch quotes)',QSNAP.updatedAt? 'arquivo de '+relayLocal() : '—','robô a cada 15 min em pregão · página relê a cada 60 s'],
    ['Candles (gráficos de preço)','Yahoo Finance via robô diário',CANDLES&&CANDLES.updatedAt? 'histórico de '+dmy(CANDLES.updatedAt) : 'carrega ao abrir o 1º gráfico','diário · candle de hoje completado ao vivo'],
+   ['Notícias por empresa','Google News via robô diário',NEWSD&&NEWSD.updatedAt? 'coletado em '+dmy(NEWSD.updatedAt) : 'carrega ao abrir uma empresa','robô · dias úteis'],
+   ['Segmentos e dados operacionais','curadoria manual (releases das empresas)','—','sob demanda · data/segmentos.json e operacionais.json'],
    ['Moedas','AwesomeAPI',LIVE.ok? liveTxt : ((c.fx&&c.fx.USDBRL&&c.fx.USDBRL.ts)? dmy(c.fx.USDBRL.ts)+' '+String(c.fx.USDBRL.ts).slice(11,16):snap),'no navegador · a cada 60 s'],
    ['Bitcoin e Ethereum','CoinGecko',LIVE.ok? liveTxt : snap,'no navegador · a cada 60 s'],
    ['Selic, CDI e IPCA 12m','Banco Central (SGS)',LIVE.ok? liveTxt : snap,'no navegador · a cada 5 min'],
@@ -1531,13 +1811,15 @@ async function refreshFast(){
 // ---------- navegação entre visões ----------
 function setView(v){
   document.body.dataset.view=v;
-  for(const [id,key] of [['#nav-emp','emp'],['#nav-etf','etf'],['#nav-eua','eua'],['#nav-mac','macro']])
+  for(const [id,key] of [['#nav-emp','emp'],['#nav-cmp','cmp'],['#nav-etf','etf'],['#nav-eua','eua'],['#nav-mac','macro']])
     $(id).classList.toggle('on', v===key);
   if(v==='macro') renderMacro();
+  if(v==='cmp') renderCmp();
   if(v==='etf'){ renderETF(); refreshB3(); }
   if(v==='eua'){ renderEUA(); refreshFinnhub(); }
 }
 $('#nav-emp').onclick=()=>setView('emp');
+$('#nav-cmp').onclick=()=>setView('cmp');
 $('#nav-etf').onclick=()=>setView('etf');
 $('#nav-eua').onclick=()=>setView('eua');
 $('#nav-mac').onclick=()=>setView('macro');
