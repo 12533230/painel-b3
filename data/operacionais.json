@@ -117,6 +117,54 @@
    }
   ]
  },
+ "1228": {
+  "fonte": "https://ri.bnb.gov.br/documents/45843/9646311/Apresenta%C3%A7%C3%A3o+de+Resultados+-+Banco+do+Nordeste+-+2T2026.pdf/a126af73-27f5-cb41-1544-3b3ca9b398b2?t=1786709177222",
+  "indicadores": [
+   {
+    "nome": "Carteira de crédito administrada (BNB + FNE)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 183400
+    }
+   },
+   {
+    "nome": "Inadimplência — NPL > 90 dias (BNB, recursos próprios)",
+    "unidade": "%",
+    "valores": {
+     "2025T2": 3.6,
+     "2026T1": 6.3,
+     "2026T2": 8.1
+    }
+   },
+   {
+    "nome": "Inadimplência — NPL > 90 dias (FNE)",
+    "unidade": "%",
+    "valores": {
+     "2025T2": 4.1,
+     "2026T1": 4.2,
+     "2026T2": 4.3
+    }
+   },
+   {
+    "nome": "Índice de Basileia — IPR (Patrimônio de Referência / RWA)",
+    "unidade": "%",
+    "valores": {
+     "2025T2": 13.52,
+     "2026T1": 14.18,
+     "2026T2": 15.14
+    }
+   },
+   {
+    "nome": "ROAE",
+    "unidade": "%",
+    "valores": {
+     "2025T2": 20.4,
+     "2026T1": 12.5,
+     "2026T2": 13.2
+    }
+   }
+  ]
+ },
  "2437": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/abb77a17-3348-4bc7-849a-154998e06ca3/9063e4cb-d112-29e3-23a8-00354c952a4a?origin=2",
   "indicadores": [
@@ -575,6 +623,63 @@
    }
   ]
  },
+ "8656": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/0e58d869-d438-4c13-9d23-c24d27e72c47/7235f9dc-6b06-d973-7741-e13db7024fb3?origin=2",
+  "indicadores": [
+   {
+    "nome": "Produção de aço bruto (consolidado)",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 3228,
+     "2026T1": 3149,
+     "2025T2": 3052
+    }
+   },
+   {
+    "nome": "Vendas de aço (consolidado)",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 2908,
+     "2026T1": 2811,
+     "2025T2": 2823
+    }
+   },
+   {
+    "nome": "EBITDA ajustado por tonelada (consolidado)",
+    "unidade": "R$/tonelada",
+    "valores": {
+     "2026T2": 1178,
+     "2026T1": 1051,
+     "2025T2": 906
+    }
+   },
+   {
+    "nome": "Margem EBITDA ajustada (consolidado)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 19.2,
+     "2026T1": 17.7,
+     "2025T2": 14.6
+    }
+   },
+   {
+    "nome": "Taxa de utilização da capacidade de produção (consolidado)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 82
+    }
+   },
+   {
+    "nome": "Dívida líquida / EBITDA ajustado",
+    "unidade": "x",
+    "valores": {
+     "2026T2": 0.69,
+     "2026T1": 0.73,
+     "2025T2": 0.85
+    }
+   }
+  ]
+ },
  "9512": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/857e970b-1bf4-9ea4-093f-b93bfc2bac95?origin=2 (Relatório de Desempenho 2T26 — segmentos) | https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/19a7ace8-ce1a-28a6-ead3-bdc01b7204f7?origin=2 (Relatório de Produção e Vendas 2T26 — KPIs operacionais)",
   "indicadores": [
@@ -765,6 +870,64 @@
    }
   ]
  },
+ "14320": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/5dcf459c-823d-4c02-ac4b-a2aa54a63486/d3f91994-9257-c40e-8a2a-4b581911af32?origin=2",
+  "indicadores": [
+   {
+    "nome": "Produção de aço bruto (Siderurgia)",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 803,
+     "2026T1": 729,
+     "2025T2": 789
+    }
+   },
+   {
+    "nome": "Produção total de laminados (Siderurgia)",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 980,
+     "2026T1": 1011,
+     "2025T2": 1122
+    }
+   },
+   {
+    "nome": "Volume de vendas de aço (total)",
+    "unidade": "mil toneladas",
+    "valores": {
+     "2026T2": 989,
+     "2026T1": 1007,
+     "2025T2": 1079
+    }
+   },
+   {
+    "nome": "Produção de minério de ferro (Mineração)",
+    "unidade": "kton",
+    "valores": {
+     "2026T2": 2209,
+     "2026T1": 1927,
+     "2025T2": 2314
+    }
+   },
+   {
+    "nome": "Vendas totais de minério de ferro (Mineração)",
+    "unidade": "kton",
+    "valores": {
+     "2026T2": 2469,
+     "2026T1": 1946,
+     "2025T2": 2458
+    }
+   },
+   {
+    "nome": "CPV por tonelada - Siderurgia",
+    "unidade": "R$/t",
+    "valores": {
+     "2026T2": 4738,
+     "2026T1": 4664
+    }
+   }
+  ]
+ },
  "14443": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/9e47ee51-f833-4a23-af98-2bac9e54e0b3/de280a94-7fcb-2184-1e27-26e46650843f?origin=2",
   "indicadores": [
@@ -826,6 +989,74 @@
    }
   ]
  },
+ "14460": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d7617e78-1c42-4341-83ae-a1faa8569ca8/0811466e-2b88-f66a-c672-d8b52af71497?origin=2",
+  "indicadores": [
+   {
+    "nome": "VGV Lançado ex-permuta (%CBR)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 3840,
+     "2026T1": 1747,
+     "2025T2": 2864
+    }
+   },
+   {
+    "nome": "Número de lançamentos (empreendimentos)",
+    "unidade": "unidades",
+    "valores": {
+     "2026T2": 20,
+     "2026T1": 12,
+     "2025T2": 17
+    }
+   },
+   {
+    "nome": "Vendas contratadas líquidas ex-permuta (%CBR)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 2561,
+     "2026T1": 2164,
+     "2025T2": 2240
+    }
+   },
+   {
+    "nome": "VSO 12 meses ex-permuta (%CBR)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 42.8,
+     "2026T1": 44.7,
+     "2025T2": 51.4
+    }
+   },
+   {
+    "nome": "Estoque a valor de mercado (%CBR)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 12813,
+     "2026T1": 11338,
+     "2025T2": 10018
+    }
+   },
+   {
+    "nome": "Banco de terrenos - VGV potencial com permuta (100%)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 17476,
+     "2026T1": 18209,
+     "2025T2": 20214
+    }
+   },
+   {
+    "nome": "VGV Entregue ex-permuta (%CBR)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 1516,
+     "2026T1": 829,
+     "2025T2": 1637
+    }
+   }
+  ]
+ },
  "15253": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/60f49a2d-bd8c-4fd9-95ab-bdf833097a83/c4a851a2-10c3-3c55-3d68-fcf7f6306b96?origin=2",
   "indicadores": [
@@ -876,6 +1107,75 @@
     "valores": {
      "2026T2": 57355,
      "2025T2": 49643
+    }
+   }
+  ]
+ },
+ "15636": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/14abe1c8-5911-4e94-a991-82f500120a89/010da22a-b0b6-dab8-9fd7-dc6429588c30?origin=2",
+  "indicadores": [
+   {
+    "nome": "Total de clientes",
+    "unidade": "clientes",
+    "valores": {
+     "2026T2": 2902009,
+     "2025T2": 2740341
+    }
+   },
+   {
+    "nome": "Volume total distribuído",
+    "unidade": "mil m³",
+    "valores": {
+     "2026T2": 1048395,
+     "2025T2": 1083338
+    }
+   },
+   {
+    "nome": "Volume médio diário distribuído",
+    "unidade": "milhões de m³/dia (mm³/dia)",
+    "valores": {
+     "2026T2": 11.6,
+     "2025T2": 12
+    }
+   },
+   {
+    "nome": "EBITDA",
+    "unidade": "R$ milhões (convertido de R$ mil)",
+    "valores": {
+     "2026T2": 898.188,
+     "2025T2": 935.039
+    }
+   },
+   {
+    "nome": "Resultado do período (lucro líquido)",
+    "unidade": "R$ milhões (convertido de R$ mil)",
+    "valores": {
+     "2026T2": 383.565,
+     "2025T2": 389.54
+    }
+   },
+   {
+    "nome": "CAPEX (investimentos)",
+    "unidade": "R$ milhões (convertido de R$ mil)",
+    "valores": {
+     "2026T2": 407.308,
+     "2025T2": 332.482
+    }
+   },
+   {
+    "nome": "Dívida líquida",
+    "unidade": "R$ milhões (convertido de R$ mil)",
+    "valores": {
+     "2026T2": 7365.894,
+     "2025T2": 6562.786
+    }
+   },
+   {
+    "nome": "Alavancagem (Dívida líquida/EBITDA)",
+    "unidade": "x",
+    "valores": {
+     "2026T2": 2,
+     "2025T2": 1.83
     }
    }
   ]
@@ -1098,6 +1398,56 @@
    }
   ]
  },
+ "18376": {
+  "fonte": "https://ri.isaenergiabrasil.com.br/pt/documentos/6758-Earnings-Release-2T26-vfinal-1.pdf",
+  "indicadores": [
+   {
+    "nome": "RAP — Receita Anual Permitida, Ciclo 2026/2027 (ex-Parcela de Ajuste, pós-descruzamento de ativos com a AXIA)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 7082.3
+    }
+   },
+   {
+    "nome": "RAP habilitada pelas energizações do trimestre (Jacarandá + bloco 3 do Piraquê), ciclo 2026/2027",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 376.2
+    }
+   },
+   {
+    "nome": "Parcela Variável (PV) — desconto de receita por indisponibilidade de ativos da Rede Básica (≥230 kV)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": -12.6,
+     "2025T2": -12.7
+    }
+   },
+   {
+    "nome": "CapEx total investido (ex-M&A; consolidado + controladas em conjunto)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 1053.5,
+     "2025T2": 1102.1
+    }
+   },
+   {
+    "nome": "Equipamentos substituídos em projetos de Reforços e Melhorias (R&M)",
+    "unidade": "equipamentos (unidades)",
+    "valores": {
+     "2026T2": 312
+    }
+   },
+   {
+    "nome": "Alavancagem gerencial — Dívida Líquida/EBITDA (metodologia BNDES); comparativo publicado é o 4T25",
+    "unidade": "x (vezes)",
+    "valores": {
+     "2026T2": 3.78,
+     "2025T4": 3.63
+    }
+   }
+  ]
+ },
  "18465": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/4282e939-a6dc-401d-a873-e3c28b7e48df/a8ec731a-2a87-ecd0-896c-975c26cd9ef5?origin=2",
   "indicadores": [
@@ -1157,6 +1507,59 @@
    }
   ]
  },
+ "18627": {
+  "fonte": "https://ri.sanepar.com.br/docs/Sanepar-2026-06-30-LhNKMDPD.pdf",
+  "indicadores": [
+   {
+    "nome": "Volume faturado de água",
+    "unidade": "milhões de m³",
+    "valores": {
+     "2026T2": 149.1,
+     "2025T2": 142.2
+    }
+   },
+   {
+    "nome": "Volume faturado de esgoto",
+    "unidade": "milhões de m³",
+    "valores": {
+     "2026T2": 122.4,
+     "2025T2": 115.7
+    }
+   },
+   {
+    "nome": "Número de ligações de água (posição em JUN)",
+    "unidade": "ligações",
+    "valores": {
+     "2026T2": 3555133,
+     "2025T2": 3506210
+    }
+   },
+   {
+    "nome": "Número de ligações de esgoto (posição em JUN)",
+    "unidade": "ligações",
+    "valores": {
+     "2026T2": 2687612,
+     "2025T2": 2611716
+    }
+   },
+   {
+    "nome": "Perdas no faturamento (acumulado 12 meses, posição em JUN)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 30.83,
+     "2025T2": 31.96
+    }
+   },
+   {
+    "nome": "Tarifa média regulatória Agepar (vigente a partir de 17/05 de cada ano; não é tarifa média realizada)",
+    "unidade": "R$/m³",
+    "valores": {
+     "2026T2": 7.0032,
+     "2025T2": 6.83
+    }
+   }
+  ]
+ },
  "18660": {
   "fonte": "https://ri.cpfl.com.br/Download.aspx?Arquivo=V9nPRClCfYq%2F57zASRNUmw%3D%3D&linguagem=pt",
   "indicadores": [
@@ -1205,6 +1608,53 @@
     "unidade": "%",
     "valores": {
      "2026T2": 1.08
+    }
+   }
+  ]
+ },
+ "18724": {
+  "fonte": "https://bradespar.bradesco/content/dam/banco-bradesco/bradespar/staticfiles/assets/pdf/resultados-trimestrais/2026/RRI%2006.2026.pdf",
+  "indicadores": [
+   {
+    "nome": "Participação da BRADESPAR no capital total/votante da VALE (30/06/2026)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 3.83
+    }
+   },
+   {
+    "nome": "Valor de mercado da participação na VALE (Valor Total dos Ativos da Bradespar)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 12722.1
+    }
+   },
+   {
+    "nome": "Valor Líquido dos Ativos da Bradespar (ativos + caixa líquido)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 12974.6
+    }
+   },
+   {
+    "nome": "Valor de mercado da BRADESPAR (BRAP3 + BRAP4, fechamento 30/06/2026)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 8268.4
+    }
+   },
+   {
+    "nome": "Desconto do valor de mercado da BRADESPAR vs. Valor Líquido dos Ativos",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 36.3
+    }
+   },
+   {
+    "nome": "EBITDA proforma da empresa investida VALE (reportado no release da Bradespar)",
+    "unidade": "US$ bilhões",
+    "valores": {
+     "2026T2": 4.1
     }
    }
   ]
@@ -1376,6 +1826,59 @@
      "2026T2": 65.46,
      "2026T1": 73.577,
      "2025T2": 64.432
+    }
+   }
+  ]
+ },
+ "19550": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/67c3b7d4-64ea-4c2f-b380-6596a2ac2fbf/4065f0f9-976a-526a-5f90-33b6275a5bca?origin=2",
+  "indicadores": [
+   {
+    "nome": "Consultoras de beleza — Brasil (média disponível)",
+    "unidade": "mil consultoras",
+    "valores": {
+     "2026T2": 1480,
+     "2025T2": 1519
+    }
+   },
+   {
+    "nome": "Consultoras de beleza — Mercados Hispânicos (média disponível)",
+    "unidade": "mil consultoras",
+    "valores": {
+     "2026T2": 1129,
+     "2025T2": 1366
+    }
+   },
+   {
+    "nome": "Clientes identificados — Brasil",
+    "unidade": "milhões de clientes",
+    "valores": {
+     "2026T2": 9,
+     "2025T2": 7.9
+    }
+   },
+   {
+    "nome": "Total de lojas — Brasil (próprias + franquias)",
+    "unidade": "lojas",
+    "valores": {
+     "2026T2": 1098,
+     "2025T2": 1024
+    }
+   },
+   {
+    "nome": "SSS — vendas mesmas lojas, Brasil",
+    "unidade": "%",
+    "valores": {
+     "2026T2": -4.3,
+     "2025T2": 9.1
+    }
+   },
+   {
+    "nome": "Emana Pay — usuários ativos",
+    "unidade": "mil usuários",
+    "valores": {
+     "2026T2": 697,
+     "2025T2": 465
     }
    }
   ]
@@ -1707,6 +2210,28 @@
    }
   ]
  },
+ "20257": {
+  "fonte": "https://ri.taesa.com.br/wp-content/uploads/2018/11/TAESA_Release-2T26.pdf",
+  "indicadores": [
+   {
+    "nome": "Parcela Variável (PV) contabilizada — Resultado Regulatório Consolidado (lançada como dedução da receita; magnitudes)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 7.8,
+     "2025T2": 0.2
+    }
+   },
+   {
+    "nome": "Alavancagem — Dívida Líquida/EBITDA (consolidação proporcional das controladas em conjunto e coligadas)",
+    "unidade": "x (vezes)",
+    "valores": {
+     "2026T2": 4.2,
+     "2026T1": 4.2,
+     "2025T2": 4
+    }
+   }
+  ]
+ },
  "20532": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/a2595886-9fbb-4339-8a38-71d6ce7c7d36/5395e890-a68c-8c25-7c30-399ec6928c53?origin=2",
   "indicadores": [
@@ -1822,6 +2347,59 @@
    }
   ]
  },
+ "20982": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/08dd2899-a019-4531-a90c-f00c9f91b0ff/c4f3c5e6-87bf-6caf-cbab-d87472eb4631?origin=2",
+  "indicadores": [
+   {
+    "nome": "Vendas dos lojistas (100% dos shoppings)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 6753.8,
+     "2025T2": 6270.1
+    }
+   },
+   {
+    "nome": "Vendas nas Mesmas Lojas (SSS)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 4.3,
+     "2025T2": 10.9
+    }
+   },
+   {
+    "nome": "Aluguel nas Mesmas Lojas (SSR)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 4.1,
+     "2025T2": 9.3
+    }
+   },
+   {
+    "nome": "Taxa de ocupação (shopping centers)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 96.2,
+     "2025T2": 96.1
+    }
+   },
+   {
+    "nome": "Custo de ocupação dos lojistas",
+    "unidade": "% das vendas",
+    "valores": {
+     "2026T2": 12.3,
+     "2025T2": 12.6
+    }
+   },
+   {
+    "nome": "Inadimplência líquida",
+    "unidade": "%",
+    "valores": {
+     "2026T2": -1.2,
+     "2025T2": 0.2
+    }
+   }
+  ]
+ },
  "21237": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/6c663f3b-ae5a-4692-81d3-ab23ee84c1de/3575e2a1-2720-afc4-224b-9e318ce4cc5c?origin=2",
   "indicadores": [
@@ -1877,6 +2455,129 @@
      "2026T2": 56,
      "2026T1": 43,
      "2025T2": 32
+    }
+   }
+  ]
+ },
+ "21431": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/4be66703-ecd7-4134-a39e-224ce462b371/b8f9a239-11f6-b191-2764-efc15686ed97?origin=2",
+  "indicadores": [
+   {
+    "nome": "Crescimento do sell-out no varejo farmacêutico (PPP/IQVIA) vs. mesmo trimestre do ano anterior",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 7.6
+    }
+   },
+   {
+    "nome": "Contribuição dos lançamentos dos últimos 12 meses ao crescimento do sell-out",
+    "unidade": "p.p.",
+    "valores": {
+     "2026T2": 2.2
+    }
+   },
+   {
+    "nome": "Estoques",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2025T2": 2108.3,
+     "2026T1": 2066,
+     "2026T2": 1927
+    }
+   },
+   {
+    "nome": "Investimento em capital de giro como % da Receita Líquida anualizada do trimestre",
+    "unidade": "%",
+    "valores": {
+     "2025T2": 32,
+     "2025T3": 30,
+     "2025T4": 30,
+     "2026T1": 34,
+     "2026T2": 28
+    }
+   },
+   {
+    "nome": "Ciclo de Conversão de Caixa (Operações Continuadas)",
+    "unidade": "dias",
+    "valores": {
+     "2025T2": 187,
+     "2025T3": 169,
+     "2025T4": 167,
+     "2026T1": 188,
+     "2026T2": 153
+    }
+   },
+   {
+    "nome": "Dívida Líquida / EBITDA das Operações Continuadas (UDM)",
+    "unidade": "x",
+    "valores": {
+     "2026T2": 2.1
+    }
+   }
+  ]
+ },
+ "21490": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/7055e766-fc6d-42b3-9911-c19f8e89875a/d752efb1-5803-391f-472c-9348b7b0a855?origin=2",
+  "indicadores": [
+   {
+    "nome": "Disponibilidade física dos ativos de transmissão",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 99.6,
+     "2026T1": 99.7,
+     "2025T4": 99.6,
+     "2025T3": 99.9,
+     "2025T2": 99.4
+    }
+   },
+   {
+    "nome": "Parcela Variável (PV) - impacto da indisponibilidade no resultado",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 0.57,
+     "2026T1": 0.14,
+     "2025T4": 0.68,
+     "2025T3": 0.35,
+     "2025T2": 0.24
+    }
+   },
+   {
+    "nome": "Disponibilidade física dos ativos de geração",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 94.7,
+     "2026T1": 92.1,
+     "2025T4": 95.9,
+     "2025T3": 86.5,
+     "2025T2": 93.5
+    }
+   },
+   {
+    "nome": "Energia gerada (balanço energético)",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 623.9
+    }
+   },
+   {
+    "nome": "Energia contratada - contratos de venda (balanço energético)",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 496.8
+    }
+   },
+   {
+    "nome": "Capacidade instalada em operação (portfólio de geração)",
+    "unidade": "MW",
+    "valores": {
+     "2026T2": 798.5
+    }
+   },
+   {
+    "nome": "Extensão de linhas de transmissão (portfólio, 45 concessões: 31 em operação e 14 em implantação)",
+    "unidade": "km",
+    "valores": {
+     "2026T2": 10112
     }
    }
   ]
@@ -1940,6 +2641,59 @@
    }
   ]
  },
+ "21881": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/0b0dbf21-b60a-4ced-a675-18049e9abc9c/9755d796-e857-bd40-480c-c64bb795ce5a?origin=2",
+  "indicadores": [
+   {
+    "nome": "Atendimentos",
+    "unidade": "milhões de atendimentos",
+    "valores": {
+     "2026T2": 4.7,
+     "2025T2": 4
+    }
+   },
+   {
+    "nome": "Exames realizados - Medicina Diagnóstica B2C",
+    "unidade": "milhões de exames",
+    "valores": {
+     "2026T2": 46.7,
+     "2025T2": 39.7
+    }
+   },
+   {
+    "nome": "Exames por Atendimento - B2C",
+    "unidade": "exames por atendimento",
+    "valores": {
+     "2026T2": 10,
+     "2025T2": 10
+    }
+   },
+   {
+    "nome": "Receita Bruta por Exame - B2C",
+    "unidade": "R$ por exame",
+    "valores": {
+     "2026T2": 37.9,
+     "2025T2": 38.8
+    }
+   },
+   {
+    "nome": "Volume de Exames - B2B (Lab-to-Lab e Hospitais)",
+    "unidade": "milhões de exames",
+    "valores": {
+     "2026T2": 60.3,
+     "2025T2": 49.7
+    }
+   },
+   {
+    "nome": "Receita Bruta por Exame - B2B",
+    "unidade": "R$ por exame",
+    "valores": {
+     "2026T2": 9,
+     "2025T2": 9.8
+    }
+   }
+  ]
+ },
  "22187": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/cecb3d3e-6bd6-4edd-b9b3-3cacde780cac/92a74c23-4a5f-3a21-9da2-72a4fbc7982c?origin=2",
   "indicadores": [
@@ -1994,6 +2748,61 @@
     "valores": {
      "2026T2": 6.91,
      "2026T1": 8.15
+    }
+   }
+  ]
+ },
+ "22357": {
+  "fonte": "https://investidor10.com.br/acoes/link_comunicado/ALOS3/46951/",
+  "indicadores": [
+   {
+    "nome": "Vendas Totais @100%",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 10470,
+     "2025T2": 10127
+    }
+   },
+   {
+    "nome": "SSS (vendas mesmas lojas)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 2.4,
+     "2025T2": 7.1
+    }
+   },
+   {
+    "nome": "SSR (aluguel mesmas lojas)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 3.2,
+     "2025T2": 7.7
+    }
+   },
+   {
+    "nome": "Taxa de Ocupação",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 96.2,
+     "2026T1": 96.2,
+     "2025T2": 96.4
+    }
+   },
+   {
+    "nome": "Inadimplência Líquida (% da receita)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 1.4,
+     "2025T2": 1.9
+    }
+   },
+   {
+    "nome": "Custo de Ocupação (% das vendas)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 10.3,
+     "2026T1": 11.1,
+     "2025T2": 10.2
     }
    }
   ]
@@ -2274,6 +3083,65 @@
    }
   ]
  },
+ "24260": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/757d3905-6a2d-496a-bbb0-32ddd17de6a0/f949e040-5053-254d-6a03-2865a71a132a?origin=2",
+  "indicadores": [
+   {
+    "nome": "Academias — rede total no final do período (16 países)",
+    "unidade": "academias",
+    "valores": {
+     "2026T2": 2170,
+     "2026T1": 2113,
+     "2025T2": 1818
+    }
+   },
+   {
+    "nome": "Academias próprias no final do período",
+    "unidade": "academias",
+    "valores": {
+     "2026T2": 1746,
+     "2026T1": 1703,
+     "2025T2": 1459
+    }
+   },
+   {
+    "nome": "Base de clientes em academias no final do período (canal direto B2C; não inclui usuários TotalPass)",
+    "unidade": "mil clientes",
+    "valores": {
+     "2026T2": 5582,
+     "2026T1": 5582,
+     "2025T2": 5151
+    }
+   },
+   {
+    "nome": "TotalPass Brasil — market share por Monthly Active Users (fonte Sensor Tower)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 35,
+     "2026T1": 34,
+     "2025T2": 27
+    }
+   },
+   {
+    "nome": "Lucro bruto caixa anualizado por academia madura da marca Smart Fit",
+    "unidade": "R$ milhões por academia/ano",
+    "valores": {
+     "2026T2": 2.4,
+     "2026T1": 2.5,
+     "2025T2": 2.5
+    }
+   },
+   {
+    "nome": "Capex total (expansão + manutenção + corporativo/inovação)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 624.6,
+     "2026T1": 566.3,
+     "2025T2": 457
+    }
+   }
+  ]
+ },
  "24295": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d243bdaa-0468-4f64-8c09-ba0bcee9789b/36213875-dcba-f137-2545-3f3eaa493e36?origin=2",
   "indicadores": [
@@ -2438,6 +3306,173 @@
    }
   ]
  },
+ "25100": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/702b9586-4f10-4a79-a7e6-232ce8803136/8ffb3865-6cf8-f750-d1d6-aafbd22c8925?origin=2",
+  "indicadores": [
+   {
+    "nome": "VGV lançado",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 2256.9,
+     "2026T1": 2646.8,
+     "2025T2": 2225.3
+    }
+   },
+   {
+    "nome": "Vendas líquidas (VGV)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 2045.5,
+     "2026T1": 2304.6,
+     "2025T2": 2261.4
+    }
+   },
+   {
+    "nome": "VSO líquida",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 40.5,
+     "2026T1": 45.1,
+     "2025T2": 47.5
+    }
+   },
+   {
+    "nome": "Banco de terrenos (VGV potencial)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 26092.8,
+     "2026T1": 24924.6,
+     "2025T2": 21114.4
+    }
+   },
+   {
+    "nome": "Unidades produzidas",
+    "unidade": "unidades",
+    "valores": {
+     "2026T2": 5737,
+     "2026T1": 4634,
+     "2025T2": 4046
+    }
+   },
+   {
+    "nome": "Geração de caixa operacional",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 144.9,
+     "2026T1": 93.4,
+     "2025T2": 103.3
+    }
+   }
+  ]
+ },
+ "25127": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/17eafccb-2e4b-40d4-8da2-1ba38e6d4676/a2ac023a-6247-72dc-04b0-01fe67df15c1?origin=2",
+  "indicadores": [
+   {
+    "nome": "Volume distribuído (segmento Distribuição de Gás)",
+    "unidade": "MM m³/dia (e volume total em MM m³ nas chaves indicadas)",
+    "valores": {
+     "2026T2": 14.7,
+     "2025T2": 14.9
+    }
+   },
+   {
+    "nome": "Volume comercializado pela Edge (segmento Marketing e Serviços)",
+    "unidade": "MM m³ (e MM m³/dia nas chaves indicadas)",
+    "valores": {
+     "2026T2": 461,
+     "2025T2": 364
+    }
+   },
+   {
+    "nome": "Base de clientes de distribuição",
+    "unidade": "nº de clientes",
+    "valores": {
+     "2026T2": 3150593,
+     "2025T2": 2971481
+    }
+   },
+   {
+    "nome": "Extensão da rede de distribuição",
+    "unidade": "km",
+    "valores": {
+     "2026T2": 28249,
+     "2025T2": 27511
+    }
+   },
+   {
+    "nome": "Opex por cliente (últimos 12 meses) — Distribuição",
+    "unidade": "por cliente, últimos 12 meses (release informa apenas o número, sem explicitar a unidade monetária)",
+    "valores": {
+     "2026T2": 311,
+     "2025T2": 329
+    }
+   },
+   {
+    "nome": "Clientes contratados e estados atendidos pela Edge",
+    "unidade": "nº de clientes contratados (e nº de estados nas chaves indicadas); release imprime a variação de clientes como \">100%\", sem valor determinado",
+    "valores": {
+     "2026T2": 61,
+     "2025T2": 23
+    }
+   }
+  ]
+ },
+ "25186": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/8ea287f8-ae0a-4b88-b20b-80c1f1b86a1e/759380ab-906c-cfb2-3d52-43e262f436d1?origin=2",
+  "indicadores": [
+   {
+    "nome": "Same Store Sales (SSS) sem ajuste de calendário",
+    "unidade": "%",
+    "valores": {
+     "2026T2": -8,
+     "2026T1": -7.3,
+     "2025T2": 6.1
+    }
+   },
+   {
+    "nome": "Número de lojas de varejo alimentar (Atacarejo + Varejo)",
+    "unidade": "lojas",
+    "valores": {
+     "2026T2": 234,
+     "2025T2": 176
+    }
+   },
+   {
+    "nome": "Área de vendas - varejo alimentar",
+    "unidade": "mil m²",
+    "valores": {
+     "2026T2": 753,
+     "2025T2": 560
+    }
+   },
+   {
+    "nome": "Inaugurações de lojas de varejo alimentar no trimestre",
+    "unidade": "lojas",
+    "valores": {
+     "2026T2": 6,
+     "2025T2": 4
+    }
+   },
+   {
+    "nome": "Representantes comerciais - Atacado (B2B)",
+    "unidade": "representantes",
+    "valores": {
+     "2026T2": 6993,
+     "2025T2": 5572
+    }
+   },
+   {
+    "nome": "Ciclo de conversão de caixa (12 meses)",
+    "unidade": "dias",
+    "valores": {
+     "2026T2": 42,
+     "2026T1": 40,
+     "2025T2": 57
+    }
+   }
+  ]
+ },
  "25372": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/ec14f0ab-c5d4-4b12-a413-b6cc7475ed98/ecd60f65-8e70-bf69-5d12-d9615573ce8f?origin=2",
   "indicadores": [
@@ -2551,6 +3586,120 @@
    }
   ]
  },
+ "25712": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/a35cc248-b835-4157-944e-86f7561fa441/b5bb0bc5-9518-e57f-e70f-a8aa5ae9471c?origin=2",
+  "indicadores": [
+   {
+    "nome": "Número de Clientes atendidos",
+    "unidade": "clientes",
+    "valores": {
+     "2026T2": 4543
+    }
+   },
+   {
+    "nome": "Colaboradores diretos (piso — release diz \"mais de 185 mil\")",
+    "unidade": "mil colaboradores",
+    "valores": {
+     "2026T2": 185
+    }
+   },
+   {
+    "nome": "Crescimento orgânico da receita líquida (vs. mesmo trimestre do ano anterior)",
+    "unidade": "% a/a",
+    "valores": {
+     "2026T2": 6
+    }
+   },
+   {
+    "nome": "Crescimento total da receita líquida (vs. mesmo trimestre do ano anterior)",
+    "unidade": "% a/a",
+    "valores": {
+     "2026T2": 7
+    }
+   },
+   {
+    "nome": "Margem EBITDA ajustada ex-IFRS16",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 9.7,
+     "2025T2": 9.4
+    }
+   },
+   {
+    "nome": "Dívida líquida / EBITDA ajustado ex-IFRS16 (últimos 12 meses)",
+    "unidade": "x",
+    "valores": {
+     "2026T2": 1.3,
+     "2026T1": 1.6,
+     "2025T4": 1.6,
+     "2025T3": 1.5,
+     "2025T2": 1.6
+    }
+   },
+   {
+    "nome": "Duração total da carteira de dívida",
+    "unidade": "meses",
+    "valores": {
+     "2026T2": 42
+    }
+   }
+  ]
+ },
+ "26620": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/691c9da5-45e0-458f-a3da-41982b1730fc/dc5fdc3a-062b-e2db-c2c2-364fc1474185?origin=2",
+  "indicadores": [
+   {
+    "nome": "Geração de energia - ativos próprios (total)",
+    "unidade": "MW médios",
+    "valores": {
+     "2026T2": 3250.5,
+     "2025T2": 3207.9
+    }
+   },
+   {
+    "nome": "Geração hidrelétrica (ativos próprios)",
+    "unidade": "MW médios",
+    "valores": {
+     "2026T2": 1943.3,
+     "2025T2": 1784.4
+    }
+   },
+   {
+    "nome": "Geração eólica (geração total, inclui parcela ressarcível REL)",
+    "unidade": "MW médios",
+    "valores": {
+     "2026T2": 1152.5,
+     "2025T2": 1279.2
+    }
+   },
+   {
+    "nome": "Geração solar (geração total, inclui parcela ressarcível REL)",
+    "unidade": "MW médios",
+    "valores": {
+     "2026T2": 154.6,
+     "2025T2": 144.3
+    }
+   },
+   {
+    "nome": "Impacto financeiro do curtailment (Auren consolidado)",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 97.8,
+     "2026T1": 86.2,
+     "2025T2": 75.8
+    }
+   },
+   {
+    "nome": "Ganhos com modulação",
+    "unidade": "R$ milhões",
+    "valores": {
+     "2026T2": 70.5,
+     "2026T1": 97.2,
+     "2025T2": 40.4
+    }
+   }
+  ]
+ },
  "_comment": "Indicadores operacionais (SSS, LTV, CAC, ARPU, churn etc.) — curadoria MANUAL a partir dos releases; não existe fonte gratuita estruturada. Chave = código CVM. O painel mostra a seção 'Indicadores operacionais' no detalhe quando houver entrada, e esses indicadores podem ser citados na comparação entre empresas que os tenham.",
  "_schema": {
   "<codigoCVM>": {
@@ -2566,5 +3715,61 @@
     }
    ]
   }
+ },
+ "15636b": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/909e3997-39bb-4353-b073-1bf441e2f7f9/f819b484-af4c-e14d-b156-b64dcb6e7d55?origin=2",
+  "indicadores": [
+   {
+    "nome": "Energia Injetada Total (SIN + Sistema Isolado + GD)",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 7906,
+     "2025T2": 7554
+    }
+   },
+   {
+    "nome": "Energia Distribuída Total (cativa + livre + GD)",
+    "unidade": "GWh",
+    "valores": {
+     "2026T2": 6485,
+     "2025T2": 6438
+    }
+   },
+   {
+    "nome": "Número de Clientes",
+    "unidade": "mil consumidores",
+    "valores": {
+     "2026T2": 6986,
+     "2025T2": 6829
+    }
+   },
+   {
+    "nome": "Perdas Totais de Distribuição (12 meses)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 15.8,
+     "2026T1": 15.21,
+     "2025T2": 15.86
+    }
+   },
+   {
+    "nome": "Inadimplência (PECLD/ROB)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 1.08,
+     "2026T1": 1.25,
+     "2025T2": 1.03
+    }
+   },
+   {
+    "nome": "Índice de Arrecadação (12 meses)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 98,
+     "2026T1": 98.49,
+     "2025T2": 98.33
+    }
+   }
+  ]
  }
 }
