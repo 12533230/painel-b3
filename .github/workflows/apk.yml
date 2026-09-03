@@ -1,0 +1,137 @@
+name: Gerar APK (app Android)
+
+# Empacota a PWA do painel num APK Android (TWA — Trusted Web Activity) e publica
+# o arquivo como Release do GitHub, pronto para instalar no celular.
+# Rode manualmente em Actions → "Gerar APK (app Android)" → Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      versao:
+        description: "Versão do app (ex.: 1.0.0)"
+        required: false
+        default: "1.0.0"
+      alvo:
+        description: "Qual painel empacotar"
+        required: false
+        default: "insignia"
+        type: choice
+        options: [insignia, publico]
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          node-version: "20"
+
+      - name: Definir URL do painel
+        id: cfg
+        run: |
+          if [ "${{ inputs.alvo }}" = "publico" ]; then
+            echo "url=https://12533230.github.io/painel-b3/p/" >> $GITHUB_OUTPUT
+            echo "manifest=https://12533230.github.io/painel-b3/app/manifest-public.json" >> $GITHUB_OUTPUT
+            echo "appid=io.github.painelb3.publico" >> $GITHUB_OUTPUT
+            echo "nome=Painel B3" >> $GITHUB_OUTPUT
+          else
+            echo "url=https://12533230.github.io/painel-b3/" >> $GITHUB_OUTPUT
+            echo "manifest=https://12533230.github.io/painel-b3/app/manifest.json" >> $GITHUB_OUTPUT
+            echo "appid=io.github.painelb3.insignia" >> $GITHUB_OUTPUT
+            echo "nome=Painel B3" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Instalar Bubblewrap
+        run: npm install -g @bubblewrap/cli@latest
+
+      - name: Chave de assinatura (determinística, guardada no repo como secret opcional)
+        run: |
+          mkdir -p ~/.android
+          if [ -n "${{ secrets.ANDROID_KEYSTORE_B64 }}" ]; then
+            echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > android.keystore
+            echo "usando keystore do secret ANDROID_KEYSTORE_B64"
+          else
+            keytool -genkeypair -v -keystore android.keystore -alias painelb3 \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass painelb3 -keypass painelb3 \
+              -dname "CN=Painel B3, OU=Painel, O=Painel B3, L=Sao Paulo, S=SP, C=BR"
+            echo "::warning::Keystore gerado nesta execução. Para atualizar o app sem desinstalar, guarde-o no secret ANDROID_KEYSTORE_B64 (veja o resumo do job)."
+          fi
+
+      - name: Inicializar projeto TWA
+        run: |
+          bubblewrap init --manifest="${{ steps.cfg.outputs.manifest }}" --directory=twa \
+            --packageId="${{ steps.cfg.outputs.appid }}" \
+            --appVersionName="${{ inputs.versao }}" \
+            --host="12533230.github.io" \
+            --startUrl="${{ steps.cfg.outputs.url }}" \
+            --name="${{ steps.cfg.outputs.nome }}" \
+            --launcherName="Painel B3" \
+            --display=standalone \
+            --themeColor="#0c2a2d" --backgroundColor="#0c2a2d" \
+            --signingKeyPath="$PWD/android.keystore" --signingKeyAlias=painelb3 \
+            --iconUrl="https://12533230.github.io/painel-b3/app/icon-512.png" \
+            --maskableIconUrl="https://12533230.github.io/painel-b3/app/icon-maskable-512.png" \
+            --shortcuts=false --chromeosonly=false --alphaDependencies=false \
+            --enableNotifications=false --fallbackType=customtabs || true
+        env:
+          BUBBLEWRAP_ACCEPT_LICENSES: "true"
+
+      - name: Build do APK
+        working-directory: twa
+        run: |
+          yes | bubblewrap build --skipPwaValidation \
+            --signingKeyPassword=painelb3 --keystorePassword=painelb3 || \
+          ./gradlew assembleRelease
+          find . -name "*.apk" -o -name "*.aab" | head -20
+
+      - name: Coletar artefatos
+        run: |
+          mkdir -p saida
+          find twa -name "*.apk" -exec cp {} saida/ \; 2>/dev/null || true
+          find twa -name "*.aab" -exec cp {} saida/ \; 2>/dev/null || true
+          cp twa/assetlinks.json saida/ 2>/dev/null || true
+          ls -la saida/
+
+      - name: Publicar assetlinks (vincula o app ao site, tira a barra do navegador)
+        run: |
+          if [ -f saida/assetlinks.json ]; then
+            mkdir -p docs/.well-known
+            cp saida/assetlinks.json docs/.well-known/assetlinks.json
+            git config user.name "painel-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add docs/.well-known/assetlinks.json
+            git diff --cached --quiet || git commit -m "assetlinks do app Android"
+            git push || echo "sem push (sem mudanças)"
+          fi
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: painel-b3-apk
+          path: saida/*
+
+      - name: Publicar Release com o APK
+        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2
+        with:
+          tag_name: app-v${{ inputs.versao }}
+          name: Painel B3 — app Android v${{ inputs.versao }}
+          body: |
+            APK do Painel B3 (${{ inputs.alvo }}).
+
+            **Como instalar no Android:** baixe o `.apk` abaixo pelo celular, abra o arquivo e
+            autorize "instalar de fontes desconhecidas" quando o Android pedir.
+
+            O app abre o painel em tela cheia, com ícone próprio, e funciona offline com os
+            últimos dados carregados (as cotações ao vivo precisam de internet).
+          files: saida/*.apk
+          fail_on_unmatched_files: false
