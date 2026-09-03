@@ -65,10 +65,25 @@ jobs:
           SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
           test -d "$SDK" || { echo "Android SDK não encontrado"; exit 1; }
           test -d "$JAVA_HOME" || { echo "JAVA_HOME não encontrado"; exit 1; }
+
+          # O Bubblewrap valida o SDK exigindo <sdk>/tools ou <sdk>/bin, e procura o
+          # sdkmanager em <sdk>/tools/bin/sdkmanager ou <sdk>/bin/sdkmanager. O SDK do
+          # runner usa a estrutura moderna (cmdline-tools/latest/bin), então criamos o
+          # link que ele espera — apontando para os binários reais.
+          if [ ! -e "$SDK/bin" ] && [ ! -e "$SDK/tools" ]; then
+            sudo ln -s "$SDK/cmdline-tools/latest/bin" "$SDK/bin"
+          fi
+          test -x "$SDK/bin/sdkmanager" || { echo "sdkmanager não encontrado em $SDK/bin"; ls -la "$SDK"; exit 1; }
+
+          # build-tools 34.0.0 é a versão que o Bubblewrap 1.22 exige; instalamos aqui
+          # para o build não depender de prompt interativo.
+          yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
+          "$SDK/cmdline-tools/latest/bin/sdkmanager" --install "build-tools;34.0.0" "platforms;android-34" "platform-tools"
+          test -d "$SDK/build-tools/34.0.0" || { echo "build-tools 34.0.0 não instalou"; exit 1; }
+
           mkdir -p ~/.bubblewrap
           printf '{"jdkPath":"%s","androidSdkPath":"%s"}\n' "$JAVA_HOME" "$SDK" > ~/.bubblewrap/config.json
           cat ~/.bubblewrap/config.json
-          yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
 
       - name: Chave de assinatura
         run: |
