@@ -222,9 +222,43 @@
   svg .val{fill:var(--ink2);font-weight:600}
   .foot{color:var(--muted);font-size:12px;margin-top:26px;border-top:1px solid var(--grid);padding-top:10px}
   .empty{color:var(--muted);padding:30px;text-align:center}
+
+  /* ---- tela de carregamento (padrão Insignia) ----
+     Cobre o intervalo entre o primeiro pixel e o painel montado. Fica no topo do
+     <body> e usa só CSS, para aparecer antes de qualquer script rodar. */
+  #boot{position:fixed;inset:0;z-index:9999;background:#0c2a2d;display:flex;
+        flex-direction:column;align-items:center;justify-content:center;gap:26px;
+        transition:opacity .34s ease}
+  #boot.off{opacity:0;pointer-events:none}
+  #boot .bl{width:min(66vw,340px);max-width:340px;height:auto;opacity:0;
+            animation:blIn .55s ease .05s forwards}
+  @keyframes blIn{to{opacity:1}}
+  /* candles que sobem em sequência, como o ícone do app */
+  #boot .cd{display:flex;align-items:flex-end;gap:9px;height:54px}
+  #boot .cd i{display:block;width:9px;border-radius:2px;background:#cbdd7f;
+              transform-origin:bottom;animation:cdUp 1.5s ease-in-out infinite}
+  #boot .cd i:nth-child(2){background:#dcb604;height:16px;animation-delay:.11s}
+  #boot .cd i:nth-child(1){height:22px}
+  #boot .cd i:nth-child(3){height:31px;animation-delay:.22s}
+  #boot .cd i:nth-child(4){background:#dcb604;height:26px;animation-delay:.33s}
+  #boot .cd i:nth-child(5){height:42px;animation-delay:.44s}
+  #boot .cd i:nth-child(6){background:#dcb604;height:36px;animation-delay:.55s}
+  #boot .cd i:nth-child(7){height:54px;animation-delay:.66s}
+  @keyframes cdUp{0%,100%{transform:scaleY(.45);opacity:.45}45%{transform:scaleY(1);opacity:1}}
+  #boot .bt{color:#8ba79a;font:500 12.5px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;
+            letter-spacing:.09em;text-transform:uppercase}
+  @media (prefers-reduced-motion:reduce){
+    #boot .cd i{animation:none;transform:none;opacity:.9}
+    #boot .bl{animation:none;opacity:1}
+  }
 </style>
 </head>
 <body>
+<div id="boot" role="status" aria-label="Carregando o Painel B3">
+  <img class="bl" alt="Insignia Partners" src="data:image/png;base64,__LOGOBOOT__">
+  <div class="cd" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="bt">Painel B3 · carregando</div>
+</div>
 <script id="dados" type="application/json">__DATA__</script>
 
 <div class="hdr">
@@ -1418,10 +1452,64 @@ let cmpSel = lsGet('cmp_sel') || {ind:'roic', setor:'', modo:'rank', dir:'desc',
 // sane defaults se o localStorage trouxer estado antigo/inválido
 if(!CMP_INDS.some(x=>x[0]===cmpSel.ind)) cmpSel.ind = 'roic';
 if(!HIST_INDS.some(x=>x[0]===cmpSel.hind)) cmpSel.hind = 'roe';
-if(!['rank','emp','hist','op'].includes(cmpSel.modo)) cmpSel.modo = 'rank';
+if(!['rank','emp','hist','op','scr','peer'].includes(cmpSel.modo)) cmpSel.modo = 'rank';
 if(typeof cmpSel.opind !== 'string') cmpSel.opind = '';
 if(!['desc','asc'].includes(cmpSel.dir)) cmpSel.dir = 'desc';
 if(!Array.isArray(cmpSel.emps)) cmpSel.emps = [];
+if(!Array.isArray(cmpSel.filtros)) cmpSel.filtros = [];
+cmpSel.filtros = cmpSel.filtros.filter(f => f && CMP_INDS.some(x=>x[0]===f.ind) && ['gt','lt','bt'].includes(f.op));
+
+// ================= PEER SETS (conjuntos de comparáveis por projeto) =================
+// Guardados neste navegador e compartilháveis por link (#peer=nome|cvm,cvm,…).
+// O link não depende do localStorage de quem recebe: as empresas vão na própria URL.
+const PEER_MAX = 12;
+function peersAll(){ const p = lsGet('peer_sets'); return (p && typeof p === 'object' && !Array.isArray(p)) ? p : {}; }
+function peersSave(nome, cvms){
+  const n = String(nome||'').trim().slice(0,40); if(!n) return false;
+  const lim = [...new Set(cvms)].filter(c=>COS.some(x=>x.cvm===c)).slice(0,PEER_MAX);
+  if(!lim.length) return false;
+  const all = peersAll(); all[n] = lim; lsSet('peer_sets', all); return true;
+}
+function peersDel(nome){ const all = peersAll(); delete all[nome]; lsSet('peer_sets', all); }
+function peerLink(nome, cvms){
+  const base = location.origin + location.pathname;
+  return base + '#peer=' + encodeURIComponent(nome||'peer set') + '|' + cvms.join(',');
+}
+// lê o peer set da URL — usado no init e quando o usuário cola um link
+function peerFromHash(){
+  const h = location.hash || '';
+  const m = h.match(/^#peer=([^|]*)\|(.+)$/);
+  if(!m) return null;
+  let nome; try{ nome = decodeURIComponent(m[1]); }catch(e){ nome = m[1]; }
+  const cvms = m[2].split(',').map(s=>s.trim()).filter(s=>/^[0-9]+$/.test(s) && COS.some(c=>c.cvm===s)).slice(0,PEER_MAX);
+  return cvms.length ? {nome: nome.slice(0,40), cvms} : null;
+}
+
+// ================= estatísticas de série (CAGR, média, extremos) =================
+// CAGR só faz sentido em série de nível positivo (receita, EBITDA). Em indicador
+// que já é percentual ou múltiplo, ou que tenha valor <= 0, devolve null em vez de
+// um número sem significado.
+function estat(rows, permiteCagr){
+  const vs = (rows||[]).filter(r=>r && r.v!=null && isFinite(r.v));
+  if(!vs.length) return null;
+  const nums = vs.map(r=>r.v);
+  const ini = vs[0], fim = vs[vs.length-1];
+  const anos = vs.length>1 ? (pNum(fim.p) - pNum(ini.p))/4 : 0;
+  let cagr = null;
+  if(permiteCagr && anos >= 0.9 && ini.v > 0 && fim.v > 0)
+    cagr = (Math.pow(fim.v/ini.v, 1/anos) - 1) * 100;
+  return {
+    n: vs.length, ini, fim, anos,
+    cagr,
+    media: nums.reduce((a,b)=>a+b,0)/nums.length,
+    mediana: med(nums),
+    min: Math.min(...nums), max: Math.max(...nums),
+    varTotal: (ini.v !== 0 && ini.v != null) ? (fim.v/ini.v - 1)*100 : null,
+  };
+}
+const pNum = p => (+String(p).slice(0,4))*4 + (+String(p).slice(5) || 0);
+// indicadores em que CAGR faz sentido (nível, não razão)
+const CAGR_OK = new Set(['rev12','ebitda12','ni12']);
 // KPIs operacionais para comparação: cada empresa nomeia do seu jeito, então
 // agrupamos em FAMÍLIAS por palavra-chave (SSS da RD casa com o da Renner).
 const KPI_FAMILIAS = [
@@ -1510,11 +1598,13 @@ function renderCmp(){
     if(!opNomes.some(n=>n===cmpSel.opind)) cmpSel.opind = opNomes[0] || '';
     bar.append(mkSel(opNomes.length? opNomes.map(n=>[n, n+' ('+OPIDX[n].length+')']) : [['','(nenhuma empresa curada ainda)']],
       cmpSel.opind, v=>cmpSel.opind=v, 'Indicador operacional'));
-  } else
+  } else if(cmpSel.modo!=='scr' && cmpSel.modo!=='peer')
     bar.append(mkSel(CMP_INDS.map(x=>[x[0],x[1]]), cmpSel.ind, v=>cmpSel.ind=v, 'Indicador'));
   const setores = [...new Set(COS.map(c=>c.setor))].sort();
   bar.append(mkSel([['','Todos os setores'],...setores.map(s=>[s,s])], cmpSel.setor, v=>{cmpSel.setor=v; cmpSel.emp='';}, 'Setor'));
-  bar.append(mkSel([['rank','Ranking'],['emp','Empresa × setor'],['hist','Histórico (linhas)'],['op','KPIs operacionais']], cmpSel.modo, v=>cmpSel.modo=v, 'Modo'));
+  bar.append(mkSel([['rank','Ranking'],['emp','Empresa × setor'],['hist','Histórico (linhas)'],
+                    ['op','KPIs operacionais'],['scr','Screener (filtros)'],['peer','Peer set (tabela)']],
+                   cmpSel.modo, v=>cmpSel.modo=v, 'Modo'));
   if(cmpSel.modo==='rank')
     bar.append(mkSel([['desc','Maiores'],['asc','Menores']], cmpSel.dir, v=>cmpSel.dir=v, 'Direção'));
   const [key,label,getter,fmt] = CMP_INDS.find(x=>x[0]===cmpSel.ind);
@@ -1531,11 +1621,219 @@ function renderCmp(){
     bar.append(mkSel(cands.map(c=>[c.cvm,c.name]), cmpSel.emp, v=>cmpSel.emp=v, 'Empresa'));
   }
   m.append(bar);
+
+  // ---- barra de peer sets (nos modos que trabalham com um conjunto de empresas) ----
+  if(cmpSel.modo==='hist' || cmpSel.modo==='peer' || cmpSel.modo==='scr'){
+    const pb = el('div','cmpbar'); pb.style.marginTop = '-4px';
+    const sets = peersAll();
+    const nomes = Object.keys(sets).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+    if(nomes.length)
+      pb.append(mkSel([['','Carregar peer set salvo…'], ...nomes.map(n=>[n, n+' ('+sets[n].length+')'])], '',
+        v => { if(v && sets[v]){ cmpSel.emps = sets[v].slice(); cmpSel.peerNome = v; if(cmpSel.modo==='scr') cmpSel.modo='peer'; } },
+        'Peer sets salvos'));
+    const btnSalvar = el('button','btn','💾 Salvar peer set');
+    btnSalvar.onclick = () => {
+      if(!cmpSel.emps.length){ alert('Escolha as empresas primeiro (ou rode o screener e clique em "usar como peer set").'); return; }
+      const n = prompt('Nome do peer set (ex.: "Projeto ADCOS — varejo alimentar"):', cmpSel.peerNome || '');
+      if(n && peersSave(n, cmpSel.emps)){ cmpSel.peerNome = String(n).trim().slice(0,40); lsSet('cmp_sel', cmpSel); renderCmp(); }
+    };
+    pb.append(btnSalvar);
+    if(cmpSel.emps.length){
+      const btnLink = el('button','btn','🔗 Copiar link');
+      btnLink.onclick = async () => {
+        const u = peerLink(cmpSel.peerNome || 'peer set', cmpSel.emps);
+        try{ await navigator.clipboard.writeText(u); btnLink.textContent = '✓ link copiado'; }
+        catch(e){ prompt('Copie o link:', u); }
+        setTimeout(()=>btnLink.textContent='🔗 Copiar link', 2200);
+      };
+      pb.append(btnLink);
+    }
+    if(cmpSel.peerNome && sets[cmpSel.peerNome]){
+      const btnDel = el('button','btn','🗑 Excluir "'+cmpSel.peerNome+'"');
+      btnDel.onclick = () => { if(confirm('Excluir o peer set "'+cmpSel.peerNome+'"?')){ peersDel(cmpSel.peerNome); cmpSel.peerNome=''; lsSet('cmp_sel', cmpSel); renderCmp(); } };
+      pb.append(btnDel);
+    }
+    m.append(pb);
+  }
+
   const card = el('div','card');
   const titulo = el('div','ct'); card.append(titulo);
   const box = el('div'); card.append(box); m.append(card);
   const noteEl2 = el('div','note'); m.append(noteEl2);
-  if(cmpSel.modo==='op'){
+  if(cmpSel.modo==='scr'){
+    // ---------- SCREENER: filtros combinados sobre os indicadores ----------
+    titulo.textContent = 'Screener — filtros combinados';
+    const OPS = [['gt','maior que'],['lt','menor que'],['bt','entre']];
+    const fbox = el('div');
+    const linhaFiltro = (f, i) => {
+      const r = el('div','cmpbar'); r.style.margin = '0 0 8px';
+      r.append(mkSel(CMP_INDS.map(x=>[x[0],x[1]]), f.ind, v=>cmpSel.filtros[i].ind=v, 'Indicador do filtro'));
+      r.append(mkSel(OPS, f.op, v=>cmpSel.filtros[i].op=v, 'Operador'));
+      const inp = (val, onch, ph) => {
+        const e = document.createElement('input');
+        e.type = 'number'; e.step = 'any'; e.placeholder = ph; e.value = (val==null?'':val);
+        e.style.cssText = 'padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;width:110px';
+        e.onchange = () => { onch(e.value===''? null : +e.value); lsSet('cmp_sel', cmpSel); renderCmp(); };
+        e.setAttribute('aria-label', ph);
+        return e;
+      };
+      r.append(inp(f.v1, v=>cmpSel.filtros[i].v1=v, f.op==='bt'?'de':'valor'));
+      if(f.op==='bt') r.append(inp(f.v2, v=>cmpSel.filtros[i].v2=v, 'até'));
+      const x = el('button','btn','✕');
+      x.title = 'remover filtro';
+      x.onclick = () => { cmpSel.filtros.splice(i,1); lsSet('cmp_sel', cmpSel); renderCmp(); };
+      r.append(x);
+      return r;
+    };
+    cmpSel.filtros.forEach((f,i) => fbox.append(linhaFiltro(f,i)));
+    const add = el('button','btn','+ adicionar filtro');
+    add.onclick = () => { cmpSel.filtros.push({ind:'roic', op:'gt', v1:null, v2:null}); lsSet('cmp_sel', cmpSel); renderCmp(); };
+    fbox.append(add);
+    box.append(fbox);
+
+    // aplica os filtros que já têm valor preenchido
+    const ativos = cmpSel.filtros.filter(f => f.v1!=null || (f.op==='bt' && f.v2!=null));
+    const passa = c => ativos.every(f => {
+      const g = CMP_INDS.find(x=>x[0]===f.ind); if(!g) return true;
+      const v = g[2](c);
+      if(v==null || !isFinite(v)) return false;            // sem o dado → fora do resultado
+      if(f.op==='gt') return v > f.v1;
+      if(f.op==='lt') return v < f.v1;
+      const lo = Math.min(f.v1!=null?f.v1:-Infinity, f.v2!=null?f.v2:Infinity);
+      const hi = Math.max(f.v1!=null?f.v1:-Infinity, f.v2!=null?f.v2:Infinity);
+      return v >= lo && v <= hi;
+    });
+    const res = escopo.filter(passa);
+    // colunas: os indicadores filtrados + valor de mercado como referência
+    const colKeys = [...new Set([...ativos.map(f=>f.ind), 'mktCap'])];
+    const cols = colKeys.map(k => CMP_INDS.find(x=>x[0]===k)).filter(Boolean);
+    const ordKey = (cols[0]||CMP_INDS[0])[0];
+    const ordG = CMP_INDS.find(x=>x[0]===ordKey)[2];
+    res.sort((a,b) => { const va=ordG(a), vb=ordG(b);
+      return (vb==null?-Infinity:vb) - (va==null?-Infinity:va); });
+
+    const resumo = el('div','ct');
+    resumo.style.marginTop = '12px';
+    resumo.textContent = ativos.length
+      ? res.length + ' empresa' + (res.length===1?'':'s') + ' passam nos ' + ativos.length + ' filtro' + (ativos.length===1?'':'s')
+        + (cmpSel.setor ? ' · ' + cmpSel.setor : '') + ' (de ' + escopo.length + ' no escopo)'
+      : 'Adicione um filtro e preencha o valor para ver o resultado.';
+    box.append(resumo);
+
+    if(ativos.length && res.length){
+      const headers = ['Empresa','Setor', ...cols.map(c=>c[1])];
+      const linhas = res.map(c => [c.name, c.subsetor || c.setor, ...cols.map(k => k[2](c))]);
+      const w = el('div','qtblwrap'); w.style.marginTop='8px';
+      const t = el('table','qtbl');
+      const hr = el('tr'); for(const h of headers) hr.append(el('th',null,h));
+      const th = el('thead'); th.append(hr); t.append(th);
+      const tb = el('tbody');
+      res.forEach((c,ix) => {
+        const tr = el('tr'); tr.style.cursor='pointer';
+        tr.onclick = () => openDetail(c.cvm);
+        tr.append(el('td',null,c.name), el('td',null,c.subsetor||c.setor));
+        cols.forEach(k => tr.append(el('td',null, k[3](k[2](c)))));
+        tb.append(tr);
+      });
+      t.append(tb); w.append(t); box.append(w);
+      const tools = el('div'); tools.style.cssText='display:flex;gap:8px;margin:8px 0 0;flex-wrap:wrap';
+      const bCopy = el('button','btn','⧉ copiar dados (Excel)');
+      bCopy.onclick = () => copiaTSV(headers, linhas, bCopy);
+      const bPeer = el('button','btn','★ usar como peer set');
+      bPeer.onclick = () => {
+        cmpSel.emps = res.slice(0, PEER_MAX).map(c=>c.cvm);
+        cmpSel.peerNome = '';
+        cmpSel.modo = 'peer';
+        lsSet('cmp_sel', cmpSel); renderCmp();
+      };
+      tools.append(bCopy, bPeer);
+      box.append(tools);
+      if(res.length > PEER_MAX)
+        box.append(el('div','dim','O peer set leva as '+PEER_MAX+' primeiras (ordenado por '+(cols[0]||CMP_INDS[0])[1]+').'));
+    }
+    noteEl2.textContent = 'Empresas sem o dado de algum filtro ficam fora do resultado — o screener não presume valor ausente. '
+      + 'Múltiplos (P/L, P/VP, EV/EBITDA, DY) vêm do Fundamentus no último fechamento; ROIC, margens e alavancagem são calculados dos 12 meses da CVM. Os filtros ficam salvos neste navegador.';
+
+  } else if(cmpSel.modo==='peer'){
+    // ---------- PEER SET: tabela empresas × indicadores + estatísticas ----------
+    const nome = cmpSel.peerNome || 'Peer set';
+    titulo.textContent = nome + ' — ' + cmpSel.emps.length + ' empresa' + (cmpSel.emps.length===1?'':'s');
+    const cands = COS.slice().sort((a,b)=>(a.name||'').localeCompare(b.name||'','pt-BR'));
+    const addBar = el('div','cmpbar'); addBar.style.margin='0 0 10px';
+    addBar.append(mkSel([['','+ adicionar empresa…'], ...cands.filter(c=>!cmpSel.emps.includes(c.cvm)).map(c=>[c.cvm,c.name])],
+      '', v => { if(v && cmpSel.emps.length<PEER_MAX) cmpSel.emps.push(v); }, 'Adicionar empresa ao peer set'));
+    box.append(addBar);
+    // chips para remover
+    if(cmpSel.emps.length){
+      const chips = el('div','badges'); chips.style.marginBottom='10px';
+      for(const cv of cmpSel.emps){
+        const c2 = COS.find(x=>x.cvm===cv); if(!c2) continue;
+        const b = el('span','badge', c2.name+' ');
+        const x = el('button','rmv','✕');
+        x.onclick = () => { cmpSel.emps = cmpSel.emps.filter(z=>z!==cv); lsSet('cmp_sel', cmpSel); renderCmp(); };
+        b.append(x); chips.append(b);
+      }
+      box.append(chips);
+    }
+    const membros = cmpSel.emps.map(cv=>COS.find(c=>c.cvm===cv)).filter(Boolean);
+    if(!membros.length){
+      box.append(el('div','dim','Monte o peer set adicionando empresas acima, ou rode o screener e clique em "usar como peer set".'));
+    } else {
+      const cols = ['roic','roe','mgE12','evebitda','pl','pvp','dlEbitda','rev12','mktCap']
+        .map(k=>CMP_INDS.find(x=>x[0]===k)).filter(Boolean);
+      // setor dominante do peer set → mediana setorial de referência
+      const cont = {}; for(const c of membros) cont[c.setor]=(cont[c.setor]||0)+1;
+      const setorDom = Object.entries(cont).sort((a,b)=>b[1]-a[1])[0][0];
+      const peersSetor = COS.filter(c=>c.setor===setorDom);
+      const medSet = {}, medPeer = {};
+      for(const k of cols){
+        medPeer[k[0]] = med(membros.map(c=>k[2](c)).filter(v=>v!=null && isFinite(v)));
+        medSet[k[0]]  = med(peersSetor.map(c=>k[2](c)).filter(v=>v!=null && isFinite(v)));
+      }
+      const headers = ['Empresa', ...cols.map(k=>k[1])];
+      const w = el('div','qtblwrap'); const t = el('table','qtbl');
+      const hr = el('tr'); for(const h of headers) hr.append(el('th',null,h));
+      const th = el('thead'); th.append(hr); t.append(th);
+      const tb = el('tbody');
+      for(const c of membros){
+        const tr = el('tr'); tr.style.cursor='pointer'; tr.onclick = () => openDetail(c.cvm);
+        tr.append(el('td',null,c.name));
+        for(const k of cols){
+          const v = k[2](c);
+          const td = el('td',null, k[3](v));
+          const mp = medPeer[k[0]];
+          if(v!=null && mp!=null && isFinite(v)){
+            // negrito quando está acima da mediana do próprio peer set
+            if(v > mp) td.style.fontWeight = '600';
+          }
+          tr.append(td);
+        }
+        tb.append(tr);
+      }
+      const trP = el('tr'); trP.style.background='var(--wash)';
+      trP.append(el('td',null,'mediana do peer set'));
+      for(const k of cols) trP.append(el('td',null, k[3](medPeer[k[0]])));
+      tb.append(trP);
+      const trS = el('tr'); trS.style.background='var(--wash)';
+      trS.append(el('td',null,'mediana do setor '+setorDom));
+      for(const k of cols) trS.append(el('td',null, k[3](medSet[k[0]])));
+      tb.append(trS);
+      t.append(tb); w.append(t); box.append(w);
+      const linhas = [
+        ...membros.map(c => [c.name, ...cols.map(k=>k[2](c))]),
+        ['mediana do peer set', ...cols.map(k=>medPeer[k[0]])],
+        ['mediana do setor '+setorDom, ...cols.map(k=>medSet[k[0]])],
+      ];
+      const bCopy2 = el('button','btn','⧉ copiar tabela (Excel)');
+      bCopy2.onclick = () => copiaTSV(headers, linhas, bCopy2);
+      const tb2 = el('div'); tb2.style.cssText='display:flex;gap:8px;margin:8px 0 0;flex-wrap:wrap';
+      tb2.append(bCopy2); card.append(tb2);
+      noteEl2.textContent = 'Negrito = acima da mediana do próprio peer set. A mediana setorial usa o setor com mais empresas no conjunto ('
+        + setorDom + ', ' + peersSetor.length + ' empresas listadas). Clique numa linha para abrir a empresa. '
+        + 'Salve o conjunto e copie o link para abrir a mesma comparação em outro computador.';
+    }
+
+  } else if(cmpSel.modo==='op'){
     let lista = (OPIDX[cmpSel.opind] || []).filter(x => !cmpSel.setor || x.setor===cmpSel.setor);
     // dentro da família, compara só o grupo de unidade dominante (% com %, R$ com R$…)
     let omitidos = [];
@@ -1608,8 +1906,49 @@ function renderCmp(){
         () => 'Histórico '+hlabel));
       card.append(tabelaValores(['Período', ...series.map(s=>s.label)],
         linhas.map(l => [l[0], ...l.slice(1).map(v => v==null?null:hfmt(v))])));
+
+      // ---- estatísticas da série: CAGR (quando faz sentido), média, extremos ----
+      const podeCagr = CAGR_OK.has(hk);
+      const sts = series.map(s => ({label: s.label, e: estat(s.rows, podeCagr)})).filter(x=>x.e);
+      if(sts.length){
+        const medianaSetor = (() => {
+          // mediana do último valor do indicador no setor das empresas escolhidas
+          const setores = [...new Set(cmpSel.emps.map(cv => (COS.find(c=>c.cvm===cv)||{}).setor).filter(Boolean))];
+          if(setores.length !== 1) return null;   // só faz sentido com peers do mesmo setor
+          const vals = COS.filter(c=>c.setor===setores[0]).map(c => {
+            const s2 = indSeries(c, hk); if(!s2 || !s2.rows) return null;
+            const ok = s2.rows.filter(r=>r.v!=null); return ok.length? ok[ok.length-1].v : null;
+          }).filter(v=>v!=null && isFinite(v));
+          return vals.length>=3 ? {setor: setores[0], v: med(vals), n: vals.length} : null;
+        })();
+        const heads = ['Empresa','Período','Último','Média', ...(podeCagr?['CAGR a.a.']:[]), 'Variação no período','Mínimo','Máximo'];
+        const lns = sts.map(x => {
+          const e = x.e;
+          return [x.label,
+            e.ini.p+' → '+e.fim.p,
+            hfmt(e.fim.v),
+            hfmt(+e.media.toFixed(2)),
+            ...(podeCagr ? [e.cagr==null? '—' : fmtPct(+e.cagr.toFixed(1))] : []),
+            e.varTotal==null? '—' : fmtPct(+e.varTotal.toFixed(1)),
+            hfmt(e.min), hfmt(e.max)];
+        });
+        if(medianaSetor)
+          lns.push(['mediana do setor '+medianaSetor.setor, '(último dado)', hfmt(+medianaSetor.v.toFixed(2)), '—',
+                    ...(podeCagr?['—']:[]), '—','—','—']);
+        card.append(el('div','ct','Estatísticas do período'));
+        card.append(tabelaValores(heads, lns));
+        const bStat = el('button','btn','⧉ copiar estatísticas (Excel)');
+        bStat.onclick = () => copiaTSV(heads, lns, bStat);
+        const wrapS = el('div'); wrapS.style.cssText='display:flex;gap:8px;margin:8px 0 0;flex-wrap:wrap';
+        wrapS.append(bStat); card.append(wrapS);
+      }
     }
-    noteEl2.textContent = 'Séries trimestrais da CVM (12m móveis onde indicado). Sua seleção fica salva neste navegador. Copie os dados para o Excel ou baixe o gráfico em PNG para usar em slides.';
+    noteEl2.textContent = 'Séries trimestrais da CVM (12m móveis onde indicado). '
+      + (CAGR_OK.has(hk)
+          ? 'CAGR calculado entre o primeiro e o último trimestre da série, anualizado — só aparece com 1 ano ou mais e valores positivos nas duas pontas. '
+          : 'CAGR não se aplica a percentual ou múltiplo, por isso a coluna não aparece neste indicador. ')
+      + 'A mediana setorial só entra quando todas as empresas escolhidas são do mesmo setor. '
+      + 'Sua seleção fica salva neste navegador. Copie os dados para o Excel ou baixe o gráfico em PNG para usar em slides.';
   } else if(cmpSel.modo==='rank'){
     let rows = escopo.map(c=>({label:c.name, v:getter(c), cvm:c.cvm})).filter(r=>r.v!=null && isFinite(r.v));
     rows.sort((a,b)=>cmpSel.dir==='asc'? a.v-b.v : b.v-a.v);
@@ -2152,6 +2491,20 @@ $('#srcline').textContent = 'CVM (ITR/DFP) · B3 (setores + cotações ao vivo) 
 document.body.dataset.view='emp';
 document.querySelector('.main').insertBefore(noticeEl(), $('#crumb'));
 renderAll();
+
+// ---------- peer set vindo de link compartilhado (#peer=nome|cvm,cvm,…) ----------
+function abrePeerDaURL(){
+  const p = peerFromHash();
+  if(!p) return false;
+  cmpSel.emps = p.cvms;
+  cmpSel.peerNome = p.nome;
+  cmpSel.modo = 'peer';
+  lsSet('cmp_sel', cmpSel);
+  setView('cmp');
+  return true;
+}
+abrePeerDaURL();
+addEventListener('hashchange', abrePeerDaURL);
 renderTicker();
 refreshLive();
 refreshRelay();
@@ -2162,6 +2515,19 @@ setInterval(refreshRelay, 60*1000);    // quotes.json do robô (B3 completa + EU
 setInterval(refreshB3, 60*1000);       // B3 direto (ETFs na tela, empresa aberta, IBOV/IFIX)
 setInterval(refreshFinnhub, 60*1000);  // EUA em tempo real (só com chave)
 document.addEventListener('visibilitychange', () => { if(!document.hidden){ refreshFast(); refreshRelay(); refreshB3(); refreshFinnhub(); } });
+
+// ---------- sai da tela de carregamento ----------
+// A lista já está montada aqui. Espera dois frames para o navegador pintar antes
+// do fade, senão o splash sai enquanto a tela ainda está em branco.
+(function fechaBoot(){
+  const b = document.getElementById('boot');
+  if(!b) return;
+  const fim = () => { b.classList.add('off'); setTimeout(() => b.remove(), 420); };
+  // requestAnimationFrame não dispara em aba oculta — nesse caso fecha direto.
+  if(document.hidden){ fim(); return; }
+  requestAnimationFrame(() => requestAnimationFrame(fim));
+  setTimeout(fim, 4000);   // rede de segurança: nunca deixa o splash preso
+})();
 
 // ---------- app instalável (PWA): service worker + convite de instalação ----------
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){

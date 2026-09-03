@@ -24,6 +24,13 @@ if logo.exists():
     html = html.replace("__LOGO__", logo.read_text().strip())
 if fav.exists():
     html = html.replace("__FAVICON__", fav.read_text().strip())
+# logo empilhado (branco + alpha) usado na tela de carregamento
+import base64 as _b64
+boot = (BASE / "brand" / "logo_full.png")
+if boot.exists():
+    html = html.replace("__LOGOBOOT__", _b64.b64encode(boot.read_bytes()).decode())
+elif logo.exists():
+    html = html.replace("__LOGOBOOT__", logo.read_text().strip())
 out = BASE / "out" / "Painel_B3.html"
 out.write_text(html, encoding="utf-8")
 print(f"OK {out} ({out.stat().st_size/1024:.0f} KB)")

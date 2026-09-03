@@ -50,6 +50,12 @@ def main():
                   '<link rel="icon" type="image/svg+xml" href="' + FAVICON + '">', html, count=1)
     html = re.sub(r'<img class="logo"[^>]*>',
                   '<span style="font-size:18px" aria-hidden="true">\U0001F4CA</span>', html, count=1)
+    # tela de carregamento: troca o logo da firma por um título neutro
+    html = re.sub(r'<img class="bl"[^>]*>',
+                  '<div class="bl" style="color:#e2e8f0;font:600 26px/1.2 system-ui,-apple-system,'
+                  '\'Segoe UI\',sans-serif;letter-spacing:.02em;text-align:center;opacity:1">Painel B3</div>',
+                  html, count=1)
+    html = html.replace('aria-label="Carregando o Painel B3"', 'aria-label="Carregando"')
     html = html.replace("Insignia Partners · painel interno.",
                         "Painel de mercado — projeto independente, sem fins comerciais.")
     html = html.replace("painel interno da Insignia Partners, informativo e educacional",
