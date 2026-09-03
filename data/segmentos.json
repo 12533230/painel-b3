@@ -176,6 +176,127 @@
    }
   ]
  },
+ "1210": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/fafdeaf3-7820-4ec2-9477-ce501c563c96/a96a53f3-72f7-af30-61fa-5526ff5fe9a7?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receitas de prestação de serviços"
+  ],
+  "segmentos": [
+   {
+    "nome": "Serviços de Conta Corrente",
+    "valores": {
+     "2026T2": [
+      154.6
+     ],
+     "2026T1": [
+      157.4
+     ],
+     "2025T2": [
+      151.5
+     ]
+    }
+   },
+   {
+    "nome": "Receitas de Serviços Banrisul Pagamentos (Vero)",
+    "valores": {
+     "2026T2": [
+      123.2
+     ],
+     "2026T1": [
+      123.9
+     ],
+     "2025T2": [
+      131.8
+     ]
+    }
+   },
+   {
+    "nome": "Comissões de Corretagem de Seguros",
+    "valores": {
+     "2026T2": [
+      74.7
+     ],
+     "2026T1": [
+      75.6
+     ],
+     "2025T2": [
+      75
+     ]
+    }
+   },
+   {
+    "nome": "Cartão de Crédito",
+    "valores": {
+     "2026T2": [
+      61.4
+     ],
+     "2026T1": [
+      63.2
+     ],
+     "2025T2": [
+      61.5
+     ]
+    }
+   },
+   {
+    "nome": "Administração de Fundos",
+    "valores": {
+     "2026T2": [
+      37.8
+     ],
+     "2026T1": [
+      38.2
+     ],
+     "2025T2": [
+      33.4
+     ]
+    }
+   },
+   {
+    "nome": "Administração de Consórcio",
+    "valores": {
+     "2026T2": [
+      32.9
+     ],
+     "2026T1": [
+      27.6
+     ],
+     "2025T2": [
+      31.4
+     ]
+    }
+   },
+   {
+    "nome": "Demais Receitas (arrecadação e serviços cambiais)",
+    "valores": {
+     "2026T2": [
+      26.5
+     ],
+     "2026T1": [
+      25.9
+     ],
+     "2025T2": [
+      27.2
+     ]
+    }
+   },
+   {
+    "nome": "Cobrança e Serviços de Custódia",
+    "valores": {
+     "2026T2": [
+      13
+     ],
+     "2026T1": [
+      13.3
+     ],
+     "2025T2": [
+      13.8
+     ]
+    }
+   }
+  ]
+ },
  "1228": {
   "fonte": "https://ri.bnb.gov.br/documents/45843/9646311/Apresenta%C3%A7%C3%A3o+de+Resultados+-+Banco+do+Nordeste+-+2T2026.pdf/a126af73-27f5-cb41-1544-3b3ca9b398b2?t=1786709177222",
   "unidade": "R$ milhões",
@@ -228,6 +349,42 @@
      ],
      "2026T2": [
       21300
+     ]
+    }
+   }
+  ]
+ },
+ "2461": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/137b4414-3d0c-493e-8b59-0d02bc3e4072/9f6f2a5c-3fbf-cf50-5cb9-e6e171327b74?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Operacional Líquida",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "Celesc Distribuição S.A.",
+    "valores": {
+     "2026T2": [
+      2938.2,
+      505.7
+     ],
+     "2025T2": [
+      2849.4,
+      404.2
+     ]
+    }
+   },
+   {
+    "nome": "Celesc Geração S.A.",
+    "valores": {
+     "2026T2": [
+      64.1,
+      37.1
+     ],
+     "2025T2": [
+      52.8,
+      33.3
      ]
     }
    }
@@ -289,6 +446,135 @@
      "2025T2": [
       1331,
       149
+     ]
+    }
+   }
+  ]
+ },
+ "4030": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/29633c00-23f7-4765-9594-926012179477/5ffaa693-869a-c253-6b5d-9d72a1e79070?origin=2",
+  "unidade": "R$ milhões (antes de eliminações)",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Siderurgia",
+    "valores": {
+     "2025T2": [
+      5391.9,
+      581.3
+     ],
+     "2026T1": [
+      5599.9,
+      393.4
+     ],
+     "2026T2": [
+      6075.7,
+      636.3
+     ]
+    }
+   },
+   {
+    "nome": "Mineração",
+    "valores": {
+     "2025T2": [
+      3413.7,
+      1231.5
+     ],
+     "2026T1": [
+      3186.2,
+      1374.3
+     ],
+     "2026T2": [
+      2904.3,
+      929.7
+     ]
+    }
+   },
+   {
+    "nome": "Cimentos",
+    "valores": {
+     "2025T2": [
+      1212.7,
+      293.4
+     ],
+     "2026T1": [
+      1256.1,
+      392.5
+     ],
+     "2026T2": [
+      1385.7,
+      426.9
+     ]
+    }
+   },
+   {
+    "nome": "Logística",
+    "valores": {
+     "2025T2": [
+      1176.9,
+      519.1
+     ],
+     "2026T1": [
+      1070.8,
+      447.7
+     ],
+     "2026T2": [
+      1213.9,
+      548.2
+     ]
+    }
+   },
+   {
+    "nome": "Energia",
+    "valores": {
+     "2025T2": [
+      203.4,
+      90
+     ],
+     "2026T1": [
+      202.7,
+      61.9
+     ],
+     "2026T2": [
+      395.5,
+      245.6
+     ]
+    }
+   },
+   {
+    "nome": "Despesas Corporativas / Eliminações",
+    "valores": {
+     "2025T2": [
+      -705.3,
+      -72.8
+     ],
+     "2026T1": [
+      -711.9,
+      -23.6
+     ],
+     "2026T2": [
+      -669,
+      -14.1
+     ]
+    }
+   },
+   {
+    "nome": "CSN Consolidado",
+    "valores": {
+     "2025T2": [
+      10693.3,
+      2642.6
+     ],
+     "2026T1": [
+      10603.8,
+      2646.2
+     ],
+     "2026T2": [
+      11306.2,
+      2772.6
      ]
     }
    }
@@ -406,6 +692,113 @@
    }
   ]
  },
+ "4669": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/4669.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita",
+   "Ebitda"
+  ],
+  "segmentos": [
+   {
+    "nome": "Mercadorias",
+    "valores": {
+     "2026T2": [
+      2007.5,
+      342
+     ]
+    }
+   },
+   {
+    "nome": "Serviços Financeiros",
+    "valores": {
+     "2026T2": [
+      684.2,
+      118.6
+     ]
+    }
+   }
+  ]
+ },
+ "4820": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Recorrente"
+  ],
+  "segmentos": [
+   {
+    "nome": "Brasil/América do Sul",
+    "valores": {
+     "2026T2": [
+      16027,
+      4373
+     ]
+    }
+   },
+   {
+    "nome": "Estados Unidos e Europa",
+    "valores": {
+     "2026T2": [
+      5468,
+      739
+     ]
+    }
+   },
+   {
+    "nome": "México",
+    "valores": {
+     "2026T2": [
+      1064,
+      289
+     ]
+    }
+   },
+   {
+    "nome": "Total Segmentos Reportáveis",
+    "valores": {
+     "2026T2": [
+      22560,
+      5401
+     ]
+    }
+   },
+   {
+    "nome": "Total Braskem Consolidado",
+    "valores": {
+     "2026T2": [
+      21715,
+      5253
+     ]
+    }
+   }
+  ]
+ },
+ "5380": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/5380.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "UPR - Unidade de Produção Repetitiva",
+    "valores": {
+     "2026T2": [
+      63.6
+     ]
+    }
+   },
+   {
+    "nome": "USE - Unidade Sob Encomenda (inclui controladas)",
+    "valores": {
+     "2026T2": [
+      73.5
+     ]
+    }
+   }
+  ]
+ },
  "5410": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/50c1bd3e-8ac6-42d9-884f-b9d69f690602/9a78cad5-4da1-b36f-38ec-45060792f84c?origin=2",
   "unidade": "R$ milhões (convertido de R$ mil, escala original do release). EBITDA por segmento não é divulgado pela WEG — apenas ROL por área de negócio, aberta em Mercado Interno e Mercado Externo.",
@@ -479,6 +872,149 @@
      "2025T2": [
       331.136,
       67.503
+     ]
+    }
+   }
+  ]
+ },
+ "5762": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/5762.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita liquida",
+   "Lucro bruto"
+  ],
+  "segmentos": [
+   {
+    "nome": "Fibrocimento",
+    "valores": {
+     "2026T2": [
+      210.075,
+      41.503
+     ]
+    }
+   },
+   {
+    "nome": "Mineral Crisotila",
+    "valores": {
+     "2026T2": [
+      76.036,
+      11.21
+     ]
+    }
+   }
+  ]
+ },
+ "6173": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/6173.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Armas & Acessórios",
+    "valores": {
+     "2026T2": [
+      324.5
+     ]
+    }
+   }
+  ]
+ },
+ "6211": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/23341a9d-be9a-4855-a251-1c1004aa997c/59f3f426-767c-ea12-8946-074ee9775659?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida"
+  ],
+  "segmentos": [
+   {
+    "nome": "Frenagem",
+    "valores": {
+     "2026T2": [
+      771
+     ],
+     "2026T1": [
+      757.6
+     ],
+     "2025T2": [
+      772.5
+     ]
+    }
+   },
+   {
+    "nome": "Direção e Conforto",
+    "valores": {
+     "2026T2": [
+      282.7
+     ],
+     "2026T1": [
+      185.2
+     ],
+     "2025T2": [
+      259.7
+     ]
+    }
+   },
+   {
+    "nome": "Trem de Força",
+    "valores": {
+     "2026T2": [
+      309.4
+     ],
+     "2026T1": [
+      290.6
+     ],
+     "2025T2": [
+      307.3
+     ]
+    }
+   },
+   {
+    "nome": "Outros Produtos",
+    "valores": {
+     "2026T2": [
+      21.6
+     ],
+     "2026T1": [
+      16.6
+     ],
+     "2025T2": [
+      20.7
+     ]
+    }
+   }
+  ]
+ },
+ "6505": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/6505.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita bruta"
+  ],
+  "segmentos": [
+   {
+    "nome": "Lojas Físicas",
+    "valores": {
+     "2026T2": [
+      5466
+     ]
+    }
+   },
+   {
+    "nome": "Online 1P",
+    "valores": {
+     "2026T2": [
+      2645
+     ]
+    }
+   },
+   {
+    "nome": "Online 3P (marketplace)",
+    "valores": {
+     "2026T2": [
+      210
      ]
     }
    }
@@ -872,6 +1408,166 @@
    }
   ]
  },
+ "8451": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/1d587592-1c8f-4722-9db0-d79a28b81387/4ee7c23c-3d50-180e-c1eb-31427b96b41c?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida"
+  ],
+  "segmentos": [
+   {
+    "nome": "Rodoviários",
+    "valores": {
+     "2026T2": [
+      697.7
+     ],
+     "2025T2": [
+      909.1
+     ]
+    }
+   },
+   {
+    "nome": "Urbanos",
+    "valores": {
+     "2026T2": [
+      588.9
+     ],
+     "2025T2": [
+      587.6
+     ]
+    }
+   },
+   {
+    "nome": "Micros",
+    "valores": {
+     "2026T2": [
+      420.9
+     ],
+     "2025T2": [
+      189.4
+     ]
+    }
+   },
+   {
+    "nome": "Volares (inclui chassis dos Volares)",
+    "valores": {
+     "2026T2": [
+      463.6
+     ],
+     "2025T2": [
+      450.7
+     ]
+    }
+   },
+   {
+    "nome": "Chassis",
+    "valores": {
+     "2026T2": [
+      20.6
+     ],
+     "2025T2": [
+      2.5
+     ]
+    }
+   },
+   {
+    "nome": "Banco Moneo (segmento financeiro)",
+    "valores": {
+     "2026T2": [
+      75.3
+     ],
+     "2025T2": [
+      62
+     ]
+    }
+   },
+   {
+    "nome": "Peças e Outros",
+    "valores": {
+     "2026T2": [
+      106.3
+     ],
+     "2025T2": [
+      103.8
+     ]
+    }
+   }
+  ]
+ },
+ "8575": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Powertrain and Charging",
+    "valores": {
+     "2026T2": [
+      1139.9
+     ]
+    }
+   },
+   {
+    "nome": "Thermal and Fluid Systems",
+    "valores": {
+     "2026T2": [
+      192.3
+     ]
+    }
+   }
+  ]
+ },
+ "8672": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/8672.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Shoppings",
+    "valores": {
+     "2026T2": [
+      374.3
+     ]
+    }
+   },
+   {
+    "nome": "Varejo (Iguatemi 365 e I-Retail)",
+    "valores": {
+     "2026T2": [
+      67.1
+     ]
+    }
+   }
+  ]
+ },
+ "9342": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/9342.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Varejo (Receita Bruta)",
+    "valores": {
+     "2026T2": [
+      1631
+     ]
+    }
+   },
+   {
+    "nome": "Outros (Receita Bruta)",
+    "valores": {
+     "2026T2": [
+      4.3
+     ]
+    }
+   }
+  ]
+ },
  "9512": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/857e970b-1bf4-9ea4-093f-b93bfc2bac95?origin=2 (Relatório de Desempenho 2T26 — segmentos) | https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/19a7ace8-ce1a-28a6-ead3-bdc01b7204f7?origin=2 (Relatório de Produção e Vendas 2T26 — KPIs operacionais)",
   "unidade": "R$ milhões",
@@ -928,6 +1624,149 @@
      "2025T2": [
       12320,
       1347
+     ]
+    }
+   }
+  ]
+ },
+ "10456": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/a8ec6c13-3ef3-4e4a-9879-c684188aa2cb/cbc86732-b938-1dad-7e16-70533c298d5c?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "Havaianas Brasil",
+    "valores": {
+     "2026T2": [
+      809.2,
+      165.7
+     ],
+     "2025T2": [
+      693.7,
+      138.2
+     ]
+    }
+   },
+   {
+    "nome": "Havaianas Internacional",
+    "valores": {
+     "2026T2": [
+      405.8,
+      117.4
+     ],
+     "2025T2": [
+      396.6,
+      57.2
+     ]
+    }
+   },
+   {
+    "nome": "Outros",
+    "valores": {
+     "2026T2": [
+      11.3,
+      -14.1
+     ],
+     "2025T2": [
+      11,
+      -20.8
+     ]
+    }
+   }
+  ]
+ },
+ "11592": {
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553672&numSequencia=1078378&numVersao=1",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida Ajustada"
+  ],
+  "segmentos": [
+   {
+    "nome": "Brasil",
+    "valores": {
+     "2026T2": [
+      1200
+     ],
+     "2026T1": [
+      960
+     ],
+     "2025T2": [
+      1043
+     ]
+    }
+   },
+   {
+    "nome": "Argentina (Unipar Indupa - Bahía Blanca)",
+    "valores": {
+     "2026T2": [
+      294
+     ],
+     "2026T1": [
+      261
+     ],
+     "2025T2": [
+      270
+     ]
+    }
+   }
+  ]
+ },
+ "11932": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/11932.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "América do Sul",
+    "valores": {
+     "2026T2": [
+      1140
+     ]
+    }
+   },
+   {
+    "nome": "América do Norte",
+    "valores": {
+     "2026T2": [
+      1037.8
+     ]
+    }
+   },
+   {
+    "nome": "EMEA",
+    "valores": {
+     "2026T2": [
+      1481.9
+     ]
+    }
+   },
+   {
+    "nome": "Ásia",
+    "valores": {
+     "2026T2": [
+      352.7
+     ]
+    }
+   },
+   {
+    "nome": "Maxion Wheels",
+    "valores": {
+     "2026T2": [
+      3196.8
+     ]
+    }
+   },
+   {
+    "nome": "Maxion Structural Components",
+    "valores": {
+     "2026T2": [
+      815.7
      ]
     }
    }
@@ -1141,6 +1980,60 @@
    }
   ]
  },
+ "14109": {
+  "unidade": "R$ milhoes",
+  "metricas": [
+   "Receita Liquida",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "Autopecas",
+    "valores": {
+     "2026T2": [
+      1109.1,
+      150.9
+     ]
+    }
+   },
+   {
+    "nome": "Controle de Movimentos",
+    "valores": {
+     "2026T2": [
+      1384.7,
+      282.3
+     ]
+    }
+   },
+   {
+    "nome": "Montadora",
+    "valores": {
+     "2026T2": [
+      767.8,
+      36.5
+     ]
+    }
+   },
+   {
+    "nome": "Solucoes Financeiras e Servicos",
+    "valores": {
+     "2026T2": [
+      233.2,
+      13.7
+     ]
+    }
+   },
+   {
+    "nome": "Tecnologia Avancada e Estrategias Digitais",
+    "valores": {
+     "2026T2": [
+      52.4,
+      -1.1
+     ]
+    }
+   }
+  ]
+ },
  "14320": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/5dcf459c-823d-4c02-ac4b-a2aa54a63486/d3f91994-9257-c40e-8a2a-4b581911af32?origin=2",
   "unidade": "R$ milhões (exceto Margem EBITDA Ajustado, em %)",
@@ -1223,6 +2116,83 @@
        "EBITDA Ajustado": 653,
        "Margem EBITDA Ajustado (%)": 11
       }
+     ]
+    }
+   }
+  ]
+ },
+ "14826": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/14826.pdf",
+  "unidade": "R$ milhões (receita bruta / vendas totais)",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Pão de Açúcar",
+    "valores": {
+     "2026T2": [
+      2488
+     ]
+    }
+   },
+   {
+    "nome": "Extra Mercado",
+    "valores": {
+     "2026T2": [
+      1561
+     ]
+    }
+   },
+   {
+    "nome": "Proximidade",
+    "valores": {
+     "2026T2": [
+      585
+     ]
+    }
+   },
+   {
+    "nome": "Outros negócios",
+    "valores": {
+     "2026T2": [
+      80
+     ]
+    }
+   },
+   {
+    "nome": "GPA (total)",
+    "valores": {
+     "2026T2": [
+      4713
+     ]
+    }
+   }
+  ]
+ },
+ "16632": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/16632.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita liquida",
+   "Ebitda ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Químico (GPC Química)",
+    "valores": {
+     "2026T2": [
+      351.7,
+      55.8
+     ]
+    }
+   },
+   {
+    "nome": "Aço (Apolo Tubos)",
+    "valores": {
+     "2026T2": [
+      108.6,
+      1.6
      ]
     }
    }
@@ -1603,6 +2573,33 @@
      ],
      "2025T2": [
       969
+     ]
+    }
+   }
+  ]
+ },
+ "17973": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Recorrente"
+  ],
+  "segmentos": [
+   {
+    "nome": "Educação Básica (Vasta + Saber)",
+    "valores": {
+     "2026T2": [
+      650.2,
+      74
+     ]
+    }
+   },
+   {
+    "nome": "Educação Superior (Kroton)",
+    "valores": {
+     "2026T2": [
+      1310.5,
+      515.4
      ]
     }
    }
@@ -2372,6 +3369,77 @@
    }
   ]
  },
+ "19453": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/7c109ecb-88c9-441f-91cb-66a8db417120/9d83ccee-0591-e096-4129-d1bd16ce5c22?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Bruta (ex-construção)",
+   "Receita Líquida Ajustada (ex-construção)",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Concessões Rodoviárias",
+    "valores": {
+     "2026T2": [
+      1899,
+      1736.4,
+      1294.6
+     ],
+     "2025T2": [
+      1884.4,
+      1724.4,
+      1306.9
+     ]
+    }
+   },
+   {
+    "nome": "Ecoporto Santos",
+    "valores": {
+     "2026T2": [
+      138.3,
+      97.5,
+      18.1
+     ],
+     "2025T2": [
+      130.5,
+      91.6,
+      21.3
+     ]
+    }
+   },
+   {
+    "nome": "Serviços e Holding (ECS + Holding)",
+    "valores": {
+     "2026T2": [
+      159.8,
+      144.7,
+      26.2
+     ],
+     "2025T2": [
+      145.9,
+      131.7,
+      25.6
+     ]
+    }
+   },
+   {
+    "nome": "Ecopátio Cubatão",
+    "valores": {
+     "2026T2": [
+      20.3,
+      null,
+      9.6
+     ],
+     "2025T2": [
+      19.3,
+      null,
+      9.5
+     ]
+    }
+   }
+  ]
+ },
  "19550": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/67c3b7d4-64ea-4c2f-b380-6596a2ac2fbf/4065f0f9-976a-526a-5f90-33b6275a5bca?origin=2",
   "unidade": "R$ milhões",
@@ -2452,6 +3520,54 @@
        "EBITDA": 658,
        "Margem EBITDA (%)": 11.6
       }
+     ]
+    }
+   }
+  ]
+ },
+ "19615": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita bruta"
+  ],
+  "segmentos": [
+   {
+    "nome": "Mercado interno",
+    "valores": {
+     "2026T2": [
+      544.005
+     ]
+    }
+   },
+   {
+    "nome": "Exportação",
+    "valores": {
+     "2026T2": [
+      187.844
+     ]
+    }
+   }
+  ]
+ },
+ "19623": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita bruta"
+  ],
+  "segmentos": [
+   {
+    "nome": "Diagnósticos Nacional",
+    "valores": {
+     "2026T2": [
+      2207
+     ]
+    }
+   },
+   {
+    "nome": "Hospitais e Oncologia Nordeste (HBA/Clínicas AMO)",
+    "valores": {
+     "2026T2": [
+      208
      ]
     }
    }
@@ -2584,6 +3700,34 @@
    }
   ]
  },
+ "19879": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/19879.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Distribuição (Light SESA)",
+    "valores": {
+     "2026T2": [
+      3075,
+      461
+     ]
+    }
+   },
+   {
+    "nome": "Geração e Comercialização (Light Energia + LightCOM)",
+    "valores": {
+     "2026T2": [
+      463,
+      143
+     ]
+    }
+   }
+  ]
+ },
  "19992": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d3be5d49-62e7-4def-a3e1-ab25ff09f153/29ca7a02-e9c5-d3b1-6d1e-578cf0ac69d8?origin=2",
   "unidade": "R$ milhões",
@@ -2706,6 +3850,71 @@
       {
        "EBITDA Ajustado": 39.8
       }
+     ]
+    }
+   }
+  ]
+ },
+ "20028": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20028.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita",
+   "Ebitda"
+  ],
+  "segmentos": [
+   {
+    "nome": "ValidID (ID & Gov. Digital)",
+    "valores": {
+     "2026T2": [
+      252.9,
+      78.6
+     ]
+    }
+   },
+   {
+    "nome": "ValidMobile",
+    "valores": {
+     "2026T2": [
+      150.4,
+      24.9
+     ]
+    }
+   },
+   {
+    "nome": "ValidPay",
+    "valores": {
+     "2026T2": [
+      102.4,
+      8.7
+     ]
+    }
+   }
+  ]
+ },
+ "20044": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20044.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita liquida",
+   "Lucro bruto"
+  ],
+  "segmentos": [
+   {
+    "nome": "CSU Pays",
+    "valores": {
+     "2026T2": [
+      104.1,
+      62.6
+     ]
+    }
+   },
+   {
+    "nome": "CSU DX",
+    "valores": {
+     "2026T2": [
+      71.9,
+      15.2
      ]
     }
    }
@@ -2883,6 +4092,419 @@
    }
   ]
  },
+ "20338": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/fcf0301a-c792-45d6-a615-fc81722c9abe/ece82813-e7f8-049b-29bf-a2bb28316dcd?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida"
+  ],
+  "segmentos": [
+   {
+    "nome": "Produtos Principais (biscoitos, massas e margarinas)",
+    "valores": {
+     "2026T2": [
+      2088.5
+     ],
+     "2026T1": [
+      1667.4
+     ],
+     "2025T2": [
+      2127.1
+     ]
+    }
+   },
+   {
+    "nome": "Moinhos de Trigo e Refino de Óleos Vegetais (farinhas, farelo e gorduras industriais)",
+    "valores": {
+     "2026T2": [
+      452.3
+     ],
+     "2026T1": [
+      428.8
+     ],
+     "2025T2": [
+      455.3
+     ]
+    }
+   },
+   {
+    "nome": "Adjacências (bolos, snacks, misturas para bolos, torradas, saudáveis, molhos e temperos)",
+    "valores": {
+     "2026T2": [
+      158.5
+     ],
+     "2026T1": [
+      121.1
+     ],
+     "2025T2": [
+      141
+     ]
+    }
+   }
+  ]
+ },
+ "20346": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20346.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita bruta",
+   "Ebitda ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Profarma Distribuição",
+    "valores": {
+     "2026T2": [
+      3293.1,
+      84.1
+     ]
+    }
+   },
+   {
+    "nome": "Rede d1000",
+    "valores": {
+     "2026T2": [
+      703.5,
+      29.3
+     ]
+    }
+   },
+   {
+    "nome": "4BIO (Especialidades)",
+    "valores": {
+     "2026T2": [
+      682.3,
+      13.6
+     ]
+    }
+   }
+  ]
+ },
+ "20362": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20362.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Infraestrutura, Serviços e Soluções de TI (ISS)",
+    "valores": {
+     "2026T2": [
+      605.3
+     ]
+    }
+   },
+   {
+    "nome": "Dispositivos Inteligentes - Consumo",
+    "valores": {
+     "2026T2": [
+      336.7
+     ]
+    }
+   },
+   {
+    "nome": "Soluções de Pagamento",
+    "valores": {
+     "2026T2": [
+      156.5
+     ]
+    }
+   },
+   {
+    "nome": "Negócios Adjacentes",
+    "valores": {
+     "2026T2": [
+      28.5
+     ]
+    }
+   },
+   {
+    "nome": "Receita Bruta Consolidada",
+    "valores": {
+     "2026T2": [
+      1127
+     ]
+    }
+   }
+  ]
+ },
+ "20370": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20370.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita",
+   "Ebitda"
+  ],
+  "segmentos": [
+   {
+    "nome": "Rede Lopes",
+    "valores": {
+     "2026T2": [
+      32.88,
+      7.544
+     ]
+    }
+   },
+   {
+    "nome": "CrediPronto",
+    "valores": {
+     "2026T2": [
+      21.709,
+      7.521
+     ]
+    }
+   }
+  ]
+ },
+ "20516": {
+  "fonte": "https://ri.saomartinho.com.br/Download.aspx?Arquivo=ZFp1QaLRnygOLp3G2inCFg%3D%3D&linguagem=pt",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "Operação de Milho (etanol de milho, DDGS, óleo de milho, CBIOs)",
+    "valores": {
+     "2026T2": [
+      235.3,
+      82.5
+     ],
+     "2026T1": [
+      432,
+      187.5
+     ],
+     "2025T2": [
+      265.8,
+      95.5
+     ]
+    }
+   }
+  ]
+ },
+ "20605": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/1389c06d-4b85-4082-ae2b-3cc3b67db647/eb507b65-aef9-704c-e6c9-cb0feae7c20e?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Incorporação",
+    "valores": {
+     "2026T2": [
+      560.8,
+      345.8
+     ],
+     "2025T2": [
+      166.1,
+      107.3
+     ]
+    }
+   },
+   {
+    "nome": "Hospitalidade e Gastronomia",
+    "valores": {
+     "2026T2": [
+      120.2,
+      27.1
+     ],
+     "2025T2": [
+      115,
+      23.3
+     ]
+    }
+   },
+   {
+    "nome": "Aeroporto",
+    "valores": {
+     "2026T2": [
+      100.5,
+      56.2
+     ],
+     "2025T2": [
+      65,
+      44.7
+     ]
+    }
+   },
+   {
+    "nome": "Shoppings",
+    "valores": {
+     "2026T2": [
+      93.7,
+      56.8
+     ],
+     "2025T2": [
+      85.2,
+      53.3
+     ]
+    }
+   },
+   {
+    "nome": "JHSF Residences e Clubs",
+    "valores": {
+     "2026T2": [
+      73.6,
+      52.3
+     ],
+     "2025T2": [
+      38.7,
+      29.9
+     ]
+    }
+   },
+   {
+    "nome": "Varejo",
+    "valores": {
+     "2026T2": [
+      36.5,
+      3
+     ]
+    }
+   },
+   {
+    "nome": "JHSF Capital",
+    "valores": {
+     "2026T2": [
+      11.6,
+      4.9
+     ],
+     "2025T2": [
+      3.6,
+      -0.6
+     ]
+    }
+   }
+  ]
+ },
+ "20710": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Operacional Líquida",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Navegação Costeira",
+    "valores": {
+     "2026T2": [
+      500.8,
+      86.4
+     ]
+    }
+   },
+   {
+    "nome": "TVV",
+    "valores": {
+     "2026T2": [
+      134.3,
+      70
+     ]
+    }
+   },
+   {
+    "nome": "Transporte Rodoviário de Cargas",
+    "valores": {
+     "2026T2": [
+      142,
+      -1.2
+     ]
+    }
+   }
+  ]
+ },
+ "20745": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/a975c39b-3eca-4ad8-9330-2c0a0b8d1060/da017e37-1ea8-7eef-ac2c-243762280f70?origin=2",
+  "unidade": "R$ milhões (convertido de R$ mil publicado no release)",
+  "metricas": [
+   "Receita líquida",
+   "Resultado bruto"
+  ],
+  "segmentos": [
+   {
+    "nome": "Algodão em pluma",
+    "valores": {
+     "2026T2": [
+      733.407,
+      338.126
+     ],
+     "2025T2": [
+      677.808,
+      253.882
+     ]
+    }
+   },
+   {
+    "nome": "Caroço de algodão",
+    "valores": {
+     "2026T2": [
+      27.051,
+      6.662
+     ],
+     "2025T2": [
+      32.2,
+      14.176
+     ]
+    }
+   },
+   {
+    "nome": "Soja",
+    "valores": {
+     "2026T2": [
+      1001.703,
+      301.269
+     ],
+     "2025T2": [
+      951.975,
+      262.8
+     ]
+    }
+   },
+   {
+    "nome": "Milho",
+    "valores": {
+     "2026T2": [
+      77.663,
+      22.885
+     ],
+     "2025T2": [
+      49.584,
+      21.648
+     ]
+    }
+   },
+   {
+    "nome": "Rebanho bovino",
+    "valores": {
+     "2026T2": [
+      93.519,
+      15.664
+     ],
+     "2025T2": [
+      53.479,
+      8.587
+     ]
+    }
+   },
+   {
+    "nome": "Sementes (venda a terceiros)",
+    "valores": {
+     "2026T2": [
+      0.22,
+      -0.559
+     ],
+     "2025T2": [
+      0.096,
+      -0.595
+     ]
+    }
+   }
+  ]
+ },
  "20788": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/046e3a67-965a-4246-ac46-a0ca4760b186/bf64bbb1-0b12-335c-a79b-0754bdf1299c?origin=2",
   "unidade": "R$ milhões (Beef América do Norte e Sadia Halal reportados pela empresa em US$ milhões, mantidos em US$); volume em mil toneladas; margem em %",
@@ -2901,6 +4523,393 @@
       null,
       null,
       null
+     ]
+    }
+   }
+  ]
+ },
+ "20800": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20800.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita liquida",
+   "Ebitda"
+  ],
+  "segmentos": [
+   {
+    "nome": "Divisão de Logística Automotiva",
+    "valores": {
+     "2026T2": [
+      692.9,
+      124.4
+     ]
+    }
+   },
+   {
+    "nome": "Divisão de Logística Integrada",
+    "valores": {
+     "2026T2": [
+      47.2,
+      6.9
+     ]
+    }
+   }
+  ]
+ },
+ "20931": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Brasil",
+    "valores": {
+     "2026T2": [
+      8596.9
+     ]
+    }
+   },
+   {
+    "nome": "Argentina",
+    "valores": {
+     "2026T2": [
+      1213.4
+     ]
+    }
+   },
+   {
+    "nome": "Colômbia",
+    "valores": {
+     "2026T2": [
+      544.4
+     ]
+    }
+   },
+   {
+    "nome": "Paraguai",
+    "valores": {
+     "2026T2": [
+      1758.8
+     ]
+    }
+   },
+   {
+    "nome": "Uruguai",
+    "valores": {
+     "2026T2": [
+      1636.1
+     ]
+    }
+   },
+   {
+    "nome": "Austrália",
+    "valores": {
+     "2026T2": [
+      747.6
+     ]
+    }
+   },
+   {
+    "nome": "Chile",
+    "valores": {
+     "2026T2": [
+      0
+     ]
+    }
+   },
+   {
+    "nome": "Outros",
+    "valores": {
+     "2026T2": [
+      570.5
+     ]
+    }
+   }
+  ]
+ },
+ "20974": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/ada9bc2c-f7d0-4359-9eaf-851b679ab788/8966f336-97d7-142e-654a-b27fae98b331?origin=2",
+  "unidade": "R$ milhões (VGV 100%)",
+  "metricas": [
+   "VGV Lançado",
+   "Vendas Líquidas Contratadas (VGV Líquido Contratado)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Direcional (MCMV Faixas 1, 2 e 3)",
+    "valores": {
+     "2026T2": [
+      1285.8,
+      1064.5
+     ],
+     "2026T1": [
+      704.7,
+      979.9
+     ],
+     "2025T2": [
+      1062,
+      996.5
+     ]
+    }
+   },
+   {
+    "nome": "Riva (média renda / MCMV Faixa 4 e fora do programa)",
+    "valores": {
+     "2026T2": [
+      779.4,
+      590.4
+     ],
+     "2026T1": [
+      301.1,
+      602.1
+     ],
+     "2025T2": [
+      841.9,
+      680.8
+     ]
+    }
+   }
+  ]
+ },
+ "21016": {
+  "unidade": "R$ milhoes",
+  "metricas": [
+   "Receita Liquida",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Idomed (Medicina)",
+    "valores": {
+     "2026T2": [
+      340.1,
+      151.6
+     ]
+    }
+   },
+   {
+    "nome": "Ibmec",
+    "valores": {
+     "2026T2": [
+      106.7,
+      33.8
+     ]
+    }
+   },
+   {
+    "nome": "Estacio & Wyden",
+    "valores": {
+     "2026T2": [
+      945.3,
+      214.8
+     ]
+    }
+   }
+  ]
+ },
+ "21040": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21040.pdf",
+  "unidade": "R$ milhões (receita líquida de locação, Proforma)",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Edifícios Corporativos",
+    "valores": {
+     "2026T2": [
+      7.977
+     ]
+    }
+   },
+   {
+    "nome": "Shopping Centers",
+    "valores": {
+     "2026T2": [
+      18.295
+     ]
+    }
+   },
+   {
+    "nome": "Galpões Logísticos",
+    "valores": {
+     "2026T2": [
+      2.474
+     ]
+    }
+   }
+  ]
+ },
+ "21091": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado e Recorrente"
+  ],
+  "segmentos": [
+   {
+    "nome": "Madeira (Painéis)",
+    "valores": {
+     "2026T2": [
+      1570.1,
+      485.1
+     ]
+    }
+   },
+   {
+    "nome": "Metais e Louças",
+    "valores": {
+     "2026T2": [
+      471.3,
+      55.6
+     ]
+    }
+   },
+   {
+    "nome": "Revestimentos Cerâmicos",
+    "valores": {
+     "2026T2": [
+      190.1,
+      6.7
+     ]
+    }
+   },
+   {
+    "nome": "LD Celulose (100% da operação, JV 49% Dexco)",
+    "valores": {
+     "2026T2": [
+      714.6,
+      338.8
+     ]
+    }
+   }
+  ]
+ },
+ "21148": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21148.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita liquida",
+   "Ebitda ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Tenda",
+    "valores": {
+     "2026T2": [
+      1204.9,
+      299.8
+     ]
+    }
+   },
+   {
+    "nome": "Alea",
+    "valores": {
+     "2026T2": [
+      85.1,
+      -24.6
+     ]
+    }
+   }
+  ]
+ },
+ "21350": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/ada9bc2c-f7d0-4359-9eaf-851b679ab788/8966f336-97d7-142e-654a-b27fae98b331?origin=2",
+  "unidade": "R$ milhões (VGV 100%)",
+  "metricas": [
+   "VGV Lançado",
+   "Vendas Líquidas Contratadas (VGV Líquido Contratado)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Direcional (MCMV Faixas 1, 2 e 3)",
+    "valores": {
+     "2026T2": [
+      1285.8,
+      1064.5
+     ],
+     "2026T1": [
+      704.7,
+      979.9
+     ],
+     "2025T2": [
+      1062,
+      996.5
+     ]
+    }
+   },
+   {
+    "nome": "Riva (média renda / MCMV Faixa 4 e fora do programa)",
+    "valores": {
+     "2026T2": [
+      779.4,
+      590.4
+     ],
+     "2026T1": [
+      301.1,
+      602.1
+     ],
+     "2025T2": [
+      841.9,
+      680.8
+     ]
+    }
+   }
+  ]
+ },
+ "21440": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21440.pdf",
+  "unidade": "R$ milhões (receita bruta)",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Le Lis",
+    "valores": {
+     "2026T2": [
+      237.2
+     ]
+    }
+   },
+   {
+    "nome": "Dudalina",
+    "valores": {
+     "2026T2": [
+      64.2
+     ]
+    }
+   },
+   {
+    "nome": "John John",
+    "valores": {
+     "2026T2": [
+      45.8
+     ]
+    }
+   },
+   {
+    "nome": "BO.BÔ",
+    "valores": {
+     "2026T2": [
+      46.2
+     ]
+    }
+   },
+   {
+    "nome": "Individual",
+    "valores": {
+     "2026T2": [
+      13.6
+     ]
+    }
+   },
+   {
+    "nome": "Estoque (Outlets)",
+    "valores": {
+     "2026T2": [
+      26.1
      ]
     }
    }
@@ -3363,6 +5372,111 @@
    }
   ]
  },
+ "22012": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita liquida",
+   "Ebitda ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Rental",
+    "valores": {
+     "2026T2": [
+      392.5,
+      215
+     ]
+    }
+   },
+   {
+    "nome": "Formas e Escoramentos",
+    "valores": {
+     "2026T2": [
+      79.7,
+      53.8
+     ]
+    }
+   }
+  ]
+ },
+ "22020": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22020.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita líquida",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "JSL Serviços Dedicados",
+    "valores": {
+     "2026T2": [
+      1790.8,
+      351.6
+     ]
+    }
+   },
+   {
+    "nome": "Intralog",
+    "valores": {
+     "2026T2": [
+      524.4,
+      120.2
+     ]
+    }
+   },
+   {
+    "nome": "JSL Digital",
+    "valores": {
+     "2026T2": [
+      183.6,
+      14.5
+     ]
+    }
+   }
+  ]
+ },
+ "22349": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22349.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Shoes & Bags",
+    "valores": {
+     "2026T2": [
+      966.5
+     ]
+    }
+   },
+   {
+    "nome": "Fashion Women",
+    "valores": {
+     "2026T2": [
+      1404.4
+     ]
+    }
+   },
+   {
+    "nome": "Fashion Men",
+    "valores": {
+     "2026T2": [
+      420.2
+     ]
+    }
+   },
+   {
+    "nome": "Basic",
+    "valores": {
+     "2026T2": [
+      559.5
+     ]
+    }
+   }
+  ]
+ },
  "22357": {
   "fonte": "https://investidor10.com.br/acoes/link_comunicado/ALOS3/46951/",
   "unidade": "R$ milhões",
@@ -3433,6 +5547,39 @@
      ],
      "2025T2": [
       45.2
+     ]
+    }
+   }
+  ]
+ },
+ "22454": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22454.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Promoção de Eventos",
+    "valores": {
+     "2026T2": [
+      0.3
+     ]
+    }
+   },
+   {
+    "nome": "Operação de Bilheteria, A&B e Venues",
+    "valores": {
+     "2026T2": [
+      21.1
+     ]
+    }
+   },
+   {
+    "nome": "Patrocínio",
+    "valores": {
+     "2026T2": [
+      2.3
      ]
     }
    }
@@ -3623,6 +5770,74 @@
    }
   ]
  },
+ "22675": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita operacional líquida",
+   "EBITDA Ajustado recorrente"
+  ],
+  "segmentos": [
+   {
+    "nome": "Brasil (operações continuadas)",
+    "valores": {
+     "2026T2": [
+      359,
+      184
+     ]
+    }
+   },
+   {
+    "nome": "Paraguai",
+    "valores": {
+     "2026T2": [
+      305,
+      138
+     ]
+    }
+   }
+  ]
+ },
+ "22780": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22780.pdf",
+  "unidade": "R$ milhões (faturamento bruto ex-IPI)",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Exclusivas",
+    "valores": {
+     "2026T2": [
+      46.666
+     ]
+    }
+   },
+   {
+    "nome": "Multimarcas",
+    "valores": {
+     "2026T2": [
+      5.084
+     ]
+    }
+   },
+   {
+    "nome": "Corporate",
+    "valores": {
+     "2026T2": [
+      4.354
+     ]
+    }
+   },
+   {
+    "nome": "Mercado Externo",
+    "valores": {
+     "2026T2": [
+      9.829
+     ]
+    }
+   }
+  ]
+ },
  "23159": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d4ee6df5-1dd8-4fb5-b518-e05397c304e4/9d131b94-6415-4fa8-d78c-99319c643d26?origin=2",
   "unidade": "R$ milhões",
@@ -3750,6 +5965,80 @@
    }
   ]
  },
+ "23221": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23221.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Mensalidades de Ensino Presencial",
+    "valores": {
+     "2026T2": [
+      517.909
+     ]
+    }
+   },
+   {
+    "nome": "Mensalidades de Ensino a Distância (EAD)",
+    "valores": {
+     "2026T2": [
+      67.577
+     ]
+    }
+   },
+   {
+    "nome": "Mensalidades de Ensino Semipresencial",
+    "valores": {
+     "2026T2": [
+      10.512
+     ]
+    }
+   },
+   {
+    "nome": "Outras",
+    "valores": {
+     "2026T2": [
+      26.038
+     ]
+    }
+   }
+  ]
+ },
+ "23248": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23248.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Ânima Core",
+    "valores": {
+     "2026T2": [
+      554.1
+     ]
+    }
+   },
+   {
+    "nome": "Ensino Digital",
+    "valores": {
+     "2026T2": [
+      81.5
+     ]
+    }
+   },
+   {
+    "nome": "Inspirali",
+    "valores": {
+     "2026T2": [
+      414.4
+     ]
+    }
+   }
+  ]
+ },
  "23264": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/c8182463-4b7e-408c-9d0f-42797662435e/7abe43b3-913c-7775-c393-ceb89777d32a?origin=2",
   "unidade": "R$ milhões",
@@ -3857,6 +6146,155 @@
        "Receita líquida": 20090.2,
        "EBITDA normalizado": 6152.7
       }
+     ]
+    }
+   }
+  ]
+ },
+ "23272": {
+  "unidade": "R$ milhoes",
+  "metricas": [
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "Locacao",
+    "valores": {
+     "2026T2": [
+      56.6
+     ]
+    }
+   },
+   {
+    "nome": "Desenvolvimento",
+    "valores": {
+     "2026T2": [
+      23.2
+     ]
+    }
+   }
+  ]
+ },
+ "23507": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23507.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Animais de Produção",
+    "valores": {
+     "2026T2": [
+      252.4
+     ]
+    }
+   },
+   {
+    "nome": "Animais de Companhia",
+    "valores": {
+     "2026T2": [
+      49.8
+     ]
+    }
+   },
+   {
+    "nome": "Operações Internacionais",
+    "valores": {
+     "2026T2": [
+      36.5
+     ]
+    }
+   }
+  ]
+ },
+ "23574": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23574.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Brasil",
+    "valores": {
+     "2026T2": [
+      250.7,
+      31.8
+     ]
+    }
+   },
+   {
+    "nome": "Frango Assado",
+    "valores": {
+     "2026T2": [
+      142.7,
+      15.7
+     ]
+    }
+   },
+   {
+    "nome": "Pizza Hut",
+    "valores": {
+     "2026T2": [
+      52.6,
+      8.2
+     ]
+    }
+   },
+   {
+    "nome": "Outras Marcas",
+    "valores": {
+     "2026T2": [
+      55.4,
+      7.9
+     ]
+    }
+   },
+   {
+    "nome": "EUA",
+    "valores": {
+     "2026T2": [
+      169.1,
+      34.8
+     ]
+    }
+   }
+  ]
+ },
+ "23590": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23590.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida Ajustada",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "Seguros",
+    "valores": {
+     "2026T2": [
+      157.1,
+      113.4
+     ]
+    }
+   },
+   {
+    "nome": "Crédito e Consórcios",
+    "valores": {
+     "2026T2": [
+      32.4,
+      15.5
+     ]
+    }
+   },
+   {
+    "nome": "Run-Off Caixa",
+    "valores": {
+     "2026T2": [
+      45.8,
+      43.7
      ]
     }
    }
@@ -4097,6 +6535,142 @@
    }
   ]
  },
+ "24112": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/ed78542a-4e01-429a-8926-03d69ccfa307/51192f68-386a-a700-cbae-fba020b58c7b?origin=2",
+  "unidade": "R$ milhões (receita líquida) — a Azul NÃO divulga EBITDA por segmento/linha de negócio no release; a única métrica publicada nessa abertura é a receita líquida",
+  "metricas": [
+   "Receita líquida"
+  ],
+  "segmentos": [
+   {
+    "nome": "Transporte de passageiros",
+    "valores": {
+     "2026T2": [
+      4560.5
+     ],
+     "2025T2": [
+      4578.9
+     ]
+    }
+   },
+   {
+    "nome": "Cargas e outras receitas (Azul Logística e outros)",
+    "valores": {
+     "2026T2": [
+      418.1
+     ],
+     "2025T2": [
+      363.4
+     ]
+    }
+   }
+  ]
+ },
+ "24180": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Prêmio Emitido"
+  ],
+  "segmentos": [
+   {
+    "nome": "Vida",
+    "valores": {
+     "2026T2": [
+      54.9
+     ]
+    }
+   },
+   {
+    "nome": "P&C",
+    "valores": {
+     "2026T2": [
+      1099.3
+     ]
+    }
+   },
+   {
+    "nome": "P&C - Patrimonial",
+    "valores": {
+     "2026T2": [
+      728.7
+     ]
+    }
+   },
+   {
+    "nome": "P&C - Rural",
+    "valores": {
+     "2026T2": [
+      52.7
+     ]
+    }
+   },
+   {
+    "nome": "P&C - Riscos Especiais",
+    "valores": {
+     "2026T2": [
+      47.6
+     ]
+    }
+   },
+   {
+    "nome": "P&C - Outros",
+    "valores": {
+     "2026T2": [
+      270.2
+     ]
+    }
+   },
+   {
+    "nome": "Brasil",
+    "valores": {
+     "2026T2": [
+      803.1
+     ]
+    }
+   },
+   {
+    "nome": "Exterior",
+    "valores": {
+     "2026T2": [
+      351.1
+     ]
+    }
+   }
+  ]
+ },
+ "24236": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24236.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Siderurgia & Mineração",
+    "valores": {
+     "2026T2": [
+      193
+     ]
+    }
+   },
+   {
+    "nome": "Óleo & Gás",
+    "valores": {
+     "2026T2": [
+      172.2
+     ]
+    }
+   },
+   {
+    "nome": "Outros",
+    "valores": {
+     "2026T2": [
+      97.4
+     ]
+    }
+   }
+  ]
+ },
  "24260": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/757d3905-6a2d-496a-bbb0-32ddd17de6a0/f949e040-5053-254d-6a03-2865a71a132a?origin=2",
   "unidade": "R$ milhões",
@@ -4277,6 +6851,152 @@
    }
   ]
  },
+ "24627": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Hospitalar",
+    "valores": {
+     "2026T2": [
+      417
+     ]
+    }
+   },
+   {
+    "nome": "Varejo+Estética",
+    "valores": {
+     "2026T2": [
+      69
+     ]
+    }
+   }
+  ]
+ },
+ "24694": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24694.pdf",
+  "unidade": "R$ milhões (receita líquida; convertido de R$ mil da tabela da p.7)",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Centauro",
+    "valores": {
+     "2026T2": [
+      1121
+     ]
+    }
+   },
+   {
+    "nome": "Fisia (Nike Brasil)",
+    "valores": {
+     "2026T2": [
+      1334.9
+     ]
+    }
+   }
+  ]
+ },
+ "24716": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24716.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Serviços de locação",
+    "valores": {
+     "2026T2": [
+      1087.9
+     ]
+    }
+   },
+   {
+    "nome": "Venda de ativos",
+    "valores": {
+     "2026T2": [
+      365
+     ]
+    }
+   },
+   {
+    "nome": "Indústria",
+    "valores": {
+     "2026T2": [
+      114.4
+     ]
+    }
+   }
+  ]
+ },
+ "24805": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/61a4df2d-a461-44d6-9128-da74058019db/cda0f39f-8ec4-4b0d-0db3-6f9a0395f592?origin=2",
+  "unidade": "R$ milhões (valores já reportados em R$ milhões pela empresa; sem conversão)",
+  "metricas": [
+   "Receita Bruta (líq. de devoluções)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Lojas Vivara",
+    "valores": {
+     "2026T2": [
+      668.9
+     ],
+     "2025T2": [
+      625.8
+     ]
+    }
+   },
+   {
+    "nome": "Lojas Life",
+    "valores": {
+     "2026T2": [
+      242
+     ],
+     "2025T2": [
+      209
+     ]
+    }
+   },
+   {
+    "nome": "Quiosques",
+    "valores": {
+     "2026T2": [
+      5.3
+     ],
+     "2025T2": [
+      4.9
+     ]
+    }
+   },
+   {
+    "nome": "Vendas Digitais",
+    "valores": {
+     "2026T2": [
+      153.5
+     ],
+     "2025T2": [
+      126.6
+     ]
+    }
+   },
+   {
+    "nome": "Outros (B2B e assistência técnica)",
+    "valores": {
+     "2026T2": [
+      1.7
+     ],
+     "2025T2": [
+      3.4
+     ]
+    }
+   }
+  ]
+ },
  "24821": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/5ecded6f-d02b-4439-bd60-b78400f01f1e/b0571f84-bf03-c349-a6a1-e722c724bac1?origin=2",
   "unidade": "R$ milhões (visão gerencial ex-IFRS 17, antes de eliminações intercompany; EBITDA SulAmérica é o reportado — o ajustado pelo resultado financeiro de ativos vinculados foi R$ 1.117,3 mi no 2026T2)",
@@ -4316,6 +7036,234 @@
      "2025T2": [
       8147.7,
       399
+     ]
+    }
+   }
+  ]
+ },
+ "24910": {
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Commerce",
+    "valores": {
+     "2026T2": [
+      276,
+      76.3
+     ]
+    }
+   },
+   {
+    "nome": "BeOnline / SaaS",
+    "valores": {
+     "2026T2": [
+      99.3,
+      26.2
+     ]
+    }
+   }
+  ]
+ },
+ "24929": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24929.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Serviço Móvel",
+    "valores": {
+     "2026T2": [
+      6369
+     ]
+    }
+   },
+   {
+    "nome": "Serviço Fixo",
+    "valores": {
+     "2026T2": [
+      416
+     ]
+    }
+   }
+  ]
+ },
+ "24953": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24953.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Alugadas e Administradas",
+    "valores": {
+     "2026T2": [
+      276.496
+     ]
+    }
+   },
+   {
+    "nome": "Contratos de Longo Prazo",
+    "valores": {
+     "2026T2": [
+      112.684
+     ]
+    }
+   },
+   {
+    "nome": "Concessões On-Street",
+    "valores": {
+     "2026T2": [
+      68.509
+     ]
+    }
+   },
+   {
+    "nome": "Concessões On-Street — Zona Azul de São Paulo",
+    "valores": {
+     "2026T2": [
+      53.389
+     ]
+    }
+   },
+   {
+    "nome": "Concessões On-Street — Outras concessões",
+    "valores": {
+     "2026T2": [
+      15.12
+     ]
+    }
+   },
+   {
+    "nome": "Concessões Off-Street",
+    "valores": {
+     "2026T2": [
+      43.218
+     ]
+    }
+   },
+   {
+    "nome": "Propriedades",
+    "valores": {
+     "2026T2": [
+      11.513
+     ]
+    }
+   },
+   {
+    "nome": "Digital",
+    "valores": {
+     "2026T2": [
+      8.522
+     ]
+    }
+   },
+   {
+    "nome": "Zletric",
+    "valores": {
+     "2026T2": [
+      3.004
+     ]
+    }
+   },
+   {
+    "nome": "Demais",
+    "valores": {
+     "2026T2": [
+      0.06
+     ]
+    }
+   },
+   {
+    "nome": "Total — Receita Líquida",
+    "valores": {
+     "2026T2": [
+      524.007
+     ]
+    }
+   }
+  ]
+ },
+ "25003": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25003.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA"
+  ],
+  "segmentos": [
+   {
+    "nome": "JSL",
+    "valores": {
+     "2026T2": [
+      2498.9,
+      493.7
+     ]
+    }
+   },
+   {
+    "nome": "MOVIDA",
+    "valores": {
+     "2026T2": [
+      3765.8,
+      1686.7
+     ]
+    }
+   },
+   {
+    "nome": "VAMOS",
+    "valores": {
+     "2026T2": [
+      1564.3,
+      971.5
+     ]
+    }
+   },
+   {
+    "nome": "AUTOMOB",
+    "valores": {
+     "2026T2": [
+      3455.1,
+      137.8
+     ]
+    }
+   }
+  ]
+ },
+ "25038": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25038.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Varejo",
+    "valores": {
+     "2026T2": [
+      562
+     ]
+    }
+   },
+   {
+    "nome": "Serviços Financeiros",
+    "valores": {
+     "2026T2": [
+      244.5
+     ]
+    }
+   },
+   {
+    "nome": "Cartão de Crédito",
+    "valores": {
+     "2026T2": [
+      28
      ]
     }
    }
@@ -4421,6 +7369,334 @@
    }
   ]
  },
+ "25232": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25232.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Shopping Brasil",
+    "valores": {
+     "2026T2": [
+      92.6
+     ]
+    }
+   },
+   {
+    "nome": "Serviços financeiros",
+    "valores": {
+     "2026T2": [
+      8.2
+     ]
+    }
+   },
+   {
+    "nome": "Shopping internacional (Picodi)",
+    "valores": {
+     "2026T2": [
+      2.8
+     ]
+    }
+   },
+   {
+    "nome": "Outros",
+    "valores": {
+     "2026T2": [
+      12
+     ]
+    }
+   }
+  ]
+ },
+ "25283": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25283.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Segmento de Pás (total)",
+    "valores": {
+     "2026T2": [
+      104.5
+     ]
+    }
+   },
+   {
+    "nome": "Pás - Mercado Interno",
+    "valores": {
+     "2026T2": [
+      12.8
+     ]
+    }
+   },
+   {
+    "nome": "Pás - Mercado Externo",
+    "valores": {
+     "2026T2": [
+      91.7
+     ]
+    }
+   },
+   {
+    "nome": "Segmento de Serviços",
+    "valores": {
+     "2026T2": [
+      21.9
+     ]
+    }
+   },
+   {
+    "nome": "Comercializadora de Energia",
+    "valores": {
+     "2026T2": [
+      2.9
+     ]
+    }
+   }
+  ]
+ },
+ "25291": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/55b913af-cd4c-48d5-bc19-48c63916b8a5/94042c66-145c-ee7c-b906-29040f70002a?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "EBITDA Ajustado (ex-IFRS 16)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Onshore",
+    "valores": {
+     "2026T2": [
+      1012,
+      541
+     ]
+    }
+   },
+   {
+    "nome": "Offshore",
+    "valores": {
+     "2026T2": [
+      1817,
+      1112
+     ]
+    }
+   },
+   {
+    "nome": "Downstream",
+    "valores": {
+     "2026T2": [
+      1512,
+      197
+     ]
+    }
+   },
+   {
+    "nome": "Eliminações intercompany",
+    "valores": {
+     "2026T2": [
+      -744,
+      -62
+     ]
+    }
+   }
+  ]
+ },
+ "25330": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25330.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Brasil — Distribuição",
+    "valores": {
+     "2026T2": [
+      803.5
+     ]
+    }
+   },
+   {
+    "nome": "Brasil — Online",
+    "valores": {
+     "2026T2": [
+      209.1
+     ]
+    }
+   },
+   {
+    "nome": "Brasil — Varejo Físico",
+    "valores": {
+     "2026T2": [
+      136.4
+     ]
+    }
+   },
+   {
+    "nome": "Brasil (total)",
+    "valores": {
+     "2026T2": [
+      1149.1
+     ]
+    }
+   },
+   {
+    "nome": "Internacional",
+    "valores": {
+     "2026T2": [
+      309.2
+     ]
+    }
+   }
+  ]
+ },
+ "25453": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25453.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Segurança",
+    "valores": {
+     "2026T2": [
+      690.5
+     ]
+    }
+   },
+   {
+    "nome": "Tecnologia da Informação e Comunicação (TIC)",
+    "valores": {
+     "2026T2": [
+      283.5
+     ]
+    }
+   },
+   {
+    "nome": "Energia",
+    "valores": {
+     "2026T2": [
+      175.1
+     ]
+    }
+   }
+  ]
+ },
+ "25526": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25526.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Presencial",
+    "valores": {
+     "2026T2": [
+      535.9
+     ]
+    }
+   },
+   {
+    "nome": "Digital + Semipresencial",
+    "valores": {
+     "2026T2": [
+      266.7
+     ]
+    }
+   }
+  ]
+ },
+ "25534": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25534.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita liquida",
+   "Ebitda ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Embarcações",
+    "valores": {
+     "2026T2": [
+      399,
+      151
+     ]
+    }
+   },
+   {
+    "nome": "Serviços",
+    "valores": {
+     "2026T2": [
+      396,
+      105
+     ]
+    }
+   }
+  ]
+ },
+ "25550": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25550.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Destinação Final - Orizon Legado",
+    "valores": {
+     "2026T2": [
+      255.8
+     ]
+    }
+   },
+   {
+    "nome": "Destinação Final - Vital Pro-forma",
+    "valores": {
+     "2026T2": [
+      63
+     ]
+    }
+   },
+   {
+    "nome": "Gestão Integrada",
+    "valores": {
+     "2026T2": [
+      495
+     ]
+    }
+   },
+   {
+    "nome": "Coleta",
+    "valores": {
+     "2026T2": [
+      90
+     ]
+    }
+   },
+   {
+    "nome": "Transição Energética",
+    "valores": {
+     "2026T2": [
+      83.6
+     ]
+    }
+   },
+   {
+    "nome": "Economia Circular",
+    "valores": {
+     "2026T2": [
+      9.7
+     ]
+    }
+   }
+  ]
+ },
  "25585": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/9e56a180-7ba5-412d-ab60-44ca855d1d3d/1a02e5fb-0331-5f51-8637-33ece813b87f?origin=2",
   "unidade": "R$ milhões",
@@ -4453,6 +7729,399 @@
      ],
      "2025T2": [
       3636.457
+     ]
+    }
+   }
+  ]
+ },
+ "25640": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/050fef26-7d75-4607-8a2b-bd8cd509d0c7/d4b27ac0-b355-9310-603c-1efb1a0c3307?origin=2",
+  "unidade": "R$ milhões (convertido de R$ mil, unidade original das tabelas do release)",
+  "metricas": [
+   "Receita Líquida",
+   "Lucro Bruto Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Insumos",
+    "valores": {
+     "2026T2": [
+      487.33,
+      96.307
+     ],
+     "2025T2": [
+      391.082,
+      71.349
+     ]
+    }
+   },
+   {
+    "nome": "Grãos",
+    "valores": {
+     "2026T2": [
+      2202.949,
+      188.52
+     ],
+     "2025T2": [
+      1251.393,
+      88.505
+     ]
+    }
+   },
+   {
+    "nome": "Indústria",
+    "valores": {
+     "2026T2": [
+      2010.121,
+      244.815
+     ],
+     "2025T2": [
+      1920.402,
+      416.076
+     ]
+    }
+   }
+  ]
+ },
+ "25682": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25682.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Hospitais e Clínicas",
+    "valores": {
+     "2026T2": [
+      2150.1
+     ]
+    }
+   },
+   {
+    "nome": "Laboratórios e Vacinas",
+    "valores": {
+     "2026T2": [
+      311.2
+     ]
+    }
+   },
+   {
+    "nome": "Varejo",
+    "valores": {
+     "2026T2": [
+      254.1
+     ]
+    }
+   },
+   {
+    "nome": "Serviços",
+    "valores": {
+     "2026T2": [
+      194.8
+     ]
+    }
+   }
+  ]
+ },
+ "25763": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25763.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Fertilizantes de solo",
+    "valores": {
+     "2026T2": [
+      63.854
+     ]
+    }
+   },
+   {
+    "nome": "Fertilizantes foliares e produtos industriais",
+    "valores": {
+     "2026T2": [
+      18.388
+     ]
+    }
+   },
+   {
+    "nome": "Soluções biológicas e naturais",
+    "valores": {
+     "2026T2": [
+      31.806
+     ]
+    }
+   }
+  ]
+ },
+ "25860": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25860.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Investment Banking (fees) + Mercado de Capitais (fees)",
+    "valores": {
+     "2026T2": [
+      81.1
+     ]
+    }
+   },
+   {
+    "nome": "Treasury Sales & Structuring (capital)",
+    "valores": {
+     "2026T2": [
+      18.5
+     ]
+    }
+   },
+   {
+    "nome": "Gestão de Patrimônio (fees)",
+    "valores": {
+     "2026T2": [
+      4.8
+     ]
+    }
+   },
+   {
+    "nome": "Remuneração do Capital (capital)",
+    "valores": {
+     "2026T2": [
+      25.7
+     ]
+    }
+   }
+  ]
+ },
+ "25895": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25895.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "Revenda",
+    "valores": {
+     "2026T2": [
+      134.9
+     ]
+    }
+   },
+   {
+    "nome": "TaaS (Technology as a Service)",
+    "valores": {
+     "2026T2": [
+      63.4
+     ]
+    }
+   }
+  ]
+ },
+ "25950": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/050fef26-7d75-4607-8a2b-bd8cd509d0c7/d4b27ac0-b355-9310-603c-1efb1a0c3307?origin=2",
+  "unidade": "R$ milhões (convertido de R$ mil, unidade original das tabelas do release)",
+  "metricas": [
+   "Receita Líquida",
+   "Lucro Bruto Ajustado"
+  ],
+  "segmentos": [
+   {
+    "nome": "Insumos",
+    "valores": {
+     "2026T2": [
+      487.33,
+      96.307
+     ],
+     "2025T2": [
+      391.082,
+      71.349
+     ]
+    }
+   },
+   {
+    "nome": "Grãos",
+    "valores": {
+     "2026T2": [
+      2202.949,
+      188.52
+     ],
+     "2025T2": [
+      1251.393,
+      88.505
+     ]
+    }
+   },
+   {
+    "nome": "Indústria",
+    "valores": {
+     "2026T2": [
+      2010.121,
+      244.815
+     ],
+     "2025T2": [
+      1920.402,
+      416.076
+     ]
+    }
+   }
+  ]
+ },
+ "25984": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/73a23c6c-b1fd-4abb-beba-056de474f2ec/d1dbe170-751e-3a4f-acd2-ecc96e9f2a46?origin=2",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida"
+  ],
+  "segmentos": [
+   {
+    "nome": "Alumínio (total do negócio)",
+    "valores": {
+     "2026T2": [
+      2428
+     ],
+     "2026T1": [
+      2186
+     ],
+     "2025T2": [
+      1902
+     ]
+    }
+   },
+   {
+    "nome": "Alumínio - Primários",
+    "valores": {
+     "2026T2": [
+      1433
+     ],
+     "2026T1": [
+      1165
+     ],
+     "2025T2": [
+      1034
+     ]
+    }
+   },
+   {
+    "nome": "Alumínio - Transformados",
+    "valores": {
+     "2026T2": [
+      865
+     ],
+     "2026T1": [
+      853
+     ],
+     "2025T2": [
+      817
+     ]
+    }
+   },
+   {
+    "nome": "Alumínio - Reciclagem",
+    "valores": {
+     "2026T2": [
+      226
+     ],
+     "2026T1": [
+      195
+     ],
+     "2025T2": [
+      223
+     ]
+    }
+   },
+   {
+    "nome": "Alumínio - Outros (venda de sucata)",
+    "valores": {
+     "2026T2": [
+      171
+     ],
+     "2026T1": [
+      155
+     ],
+     "2025T2": [
+      125
+     ]
+    }
+   },
+   {
+    "nome": "Energia",
+    "valores": {
+     "2026T2": [
+      162
+     ],
+     "2026T1": [
+      144
+     ],
+     "2025T2": [
+      118
+     ]
+    }
+   }
+  ]
+ },
+ "26034": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/26034.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita Líquida",
+   "Lucro Bruto"
+  ],
+  "segmentos": [
+   {
+    "nome": "Corporativo",
+    "valores": {
+     "2026T2": [
+      607.5,
+      182.5
+     ]
+    }
+   },
+   {
+    "nome": "Consumer Tech",
+    "valores": {
+     "2026T2": [
+      281.2,
+      112.8
+     ]
+    }
+   },
+   {
+    "nome": "Consumer Especializado",
+    "valores": {
+     "2026T2": [
+      71.1,
+      34
+     ]
+    }
+   }
+  ]
+ },
+ "26050": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/26050.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita"
+  ],
+  "segmentos": [
+   {
+    "nome": "B2C",
+    "valores": {
+     "2026T2": [
+      329.8
+     ]
+    }
+   },
+   {
+    "nome": "B2B",
+    "valores": {
+     "2026T2": [
+      81.9
      ]
     }
    }
@@ -4580,6 +8249,39 @@
      "2026T2": [
       3055.5,
       858.9
+     ]
+    }
+   }
+  ]
+ },
+ "27707": {
+  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/27707.pdf",
+  "unidade": "R$ milhões",
+  "metricas": [
+   "Receita bruta"
+  ],
+  "segmentos": [
+   {
+    "nome": "Veículos Leves",
+    "valores": {
+     "2026T2": [
+      2970.8
+     ]
+    }
+   },
+   {
+    "nome": "Caminhões e Ônibus",
+    "valores": {
+     "2026T2": [
+      488.1
+     ]
+    }
+   },
+   {
+    "nome": "Agro e Máquinas",
+    "valores": {
+     "2026T2": [
+      222.7
      ]
     }
    }
