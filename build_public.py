@@ -58,6 +58,10 @@ def main():
                         "não são curadoria nem recomendação")
     html = html.replace("Identidade visual Insignia Partners — paleta do Manual de Marca + tema PPT v4",
                         "Paleta base (a versão pública sobrepõe com paleta neutra no fim do head)")
+    html = html.replace('href="app/manifest.json"', 'href="../app/manifest-public.json"')
+    html = html.replace('href="app/icon-192.png"', 'href="../app/icon-192.png"')
+    html = html.replace("navigator.serviceWorker.register('sw.js')", "navigator.serviceWorker.register('../sw.js', {scope: './'})")
+    html = html.replace('content="#0c2a2d"', 'content="#0b1220"')
     html = html.replace("</head>", PALETA + "\n</head>", 1)
     if "Insignia" in html:
         print("[public] ERRO: ainda há menção à marca no HTML público", file=sys.stderr)

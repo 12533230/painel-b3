@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Insignia Partners · Painel B3</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,__FAVICON__">
+<link rel="manifest" href="app/manifest.json" id="pwa-manifest">
+<meta name="theme-color" content="#0c2a2d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Painel B3">
+<link rel="apple-touch-icon" href="app/icon-192.png">
 <style>
   /* Identidade visual Insignia Partners — paleta do Manual de Marca + tema PPT v4 */
   :root{
@@ -234,6 +241,7 @@
   </div>
   <button class="btn" id="infobtn" title="Fontes, datas de atualização e avisos">ⓘ Dados</button>
   <button class="btn" id="cfgbtn" title="Cotações ao vivo — fontes e chaves opcionais">⚙ Ao vivo</button>
+  <button class="btn" id="installbtn" title="Instalar como aplicativo" style="display:none">⬇ Instalar app</button>
   <button class="btn" id="theme" title="Alternar tema">◐ Tema</button>
 </div>
 <div class="ticker" id="ticker" title="Cotações — passe o mouse para pausar"><div class="tk-track" id="tkt"></div></div>
@@ -2154,6 +2162,41 @@ setInterval(refreshRelay, 60*1000);    // quotes.json do robô (B3 completa + EU
 setInterval(refreshB3, 60*1000);       // B3 direto (ETFs na tela, empresa aberta, IBOV/IFIX)
 setInterval(refreshFinnhub, 60*1000);  // EUA em tempo real (só com chave)
 document.addEventListener('visibilitychange', () => { if(!document.hidden){ refreshFast(); refreshRelay(); refreshB3(); refreshFinnhub(); } });
+
+// ---------- app instalável (PWA): service worker + convite de instalação ----------
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+let deferredPrompt = null;
+const btnInstall = document.getElementById('installbtn');
+addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredPrompt = e;
+  if(btnInstall && !matchMedia('(display-mode: standalone)').matches) btnInstall.style.display = '';
+});
+if(btnInstall) btnInstall.onclick = async () => {
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    const r = await deferredPrompt.userChoice.catch(()=>null);
+    deferredPrompt = null;
+    if(r && r.outcome === 'accepted') btnInstall.style.display = 'none';
+    return;
+  }
+  // iPhone/iPad (Safari não expõe beforeinstallprompt) e demais casos: instrução
+  modalKind = 'info';
+  ibox.textContent = '';
+  const x = el('button','btn x2','✕ fechar'); x.onclick = closeInfo; ibox.append(x);
+  ibox.append(el('h2',null,'Instalar o Painel B3 como aplicativo'));
+  const ps = [
+    ['Android (Chrome)','toque no menu ⋮ e escolha "Instalar aplicativo" ou "Adicionar à tela inicial".'],
+    ['iPhone / iPad (Safari)','toque no botão Compartilhar e escolha "Adicionar à Tela de Início".'],
+    ['Computador (Chrome/Edge)','clique no ícone de instalar na barra de endereço, ou menu ⋮ → "Instalar Painel B3".'],
+    ['Depois de instalado','o painel abre em janela própria, com ícone na tela inicial, e continua abrindo offline com os últimos dados carregados (as cotações precisam de internet).'],
+  ];
+  for(const [b,t] of ps){ const p = el('p'); p.append(el('b',null,b+' — '), document.createTextNode(t)); ibox.append(p); }
+  iovl.classList.add('on');
+};
+addEventListener('appinstalled', () => { if(btnInstall) btnInstall.style.display = 'none'; });
+if(matchMedia('(display-mode: standalone)').matches && btnInstall) btnInstall.style.display = 'none';
 </script>
 </body>
 </html>
