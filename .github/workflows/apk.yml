@@ -151,7 +151,11 @@ jobs:
           BUBBLEWRAP_KEY_PASSWORD: painelb3
         run: |
           set -euo pipefail
-          bubblewrap build --skipPwaValidation
+          # `update --skipVersionUpgrade` gera o projeto Android a partir do twa-manifest.json
+          # e grava o manifest-checksum.txt — sem isso o `build` para num prompt interativo.
+          bubblewrap update --skipVersionUpgrade < /dev/null
+          test -f manifest-checksum.txt
+          bubblewrap build --skipPwaValidation < /dev/null
           echo "--- artefatos gerados ---"
           find . -name "*.apk" -o -name "*.aab" | sort
 
