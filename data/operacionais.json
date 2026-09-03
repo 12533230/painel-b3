@@ -154,7 +154,9 @@
      "2026T2": 48.9
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556363&numSequencia=1081069&numVersao=1",
+  "paginas": "2-3, 14"
  },
  "1210": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/fafdeaf3-7820-4ec2-9477-ce501c563c96/a96a53f3-72f7-af30-61fa-5526ff5fe9a7?origin=2",
@@ -264,7 +266,7 @@
   ]
  },
  "2429": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/2429.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1550043&numSequencia=1074749&numVersao=1",
   "indicadores": [
    {
     "nome": "Produção de papel para embalagens sustentáveis",
@@ -301,7 +303,8 @@
      "2026T2": 6139
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "2437": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/abb77a17-3348-4bc7-849a-154998e06ca3/9063e4cb-d112-29e3-23a8-00354c952a4a?origin=2",
@@ -473,7 +476,7 @@
   ]
  },
  "3050": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/3050.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1548991&numSequencia=1073697&numVersao=1",
   "indicadores": [
    {
     "nome": "Volume de Energia - Venda e Transporte",
@@ -510,10 +513,11 @@
      "2026T2": 97.41
     }
    }
-  ]
+  ],
+  "doc": "Comentários de Desempenho 2T26 e 6M26"
  },
  "3069": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/3069.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555222&numSequencia=1079928&numVersao=1",
   "indicadores": [
    {
     "nome": "Produção de ferroligas",
@@ -550,7 +554,8 @@
      "2026T2": 85.5
     }
    }
-  ]
+  ],
+  "doc": "Press Release 2T26"
  },
  "3980": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/21e1d193-5cab-456d-8bb8-f00a49a43c1c/ea70e796-ede0-c9fd-2e8a-eccd8d0a2f72?origin=2",
@@ -719,7 +724,7 @@
   ]
  },
  "4537": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/4537.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558218&numSequencia=1082924&numVersao=1",
   "indicadores": [
    {
     "nome": "Número de lojas (total)",
@@ -756,10 +761,11 @@
      "2026T2": 108.5
     }
    }
-  ]
+  ],
+  "doc": "Divulgação dos resultados 2T26 - 2026"
  },
  "4669": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/4669.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552845&numSequencia=1077551&numVersao=1",
   "indicadores": [
    {
     "nome": "SSS Vestuário",
@@ -796,7 +802,8 @@
      "2026T2": 2800
     }
    }
-  ]
+  ],
+  "doc": "Resultados 2T26"
  },
  "4820": {
   "indicadores": [
@@ -835,7 +842,9 @@
      "2026T2": 125
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557511&numSequencia=1082217&numVersao=1",
+  "paginas": "4, 6, 7, 10, 12, 37"
  },
  "5258": {
   "fonte": "https://ri.rdsaude.com.br/Download.aspx?Arquivo=mkRRUYR4kE%2BVDWWbKdYBJw%3D%3D",
@@ -909,7 +918,7 @@
   ]
  },
  "5380": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/5380.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553921&numSequencia=1078627&numVersao=1",
   "indicadores": [
    {
     "nome": "Colaboradores (quadro de funcionários ao final do período)",
@@ -946,7 +955,8 @@
      "2026T2": 43.5
     }
    }
-  ]
+  ],
+  "doc": "Relatório de desempenho 2T2026"
  },
  "5410": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/50c1bd3e-8ac6-42d9-884f-b9d69f690602/9a78cad5-4da1-b36f-38ec-45060792f84c?origin=2",
@@ -1007,7 +1017,7 @@
   ]
  },
  "5762": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/5762.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555926&numSequencia=1080632&numVersao=1",
   "indicadores": [
    {
     "nome": "Volume de vendas de produtos de fibrocimento",
@@ -1044,10 +1054,11 @@
      "2026T2": 19.8
     }
    }
-  ]
+  ],
+  "doc": "Release Resultados 2T26 PT EN"
  },
  "6173": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/6173.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556077&numSequencia=1080783&numVersao=1",
   "indicadores": [
    {
     "nome": "Produção de armas",
@@ -1084,7 +1095,8 @@
      "2026T2": 21
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados do segundo trimestre e primeiro semest"
  },
  "6211": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/23341a9d-be9a-4855-a251-1c1004aa997c/59f3f426-767c-ea12-8946-074ee9775659?origin=2",
@@ -1182,10 +1194,12 @@
      "2026T2": 5.05
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553656&numSequencia=1078362&numVersao=1",
+  "paginas": "1-9"
  },
  "6505": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/6505.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558371&numSequencia=1083077&numVersao=1",
   "indicadores": [
    {
     "nome": "Same Store Sales (SSS) - lojas físicas",
@@ -1222,7 +1236,8 @@
      "2026T2": 13.1
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultado 2T26 | Earnings Release 2Q26"
  },
  "7617": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/afd9200b-9b01-4d1c-bdd9-9b2c1e9b3b4d/68055d0d-aa63-8b36-872c-f27026a2a42e?origin=2",
@@ -1422,7 +1437,9 @@
      "2026T2": 28.9
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556533&numSequencia=1081239&numVersao=1",
+  "paginas": "10, 11, 13"
  },
  "8656": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/0e58d869-d438-4c13-9d23-c24d27e72c47/7235f9dc-6b06-d973-7741-e13db7024fb3?origin=2",
@@ -1482,7 +1499,7 @@
   ]
  },
  "8672": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/8672.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552906&numSequencia=1077612&numVersao=2",
   "indicadores": [
    {
     "nome": "Vendas totais",
@@ -1519,10 +1536,11 @@
      "2026T2": 789465
     }
    }
-  ]
+  ],
+  "doc": "Resultados 2T26"
  },
  "9342": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/9342.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553799&numSequencia=1078505&numVersao=1",
   "indicadores": [
    {
     "nome": "Número de lojas em operação",
@@ -1559,7 +1577,8 @@
      "2026T2": 33.7
     }
    }
-  ]
+  ],
+  "doc": "Divulgação de Resultados 2T26"
  },
  "9512": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/857e970b-1bf4-9ea4-093f-b93bfc2bac95?origin=2 (Relatório de Desempenho 2T26 — segmentos) | https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/19a7ace8-ce1a-28a6-ead3-bdc01b7204f7?origin=2 (Relatório de Produção e Vendas 2T26 — KPIs operacionais)",
@@ -1721,7 +1740,7 @@
   ]
  },
  "11932": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/11932.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552561&numSequencia=1077267&numVersao=1",
   "indicadores": [
    {
     "nome": "Margem bruta",
@@ -1758,10 +1777,11 @@
      "2026T2": 3685.4
     }
    }
-  ]
+  ],
+  "doc": "Divulgação dos resultados do 2T26"
  },
  "11975": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/11975.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558549&numSequencia=1083255&numVersao=2",
   "indicadores": [
    {
     "nome": "Backlog (carteira contratada)",
@@ -1784,7 +1804,8 @@
      "2026T2": 33
     }
    }
-  ]
+  ],
+  "doc": "Release 2T2026"
  },
  "12653": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/1c41fa99-efe7-4e72-81dd-5b571f5aa376/1c433925-a2b4-39b8-9193-db7a1ff0a2e0?origin=2",
@@ -1846,7 +1867,7 @@
   ]
  },
  "13781": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/13781.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556020&numSequencia=1080726&numVersao=1",
   "indicadores": [
    {
     "nome": "Taxa de vacância física - Best Center",
@@ -1883,7 +1904,8 @@
      "2026T2": 31.4
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados do 2T26 - Versão Português"
  },
  "13986": {
   "fonte": "https://s201.q4cdn.com/761980458/files/doc_news/2026/08/Release/Release-de-Resultados_2T26_PT.pdf",
@@ -1981,7 +2003,9 @@
      "2026T2": 5908
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557269&numSequencia=1081975&numVersao=1",
+  "paginas": "4, 19, 20, 21, 29"
  },
  "14311": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/16a31b1b-5ecd-4214-a2e0-308a2393e330/8a327785-31db-2172-47a1-4ad21f404eba?origin=2",
@@ -2184,33 +2208,57 @@
   ]
  },
  "14524": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/909e3997-39bb-4353-b073-1bf441e2f7f9/f819b484-af4c-e14d-b156-b64dcb6e7d55?origin=2",
   "indicadores": [
    {
     "nome": "Energia Injetada Total (SIN + Sistema Isolado + GD)",
     "unidade": "GWh",
     "valores": {
-     "2026T2": 7906
+     "2026T2": 7906,
+     "2025T2": 7554
     }
    },
    {
-    "nome": "Energia Distribuída Total (Cativa + Livre + GD)",
+    "nome": "Energia Distribuída Total (cativa + livre + GD)",
     "unidade": "GWh",
     "valores": {
-     "2026T2": 6485
+     "2026T2": 6485,
+     "2025T2": 6438
     }
    },
    {
     "nome": "Número de Clientes",
     "unidade": "mil consumidores",
     "valores": {
-     "2026T2": 6986
+     "2026T2": 6986,
+     "2025T2": 6829
     }
    },
    {
-    "nome": "Perdas de Distribuição (12 meses)",
+    "nome": "Perdas Totais de Distribuição (12 meses)",
     "unidade": "%",
     "valores": {
-     "2026T2": 15.8
+     "2026T2": 15.8,
+     "2026T1": 15.21,
+     "2025T2": 15.86
+    }
+   },
+   {
+    "nome": "Inadimplência (PECLD/ROB)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 1.08,
+     "2026T1": 1.25,
+     "2025T2": 1.03
+    }
+   },
+   {
+    "nome": "Índice de Arrecadação (12 meses)",
+    "unidade": "%",
+    "valores": {
+     "2026T2": 98,
+     "2026T1": 98.49,
+     "2025T2": 98.33
     }
    },
    {
@@ -2219,11 +2267,18 @@
     "valores": {
      "2026T2": 9.67
     }
+   },
+   {
+    "nome": "FEC anualizado",
+    "unidade": "vezes",
+    "valores": {
+     "2026T2": 3.96
+    }
    }
   ]
  },
  "14826": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/14826.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552148&numSequencia=1076854&numVersao=1",
   "indicadores": [
    {
     "nome": "Número total de lojas",
@@ -2260,7 +2315,8 @@
      "2026T2": -2.3
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "14869": {
   "indicadores": [
@@ -2299,7 +2355,9 @@
      "2026T2": 99.47
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1549002&numSequencia=1073708&numVersao=1",
+  "paginas": "1, 4, 5, 6"
  },
  "15253": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/60f49a2d-bd8c-4fd9-95ab-bdf833097a83/c4a851a2-10c3-3c55-3d68-fcf7f6306b96?origin=2",
@@ -2425,7 +2483,7 @@
   ]
  },
  "16632": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/16632.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555990&numSequencia=1080696&numVersao=1",
   "indicadores": [
    {
     "nome": "Volume de vendas - Segmento Químico (GPC Química)",
@@ -2441,7 +2499,8 @@
      "2026T2": 14.6
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados - 2T26"
  },
  "16659": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/b77a3922-d280-4451-b3ee-0afec4577834/4432e300-316c-530a-bf34-b5ac18038e09?origin=2",
@@ -2645,7 +2704,9 @@
      "2026T2": 5.95
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1546721&numSequencia=1071427&numVersao=1",
+  "paginas": "1, 3-4"
  },
  "17671": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/24165f81-24d6-4648-bf9f-66712905d5a2/a5722e85-0af4-69bb-d2b6-ca7775f2839f?origin=2",
@@ -2737,7 +2798,9 @@
      "2026T2": 30
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556591&numSequencia=1081297&numVersao=1",
+  "paginas": "2, 4, 6, 7, 9, 11, 12, 13"
  },
  "18376": {
   "fonte": "https://ri.isaenergiabrasil.com.br/pt/documentos/6758-Earnings-Release-2T26-vfinal-1.pdf",
@@ -2790,7 +2853,7 @@
   ]
  },
  "18414": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/18414.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553786&numSequencia=1078492&numVersao=2",
   "indicadores": [
    {
     "nome": "Receita líquida - Equipamentos Brasil",
@@ -2827,7 +2890,8 @@
      "2026T2": 5.6
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "18465": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/4282e939-a6dc-401d-a873-e3c28b7e48df/a8ec731a-2a87-ecd0-896c-975c26cd9ef5?origin=2",
@@ -3356,7 +3420,9 @@
      "2026T2": 20.64
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553661&numSequencia=1078367&numVersao=1",
+  "paginas": "p. 2 (Destaques 2T26 vs 2T25) e p. 21 do PDF / rodapé \"Página 20 de 23\" (Anexo I – Receita Bruta Consolidada, Volumes, Receita Bruta por Par e Participação por Mercado)"
  },
  "19623": {
   "indicadores": [
@@ -3395,7 +3461,9 @@
      "2026T2": 12.5
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557405&numSequencia=1082111&numVersao=1",
+  "paginas": "5-8, 10, 12-13"
  },
  "19739": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/08f327aa-e610-4d9d-b683-8ff0f7caae07/ffd204e4-d65f-5649-63a7-f12a8b70f4bd?origin=2",
@@ -3510,7 +3578,7 @@
   ]
  },
  "19879": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/19879.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557437&numSequencia=1082143&numVersao=1",
   "indicadores": [
    {
     "nome": "Energia distribuída (Light SESA)",
@@ -3547,7 +3615,8 @@
      "2026T2": 526
     }
    }
-  ]
+  ],
+  "doc": "Press-release 2T26"
  },
  "19992": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d3be5d49-62e7-4def-a3e1-ab25ff09f153/29ca7a02-e9c5-d3b1-6d1e-578cf0ac69d8?origin=2",
@@ -3661,7 +3730,7 @@
   ]
  },
  "20028": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20028.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552874&numSequencia=1077580&numVersao=1",
   "indicadores": [
    {
     "nome": "Volume de Documentos (ID & Gov. Digital)",
@@ -3698,10 +3767,11 @@
      "2026T2": 32
     }
    }
-  ]
+  ],
+  "doc": "Release em Português"
  },
  "20044": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20044.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556009&numSequencia=1080715&numVersao=1",
   "indicadores": [
    {
     "nome": "Contas e cartões cadastrados",
@@ -3738,7 +3808,8 @@
      "2026T2": 5.2
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados 2T26 (Português)"
  },
  "20087": {
   "fonte": "https://www.embraer.com/media/hu2ij3eq/ri_release_earnings_2t26_pt.pdf",
@@ -3926,7 +3997,7 @@
   ]
  },
  "20346": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20346.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1549505&numSequencia=1074211&numVersao=1",
   "indicadores": [
    {
     "nome": "Número de lojas (Rede d1000)",
@@ -3963,10 +4034,11 @@
      "2026T2": 141.2
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados 2T26"
  },
  "20362": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20362.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556628&numSequencia=1081334&numVersao=1",
   "indicadores": [
    {
     "nome": "Receita de Servidores",
@@ -4003,10 +4075,11 @@
      "2026T2": 95
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "20370": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20370.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555996&numSequencia=1080702&numVersao=1",
   "indicadores": [
    {
     "nome": "VGL Total lançado",
@@ -4043,10 +4116,11 @@
      "2026T2": 770
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "20435": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20435.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557280&numSequencia=1081986&numVersao=1",
   "indicadores": [
    {
     "nome": "VGV lançado (100%)",
@@ -4083,7 +4157,8 @@
      "2026T2": 1511
     }
    }
-  ]
+  ],
+  "doc": "Divulgação de Resultados 2T26"
  },
  "20516": {
   "fonte": "https://ri.saomartinho.com.br/Download.aspx?Arquivo=ZFp1QaLRnygOLp3G2inCFg%3D%3D&linguagem=pt",
@@ -4277,7 +4352,9 @@
      "2026T2": 23389
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556496&numSequencia=1081202&numVersao=1",
+  "paginas": "2"
  },
  "20745": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/a975c39b-3eca-4ad8-9330-2c0a0b8d1060/da017e37-1ea8-7eef-ac2c-243762280f70?origin=2",
@@ -4369,7 +4446,9 @@
      "2026T2": 775
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553635&numSequencia=1078341&numVersao=1",
+  "paginas": "4-5, 17-20"
  },
  "20788": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/046e3a67-965a-4246-ac46-a0ca4760b186/bf64bbb1-0b12-335c-a79b-0754bdf1299c?origin=2",
@@ -4428,7 +4507,7 @@
   ]
  },
  "20800": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20800.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1551384&numSequencia=1076090&numVersao=1",
   "indicadores": [
    {
     "nome": "Veículos transportados",
@@ -4458,10 +4537,11 @@
      "2026T2": 1285
     }
    }
-  ]
+  ],
+  "doc": "Earnings Releease 2t26"
  },
  "20877": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20877.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556038&numSequencia=1080744&numVersao=1",
   "indicadores": [
    {
     "nome": "VGV lançado (total, líquido de permuta)",
@@ -4498,7 +4578,8 @@
      "2026T2": 11560.5
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "20915": {
   "indicadores": [
@@ -4537,7 +4618,9 @@
      "2026T2": 40.9
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556733&numSequencia=1081439&numVersao=1",
+  "paginas": "1, 19"
  },
  "20931": {
   "indicadores": [
@@ -4576,10 +4659,12 @@
      "2026T2": 28.6
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556535&numSequencia=1081241&numVersao=1",
+  "paginas": "5, 6, 8"
  },
  "20958": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20958.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552992&numSequencia=1077698&numVersao=1",
   "indicadores": [
    {
     "nome": "Carteira de Crédito Expandida",
@@ -4609,66 +4694,8 @@
      "2026T2": 14.3
     }
    }
-  ]
- },
- "20974": {
-  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/ada9bc2c-f7d0-4359-9eaf-851b679ab788/8966f336-97d7-142e-654a-b27fae98b331?origin=2",
-  "indicadores": [
-   {
-    "nome": "VGV Lançado (VGV 100%)",
-    "unidade": "R$ milhões",
-    "valores": {
-     "2026T2": 2065.2,
-     "2026T1": 1005.8,
-     "2025T2": 1903.9
-    }
-   },
-   {
-    "nome": "Vendas Líquidas Contratadas — VGV Líquido Contratado (VGV 100%)",
-    "unidade": "R$ milhões",
-    "valores": {
-     "2026T2": 1654.9,
-     "2026T1": 1582,
-     "2025T2": 1677.3
-    }
-   },
-   {
-    "nome": "VSO — Vendas Sobre Oferta consolidada (VGV 100%)",
-    "unidade": "%",
-    "valores": {
-     "2026T2": 23,
-     "2026T1": 24,
-     "2025T2": 26
-    }
-   },
-   {
-    "nome": "Estoque a valor de mercado (VGV 100%)",
-    "unidade": "R$ milhões",
-    "valores": {
-     "2026T2": 5611.5,
-     "2026T1": 5177.8,
-     "2025T2": 4716
-    }
-   },
-   {
-    "nome": "Repasses — VGV das unidades repassadas (VGV 100%)",
-    "unidade": "R$ milhões",
-    "valores": {
-     "2026T2": 1245,
-     "2026T1": 988,
-     "2025T2": 1129
-    }
-   },
-   {
-    "nome": "Distratos / Vendas Brutas (VGV 100%)",
-    "unidade": "%",
-    "valores": {
-     "2026T2": 16.6,
-     "2026T1": 16.2,
-     "2025T2": 12.2
-    }
-   }
-  ]
+  ],
+  "doc": "Earnings Release versão Português"
  },
  "20982": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/08dd2899-a019-4531-a90c-f00c9f91b0ff/c4f3c5e6-87bf-6caf-cbab-d87472eb4631?origin=2",
@@ -4724,7 +4751,7 @@
   ]
  },
  "20990": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20990.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556718&numSequencia=1081424&numVersao=1",
   "indicadores": [
    {
     "nome": "Receita Bruta Consolidada",
@@ -4747,7 +4774,8 @@
      "2026T2": 23.4
     }
    }
-  ]
+  ],
+  "doc": "Release Resultados 2T26 - Português"
  },
  "21016": {
   "indicadores": [
@@ -4786,10 +4814,12 @@
      "2026T2": 252
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557225&numSequencia=1081931&numVersao=1",
+  "paginas": "7, 9, 10, 13, 17, 29"
  },
  "21040": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21040.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557413&numSequencia=1082119&numVersao=1",
   "indicadores": [
    {
     "nome": "Ocupação Física (portfólio SYN, ex-ITM)",
@@ -4819,7 +4849,8 @@
      "2026T2": 303.2
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26."
  },
  "21091": {
   "indicadores": [
@@ -4858,10 +4889,12 @@
      "2026T2": 157.6
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552795&numSequencia=1077501&numVersao=1",
+  "paginas": "1, 5, 14, 16, 18, 19, 21, 22"
  },
  "21130": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21130.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557164&numSequencia=1081870&numVersao=1",
   "indicadores": [
    {
     "nome": "VGV Lançado (% Trisul)",
@@ -4898,10 +4931,11 @@
      "2026T2": 12.5
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados do 2T26"
  },
  "21148": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21148.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552030&numSequencia=1076736&numVersao=1",
   "indicadores": [
    {
     "nome": "Lançamentos (VGV) – consolidado",
@@ -4938,10 +4972,11 @@
      "2026T2": 33767.9
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "21180": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21180.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557430&numSequencia=1082136&numVersao=1",
   "indicadores": [
    {
     "nome": "Estoque de processos trabalhistas",
@@ -4950,7 +4985,8 @@
      "2026T2": 177
     }
    }
-  ]
+  ],
+  "doc": "Press Release 2T26"
  },
  "21237": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/6c663f3b-ae5a-4692-81d3-ab23ee84c1de/3575e2a1-2720-afc4-224b-9e318ce4cc5c?origin=2",
@@ -5128,7 +5164,7 @@
   ]
  },
  "21440": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21440.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558600&numSequencia=1083306&numVersao=1",
   "indicadores": [
    {
     "nome": "SSS (Same Store Sales) consolidado",
@@ -5165,7 +5201,8 @@
      "2026T2": 35001
     }
    }
-  ]
+  ],
+  "doc": "Earnings Release versão Eng"
  },
  "21490": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/7055e766-fc6d-42b3-9911-c19f8e89875a/d752efb1-5803-391f-472c-9348b7b0a855?origin=2",
@@ -5293,7 +5330,7 @@
   ]
  },
  "21636": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21636.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557254&numSequencia=1081960&numVersao=1",
   "indicadores": [
    {
     "nome": "Geração bruta teórica",
@@ -5330,7 +5367,8 @@
      "2026T2": 8.71
     }
    }
-  ]
+  ],
+  "doc": "Press-release 2T26"
  },
  "21881": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/0b0dbf21-b60a-4ced-a675-18049e9abc9c/9755d796-e857-bd40-480c-c64bb795ce5a?origin=2",
@@ -5422,10 +5460,12 @@
      "2026T2": 88.6
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552791&numSequencia=1077497&numVersao=1",
+  "paginas": "3, 13, 14, 16, 17"
  },
  "22020": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22020.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555473&numSequencia=1080179&numVersao=1",
   "indicadores": [
    {
     "nome": "Novos contratos assinados no trimestre",
@@ -5462,10 +5502,11 @@
      "2026T2": 2.74
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "22055": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22055.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558152&numSequencia=1082858&numVersao=1",
   "indicadores": [
    {
     "nome": "Receita líquida varejo mesmas lojas (SSS) - crescimento vs. 2T25",
@@ -5502,10 +5543,11 @@
      "2026T2": 26
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados 2T26 PT-EN"
  },
  "22179": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22179.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1546727&numSequencia=1071433&numVersao=1",
   "indicadores": [
    {
     "nome": "Taxa de disponibilidade das instalações de transmissão",
@@ -5528,7 +5570,8 @@
      "2026T2": 483
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "22187": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/cecb3d3e-6bd6-4edd-b9b3-3cacde780cac/92a74c23-4a5f-3a21-9da2-72a4fbc7982c?origin=2",
@@ -5589,7 +5632,7 @@
   ]
  },
  "22349": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22349.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556645&numSequencia=1081351&numVersao=1",
   "indicadores": [
    {
     "nome": "Receita bruta canais sell-out",
@@ -5626,7 +5669,8 @@
      "2026T2": 93
     }
    }
-  ]
+  ],
+  "doc": "Earnings Release 2T26"
  },
  "22357": {
   "fonte": "https://investidor10.com.br/acoes/link_comunicado/ALOS3/46951/",
@@ -5684,7 +5728,7 @@
   ]
  },
  "22454": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22454.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556647&numSequencia=1081353&numVersao=1",
   "indicadores": [
    {
     "nome": "Eventos promovidos (Música Ao Vivo)",
@@ -5707,7 +5751,8 @@
      "2026T2": 292.6
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados 2T26"
  },
  "22470": {
   "fonte": "https://ri.magazineluiza.com.br/ListResultados/Download.aspx?Arquivo=dL1FGoA0QI/SvcDvROsA7g==",
@@ -5763,7 +5808,7 @@
   ]
  },
  "22497": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22497.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556513&numSequencia=1081219&numVersao=1",
   "indicadores": [
    {
     "nome": "Portfólio Core - total de vidas",
@@ -5800,10 +5845,11 @@
      "2026T2": 103
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "22519": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22519.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555418&numSequencia=1080124&numVersao=1",
   "indicadores": [
    {
     "nome": "Volume de relógios vendidos",
@@ -5819,7 +5865,8 @@
      "2026T2": 223
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados 2T26 / 2Q26 Earnings release"
  },
  "22608": {
   "indicadores": [
@@ -5858,7 +5905,9 @@
      "2026T2": 22.6
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1551400&numSequencia=1076106&numVersao=1",
+  "paginas": "3, 5"
  },
  "22616": {
   "fonte": "https://d169uzu5o4xu1k.cloudfront.net/78a5a309-f13a-41ed-a7d1-814e37b63259/2026/6f150811-626f-4b9e-8199-7471adbe3e5e.pdf",
@@ -5956,10 +6005,12 @@
      "2026T2": 2.4
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555285&numSequencia=1079991&numVersao=1",
+  "paginas": "1, 6, 7"
  },
  "22780": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22780.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557271&numSequencia=1081977&numVersao=1",
   "indicadores": [
    {
     "nome": "Vendas das mesmas lojas (SSS) - Exclusivas",
@@ -5996,7 +6047,8 @@
      "2026T2": -11.1
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26 (PT-BR_EN-US)"
  },
  "23159": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d4ee6df5-1dd8-4fb5-b518-e05397c304e4/9d131b94-6415-4fa8-d78c-99319c643d26?origin=2",
@@ -6058,7 +6110,7 @@
   ]
  },
  "23175": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23175.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556728&numSequencia=1081434&numVersao=1",
   "indicadores": [
    {
     "nome": "Economias totais (água + esgoto)",
@@ -6095,10 +6147,11 @@
      "2026T2": -0.6
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "23221": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23221.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556536&numSequencia=1081242&numVersao=1",
   "indicadores": [
    {
     "nome": "Base de alunos de graduação - Ensino Presencial",
@@ -6135,10 +6188,11 @@
      "2026T2": 881.86
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "23248": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23248.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557502&numSequencia=1082208&numVersao=1",
   "indicadores": [
    {
     "nome": "Base de Alunos Total (média do período)",
@@ -6175,7 +6229,8 @@
      "2026T2": 10315
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "23264": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/c8182463-4b7e-408c-9d0f-42797662435e/7abe43b3-913c-7775-c393-ceb89777d32a?origin=2",
@@ -6266,10 +6321,12 @@
      "2026T2": 1.8
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553655&numSequencia=1078361&numVersao=1",
+  "paginas": "4, 5, 8, 9, 11"
  },
  "23507": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23507.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553686&numSequencia=1078392&numVersao=1",
   "indicadores": [
    {
     "nome": "Margem bruta consolidada",
@@ -6306,10 +6363,11 @@
      "2026T2": 87
     }
    }
-  ]
+  ],
+  "doc": "Press Release - 2T26"
  },
  "23574": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23574.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557486&numSequencia=1082192&numVersao=1",
   "indicadores": [
    {
     "nome": "Número de lojas no sistema",
@@ -6346,10 +6404,11 @@
      "2026T2": 6.5
     }
    }
-  ]
+  ],
+  "doc": "Earnings Release - 2T26"
  },
  "23590": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23590.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553677&numSequencia=1078383&numVersao=1",
   "indicadores": [
    {
     "nome": "Prêmio Emitido de Seguros Total",
@@ -6386,7 +6445,8 @@
      "2026T2": 160.7
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "23795": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/3972906b-e50b-4f74-ab74-4d0d32125d11/460a0d8d-9a1d-b81b-5b0d-ebbf391e4cd4?origin=2",
@@ -6478,10 +6538,12 @@
      "2026T2": 76.2
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555204&numSequencia=1079910&numVersao=1",
+  "paginas": "2, 3, 4, 9, 10, 11"
  },
  "23981": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23981.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557244&numSequencia=1081950&numVersao=1",
   "indicadores": [
    {
     "nome": "Market share de plantio (apenas variedades protegidas, base de clientes)",
@@ -6518,7 +6580,8 @@
      "2026T2": 61.1
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 1T27"
  },
  "24112": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/ed78542a-4e01-429a-8926-03d69ccfa307/51192f68-386a-a700-cbae-fba020b58c7b?origin=2",
@@ -6610,10 +6673,12 @@
      "2026T2": 92
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557506&numSequencia=1082212&numVersao=2",
+  "paginas": "8, 13, 14, 15"
  },
  "24236": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24236.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557284&numSequencia=1081990&numVersao=1",
   "indicadores": [
    {
     "nome": "Novos contratos fechados no trimestre",
@@ -6650,7 +6715,8 @@
      "2026T2": 19252
     }
    }
-  ]
+  ],
+  "doc": "Relatório de Desempenho do 2T26"
  },
  "24260": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/757d3905-6a2d-496a-bbb0-32ddd17de6a0/f949e040-5053-254d-6a03-2865a71a132a?origin=2",
@@ -6712,7 +6778,7 @@
   ]
  },
  "24279": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24279.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1547170&numSequencia=1071876&numVersao=1",
   "indicadores": [
    {
     "nome": "VGV lançado",
@@ -6749,7 +6815,8 @@
      "2026T2": 6867
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "24295": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d243bdaa-0468-4f64-8c09-ba0bcee9789b/36213875-dcba-f137-2545-3f3eaa493e36?origin=2",
@@ -6858,7 +6925,7 @@
   ]
  },
  "24600": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24600.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557202&numSequencia=1081908&numVersao=1",
   "indicadores": [
    {
     "nome": "Carteira de crédito total",
@@ -6895,7 +6962,8 @@
      "2026T2": 9.2
     }
    }
-  ]
+  ],
+  "doc": "2Q26 Earnings Release"
  },
  "24627": {
   "indicadores": [
@@ -6927,10 +6995,12 @@
      "2026T2": 379
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556040&numSequencia=1080746&numVersao=1",
+  "paginas": "1, 5, 7"
  },
  "24694": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24694.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555234&numSequencia=1079940&numVersao=1",
   "indicadores": [
    {
     "nome": "Same Store Sales (SSS) total Centauro (lojas + digital)",
@@ -6967,10 +7037,11 @@
      "2026T2": 38
     }
    }
-  ]
+  ],
+  "doc": "Release Grupo SBF 30/06/2026 - PORT + ING"
  },
  "24716": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24716.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556062&numSequencia=1080768&numVersao=1",
   "indicadores": [
    {
     "nome": "Frota de locação (# de ativos)",
@@ -7007,7 +7078,8 @@
      "2026T2": 88
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "24805": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/61a4df2d-a461-44d6-9128-da74058019db/cda0f39f-8ec4-4b0d-0db3-6f9a0395f592?origin=2",
@@ -7160,10 +7232,12 @@
      "2026T2": 13.4
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552113&numSequencia=1076819&numVersao=1",
+  "paginas": "5, 7, 11, 12, 20"
  },
  "24902": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24902.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553835&numSequencia=1078541&numVersao=1",
   "indicadores": [
    {
     "nome": "Vendas brutas",
@@ -7200,7 +7274,8 @@
      "2026T2": 5.1
     }
    }
-  ]
+  ],
+  "doc": "Press-Release 2T26"
  },
  "24910": {
   "indicadores": [
@@ -7239,10 +7314,12 @@
      "2026T2": 378
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557204&numSequencia=1081910&numVersao=1",
+  "paginas": "5, 11, 12, 15"
  },
  "24929": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24929.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1548490&numSequencia=1073196&numVersao=1",
   "indicadores": [
    {
     "nome": "Base Móvel de Clientes",
@@ -7279,10 +7356,11 @@
      "2026T2": 899
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "24953": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24953.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552903&numSequencia=1077609&numVersao=1",
   "indicadores": [
    {
     "nome": "Operações ativas (fim do período)",
@@ -7319,10 +7397,11 @@
      "2026T2": 20
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2ITR26"
  },
  "25003": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25003.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556745&numSequencia=1081451&numVersao=1",
   "indicadores": [
    {
     "nome": "Ativos totais dedicados à prestação de serviços",
@@ -7359,10 +7438,11 @@
      "2026T2": 19.4
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "25038": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25038.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553682&numSequencia=1078388&numVersao=1",
   "indicadores": [
    {
     "nome": "Crescimento de Vendas Mesmas Lojas (SSS)",
@@ -7399,10 +7479,11 @@
      "2026T2": 12.5
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26 (Português)"
  },
  "25046": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25046.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1549487&numSequencia=1074193&numVersao=1",
   "indicadores": [
    {
     "nome": "Número de lojas",
@@ -7439,10 +7520,11 @@
      "2026T2": 39.6
     }
    }
-  ]
+  ],
+  "doc": "Press Release - 2T26"
  },
  "25062": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25062.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552863&numSequencia=1077569&numVersao=1",
   "indicadores": [
    {
     "nome": "VGV lançado total (100%)",
@@ -7479,10 +7561,11 @@
      "2026T2": 3049.926
     }
    }
-  ]
+  ],
+  "doc": "Earnings Release 2T26"
  },
  "25070": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25070.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556732&numSequencia=1081438&numVersao=1",
   "indicadores": [
    {
     "nome": "VGV lançado 100% (VGV de lançamentos)",
@@ -7519,7 +7602,8 @@
      "2026T2": 44385
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26/2Q26"
  },
  "25100": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/702b9586-4f10-4a79-a7e6-232ce8803136/8ffb3865-6cf8-f750-d1d6-aafbd22c8925?origin=2",
@@ -7581,7 +7665,7 @@
   ]
  },
  "25119": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25119.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556512&numSequencia=1081218&numVersao=1",
   "indicadores": [
    {
     "nome": "VGV lançado (% Melnick)",
@@ -7618,7 +7702,8 @@
      "2026T2": 74
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados - 2T26"
  },
  "25127": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/17eafccb-2e4b-40d4-8da2-1ba38e6d4676/a2ac023a-6247-72dc-04b0-01fe67df15c1?origin=2",
@@ -7729,7 +7814,7 @@
   ]
  },
  "25232": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25232.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552884&numSequencia=1077590&numVersao=1",
   "indicadores": [
    {
     "nome": "Contas totais Méliuz",
@@ -7766,10 +7851,11 @@
      "2026T2": 5.9
     }
    }
-  ]
+  ],
+  "doc": "Resultados do 2T26"
  },
  "25259": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25259.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556005&numSequencia=1080711&numVersao=1",
   "indicadores": [
    {
     "nome": "GMV da plataforma Enjoei",
@@ -7806,10 +7892,11 @@
      "2026T2": 12126
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados - 2T26/2Q26"
  },
  "25275": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25275.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557288&numSequencia=1081994&numVersao=1",
   "indicadores": [
    {
     "nome": "VGV Lançado Total",
@@ -7846,10 +7933,11 @@
      "2026T2": 62
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "25283": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25283.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555900&numSequencia=1080606&numVersao=1",
   "indicadores": [
    {
     "nome": "Sets faturados (conjunto de 3 pás)",
@@ -7886,7 +7974,8 @@
      "2026T2": 2
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "25291": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/55b913af-cd4c-48d5-bc19-48c63916b8a5/94042c66-145c-ee7c-b906-29040f70002a?origin=2",
@@ -7948,7 +8037,7 @@
   ]
  },
  "25330": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25330.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556469&numSequencia=1081175&numVersao=1",
   "indicadores": [
    {
     "nome": "SSS (vendas em mesmas lojas) — Varejo Físico, a/a",
@@ -7971,7 +8060,8 @@
      "2026T2": 13.3
     }
    }
-  ]
+  ],
+  "doc": "Relatório de Resultados 2T26"
  },
  "25372": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/ec14f0ab-c5d4-4b12-a413-b6cc7475ed98/ecd60f65-8e70-bf69-5d12-d9615573ce8f?origin=2",
@@ -8032,7 +8122,7 @@
   ]
  },
  "25402": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25402.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553460&numSequencia=1078166&numVersao=1",
   "indicadores": [
    {
     "nome": "Vendas totais HBR Malls",
@@ -8069,10 +8159,11 @@
      "2026T2": 52
     }
    }
-  ]
+  ],
+  "doc": "Earnings Release 2T26"
  },
  "25445": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25445.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556084&numSequencia=1080790&numVersao=1",
   "indicadores": [
    {
     "nome": "System-Wide Sales",
@@ -8109,10 +8200,11 @@
      "2026T2": -0.4
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "25453": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25453.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1549422&numSequencia=1074128&numVersao=1",
   "indicadores": [
    {
     "nome": "ROIC (pre-tax) LTM",
@@ -8149,10 +8241,11 @@
      "2026T2": 60
     }
    }
-  ]
+  ],
+  "doc": "Release Resultados 2T26"
  },
  "25496": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25496.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558145&numSequencia=1082851&numVersao=1",
   "indicadores": [
    {
     "nome": "Moagem (cana processada)",
@@ -8189,10 +8282,11 @@
      "2026T2": 114.8
     }
    }
-  ]
+  ],
+  "doc": "Apresentação de resultados - 1T26/27 (Jun/26) - Safra 2026/2"
  },
  "25500": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25500.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555997&numSequencia=1080703&numVersao=1",
   "indicadores": [
    {
     "nome": "TPV (Volume Financeiro de Pagamentos)",
@@ -8222,10 +8316,11 @@
      "2026T2": 72.3
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26 / 2Q26"
  },
  "25526": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25526.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556024&numSequencia=1080730&numVersao=1",
   "indicadores": [
    {
     "nome": "Base de alunos Presencial (saldo final 2026.1, inclui graduação, pós e colégio)",
@@ -8262,10 +8357,11 @@
      "2026T2": 91
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados referente ao 2T26"
  },
  "25534": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25534.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553692&numSequencia=1078398&numVersao=1",
   "indicadores": [
    {
     "nome": "Diária líquida média da frota",
@@ -8302,10 +8398,11 @@
      "2026T2": 6.5
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados do 2T26"
  },
  "25550": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25550.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557512&numSequencia=1082218&numVersao=1",
   "indicadores": [
    {
     "nome": "Volume de resíduos recebidos nos ecoparques (consolidado pro-forma)",
@@ -8342,7 +8439,8 @@
      "2026T2": 130.3
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "25585": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/9e56a180-7ba5-412d-ab60-44ca855d1d3d/1a02e5fb-0331-5f51-8637-33ece813b87f?origin=2",
@@ -8399,61 +8497,8 @@
    }
   ]
  },
- "25640": {
-  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/050fef26-7d75-4607-8a2b-bd8cd509d0c7/d4b27ac0-b355-9310-603c-1efb1a0c3307?origin=2",
-  "indicadores": [
-   {
-    "nome": "Número de lojas",
-    "unidade": "lojas",
-    "valores": {
-     "2026T2": 81
-    }
-   },
-   {
-    "nome": "Volume de grãos e farelo/DDG comercializado",
-    "unidade": "mil toneladas",
-    "valores": {
-     "2026T2": 1686.8,
-     "2026T1": 1377.8,
-     "2025T2": 1099.5
-    }
-   },
-   {
-    "nome": "Processamento de soja (Ijuí/RS, Cruz Alta/RS e Vera/MT)",
-    "unidade": "mil toneladas",
-    "valores": {
-     "2026T2": 805,
-     "2026T1": 637,
-     "2025T2": 674
-    }
-   },
-   {
-    "nome": "Volume de fertilizantes vendidos (Segmento Insumos)",
-    "unidade": "mil toneladas",
-    "valores": {
-     "2026T2": 122.7,
-     "2025T2": 102.3
-    }
-   },
-   {
-    "nome": "Volume de biodiesel (Segmento Indústria)",
-    "unidade": "mil m³",
-    "valores": {
-     "2026T2": 174.9,
-     "2025T2": 169
-    }
-   },
-   {
-    "nome": "Carteira de crédito TentosCap",
-    "unidade": "R$ milhões",
-    "valores": {
-     "2026T2": 424.5
-    }
-   }
-  ]
- },
  "25674": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25674.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556625&numSequencia=1081331&numVersao=1",
   "indicadores": [
    {
     "nome": "Passageiros pagantes",
@@ -8490,10 +8535,11 @@
      "2026T2": 25
     }
    }
-  ]
+  ],
+  "doc": "Release 2T2026"
  },
  "25682": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25682.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555993&numSequencia=1080699&numVersao=1",
   "indicadores": [
    {
     "nome": "Ciclo de caixa",
@@ -8530,10 +8576,11 @@
      "2026T2": 16.5
     }
    }
-  ]
+  ],
+  "doc": "Relatório de Resultados do 2T26"
  },
  "25690": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25690.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556701&numSequencia=1081407&numVersao=1",
   "indicadores": [
    {
     "nome": "Leitos operacionais (média do período)",
@@ -8570,10 +8617,11 @@
      "2026T2": 7845
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "25704": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25704.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558344&numSequencia=1083050&numVersao=1",
   "indicadores": [
    {
     "nome": "Área contratada para produção de sementes (campos contratados no ciclo 2025/26)",
@@ -8610,7 +8658,8 @@
      "2026T2": 622
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "25712": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/a35cc248-b835-4157-944e-86f7561fa441/b5bb0bc5-9518-e57f-e70f-a8aa5ae9471c?origin=2",
@@ -8672,7 +8721,7 @@
   ]
  },
  "25747": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25747.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557508&numSequencia=1082214&numVersao=1",
   "indicadores": [
    {
     "nome": "GMV",
@@ -8702,10 +8751,11 @@
      "2026T2": 1520
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "25763": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25763.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556641&numSequencia=1081347&numVersao=1",
   "indicadores": [
    {
     "nome": "Investimentos (imobilizado e intangível) — CAPEX",
@@ -8742,10 +8792,11 @@
      "2026T2": 15.5
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26 - Versão em português"
  },
  "25780": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25780.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553782&numSequencia=1078488&numVersao=1",
   "indicadores": [
    {
     "nome": "Produção média bruta total",
@@ -8782,10 +8833,11 @@
      "2026T2": 93.57
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "25798": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25798.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555274&numSequencia=1079980&numVersao=1",
   "indicadores": [
    {
     "nome": "VGV Lançado",
@@ -8822,10 +8874,11 @@
      "2026T2": 4000
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "25801": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25801.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558127&numSequencia=1082833&numVersao=1",
   "indicadores": [
    {
     "nome": "Negócios Gerados",
@@ -8862,10 +8915,11 @@
      "2026T2": 7.2
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "25836": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25836.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557450&numSequencia=1082156&numVersao=1",
   "indicadores": [
    {
     "nome": "Originação de crédito (aquisição de CCBs pelos FIDCs)",
@@ -8888,10 +8942,11 @@
      "2026T2": 95
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados 2T26"
  },
  "25860": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25860.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553429&numSequencia=1078135&numVersao=1",
   "indicadores": [
    {
     "nome": "Índice de Basileia",
@@ -8928,10 +8983,11 @@
      "2026T2": 809.8
     }
    }
-  ]
+  ],
+  "doc": "Earnings Release 2T26"
  },
  "25887": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25887.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558295&numSequencia=1083001&numVersao=1",
   "indicadores": [
    {
     "nome": "Patrimônio Líquido (Jun/26)",
@@ -8954,10 +9010,11 @@
      "2026T2": 0.9
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados do 2T25"
  },
  "25895": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25895.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556634&numSequencia=1081340&numVersao=1",
   "indicadores": [
    {
     "nome": "Quantidade de novos contratos TaaS",
@@ -8994,7 +9051,8 @@
      "2026T2": 2.12
     }
    }
-  ]
+  ],
+  "doc": "Release Resultados 2T26"
  },
  "25950": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/050fef26-7d75-4607-8a2b-bd8cd509d0c7/d4b27ac0-b355-9310-603c-1efb1a0c3307?origin=2",
@@ -9141,10 +9199,12 @@
      "2026T2": 71
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556716&numSequencia=1081422&numVersao=1",
+  "paginas": "2, 3, 5"
  },
  "26034": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/26034.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556564&numSequencia=1081270&numVersao=1",
   "indicadores": [
    {
     "nome": "Participação do segmento Corporativo na Receita Líquida",
@@ -9181,10 +9241,11 @@
      "2026T2": 47.8
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "26050": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/26050.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556481&numSequencia=1081187&numVersao=1",
   "indicadores": [
    {
     "nome": "Acessos Banda Larga (final do período)",
@@ -9221,10 +9282,11 @@
      "2026T2": 3889243
     }
    }
-  ]
+  ],
+  "doc": "Release Resultados 2T26"
  },
  "26069": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/26069.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556113&numSequencia=1080819&numVersao=1",
   "indicadores": [
    {
     "nome": "Receita Bruta",
@@ -9254,10 +9316,11 @@
      "2026T2": 465
     }
    }
-  ]
+  ],
+  "doc": "Resultado do 2T26 - PT &amp EN"
  },
  "26123": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/26123.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558106&numSequencia=1082812&numVersao=1",
   "indicadores": [
    {
     "nome": "Número de procedimentos",
@@ -9294,7 +9357,8 @@
      "2026T2": 47
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados do 2T26"
  },
  "26620": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/691c9da5-45e0-458f-a3da-41982b1730fc/dc5fdc3a-062b-e2db-c2c2-364fc1474185?origin=2",
@@ -9388,10 +9452,12 @@
      "2026T2": 82.1
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556033&numSequencia=1080739&numVersao=1",
+  "paginas": "3, 5, 6, 7"
  },
  "27626": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/27626.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558324&numSequencia=1083030&numVersao=1",
   "indicadores": [
    {
     "nome": "Produção total no período (ativos Phoenix + Polos Barrinha e Porto Carão)",
@@ -9421,10 +9487,11 @@
      "2026T2": 11.7
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2º Trimestre de 2026"
  },
  "27707": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/27707.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556103&numSequencia=1080809&numVersao=1",
   "indicadores": [
    {
     "nome": "Volume total de veículos vendidos (leves e pesados, ex-venda direta atacado)",
@@ -9461,10 +9528,11 @@
      "2026T2": 38
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "27766": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/27766.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557309&numSequencia=1082015&numVersao=1",
   "indicadores": [
    {
     "nome": "Número de lojas (total)",
@@ -9501,7 +9569,8 @@
      "2026T2": 14.4
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "_comment": "Indicadores operacionais (SSS, LTV, CAC, ARPU, churn etc.) — curadoria MANUAL a partir dos releases; não existe fonte gratuita estruturada. Chave = código CVM. O painel mostra a seção 'Indicadores operacionais' no detalhe quando houver entrada, e esses indicadores podem ser citados na comparação entre empresas que os tenham.",
  "_schema": {
@@ -9518,61 +9587,5 @@
     }
    ]
   }
- },
- "15636b": {
-  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/909e3997-39bb-4353-b073-1bf441e2f7f9/f819b484-af4c-e14d-b156-b64dcb6e7d55?origin=2",
-  "indicadores": [
-   {
-    "nome": "Energia Injetada Total (SIN + Sistema Isolado + GD)",
-    "unidade": "GWh",
-    "valores": {
-     "2026T2": 7906,
-     "2025T2": 7554
-    }
-   },
-   {
-    "nome": "Energia Distribuída Total (cativa + livre + GD)",
-    "unidade": "GWh",
-    "valores": {
-     "2026T2": 6485,
-     "2025T2": 6438
-    }
-   },
-   {
-    "nome": "Número de Clientes",
-    "unidade": "mil consumidores",
-    "valores": {
-     "2026T2": 6986,
-     "2025T2": 6829
-    }
-   },
-   {
-    "nome": "Perdas Totais de Distribuição (12 meses)",
-    "unidade": "%",
-    "valores": {
-     "2026T2": 15.8,
-     "2026T1": 15.21,
-     "2025T2": 15.86
-    }
-   },
-   {
-    "nome": "Inadimplência (PECLD/ROB)",
-    "unidade": "%",
-    "valores": {
-     "2026T2": 1.08,
-     "2026T1": 1.25,
-     "2025T2": 1.03
-    }
-   },
-   {
-    "nome": "Índice de Arrecadação (12 meses)",
-    "unidade": "%",
-    "valores": {
-     "2026T2": 98,
-     "2026T1": 98.49,
-     "2025T2": 98.33
-    }
-   }
-  ]
  }
 }

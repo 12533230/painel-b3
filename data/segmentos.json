@@ -301,8 +301,7 @@
   "fonte": "https://ri.bnb.gov.br/documents/45843/9646311/Apresenta%C3%A7%C3%A3o+de+Resultados+-+Banco+do+Nordeste+-+2T2026.pdf/a126af73-27f5-cb41-1544-3b3ca9b398b2?t=1786709177222",
   "unidade": "R$ milhões",
   "metricas": [
-   "Carteira de Crédito (saldo de operações de crédito sem dedução das provisões)",
-   "Contratações (volume contratado no período)"
+   "Carteira de Crédito (saldo de operações de crédito sem dedução das provisões) / Contratações (volume contratado no período)"
   ],
   "segmentos": [
    {
@@ -693,7 +692,7 @@
   ]
  },
  "4669": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/4669.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552845&numSequencia=1077551&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita",
@@ -718,7 +717,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Resultados 2T26"
  },
  "4820": {
   "unidade": "R$ milhões",
@@ -772,10 +772,12 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557511&numSequencia=1082217&numVersao=1",
+  "paginas": "4, 6, 7, 10, 12, 37"
  },
  "5380": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/5380.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553921&numSequencia=1078627&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -797,7 +799,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Relatório de desempenho 2T2026"
  },
  "5410": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/50c1bd3e-8ac6-42d9-884f-b9d69f690602/9a78cad5-4da1-b36f-38ec-45060792f84c?origin=2",
@@ -878,7 +881,7 @@
   ]
  },
  "5762": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/5762.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555926&numSequencia=1080632&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita liquida",
@@ -903,10 +906,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release Resultados 2T26 PT EN"
  },
  "6173": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/6173.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556077&numSequencia=1080783&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -920,7 +924,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados do segundo trimestre e primeiro semest"
  },
  "6211": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/23341a9d-be9a-4855-a251-1c1004aa997c/59f3f426-767c-ea12-8946-074ee9775659?origin=2",
@@ -988,7 +993,7 @@
   ]
  },
  "6505": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/6505.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558371&numSequencia=1083077&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita bruta"
@@ -1018,15 +1023,14 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultado 2T26 | Earnings Release 2Q26"
  },
  "7617": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/afd9200b-9b01-4d1c-bdd9-9b2c1e9b3b4d/68055d0d-aa63-8b36-872c-f27026a2a42e?origin=2",
   "unidade": "R$ milhões",
   "metricas": [
-   "Resultado recorrente itausa (contribuição da investida ao lucro recorrente da holding, via equivalência patrimonial / valor justo)",
-   "Receita liquida base 100% (Receita Líquida da investida, base 100%)",
-   "Ebitda base 100% (EBITDA da investida, base 100%)"
+   "Resultado recorrente itausa (contribuição da investida ao lucro recorrente da holding, via equivalência patrimonial / valor justo) / Receita liquida base 100% (Receita Líquida da investida, base 100%) / Ebitda base 100% (EBITDA da investida, base 100%)"
   ],
   "segmentos": [
    {
@@ -1516,10 +1520,12 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556533&numSequencia=1081239&numVersao=1",
+  "paginas": "10, 11, 13"
  },
  "8672": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/8672.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552906&numSequencia=1077612&numVersao=2",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -1541,10 +1547,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Resultados 2T26"
  },
  "9342": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/9342.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553799&numSequencia=1078505&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -1566,7 +1573,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Divulgação de Resultados 2T26"
  },
  "9512": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/857e970b-1bf4-9ea4-093f-b93bfc2bac95?origin=2 (Relatório de Desempenho 2T26 — segmentos) | https://api.mziq.com/mzfilemanager/v2/d/25fdf098-34f5-4608-b7fa-17d60b2de47d/19a7ace8-ce1a-28a6-ead3-bdc01b7204f7?origin=2 (Relatório de Produção e Vendas 2T26 — KPIs operacionais)",
@@ -1716,7 +1724,7 @@
   ]
  },
  "11932": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/11932.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552561&numSequencia=1077267&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -1770,14 +1778,14 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Divulgação dos resultados do 2T26"
  },
  "12653": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/1c41fa99-efe7-4e72-81dd-5b571f5aa376/1c433925-a2b4-39b8-9193-db7a1ff0a2e0?origin=2",
   "unidade": "R$ milhões",
   "metricas": [
-   "Receita Líquida",
-   "EBITDA (divulgado apenas para Celulose, no texto do release)"
+   "Receita Líquida / EBITDA (divulgado apenas para Celulose, no texto do release)"
   ],
   "segmentos": [
    {
@@ -2032,15 +2040,15 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557269&numSequencia=1081975&numVersao=1",
+  "paginas": "4, 19, 20, 21, 29"
  },
  "14320": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/5dcf459c-823d-4c02-ac4b-a2aa54a63486/d3f91994-9257-c40e-8a2a-4b581911af32?origin=2",
   "unidade": "R$ milhões (exceto Margem EBITDA Ajustado, em %)",
   "metricas": [
-   "Receita Líquida de Vendas",
-   "EBITDA Ajustado",
-   "Margem EBITDA Ajustado (%)"
+   "Receita Líquida de Vendas / EBITDA Ajustado / Margem EBITDA Ajustado (%)"
   ],
   "segmentos": [
    {
@@ -2121,8 +2129,105 @@
    }
   ]
  },
+ "14524": {
+  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/909e3997-39bb-4353-b073-1bf441e2f7f9/f819b484-af4c-e14d-b156-b64dcb6e7d55?origin=2",
+  "unidade": "GWh",
+  "metricas": [
+   "Energia Distribuída (cativo + livre + GD)"
+  ],
+  "segmentos": [
+   {
+    "nome": "Residencial",
+    "valores": {
+     "2026T2": [
+      2384
+     ],
+     "2025T2": [
+      2335
+     ]
+    }
+   },
+   {
+    "nome": "Industrial",
+    "valores": {
+     "2026T2": [
+      1355
+     ],
+     "2025T2": [
+      1305
+     ]
+    }
+   },
+   {
+    "nome": "Comercial",
+    "valores": {
+     "2026T2": [
+      1199
+     ],
+     "2025T2": [
+      1211
+     ]
+    }
+   },
+   {
+    "nome": "Rural",
+    "valores": {
+     "2026T2": [
+      716
+     ],
+     "2025T2": [
+      765
+     ]
+    }
+   },
+   {
+    "nome": "Outros (serviço público, poder público, iluminação pública e uso próprio)",
+    "valores": {
+     "2026T2": [
+      831
+     ],
+     "2025T2": [
+      822
+     ]
+    }
+   },
+   {
+    "nome": "Total Energia Distribuída (cativo + livre + GD)",
+    "valores": {
+     "2026T2": [
+      6485
+     ],
+     "2025T2": [
+      6438
+     ]
+    }
+   },
+   {
+    "nome": "Mercado Cativo",
+    "valores": {
+     "2026T2": [
+      3788
+     ],
+     "2025T2": [
+      3934
+     ]
+    }
+   },
+   {
+    "nome": "Mercado Livre + Suprimento",
+    "valores": {
+     "2026T2": [
+      2035
+     ],
+     "2025T2": [
+      1917
+     ]
+    }
+   }
+  ]
+ },
  "14826": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/14826.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552148&numSequencia=1076854&numVersao=1",
   "unidade": "R$ milhões (receita bruta / vendas totais)",
   "metricas": [
    "Receita"
@@ -2168,10 +2273,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "16632": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/16632.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555990&numSequencia=1080696&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita liquida",
@@ -2196,15 +2302,14 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados - 2T26"
  },
  "16659": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/b77a3922-d280-4451-b3ee-0afec4577834/4432e300-316c-530a-bf34-b5ac18038e09?origin=2",
   "unidade": "R$ milhões",
   "metricas": [
-   "Receita Total",
-   "Lucro Líquido",
-   "EBITDA"
+   "Receita Total / Lucro Líquido / EBITDA"
   ],
   "segmentos": [
    {
@@ -2330,8 +2435,7 @@
   "fonte": "https://www.engie.com.br/wp-content/uploads/2026/08/260805-Release-de-Resultados-2T26.pdf",
   "unidade": "R$ milhões",
   "metricas": [
-   "Receita Operacional Líquida",
-   "Ebitda Ajustado"
+   "Receita Operacional Líquida / Ebitda Ajustado"
   ],
   "segmentos": [
    {
@@ -2603,7 +2707,9 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556591&numSequencia=1081297&numVersao=1",
+  "paginas": "2, 4, 6, 7, 9, 11, 12, 13"
  },
  "18376": {
   "fonte": "https://ri.isaenergiabrasil.com.br/pt/documentos/6758-Earnings-Release-2T26-vfinal-1.pdf",
@@ -3054,8 +3160,7 @@
   "fonte": "https://ri.cpfl.com.br/Download.aspx?Arquivo=V9nPRClCfYq%2F57zASRNUmw%3D%3D&linguagem=pt",
   "unidade": "R$ milhões",
   "metricas": [
-   "Receita Líquida",
-   "EBITDA"
+   "Receita Líquida / EBITDA"
   ],
   "segmentos": [
    {
@@ -3164,9 +3269,7 @@
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/8516d569-e11b-4864-a777-68eca8245423/b69d1ac9-863e-e4a2-6a8b-52fe88ac54a9?origin=2",
   "unidade": "R$ milhoes (margem em %)",
   "metricas": [
-   "Receita Liquida Ajustada (sem receita de construcao)",
-   "EBITDA Ajustado",
-   "Margem EBITDA Ajustada (%)"
+   "Receita Liquida Ajustada (sem receita de construcao) / EBITDA Ajustado / Margem EBITDA Ajustada (%)"
   ],
   "segmentos": [
    {
@@ -3444,9 +3547,7 @@
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/67c3b7d4-64ea-4c2f-b380-6596a2ac2fbf/4065f0f9-976a-526a-5f90-33b6275a5bca?origin=2",
   "unidade": "R$ milhões",
   "metricas": [
-   "Receita líquida",
-   "EBITDA",
-   "Margem EBITDA (%)"
+   "Receita líquida / EBITDA / Margem EBITDA (%)"
   ],
   "segmentos": [
    {
@@ -3547,7 +3648,9 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553661&numSequencia=1078367&numVersao=1",
+  "paginas": "p. 2 (Destaques 2T26 vs 2T25) e p. 21 do PDF / rodapé \"Página 20 de 23\" (Anexo I – Receita Bruta Consolidada, Volumes, Receita Bruta por Par e Participação por Mercado)"
  },
  "19623": {
   "unidade": "R$ milhões",
@@ -3571,7 +3674,9 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557405&numSequencia=1082111&numVersao=1",
+  "paginas": "5-8, 10, 12-13"
  },
  "19739": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/08f327aa-e610-4d9d-b683-8ff0f7caae07/ffd204e4-d65f-5649-63a7-f12a8b70f4bd?origin=2",
@@ -3701,7 +3806,7 @@
   ]
  },
  "19879": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/19879.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557437&numSequencia=1082143&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita Líquida",
@@ -3726,14 +3831,14 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Press-release 2T26"
  },
  "19992": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d3be5d49-62e7-4def-a3e1-ab25ff09f153/29ca7a02-e9c5-d3b1-6d1e-578cf0ac69d8?origin=2",
   "unidade": "R$ milhões",
   "metricas": [
-   "Receita Líquida",
-   "EBITDA Ajustado"
+   "Receita Líquida / EBITDA Ajustado"
   ],
   "segmentos": [
    {
@@ -3788,8 +3893,7 @@
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/62b21cba-838c-49a4-aaef-e0fb2350c169/b1f651f0-9cd8-d2e0-87f0-498cd4b24f8b?origin=2",
   "unidade": "R$ milhões",
   "metricas": [
-   "Receita Líquida",
-   "EBITDA Ajustado"
+   "Receita Líquida / EBITDA Ajustado"
   ],
   "segmentos": [
    {
@@ -3856,7 +3960,7 @@
   ]
  },
  "20028": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20028.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552874&numSequencia=1077580&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita",
@@ -3890,10 +3994,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release em Português"
  },
  "20044": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20044.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556009&numSequencia=1080715&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita liquida",
@@ -3918,7 +4023,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados 2T26 (Português)"
  },
  "20087": {
   "fonte": "https://www.embraer.com/media/hu2ij3eq/ri_release_earnings_2t26_pt.pdf",
@@ -3999,9 +4105,7 @@
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/c504a4a5-75e7-4404-8af7-524b50cd7e11/5f967584-b370-d17f-328a-9991fafea1c8?origin=2",
   "unidade": "R$ milhões",
   "metricas": [
-   "Receita",
-   "Resultado das operações",
-   "Lucro líquido"
+   "Receita / Resultado das operações / Lucro líquido"
   ],
   "segmentos": [
    {
@@ -4144,7 +4248,7 @@
   ]
  },
  "20346": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20346.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1549505&numSequencia=1074211&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita bruta",
@@ -4178,10 +4282,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados 2T26"
  },
  "20362": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20362.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556628&numSequencia=1081334&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -4227,10 +4332,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "20370": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20370.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555996&numSequencia=1080702&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita",
@@ -4255,7 +4361,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "20516": {
   "fonte": "https://ri.saomartinho.com.br/Download.aspx?Arquivo=ZFp1QaLRnygOLp3G2inCFg%3D%3D&linguagem=pt",
@@ -4415,7 +4522,9 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556496&numSequencia=1081202&numVersao=1",
+  "paginas": "2"
  },
  "20745": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/a975c39b-3eca-4ad8-9330-2c0a0b8d1060/da017e37-1ea8-7eef-ac2c-243762280f70?origin=2",
@@ -4529,7 +4638,7 @@
   ]
  },
  "20800": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/20800.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1551384&numSequencia=1076090&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita liquida",
@@ -4554,7 +4663,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Earnings Releease 2t26"
  },
  "20931": {
   "unidade": "R$ milhões",
@@ -4626,51 +4736,9 @@
      ]
     }
    }
-  ]
- },
- "20974": {
-  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/ada9bc2c-f7d0-4359-9eaf-851b679ab788/8966f336-97d7-142e-654a-b27fae98b331?origin=2",
-  "unidade": "R$ milhões (VGV 100%)",
-  "metricas": [
-   "VGV Lançado",
-   "Vendas Líquidas Contratadas (VGV Líquido Contratado)"
   ],
-  "segmentos": [
-   {
-    "nome": "Direcional (MCMV Faixas 1, 2 e 3)",
-    "valores": {
-     "2026T2": [
-      1285.8,
-      1064.5
-     ],
-     "2026T1": [
-      704.7,
-      979.9
-     ],
-     "2025T2": [
-      1062,
-      996.5
-     ]
-    }
-   },
-   {
-    "nome": "Riva (média renda / MCMV Faixa 4 e fora do programa)",
-    "valores": {
-     "2026T2": [
-      779.4,
-      590.4
-     ],
-     "2026T1": [
-      301.1,
-      602.1
-     ],
-     "2025T2": [
-      841.9,
-      680.8
-     ]
-    }
-   }
-  ]
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556535&numSequencia=1081241&numVersao=1",
+  "paginas": "5, 6, 8"
  },
  "21016": {
   "unidade": "R$ milhoes",
@@ -4706,10 +4774,12 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557225&numSequencia=1081931&numVersao=1",
+  "paginas": "7, 9, 10, 13, 17, 29"
  },
  "21040": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21040.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557413&numSequencia=1082119&numVersao=1",
   "unidade": "R$ milhões (receita líquida de locação, Proforma)",
   "metricas": [
    "Receita"
@@ -4739,7 +4809,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26."
  },
  "21091": {
   "unidade": "R$ milhões",
@@ -4784,10 +4855,12 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552795&numSequencia=1077501&numVersao=1",
+  "paginas": "1, 5, 14, 16, 18, 19, 21, 22"
  },
  "21148": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21148.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552030&numSequencia=1076736&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita liquida",
@@ -4812,7 +4885,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "21350": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/ada9bc2c-f7d0-4359-9eaf-851b679ab788/8966f336-97d7-142e-654a-b27fae98b331?origin=2",
@@ -4859,7 +4933,7 @@
   ]
  },
  "21440": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/21440.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1558600&numSequencia=1083306&numVersao=1",
   "unidade": "R$ milhões (receita bruta)",
   "metricas": [
    "Receita"
@@ -4913,14 +4987,14 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Earnings Release versão Eng"
  },
  "21490": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/7055e766-fc6d-42b3-9911-c19f8e89875a/d752efb1-5803-391f-472c-9348b7b0a855?origin=2",
   "unidade": "R$ MM (Regulatório/BRGAAP)",
   "metricas": [
-   "Receita Líquida",
-   "EBITDA (Res. 156/22)"
+   "Receita Líquida / EBITDA (Res. 156/22)"
   ],
   "segmentos": [
    {
@@ -5397,10 +5471,12 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552791&numSequencia=1077497&numVersao=1",
+  "paginas": "3, 13, 14, 16, 17"
  },
  "22020": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22020.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555473&numSequencia=1080179&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita líquida",
@@ -5434,10 +5510,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "22349": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22349.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556645&numSequencia=1081351&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -5475,7 +5552,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Earnings Release 2T26"
  },
  "22357": {
   "fonte": "https://investidor10.com.br/acoes/link_comunicado/ALOS3/46951/",
@@ -5553,7 +5631,7 @@
   ]
  },
  "22454": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22454.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556647&numSequencia=1081353&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -5583,7 +5661,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados 2T26"
  },
  "22470": {
   "fonte": "https://ri.magazineluiza.com.br/ListResultados/Download.aspx?Arquivo=dL1FGoA0QI/SvcDvROsA7g==",
@@ -5795,10 +5874,12 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555285&numSequencia=1079991&numVersao=1",
+  "paginas": "1, 6, 7"
  },
  "22780": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/22780.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557271&numSequencia=1081977&numVersao=1",
   "unidade": "R$ milhões (faturamento bruto ex-IPI)",
   "metricas": [
    "Receita"
@@ -5836,7 +5917,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26 (PT-BR_EN-US)"
  },
  "23159": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/d4ee6df5-1dd8-4fb5-b518-e05397c304e4/9d131b94-6415-4fa8-d78c-99319c643d26?origin=2",
@@ -5966,7 +6048,7 @@
   ]
  },
  "23221": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23221.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556536&numSequencia=1081242&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -6004,10 +6086,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "23248": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23248.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557502&numSequencia=1082208&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -6037,14 +6120,14 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "23264": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/c8182463-4b7e-408c-9d0f-42797662435e/7abe43b3-913c-7775-c393-ceb89777d32a?origin=2",
   "unidade": "R$ milhões",
   "metricas": [
-   "Receita líquida",
-   "EBITDA normalizado"
+   "Receita líquida / EBITDA normalizado"
   ],
   "segmentos": [
    {
@@ -6173,10 +6256,12 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553655&numSequencia=1078361&numVersao=1",
+  "paginas": "4, 5, 8, 9, 11"
  },
  "23507": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23507.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553686&numSequencia=1078392&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -6206,10 +6291,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Press Release - 2T26"
  },
  "23574": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23574.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557486&numSequencia=1082192&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita Líquida",
@@ -6261,10 +6347,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Earnings Release - 2T26"
  },
  "23590": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/23590.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553677&numSequencia=1078383&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita Líquida Ajustada",
@@ -6298,15 +6385,14 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "23795": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/3972906b-e50b-4f74-ab74-4d0d32125d11/460a0d8d-9a1d-b81b-5b0d-ebbf391e4cd4?origin=2",
   "unidade": "R$ milhões",
   "metricas": [
-   "Prêmios Emitidos (Negócios de Seguros, por ramo)",
-   "Receita Operacional (Negócios de Acumulação, por segmento)",
-   "Receitas com Comissionamento (Negócios de Distribuição, DRE gerencial da holding)"
+   "Prêmios Emitidos (Negócios de Seguros, por ramo) / Receita Operacional (Negócios de Acumulação, por segmento) / Receitas com Comissionamento (Negócios de Distribuição, DRE gerencial da holding)"
   ],
   "segmentos": [
    {
@@ -6636,10 +6722,12 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557506&numSequencia=1082212&numVersao=2",
+  "paginas": "8, 13, 14, 15"
  },
  "24236": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24236.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557284&numSequencia=1081990&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -6669,7 +6757,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Relatório de Desempenho do 2T26"
  },
  "24260": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/757d3905-6a2d-496a-bbb0-32ddd17de6a0/f949e040-5053-254d-6a03-2865a71a132a?origin=2",
@@ -6873,10 +6962,12 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556040&numSequencia=1080746&numVersao=1",
+  "paginas": "1, 5, 7"
  },
  "24694": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24694.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555234&numSequencia=1079940&numVersao=1",
   "unidade": "R$ milhões (receita líquida; convertido de R$ mil da tabela da p.7)",
   "metricas": [
    "Receita"
@@ -6898,10 +6989,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release Grupo SBF 30/06/2026 - PORT + ING"
  },
  "24716": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24716.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556062&numSequencia=1080768&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -6931,7 +7023,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "24805": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/61a4df2d-a461-44d6-9128-da74058019db/cda0f39f-8ec4-4b0d-0db3-6f9a0395f592?origin=2",
@@ -7066,10 +7159,12 @@
      ]
     }
    }
-  ]
+  ],
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557204&numSequencia=1081910&numVersao=1",
+  "paginas": "5, 11, 12, 15"
  },
  "24929": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24929.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1548490&numSequencia=1073196&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7091,10 +7186,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "24953": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/24953.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552903&numSequencia=1077609&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7188,10 +7284,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2ITR26"
  },
  "25003": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25003.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556745&numSequencia=1081451&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita Líquida",
@@ -7234,10 +7331,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "25038": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25038.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553682&numSequencia=1078388&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7267,7 +7365,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26 (Português)"
  },
  "25100": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/702b9586-4f10-4a79-a7e6-232ce8803136/8ffb3865-6cf8-f750-d1d6-aafbd22c8925?origin=2",
@@ -7298,16 +7397,7 @@
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/8ea287f8-ae0a-4b88-b20b-80c1f1b86a1e/759380ab-906c-cfb2-3d52-43e262f436d1?origin=2",
   "unidade": "R$ milhões (margens, SSS e demais percentuais em %; área de vendas em mil m²; número de lojas e centros de distribuição em unidades)",
   "metricas": [
-   "Receita líquida",
-   "Lucro bruto",
-   "Margem bruta (%)",
-   "EBITDA pós IFRS 16",
-   "Margem EBITDA pós IFRS 16 (%)",
-   "Lucro líquido",
-   "SSS sem ajuste de calendário (%)",
-   "Número de lojas",
-   "Área de vendas (mil m²)",
-   "Centros de distribuição"
+   "Receita líquida / Lucro bruto / Margem bruta (%) / EBITDA pós IFRS 16 / Margem EBITDA pós IFRS 16 (%) / Lucro líquido / SSS sem ajuste de calendário (%) / Número de lojas / Área de vendas (mil m²) / Centros de distribuição"
   ],
   "segmentos": [
    {
@@ -7370,7 +7460,7 @@
   ]
  },
  "25232": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25232.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1552884&numSequencia=1077590&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7408,10 +7498,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Resultados do 2T26"
  },
  "25283": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25283.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555900&numSequencia=1080606&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7457,7 +7548,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "25291": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/55b913af-cd4c-48d5-bc19-48c63916b8a5/94042c66-145c-ee7c-b906-29040f70002a?origin=2",
@@ -7506,7 +7598,7 @@
   ]
  },
  "25330": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25330.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556469&numSequencia=1081175&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7552,10 +7644,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Relatório de Resultados 2T26"
  },
  "25453": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25453.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1549422&numSequencia=1074128&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7585,10 +7678,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release Resultados 2T26"
  },
  "25526": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25526.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556024&numSequencia=1080730&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7610,10 +7704,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados referente ao 2T26"
  },
  "25534": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25534.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553692&numSequencia=1078398&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita liquida",
@@ -7638,10 +7733,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de resultados do 2T26"
  },
  "25550": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25550.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1557512&numSequencia=1082218&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7695,7 +7791,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26"
  },
  "25585": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/9e56a180-7ba5-412d-ab60-44ca855d1d3d/1a02e5fb-0331-5f51-8637-33ece813b87f?origin=2",
@@ -7734,57 +7831,8 @@
    }
   ]
  },
- "25640": {
-  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/050fef26-7d75-4607-8a2b-bd8cd509d0c7/d4b27ac0-b355-9310-603c-1efb1a0c3307?origin=2",
-  "unidade": "R$ milhões (convertido de R$ mil, unidade original das tabelas do release)",
-  "metricas": [
-   "Receita Líquida",
-   "Lucro Bruto Ajustado"
-  ],
-  "segmentos": [
-   {
-    "nome": "Insumos",
-    "valores": {
-     "2026T2": [
-      487.33,
-      96.307
-     ],
-     "2025T2": [
-      391.082,
-      71.349
-     ]
-    }
-   },
-   {
-    "nome": "Grãos",
-    "valores": {
-     "2026T2": [
-      2202.949,
-      188.52
-     ],
-     "2025T2": [
-      1251.393,
-      88.505
-     ]
-    }
-   },
-   {
-    "nome": "Indústria",
-    "valores": {
-     "2026T2": [
-      2010.121,
-      244.815
-     ],
-     "2025T2": [
-      1920.402,
-      416.076
-     ]
-    }
-   }
-  ]
- },
  "25682": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25682.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1555993&numSequencia=1080699&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7822,10 +7870,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Relatório de Resultados do 2T26"
  },
  "25763": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25763.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556641&numSequencia=1081347&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7855,10 +7904,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release 2T26 - Versão em português"
  },
  "25860": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25860.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1553429&numSequencia=1078135&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7896,10 +7946,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Earnings Release 2T26"
  },
  "25895": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/25895.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556634&numSequencia=1081340&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -7921,7 +7972,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release Resultados 2T26"
  },
  "25950": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/050fef26-7d75-4607-8a2b-bd8cd509d0c7/d4b27ac0-b355-9310-603c-1efb1a0c3307?origin=2",
@@ -8066,7 +8118,7 @@
   ]
  },
  "26034": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/26034.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556564&numSequencia=1081270&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita Líquida",
@@ -8100,10 +8152,11 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "26050": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/26050.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556481&numSequencia=1081187&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita"
@@ -8125,7 +8178,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release Resultados 2T26"
  },
  "26620": {
   "fonte": "https://api.mziq.com/mzfilemanager/v2/d/691c9da5-45e0-458f-a3da-41982b1730fc/dc5fdc3a-062b-e2db-c2c2-364fc1474185?origin=2",
@@ -8255,7 +8309,7 @@
   ]
  },
  "27707": {
-  "fonte": "CVM/IPE 2T26 (PDF oficial protocolado): C:/Users/andre/AppData/Local/Temp/releases/27707.pdf",
+  "fonte": "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1556103&numSequencia=1080809&numVersao=1",
   "unidade": "R$ milhões",
   "metricas": [
    "Receita bruta"
@@ -8285,7 +8339,8 @@
      ]
     }
    }
-  ]
+  ],
+  "doc": "Release de Resultados 2T26"
  },
  "_comment": "Quebra por segmento de negócio (curadoria MANUAL — a CVM aberta não estrutura esses dados; eles vêm dos releases de resultados de cada empresa). Chave = código CVM da empresa. Preencha 'valores' com os números do release e cite a fonte. O painel mostra a seção 'Segmentos de negócio' no detalhe da empresa quando houver entrada aqui.",
  "_schema": {
@@ -8312,102 +8367,5 @@
     }
    ]
   }
- },
- "15636b": {
-  "fonte": "https://api.mziq.com/mzfilemanager/v2/d/909e3997-39bb-4353-b073-1bf441e2f7f9/f819b484-af4c-e14d-b156-b64dcb6e7d55?origin=2",
-  "unidade": "GWh",
-  "metricas": [
-   "Energia Distribuída (cativo + livre + GD)"
-  ],
-  "segmentos": [
-   {
-    "nome": "Residencial",
-    "valores": {
-     "2026T2": [
-      2384
-     ],
-     "2025T2": [
-      2335
-     ]
-    }
-   },
-   {
-    "nome": "Industrial",
-    "valores": {
-     "2026T2": [
-      1355
-     ],
-     "2025T2": [
-      1305
-     ]
-    }
-   },
-   {
-    "nome": "Comercial",
-    "valores": {
-     "2026T2": [
-      1199
-     ],
-     "2025T2": [
-      1211
-     ]
-    }
-   },
-   {
-    "nome": "Rural",
-    "valores": {
-     "2026T2": [
-      716
-     ],
-     "2025T2": [
-      765
-     ]
-    }
-   },
-   {
-    "nome": "Outros (serviço público, poder público, iluminação pública e uso próprio)",
-    "valores": {
-     "2026T2": [
-      831
-     ],
-     "2025T2": [
-      822
-     ]
-    }
-   },
-   {
-    "nome": "Total Energia Distribuída (cativo + livre + GD)",
-    "valores": {
-     "2026T2": [
-      6485
-     ],
-     "2025T2": [
-      6438
-     ]
-    }
-   },
-   {
-    "nome": "Mercado Cativo",
-    "valores": {
-     "2026T2": [
-      3788
-     ],
-     "2025T2": [
-      3934
-     ]
-    }
-   },
-   {
-    "nome": "Mercado Livre + Suprimento",
-    "valores": {
-     "2026T2": [
-      2035
-     ],
-     "2025T2": [
-      1917
-     ]
-    }
-   }
-  ]
  }
 }
