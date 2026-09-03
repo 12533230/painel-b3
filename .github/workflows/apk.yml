@@ -3,6 +3,10 @@ name: Gerar APK (app Android)
 # Empacota a PWA do painel num APK Android (TWA — Trusted Web Activity) e publica
 # o arquivo como Release do GitHub, pronto para instalar no celular.
 # Rode manualmente em Actions → "Gerar APK (app Android)" → Run workflow.
+#
+# Em vez de `bubblewrap init` (que é interativo e falha em CI), escrevemos o
+# twa-manifest.json direto e apontamos o Bubblewrap para o JDK e o Android SDK
+# que já vêm no runner. Nenhum passo mascara erro com `|| true`.
 on:
   workflow_dispatch:
     inputs:
@@ -36,27 +40,39 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Definir URL do painel
+      - name: Definir alvo
         id: cfg
         run: |
+          set -euo pipefail
           if [ "${{ inputs.alvo }}" = "publico" ]; then
-            echo "url=https://12533230.github.io/painel-b3/p/" >> $GITHUB_OUTPUT
+            echo "url=https://12533230.github.io/painel-b3/p/"                       >> $GITHUB_OUTPUT
             echo "manifest=https://12533230.github.io/painel-b3/app/manifest-public.json" >> $GITHUB_OUTPUT
-            echo "appid=io.github.painelb3.publico" >> $GITHUB_OUTPUT
-            echo "nome=Painel B3" >> $GITHUB_OUTPUT
+            echo "appid=io.github.painelb3.publico"                                  >> $GITHUB_OUTPUT
+            echo "nome=Painel B3"                                                    >> $GITHUB_OUTPUT
           else
-            echo "url=https://12533230.github.io/painel-b3/" >> $GITHUB_OUTPUT
-            echo "manifest=https://12533230.github.io/painel-b3/app/manifest.json" >> $GITHUB_OUTPUT
-            echo "appid=io.github.painelb3.insignia" >> $GITHUB_OUTPUT
-            echo "nome=Painel B3" >> $GITHUB_OUTPUT
+            echo "url=https://12533230.github.io/painel-b3/"                         >> $GITHUB_OUTPUT
+            echo "manifest=https://12533230.github.io/painel-b3/app/manifest.json"   >> $GITHUB_OUTPUT
+            echo "appid=io.github.painelb3.insignia"                                 >> $GITHUB_OUTPUT
+            echo "nome=Painel B3"                                                    >> $GITHUB_OUTPUT
           fi
 
       - name: Instalar Bubblewrap
-        run: npm install -g @bubblewrap/cli@latest
+        run: npm install -g @bubblewrap/cli@1.22.0
 
-      - name: Chave de assinatura (determinística, guardada no repo como secret opcional)
+      - name: Apontar Bubblewrap para o JDK e o Android SDK do runner
         run: |
-          mkdir -p ~/.android
+          set -euo pipefail
+          SDK="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
+          test -d "$SDK" || { echo "Android SDK não encontrado"; exit 1; }
+          test -d "$JAVA_HOME" || { echo "JAVA_HOME não encontrado"; exit 1; }
+          mkdir -p ~/.bubblewrap
+          printf '{"jdkPath":"%s","androidSdkPath":"%s"}\n' "$JAVA_HOME" "$SDK" > ~/.bubblewrap/config.json
+          cat ~/.bubblewrap/config.json
+          yes | "$SDK/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
+
+      - name: Chave de assinatura
+        run: |
+          set -euo pipefail
           if [ -n "${{ secrets.ANDROID_KEYSTORE_B64 }}" ]; then
             echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > android.keystore
             echo "usando keystore do secret ANDROID_KEYSTORE_B64"
@@ -65,54 +81,88 @@ jobs:
               -keyalg RSA -keysize 2048 -validity 10000 \
               -storepass painelb3 -keypass painelb3 \
               -dname "CN=Painel B3, OU=Painel, O=Painel B3, L=Sao Paulo, S=SP, C=BR"
-            echo "::warning::Keystore gerado nesta execução. Para atualizar o app sem desinstalar, guarde-o no secret ANDROID_KEYSTORE_B64 (veja o resumo do job)."
+            echo "::warning::Keystore gerado nesta execução. Para publicar atualizações sem desinstalar o app, guarde este keystore no secret ANDROID_KEYSTORE_B64."
           fi
+          test -s android.keystore
 
-      - name: Inicializar projeto TWA
+      - name: Escrever twa-manifest.json
         run: |
-          bubblewrap init --manifest="${{ steps.cfg.outputs.manifest }}" --directory=twa \
-            --packageId="${{ steps.cfg.outputs.appid }}" \
-            --appVersionName="${{ inputs.versao }}" \
-            --host="12533230.github.io" \
-            --startUrl="${{ steps.cfg.outputs.url }}" \
-            --name="${{ steps.cfg.outputs.nome }}" \
-            --launcherName="Painel B3" \
-            --display=standalone \
-            --themeColor="#0c2a2d" --backgroundColor="#0c2a2d" \
-            --signingKeyPath="$PWD/android.keystore" --signingKeyAlias=painelb3 \
-            --iconUrl="https://12533230.github.io/painel-b3/app/icon-512.png" \
-            --maskableIconUrl="https://12533230.github.io/painel-b3/app/icon-maskable-512.png" \
-            --shortcuts=false --chromeosonly=false --alphaDependencies=false \
-            --enableNotifications=false --fallbackType=customtabs || true
-        env:
-          BUBBLEWRAP_ACCEPT_LICENSES: "true"
+          set -euo pipefail
+          mkdir -p twa
+          cp android.keystore twa/android.keystore
+          cat > twa/twa-manifest.json <<JSON
+          {
+            "packageId": "${{ steps.cfg.outputs.appid }}",
+            "host": "12533230.github.io",
+            "name": "${{ steps.cfg.outputs.nome }}",
+            "launcherName": "Painel B3",
+            "display": "standalone",
+            "themeColor": "#0c2a2d",
+            "themeColorDark": "#0c2a2d",
+            "navigationColor": "#0c2a2d",
+            "navigationColorDark": "#0c2a2d",
+            "navigationDividerColor": "#0c2a2d",
+            "navigationDividerColorDark": "#0c2a2d",
+            "backgroundColor": "#0c2a2d",
+            "enableNotifications": false,
+            "startUrl": "${{ steps.cfg.outputs.url }}",
+            "iconUrl": "https://12533230.github.io/painel-b3/app/icon-512.png",
+            "maskableIconUrl": "https://12533230.github.io/painel-b3/app/icon-maskable-512.png",
+            "splashScreenFadeOutDuration": 300,
+            "signingKey": { "path": "./android.keystore", "alias": "painelb3" },
+            "appVersionName": "${{ inputs.versao }}",
+            "appVersionCode": ${{ github.run_number }},
+            "shortcuts": [],
+            "generatorApp": "bubblewrap-cli",
+            "webManifestUrl": "${{ steps.cfg.outputs.manifest }}",
+            "fallbackType": "customtabs",
+            "features": {},
+            "alphaDependencies": { "enabled": false },
+            "enableSiteSettingsShortcut": true,
+            "isChromeOSOnly": false,
+            "isMetaQuest": false,
+            "fullScopeUrl": "${{ steps.cfg.outputs.url }}",
+            "minSdkVersion": 23,
+            "orientation": "default",
+            "fingerprints": []
+          }
+          JSON
+          node -e "JSON.parse(require('fs').readFileSync('twa/twa-manifest.json','utf8')); console.log('twa-manifest.json válido')"
 
       - name: Build do APK
         working-directory: twa
+        env:
+          BUBBLEWRAP_KEYSTORE_PASSWORD: painelb3
+          BUBBLEWRAP_KEY_PASSWORD: painelb3
         run: |
-          yes | bubblewrap build --skipPwaValidation \
-            --signingKeyPassword=painelb3 --keystorePassword=painelb3 || \
-          ./gradlew assembleRelease
-          find . -name "*.apk" -o -name "*.aab" | head -20
+          set -euo pipefail
+          bubblewrap build --skipPwaValidation
+          echo "--- artefatos gerados ---"
+          find . -name "*.apk" -o -name "*.aab" | sort
 
       - name: Coletar artefatos
         run: |
+          set -euo pipefail
           mkdir -p saida
-          find twa -name "*.apk" -exec cp {} saida/ \; 2>/dev/null || true
-          find twa -name "*.aab" -exec cp {} saida/ \; 2>/dev/null || true
+          find twa -name "*.apk" -exec cp {} saida/ \;
+          find twa -name "*.aab" -exec cp {} saida/ \; || true
           cp twa/assetlinks.json saida/ 2>/dev/null || true
           ls -la saida/
+          # o APK precisa existir, senão o job falha aqui e não publica release vazio
+          test -n "$(find saida -name '*.apk' -print -quit)"
 
-      - name: Publicar assetlinks (vincula o app ao site, tira a barra do navegador)
+      - name: Publicar assetlinks (vincula o app ao site e tira a barra do navegador)
         run: |
+          set -euo pipefail
           if [ -f saida/assetlinks.json ]; then
             mkdir -p docs/.well-known
             cp saida/assetlinks.json docs/.well-known/assetlinks.json
             git config user.name "painel-bot"
             git config user.email "actions@users.noreply.github.com"
             git add docs/.well-known/assetlinks.json
-            git diff --cached --quiet || git commit -m "assetlinks do app Android"
-            git push || echo "sem push (sem mudanças)"
+            git diff --cached --quiet || { git commit -m "assetlinks do app Android"; git push; }
+          else
+            echo "sem assetlinks.json (o app abrirá com a barra do Chrome)"
           fi
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -134,4 +184,4 @@ jobs:
             O app abre o painel em tela cheia, com ícone próprio, e funciona offline com os
             últimos dados carregados (as cotações ao vivo precisam de internet).
           files: saida/*.apk
-          fail_on_unmatched_files: false
+          fail_on_unmatched_files: true
