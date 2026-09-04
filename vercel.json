@@ -1,26 +1,13 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-
-  "//": [
-    "Serve o painel já construído (pasta docs/) como site estático. Não há build:",
-    "quem gera o docs/index.html é o GitHub Actions (collect -> process -> build_html),",
-    "e o Vercel apenas publica o resultado a cada commit.",
-    "",
-    "Com docs/ virando a raiz do domínio, dois efeitos úteis:",
-    " - o painel fica em / (em vez de /painel-b3/)",
-    " - docs/.well-known/assetlinks.json cai exatamente onde o Android o procura"
-  ],
-
   "outputDirectory": "docs",
   "buildCommand": null,
   "installCommand": null,
   "framework": null,
   "cleanUrls": false,
   "trailingSlash": false,
-
   "headers": [
     {
-      "//": "O HTML carrega os dados embutidos, então não pode ficar preso em cache: sem isso a atualização diária não aparece.",
       "source": "/(.*).html",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
@@ -33,21 +20,18 @@
       ]
     },
     {
-      "//": "O service worker precisa ser sempre revalidado, senão o app fica com uma versão antiga.",
       "source": "/sw.js",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
     },
     {
-      "//": "Ícones e manifest do app mudam raramente.",
       "source": "/app/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     },
     {
-      "//": "O Android exige JSON aqui; o Vercel já serve assim, o header é garantia.",
       "source": "/.well-known/assetlinks.json",
       "headers": [
         { "key": "Content-Type", "value": "application/json" },
@@ -55,7 +39,6 @@
       ]
     },
     {
-      "//": "O painel busca dados públicos de terceiros pelo navegador; nada aqui deve ser embutido em outro site.",
       "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
@@ -64,18 +47,8 @@
       ]
     }
   ],
-
   "redirects": [
-    {
-      "//": "Links antigos (e o APK atual) apontam para /painel-b3/… — não quebram.",
-      "source": "/painel-b3",
-      "destination": "/",
-      "permanent": false
-    },
-    {
-      "source": "/painel-b3/:path*",
-      "destination": "/:path*",
-      "permanent": false
-    }
+    { "source": "/painel-b3", "destination": "/", "permanent": false },
+    { "source": "/painel-b3/:path*", "destination": "/:path*", "permanent": false }
   ]
 }
