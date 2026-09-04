@@ -552,7 +552,10 @@ qin.addEventListener('input', () => {
   const temCriterio = q && !!q.intencao;
   if(temCriterio){
     const d = el('div');
-    d.append(el('span','nm','🔍 '+resumoConsulta(q)),
+    // Se sobrou termo que não entendi, isso aparece no próprio rótulo — o usuário
+    // vê que parte da frase será ignorada antes de rodar a busca.
+    const ignora = (q.naoEntendi||[]).length ? ' · IGNORA: '+q.naoEntendi.join(', ') : '';
+    d.append(el('span','nm','🔍 '+resumoConsulta(q)+ignora),
              el('span','tk', (q.intencao==='rank' ? 'ver o ranking' : 'buscar empresas com esses critérios')+' · Enter'));
     d.onclick = () => abreConsulta(bruto);
     sugg.append(d);
@@ -565,8 +568,62 @@ qin.addEventListener('input', () => {
     d.onclick = () => { sugg.style.display='none'; qin.value=''; openDetail(c.cvm); };
     sugg.append(d);
   }
-  sugg.style.display = (temCriterio || hits.length) ? 'block' : 'none';
+
+  // Nada reconhecido e nenhuma empresa: em vez de dropdown vazio (que parece que
+  // a busca nem rodou), diz que não entendeu e oferece os termos mais próximos.
+  let ajudou = false;
+  if(!temCriterio && !hits.length && bruto.split(/\s+/).length >= 2){
+    const sug = sugereTermos(q ? (q.naoEntendi.length ? q.naoEntendi : bruto.split(/\s+/)) : bruto.split(/\s+/), 5);
+    const achouEscopo = q && q.escopo;
+    const d0 = el('div');
+    d0.append(el('span','nm','❓ Não encontrei nada para "'+bruto.slice(0,38)+'"'),
+              el('span','tk', achouEscopo ? ('reconheci só '+escopoRotulo(q.escopo)+' — falta dizer o indicador')
+                : (sug.length ? 'veja abaixo o que existe com nome parecido' : 'clique para ver o que dá para pesquisar')));
+    d0.onclick = () => { qin.value=''; sugg.style.display='none'; abreAjudaBusca(bruto); };
+    sugg.append(d0);
+    // Entendeu o setor mas não o indicador: aproveita a metade que deu certo
+    if(achouEscopo){
+      for(const [ik, ilabel] of [['mktCap','Valor de mercado'],['roe','ROE'],['roic','ROIC'],['dy','Div. Yield']]){
+        const d = el('div');
+        d.append(el('span','nm','→ maiores '+ilabel+' em '+escopoRotulo(q.escopo)),
+                 el('span','tk','ver o ranking · Enter'));
+        d.onclick = () => {
+          cmpSel.setor = q.escopo; cmpSel.modo='rank'; cmpSel.ind=ik; cmpSel.dir='desc';
+          cmpSel.filtros=[]; cmpSel.busca=''; cmpSel.buscaLida=null;
+          lsSet('cmp_sel', cmpSel);
+          sugg.style.display='none'; qin.value='';
+          setView('cmp'); $('#cmpview').scrollIntoView({block:'start'});
+        };
+        sugg.append(d);
+      }
+    }
+    for(const s of sug){
+      const d = el('div');
+      d.append(el('span','nm','→ '+s.termo), el('span','tk', s.tipo + ' · usar este'));
+      d.onclick = () => {
+        // monta uma consulta válida com o termo que existe de verdade
+        const nova = s.tipo==='indicador' ? ('maior '+s.termo) : (s.termo+' com maior ROE');
+        qin.value = nova;
+        qin.dispatchEvent(new Event('input',{bubbles:true}));
+        qin.focus();
+      };
+      sugg.append(d);
+    }
+    ajudou = true;
+  }
+  sugg.style.display = (temCriterio || hits.length || ajudou) ? 'block' : 'none';
 });
+// painel de ajuda: o que dá para pesquisar, com exemplos clicáveis
+function abreAjudaBusca(consulta){
+  cmpSel.modo = 'scr';
+  cmpSel.busca = consulta || '';
+  cmpSel.filtros = [];
+  const r = consulta ? buscaInterpreta(consulta) : null;
+  cmpSel.buscaLida = {escopo:(r&&r.escopo)||'', n:0, naoEntendi:(r&&r.naoEntendi)||[], intencao:null, falhou:true};
+  lsSet('cmp_sel', cmpSel);
+  setView('cmp');
+  $('#cmpview').scrollIntoView({block:'start'});
+}
 // Enter: pergunta com critério vai para o screener; senão abre a primeira empresa
 qin.addEventListener('keydown', e => {
   if(e.key !== 'Enter') return;
@@ -575,6 +632,11 @@ qin.addEventListener('keydown', e => {
   e.preventDefault();
   const q = buscaInterpreta(bruto);
   if(q && q.intencao){ abreConsulta(bruto); return; }
+  // nem empresa nem critério: leva ao painel de ajuda em vez de não fazer nada
+  const vv = norm(bruto);
+  const achouEmpresa = COS.some(c => norm(c.name).includes(vv) || norm(c.fullName).includes(vv) ||
+    c.root.toLowerCase().includes(vv) || c.tickers.some(t=>t.t.toLowerCase().includes(vv)));
+  if(!achouEmpresa && bruto.split(/s+/).length >= 2){ abreAjudaBusca(bruto); return; }
   const v = norm(bruto);
   const c = COS.find(c => norm(c.name).includes(v) || norm(c.fullName).includes(v) ||
     c.root.toLowerCase().includes(v) || c.tickers.some(t=>t.t.toLowerCase().includes(v)));
@@ -1663,6 +1725,73 @@ const BUSCA_INDS = [
   [/crescimento (da )?receita|cresc\w* 5/, 'cresc5a'],
 ];
 const semAcento = s => (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+
+// ---- "você quis dizer?": aproxima o termo digitado do vocabulário que existe ----
+function distancia(a, b){                       // Levenshtein, curto e suficiente
+  if(a === b) return 0;
+  const m = a.length, n = b.length;
+  if(!m || !n) return Math.max(m, n);
+  let ant = Array.from({length:n+1}, (_,j)=>j), atual = new Array(n+1);
+  for(let i=1;i<=m;i++){
+    atual[0] = i;
+    for(let j=1;j<=n;j++)
+      atual[j] = Math.min(ant[j]+1, atual[j-1]+1, ant[j-1] + (a[i-1]===b[j-1] ? 0 : 1));
+    [ant, atual] = [atual, ant];
+  }
+  return ant[n];
+}
+// vocabulário pesquisável: indicadores + os três níveis de classificação + apelidos
+// Compara pelo termo limpo: sem "(%)", "12m" e pontuação, "ROIQ" chega em "ROIC".
+function limpaTermo(t){
+  return semAcento(t)
+    .replace(/\((?:%|r\$|divulgado pela empresa|empresa)\)/g, ' ')
+    .replace(/\b(12m|5 anos|a\.a\.)\b/g, ' ')
+    .replace(/[^a-z0-9\/ ]/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+}
+function vocabulario(){
+  const v = [];
+  for(const [k, label] of CMP_INDS.map(x=>[x[0],x[1]]))
+    v.push({tipo:'indicador', termo:label, busca:limpaTermo(label), chave:k});
+  const OPC = escopoOpcoes();
+  for(const [pref, nome] of NIVEIS)
+    for(const [nomeVal] of OPC[pref])
+      v.push({tipo:nome, termo:nomeVal, busca:limpaTermo(nomeVal), chave:pref+':'+nomeVal});
+  return v;
+}
+// para cada palavra não reconhecida, o que mais se parece com ela
+function sugereTermos(palavras, limite){
+  const voc = vocabulario();
+  const vistos = new Set(), saida = [];
+  for(const p of (palavras||[])){
+    const alvo = semAcento(p);
+    if(alvo.length < 3) continue;
+    const notas = voc.map(v => {
+      const t = v.busca || semAcento(v.termo);
+      // contém a palavra vale mais que só ser parecido
+      const contem = t.includes(alvo) || alvo.includes(t);
+      const d = distancia(alvo, t);
+      return {...v, nota: contem ? -1 : d / Math.max(t.length, alvo.length)};
+    }).filter(x => (x.nota < 0 || x.nota <= 0.5) && !/^(outros|diversos)$/i.test(x.termo))
+      .sort((a,b)=>a.nota-b.nota)
+      .slice(0, 3);
+    for(const n of notas){
+      if(vistos.has(n.chave)) continue;
+      vistos.add(n.chave); saida.push({...n, origem:p});
+      if(saida.length >= (limite||6)) return saida;
+    }
+  }
+  return saida;
+}
+// exemplos que sempre funcionam, para o usuário partir de algo concreto
+const BUSCA_EXEMPLOS = [
+  'bancos com maior ROE',
+  'varejo com ROIC acima de 15',
+  'energia com dividend yield acima de 8',
+  'maiores empresas de mineração',
+  'construtoras com margem EBITDA entre 15 e 30',
+  'menores P/L do setor de saúde',
+];
 function buscaInterpreta(txt){
   const bruto = String(txt||'').trim();
   if(!bruto) return null;
@@ -1991,22 +2120,84 @@ function renderCmp(){
     box.append(bq);
     // como a frase foi entendida (e o que ficou de fora)
     if(cmpSel.buscaLida){
-      const lida = el('div','note'); lida.style.margin = '0 0 10px';
+      const bl = cmpSel.buscaLida;
       const partes = [];
-      if(cmpSel.buscaLida.escopo) partes.push(escopoRotulo(cmpSel.buscaLida.escopo));
+      if(bl.escopo) partes.push(escopoRotulo(bl.escopo));
       for(const f of cmpSel.filtros){
         const g = CMP_INDS.find(x=>x[0]===f.ind); if(!g) continue;
         const sinal = f.op==='gt' ? '>' : f.op==='lt' ? '<' : 'entre';
         partes.push(g[1]+' '+sinal+' '+(f.op==='bt' ? (f.v1+' e '+f.v2) : f.v1));
       }
-      lida.append(el('b',null,'Entendi: '), document.createTextNode(partes.length? partes.join(' · ') : 'nada aproveitável na frase'));
-      if(cmpSel.buscaLida.naoEntendi && cmpSel.buscaLida.naoEntendi.length){
-        const av = el('div'); av.style.marginTop='4px';
-        av.append(el('b',null,'Não reconheci: '), document.createTextNode(cmpSel.buscaLida.naoEntendi.join(', ')
-          + ' — esses termos não entraram no filtro. Ajuste nos seletores abaixo.'));
-        lida.append(av);
+      const falhou = bl.falhou || (!partes.length && !cmpSel.filtros.length);
+      if(falhou){
+        // Busca não reconhecida: aviso em destaque + o que existe de parecido +
+        // exemplos clicáveis. Não deixa a tela vazia nem executa busca parcial.
+        const av = el('div','notice'); av.style.margin = '0 0 10px';
+        av.append(el('b',null,'Não consegui interpretar '+(cmpSel.busca ? '"'+cmpSel.busca+'"' : 'a busca')+'. '),
+          document.createTextNode('Nada foi filtrado — corrija a frase ou use os seletores abaixo.'));
+        box.append(av);
+
+        const sug = sugereTermos(bl.naoEntendi && bl.naoEntendi.length ? bl.naoEntendi : String(cmpSel.busca||'').split(/\s+/), 8);
+        if(sug.length){
+          const cx = el('div'); cx.style.margin = '0 0 10px';
+          cx.append(el('div','ct','Você quis dizer?'));
+          const chips = el('div','badges');
+          for(const s of sug){
+            const b = el('button','btn', s.termo + ' · ' + s.tipo);
+            b.onclick = () => {
+              if(s.tipo === 'indicador'){ cmpSel.modo='rank'; cmpSel.ind=s.chave; cmpSel.dir='desc'; }
+              else { cmpSel.setor = s.chave; cmpSel.modo='rank'; }
+              cmpSel.busca=''; cmpSel.buscaLida=null;
+              lsSet('cmp_sel', cmpSel); renderCmp();
+            };
+            chips.append(b);
+          }
+          cx.append(chips); box.append(cx);
+        }
+
+        const ex = el('div'); ex.style.margin = '0 0 12px';
+        ex.append(el('div','ct','Buscas que funcionam — clique para rodar'));
+        const chipsEx = el('div','badges');
+        for(const e of BUSCA_EXEMPLOS){
+          const b = el('button','btn', e);
+          b.onclick = () => {
+            const r2 = buscaInterpreta(e);
+            cmpSel.busca = e;
+            if(r2.escopo) cmpSel.setor = r2.escopo;
+            if(r2.intencao === 'rank'){ cmpSel.modo='rank'; cmpSel.ind=r2.ind; cmpSel.dir=r2.dir; cmpSel.filtros=[]; }
+            else { cmpSel.modo='scr'; cmpSel.filtros=r2.filtros; }
+            cmpSel.buscaLida = {escopo:r2.escopo, n:r2.filtros.length, naoEntendi:r2.naoEntendi, intencao:r2.intencao};
+            lsSet('cmp_sel', cmpSel); renderCmp();
+          };
+          chipsEx.append(b);
+        }
+        ex.append(chipsEx); box.append(ex);
+
+        const vocab = el('div','note'); vocab.style.margin='0 0 10px';
+        vocab.append(el('b',null,'Indicadores que dá para pedir: '),
+          document.createTextNode(CMP_INDS.map(x=>x[1]).join(' · ')));
+        const vg = el('div'); vg.style.marginTop='4px';
+        vg.append(el('b',null,'Classificação: '),
+          document.createTextNode('11 setores, 42 subsetores e 80 segmentos — todos no seletor abaixo. Também entende apelidos: varejo, banco, energia, saneamento, construtora, mineração, papel e celulose, frigorífico, shopping, educação, farmácia, agro, transporte.'));
+        vocab.append(vg);
+        box.append(vocab);
+      } else {
+        const lida = el('div','note'); lida.style.margin = '0 0 10px';
+        lida.append(el('b',null,'Entendi: '), document.createTextNode(partes.join(' · ')));
+        if(bl.naoEntendi && bl.naoEntendi.length){
+          const av = el('div'); av.style.marginTop='4px';
+          av.append(el('b',null,'Não reconheci: '), document.createTextNode(bl.naoEntendi.join(', ')
+            + ' — esses termos não entraram no filtro. Confira nos seletores abaixo se é o que você queria.'));
+          lida.append(av);
+          const sug = sugereTermos(bl.naoEntendi, 4);
+          if(sug.length){
+            const s2 = el('div'); s2.style.marginTop='4px';
+            s2.append(el('b',null,'Talvez: '), document.createTextNode(sug.map(s=>s.termo+' ('+s.tipo+')').join(' · ')));
+            lida.append(s2);
+          }
+        }
+        box.append(lida);
       }
-      box.append(lida);
     }
 
     cmpSel.filtros.forEach((f,i) => fbox.append(linhaFiltro(f,i)));
@@ -2044,6 +2235,41 @@ function renderCmp(){
       : 'Adicione um filtro e preencha o valor para ver o resultado.';
     box.append(resumo);
 
+    // Filtros válidos mas nenhuma empresa passa: mostra qual filtro está cortando
+    // tudo e o valor que traria resultado, em vez de só dizer "0 empresas".
+    if(ativos.length && !res.length){
+      const diag = el('div','notice'); diag.style.marginTop = '10px';
+      diag.append(el('b',null,'Nenhuma empresa passa em todos os filtros. '),
+        document.createTextNode('Veja abaixo o efeito de cada um separadamente — o que está cortando tudo aparece com poucas empresas.'));
+      box.append(diag);
+      const linhas = ativos.map(f => {
+        const g = CMP_INDS.find(x=>x[0]===f.ind);
+        const passaSo = escopo.filter(c => {
+          const v = g[2](c);
+          if(v==null || !isFinite(v)) return false;
+          if(f.op==='gt') return v > f.v1;
+          if(f.op==='lt') return v < f.v1;
+          const lo=Math.min(f.v1,f.v2), hi=Math.max(f.v1,f.v2);
+          return v>=lo && v<=hi;
+        });
+        // qual valor traria pelo menos 3 empresas neste filtro
+        const vals = escopo.map(c=>g[2](c)).filter(v=>v!=null && isFinite(v)).sort((a,b)=>f.op==='lt'? a-b : b-a);
+        const sugerido = vals.length>=3 ? vals[2] : (vals.length? vals[vals.length-1] : null);
+        const sinal = f.op==='gt' ? '>' : f.op==='lt' ? '<' : 'entre';
+        return [g[1] + ' ' + sinal + ' ' + (f.op==='bt' ? (f.v1+'–'+f.v2) : f.v1),
+                passaSo.length,
+                sugerido==null ? '—' : (f.op==='bt' ? '—' : (sinal+' '+g[3](sugerido)+' traria 3'))];
+      });
+      box.append(tabelaValores(['Filtro','Empresas que passam só neste','Para ter resultado'], linhas));
+      const solto = el('div'); solto.style.cssText='display:flex;gap:8px;margin:8px 0 0;flex-wrap:wrap';
+      ativos.forEach((f,i) => {
+        const g = CMP_INDS.find(x=>x[0]===f.ind);
+        const b = el('button','btn','remover "'+g[1]+'"');
+        b.onclick = () => { cmpSel.filtros = cmpSel.filtros.filter(x=>x!==f); lsSet('cmp_sel', cmpSel); renderCmp(); };
+        solto.append(b);
+      });
+      box.append(solto);
+    }
     if(ativos.length && res.length){
       const headers = ['Empresa','Setor', ...cols.map(c=>c[1])];
       const linhas = res.map(c => [c.name, c.subsetor || c.setor, ...cols.map(k => k[2](c))]);
@@ -2275,6 +2501,32 @@ function renderCmp(){
       + 'A mediana setorial só entra quando todas as empresas escolhidas são do mesmo setor. '
       + 'Sua seleção fica salva neste navegador. Copie os dados para o Excel ou baixe o gráfico em PNG para usar em slides.';
   } else if(cmpSel.modo==='rank'){
+    // Se a busca por texto trouxe termos que não foram entendidos, o aviso fica
+    // visível junto do resultado — senão o usuário acha que pesquisou algo que
+    // na verdade foi ignorado (ex.: "criptomoedas com maior receita").
+    if(cmpSel.buscaLida && (cmpSel.buscaLida.naoEntendi||[]).length){
+      const ni = cmpSel.buscaLida.naoEntendi;
+      const av = el('div','notice');
+      av.append(el('b',null,'⚠ Ignorei: '+ni.join(', ')+'. '),
+        document.createTextNode('Este ranking NÃO considera esse(s) termo(s) — o painel não tem essa classificação. '
+          + 'Confira o filtro no seletor acima antes de usar o número.'));
+      const sug = sugereTermos(ni, 4);
+      if(sug.length){
+        const s2 = el('div'); s2.style.marginTop='6px';
+        s2.append(el('b',null,'Existe: '));
+        for(const sg2 of sug){
+          const b = el('button','btn', sg2.termo+' · '+sg2.tipo);
+          b.style.marginRight='6px';
+          b.onclick = () => {
+            if(sg2.tipo==='indicador') cmpSel.ind = sg2.chave; else cmpSel.setor = sg2.chave;
+            cmpSel.busca=''; cmpSel.buscaLida=null; lsSet('cmp_sel', cmpSel); renderCmp();
+          };
+          s2.append(b);
+        }
+        av.append(s2);
+      }
+      card.insertBefore(av, box);
+    }
     let rows = escopo.map(c=>({label:c.name, v:getter(c), cvm:c.cvm})).filter(r=>r.v!=null && isFinite(r.v));
     rows.sort((a,b)=>cmpSel.dir==='asc'? a.v-b.v : b.v-a.v);
     titulo.textContent = (cmpSel.dir==='asc'?'Menores':'Maiores')+' — '+label+' · '+escopoRotulo(cmpSel.setor);
