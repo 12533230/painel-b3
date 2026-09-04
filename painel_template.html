@@ -507,14 +507,21 @@ const qin = $('#q'), sugg = $('#sugg');
 // A busca do topo aceita duas coisas: nome/ticker de empresa (abre o detalhe) e
 // perguntas com critério ("varejo com ROIC acima de 15"), que caem no screener.
 // Sem isso a busca por critério ficava escondida dentro de Comparar → Screener.
-function abreScreener(consulta){
+// Aplica a consulta: com valor vira filtro (screener); sem valor vira ranking.
+function abreConsulta(consulta){
   const r = buscaInterpreta(consulta);
-  if(!r) return false;
-  cmpSel.modo = 'scr';
+  if(!r || !r.intencao) return false;
   cmpSel.busca = consulta;
   if(r.escopo) cmpSel.setor = r.escopo;
-  if(r.filtros.length) cmpSel.filtros = r.filtros;
-  cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi};
+  if(r.intencao === 'scr'){
+    cmpSel.modo = 'scr';
+    cmpSel.filtros = r.filtros;
+  } else {
+    cmpSel.modo = 'rank';
+    cmpSel.ind = r.ind;
+    cmpSel.dir = r.dir;
+  }
+  cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi, intencao:r.intencao};
   lsSet('cmp_sel', cmpSel);
   sugg.style.display='none'; qin.value='';
   setView('cmp');
@@ -524,6 +531,10 @@ function abreScreener(consulta){
 function resumoConsulta(r){
   const p = [];
   if(r.escopo) p.push(escopoRotulo(r.escopo));
+  if(r.intencao === 'rank'){
+    const g = CMP_INDS.find(x=>x[0]===r.ind);
+    if(g) p.push((r.dir==='asc' ? 'menores' : 'maiores') + ' ' + g[1]);
+  }
   for(const f of r.filtros){
     const g = CMP_INDS.find(x=>x[0]===f.ind); if(!g) continue;
     p.push(g[1] + ' ' + (f.op==='gt'?'>':f.op==='lt'?'<':'entre') + ' ' + (f.op==='bt' ? (f.v1+'–'+f.v2) : f.v1));
@@ -538,12 +549,12 @@ qin.addEventListener('input', () => {
   // pergunta com critério? só oferece quando há indicador com valor, para não
   // atrapalhar quem está só digitando o nome de uma empresa
   const q = buscaInterpreta(bruto);
-  const temCriterio = q && q.filtros.length > 0;
+  const temCriterio = q && !!q.intencao;
   if(temCriterio){
     const d = el('div');
     d.append(el('span','nm','🔍 '+resumoConsulta(q)),
-             el('span','tk','buscar empresas com esses critérios · Enter'));
-    d.onclick = () => abreScreener(bruto);
+             el('span','tk', (q.intencao==='rank' ? 'ver o ranking' : 'buscar empresas com esses critérios')+' · Enter'));
+    d.onclick = () => abreConsulta(bruto);
     sugg.append(d);
   }
 
@@ -563,7 +574,7 @@ qin.addEventListener('keydown', e => {
   if(bruto.length < 2) return;
   e.preventDefault();
   const q = buscaInterpreta(bruto);
-  if(q && q.filtros.length){ abreScreener(bruto); return; }
+  if(q && q.intencao){ abreConsulta(bruto); return; }
   const v = norm(bruto);
   const c = COS.find(c => norm(c.name).includes(v) || norm(c.fullName).includes(v) ||
     c.root.toLowerCase().includes(v) || c.tickers.some(t=>t.t.toLowerCase().includes(v)));
@@ -1481,7 +1492,13 @@ function hbarChart(container, rows, fmt, onclickRow){
 
 // ---- view Comparar ----
 const CMP_INDS = [
-  ['roic','ROIC (%)', c=>{const t=mainTicker(c); return (t&&t.roic!=null)?t.roic:(c.ind.roic!=null?c.ind.roic:null);}, fmtPct],
+  // O Fundamentus devolve ROIC 0 para banco/seguradora porque não calcula o
+  // indicador nesse caso (capital investido não tem o mesmo sentido). Exibir 0
+  // sugeriria "retorno zero", o que é falso — melhor não ter o dado.
+  ['roic','ROIC (%)', c=>{const t=mainTicker(c);
+    const v = (t&&t.roic!=null)?t.roic:(c.ind.roic!=null?c.ind.roic:null);
+    if(c.fin && (v===0 || v==null)) return null;
+    return v;}, fmtPct],
   ['roe','ROE (%)', c=>c.ind.roe!=null?c.ind.roe:(mainTicker(c)?mainTicker(c).roe:null), fmtPct],
   ['evebitda','EV/EBITDA', c=>{const t=mainTicker(c); const v=(t&&t.evebitda>0)?t.evebitda:(c.ind.evEbitda>0?c.ind.evEbitda:null); return v;}, fmtX],
   ['pl','P/L', c=>{const t=mainTicker(c); return (t&&t.pl>0)?t.pl:null;}, fmtX],
@@ -1703,7 +1720,7 @@ function buscaInterpreta(txt){
       if(f.op==='bt' && f.v2==null) f.op = 'gt';
       filtros.push(f);
       usado.push(a.texto);
-    } else usado.push(a.texto + ' (sem valor)');
+    } else { a.semValor = true; usado.push(a.texto); }
   });
   // remove do "resto" tudo que foi lido, para o aviso de não-entendido ser honesto
   for(const a of achados.slice().reverse()) resto = resto.slice(0, a.ini) + ' ' + resto.slice(a.fim);
@@ -1716,10 +1733,28 @@ function buscaInterpreta(txt){
     .replace(/[><=$/()\-.,;:!?]+/g,' ')
     .replace(/\s+/g,' ').trim();
 
+  // 4) intenção: com valor → screener (filtra); sem valor → ranking (ordena)
+  // "bancos com maior ROIC" não tem número: é pedido de ranking, não de filtro.
+  const ehMenor = /\b(menor(es)?|pior(es)?|mais baix|menos)\b/.test(s);
+  const ehMaior = /\b(maior(es)?|melhor(es)?|mais alt|top\s*\d*|ranking|rank)\b/.test(s);
+  const semValor = achados.find(a => a.semValor);
+  let intencao = null, indRank = null, dir = 'desc';
+  if(filtros.length) intencao = 'scr';
+  else if(semValor){ intencao = 'rank'; indRank = semValor.chave; dir = ehMenor ? 'asc' : 'desc'; }
+  else if((ehMaior || ehMenor) && escopoAchado){
+    // "maiores empresas do varejo" → ranking por valor de mercado
+    intencao = 'rank'; indRank = 'mktCap'; dir = ehMenor ? 'asc' : 'desc';
+  }
+
+  const sobraLimpa = sobra.replace(/\b(maior(es)?|menor(es)?|melhor(es)?|pior(es)?|top|ranking|rank|alto|alta|baixo|baixa|quais|qual|quem|tem|tenha|possuem?)\b/g,' ').replace(/\s+/g,' ').trim();
+
   return {
     escopo: escopoAchado,
     filtros,
-    naoEntendi: sobra ? sobra.split(' ').filter(w=>w.length>2).slice(0,6) : [],
+    intencao,
+    ind: indRank,
+    dir,
+    naoEntendi: sobraLimpa ? sobraLimpa.split(' ').filter(w=>w.length>2).slice(0,6) : [],
     frase: bruto,
   };
 }
@@ -1941,7 +1976,9 @@ function renderCmp(){
       if(r){
         if(r.escopo) cmpSel.setor = r.escopo;
         if(r.filtros.length) cmpSel.filtros = r.filtros;
-        cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi};
+        cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi, intencao:r.intencao};
+        // pedido de ranking (sem valor) sai do screener e mostra o ranking
+        if(r.intencao==='rank'){ cmpSel.modo='rank'; cmpSel.ind=r.ind; cmpSel.dir=r.dir; }
       } else { cmpSel.buscaLida = null; }
       lsSet('cmp_sel', cmpSel); renderCmp();
     };
@@ -2246,7 +2283,16 @@ function renderCmp(){
     card.append(chartTools(() => box.querySelector('svg'),
       () => ({headers: ['Empresa', label], linhas: rows.map(r=>[r.label, r.v])}),
       () => 'Ranking '+label+(escopoNorm(cmpSel.setor)?' - '+escopoRotulo(cmpSel.setor):'')));
-    noteEl2.textContent = 'Top 20 de '+rows.length+' empresas com o dado disponível (o "copiar dados" leva a lista completa). Clique numa barra para abrir a empresa. Fontes: Fundamentus (múltiplos, último fechamento) e CVM (12 meses).';
+    // Quando o escopo é de bancos/seguradoras e o indicador depende de EBITDA ou
+    // capital investido, muita empresa fica de fora — explica o porquê em vez de
+    // deixar o ranking curto sem motivo aparente.
+    const NAO_APLICA_FIN = new Set(['roic','evebitda','mgE12','dlEbitda','ev']);
+    const nFin = escopo.filter(c=>c.fin).length;
+    const avisoFin = (NAO_APLICA_FIN.has(cmpSel.ind) && nFin > 0 && nFin >= escopo.length*0.3)
+      ? ' ⚠ '+nFin+' das '+escopo.length+' empresas deste filtro são bancos ou seguradoras, e '+label
+        +' não se aplica a elas (a CVM não estrutura EBITDA/capital investido para instituição financeira) — por isso ficam fora do ranking. Para financeiras use ROE, P/VP ou Índice de Basileia.'
+      : '';
+    noteEl2.textContent = 'Top 20 de '+rows.length+' empresas com o dado disponível (o "copiar dados" leva a lista completa). Clique numa barra para abrir a empresa. Fontes: Fundamentus (múltiplos, último fechamento) e CVM (12 meses).'+avisoFin;
   } else {
     const emp = COS.find(c=>c.cvm===cmpSel.emp);
     if(!emp){ box.append(el('div','dim','escolha uma empresa no seletor acima')); return; }
