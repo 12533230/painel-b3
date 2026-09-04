@@ -1,11 +1,27 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "io.github.painelb3.insignia",
       "sha256_cert_fingerprints": [
-        "01:DB:F1:E3:F6:EE:25:F7:0F:4C:43:0E:76:AC:BC:13:8C:A5:04:48:67:91:1F:F8:03:11:17:A0:C3:2F:4D:72"
+        "01:DB:F1:E3:F6:EE:25:F7:0F:4C:43:0E:76:AC:BC:13:8C:A5:04:48:67:91:1F:F8:03:11:17:A0:C3:2F:4D:72",
+        "64:A8:F4:E6:B0:BB:18:E3:7A:85:66:67:FC:EF:7A:A2:FA:8F:42:2D:7D:B8:B3:83:99:99:67:F7:B9:08:EF:7F"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.painelb3.publico",
+      "sha256_cert_fingerprints": [
+        "01:DB:F1:E3:F6:EE:25:F7:0F:4C:43:0E:76:AC:BC:13:8C:A5:04:48:67:91:1F:F8:03:11:17:A0:C3:2F:4D:72",
+        "64:A8:F4:E6:B0:BB:18:E3:7A:85:66:67:FC:EF:7A:A2:FA:8F:42:2D:7D:B8:B3:83:99:99:67:F7:B9:08:EF:7F"
       ]
     }
   }
