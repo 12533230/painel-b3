@@ -89,16 +89,28 @@ jobs:
         run: |
           set -euo pipefail
           if [ -n "${{ secrets.ANDROID_KEYSTORE_B64 }}" ]; then
-            echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > android.keystore
+            echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | tr -d '\n\r ' | base64 -d > android.keystore
             echo "usando keystore do secret ANDROID_KEYSTORE_B64"
           else
             keytool -genkeypair -v -keystore android.keystore -alias painelb3 \
               -keyalg RSA -keysize 2048 -validity 10000 \
               -storepass painelb3 -keypass painelb3 \
               -dname "CN=Painel B3, OU=Painel, O=Painel B3, L=Sao Paulo, S=SP, C=BR"
-            echo "::warning::Keystore gerado nesta execução. Para publicar atualizações sem desinstalar o app, guarde este keystore no secret ANDROID_KEYSTORE_B64."
+            echo "::warning::Keystore gerado nesta execução — este APK NÃO poderá atualizar o anterior e a barra do Chrome voltará. Guarde um keystore fixo no secret ANDROID_KEYSTORE_B64."
           fi
           test -s android.keystore
+
+          # Falha aqui, com mensagem clara, em vez de quebrar no meio do build:
+          # confere que o keystore abre com a senha e tem o alias que o manifesto usa.
+          if ! keytool -list -keystore android.keystore -storetype PKCS12 -storepass painelb3 -alias painelb3 > /dev/null 2>&1; then
+            echo "::error::O keystore não abriu com a senha 'painelb3' ou não tem o alias 'painelb3'. Se você colou o secret ANDROID_KEYSTORE_B64, confira se o valor é o base64 completo, em uma linha só."
+            exit 1
+          fi
+          FP=$(keytool -list -v -keystore android.keystore -storetype PKCS12 -storepass painelb3 -alias painelb3 \
+               | grep -i "SHA256:" | head -1 | sed 's/.*SHA256: *//' | tr -d ' \r')
+          echo "fingerprint SHA-256 desta assinatura: $FP"
+          echo "Se este fingerprint não estiver no assetlinks.json dos domínios, o app abrirá com a barra do Chrome." >> $GITHUB_STEP_SUMMARY
+          echo "Fingerprint desta build: \`$FP\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Escrever twa-manifest.json
         run: |
