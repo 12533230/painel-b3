@@ -1458,6 +1458,9 @@ if(!['desc','asc'].includes(cmpSel.dir)) cmpSel.dir = 'desc';
 if(!Array.isArray(cmpSel.emps)) cmpSel.emps = [];
 if(!Array.isArray(cmpSel.filtros)) cmpSel.filtros = [];
 cmpSel.filtros = cmpSel.filtros.filter(f => f && CMP_INDS.some(x=>x[0]===f.ind) && ['gt','lt','bt'].includes(f.op));
+if(typeof cmpSel.busca !== 'string') cmpSel.busca = '';
+if(typeof cmpSel.setor !== 'string') cmpSel.setor = '';
+if(cmpSel.buscaLida && typeof cmpSel.buscaLida !== 'object') cmpSel.buscaLida = null;
 
 // ================= PEER SETS (conjuntos de comparáveis por projeto) =================
 // Guardados neste navegador e compartilháveis por link (#peer=nome|cvm,cvm,…).
@@ -1510,6 +1513,163 @@ function estat(rows, permiteCagr){
 const pNum = p => (+String(p).slice(0,4))*4 + (+String(p).slice(5) || 0);
 // indicadores em que CAGR faz sentido (nível, não razão)
 const CAGR_OK = new Set(['rev12','ebitda12','ni12']);
+
+// ================= filtro de escopo em 3 níveis =================
+// A B3 tem só 11 setores, e eles são grossos: "Consumo Cíclico" junta construtora,
+// autopeça, eletrodoméstico e varejo de roupa. Quem quer "varejo" precisa descer
+// para subsetor (42) ou segmento (80). O valor guardado leva o nível num prefixo:
+//   ''  = tudo | 'set:Consumo Cíclico' | 'sub:Comércio' | 'seg:Eletrodomésticos'
+const NIVEIS = [['set','setor'],['sub','subsetor'],['seg','segmento']];
+function escopoOpcoes(){
+  const conta = campo => {
+    const m = {};
+    for(const c of COS){ const v = c[campo]; if(v) m[v] = (m[v]||0)+1; }
+    return Object.keys(m).sort((a,b)=>a.localeCompare(b,'pt-BR')).map(v => [v, m[v]]);
+  };
+  return {set: conta('setor'), sub: conta('subsetor'), seg: conta('segmento')};
+}
+// migra valor antigo (sem prefixo) para o formato novo
+function escopoNorm(v){
+  if(!v) return '';
+  if(/^(set|sub|seg):/.test(v)) return v;
+  return 'set:' + v;                    // estado salvo antes desta versão
+}
+function escopoFiltra(lista, valor){
+  const v = escopoNorm(valor);
+  if(!v) return lista;
+  const nivel = v.slice(0,3), alvo = v.slice(4);
+  const campo = nivel==='set' ? 'setor' : nivel==='sub' ? 'subsetor' : 'segmento';
+  return lista.filter(c => c[campo] === alvo);
+}
+function escopoRotulo(valor){
+  const v = escopoNorm(valor);
+  if(!v) return 'todos os setores';
+  const nivel = v.slice(0,3), alvo = v.slice(4);
+  const nome = (NIVEIS.find(x=>x[0]===nivel)||[])[1] || 'setor';
+  return nome + ' ' + alvo;
+}
+
+// ================= busca por texto ("varejo com ROIC acima de 15") =================
+// Parser determinístico: traduz a frase em filtros do screener e MOSTRA como
+// entendeu, listando também o que não reconheceu — nada é ignorado em silêncio.
+// Apelidos do dia a dia → como a B3 nomeia setor/subsetor/segmento.
+const APELIDOS = [
+  [/\bvarejo\b|\bvarejista/, 'sub:Comércio'],
+  [/\bcomercio\b|\bcomércio\b/, 'sub:Comércio'],
+  [/\bbanco/, 'sub:Intermediários Financeiros'],
+  [/\bseguradora|\bseguro/, 'sub:Previdência e Seguros'],
+  [/\benergia|\beletric|\belétric/, 'sub:Energia Elétrica'],
+  [/\bsaneamento|\bagua\b|\bágua\b/, 'sub:Água e Saneamento'],
+  [/\bconstrutora|\bconstru[çc][ãa]o|\bincorporadora/, 'sub:Construção Civil'],
+  [/\bshopping/, 'seg:Exploração de Imóveis'],
+  [/\bsiderurg|\ba[çc]o\b/, 'sub:Siderurgia e Metalurgia'],
+  [/\bminera[çc][ãa]o|\bminera/, 'sub:Mineração'],
+  [/\bpapel|\bcelulose/, 'sub:Madeira e Papel'],
+  [/\bpetr[óo]leo|\bpetrol/, 'set:Petróleo. Gás e Biocombustíveis'],
+  [/\bsa[úu]de|\bhospital/, 'set:Saúde'],
+  [/\btecnologia|\bsoftware|\bti\b/, 'set:Tecnologia da Informação'],
+  [/\btelecom|\bcomunica[çc]/, 'set:Comunicações'],
+  [/\bfrigor[íi]fico|\bcarne|\bprote[íi]na/, 'seg:Carnes e Derivados'],
+  [/\bagro|\bagr[íi]cola/, 'sub:Agropecuária'],
+  [/\btransporte|\blog[íi]stica/, 'sub:Transporte'],
+  [/\beduca[çc][ãa]o|\bensino/, 'seg:Serviços Educacionais'],
+  [/\bvestu[áa]rio|\brroupa|\bmoda\b/, 'sub:Tecidos. Vestuário e Calçados'],
+  [/\bfarm[áa]cia|\bdrogaria/, 'seg:Medicamentos e Outros Produtos'],
+];
+// indicadores reconhecidos na frase (usa as chaves de CMP_INDS)
+const BUSCA_INDS = [
+  [/\broic\b/, 'roic'],
+  [/\broe\b|retorno sobre o patrim/, 'roe'],
+  [/ev\s*\/?\s*ebitda|ev sobre ebitda/, 'evebitda'],
+  [/\bp\s*\/?\s*l\b|pre[çc]o\s*\/?\s*lucro/, 'pl'],
+  [/\bp\s*\/?\s*vp\b|pre[çc]o\s*\/?\s*valor patrimonial/, 'pvp'],
+  [/dividend\s*yield|\bdy\b|dividendo/, 'dy'],
+  [/margem ebitda/, 'mgE12'],
+  [/margem l[íi]quida/, 'mgL12'],
+  [/d[íi]vida l[íi]quida\s*\/?\s*ebitda|alavancagem|endividamento/, 'dlEbitda'],
+  [/valor de mercado|market\s*cap|mktcap/, 'mktCap'],
+  [/valor da firma|\bev\b(?!\s*\/)/, 'ev'],
+  [/receita/, 'rev12'],
+  [/crescimento (da )?receita|cresc\w* 5/, 'cresc5a'],
+];
+const semAcento = s => (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+function buscaInterpreta(txt){
+  const bruto = String(txt||'').trim();
+  if(!bruto) return null;
+  const s = semAcento(bruto).replace(/\s+/g,' ');
+  const usado = [];                       // pedaços que conseguimos ler
+  let resto = s;
+  const marca = re => { const m = resto.match(re); if(m){ usado.push(m[0]); resto = resto.replace(m[0],' '); } return m; };
+
+  // 1) escopo (setor/subsetor/segmento) — apelido primeiro, depois nome literal
+  let escopoAchado = '';
+  for(const [re, alvo] of APELIDOS){
+    if(re.test(s)){
+      const [pref, nome] = [alvo.slice(0,3), alvo.slice(4)];
+      const existe = COS.some(c => c[pref==='set'?'setor':pref==='sub'?'subsetor':'segmento'] === nome);
+      if(existe){ escopoAchado = alvo; marca(re); break; }
+    }
+  }
+  if(!escopoAchado){
+    const OPC = escopoOpcoes();
+    for(const [pref] of NIVEIS){
+      const hit = OPC[pref].find(([v]) => s.includes(semAcento(v)));
+      if(hit){ escopoAchado = pref+':'+hit[0]; usado.push(semAcento(hit[0])); resto = resto.replace(semAcento(hit[0]),' '); break; }
+    }
+  }
+
+  // 2) filtros: <indicador> <operador> <número>  (aceita "entre X e Y")
+  // Cada indicador só lê o trecho até o PRÓXIMO indicador, e vale o operador mais
+  // próximo dele. Sem isso, "alavancagem abaixo de 2 e ROIC acima de 10" fazia a
+  // alavancagem capturar o "acima de 10" do ROIC.
+  const achados = [];
+  for(const [reInd, chave] of BUSCA_INDS){
+    const m = resto.match(reInd);
+    if(m) achados.push({chave, ini:m.index, fim:m.index + m[0].length, texto:m[0]});
+  }
+  achados.sort((a,b)=>a.ini-b.ini);
+  const num = '(-?\\d+(?:[.,]\\d+)?)';
+  const OPS = [
+    ['bt', new RegExp('entre\\s*'+num+'\\s*(?:e|a|-)\\s*'+num)],
+    ['gt', new RegExp('(?:acima de|maior que|maior do que|superior a|mais de|>=?|acima)\\s*'+num)],
+    ['lt', new RegExp('(?:abaixo de|menor que|menor do que|inferior a|menos de|<=?|abaixo)\\s*'+num)],
+  ];
+  const filtros = [];
+  achados.forEach((a, ix) => {
+    const limite = ix+1 < achados.length ? achados[ix+1].ini : Math.min(resto.length, a.fim + 60);
+    const trecho = resto.slice(a.fim, limite);
+    let melhor = null;
+    for(const [op, re] of OPS){
+      const m = trecho.match(re);
+      if(!m) continue;
+      if(!melhor || m.index < melhor.pos)
+        melhor = {op, pos:m.index, v1:+m[1].replace(',','.'), v2: m[2]!=null ? +m[2].replace(',','.') : null};
+    }
+    if(melhor){
+      const f = {ind:a.chave, op:melhor.op, v1:melhor.v1, v2:melhor.v2};
+      if(f.op==='bt' && f.v2==null) f.op = 'gt';
+      filtros.push(f);
+      usado.push(a.texto);
+    } else usado.push(a.texto + ' (sem valor)');
+  });
+  // remove do "resto" tudo que foi lido, para o aviso de não-entendido ser honesto
+  for(const a of achados.slice().reverse()) resto = resto.slice(0, a.ini) + ' ' + resto.slice(a.fim);
+  for(const [,re] of OPS) resto = resto.replace(new RegExp(re.source,'g'),' ');
+
+  // 3) o que sobrou de relevante (ignora conectivos e números já consumidos)
+  const sobra = resto
+    .replace(/\b(e|com|de|do|da|dos|das|em|no|na|que|as|os|a|o|empresas?|setor|subsetor|segmento|ultimo|trimestre|ano|acima|abaixo|maior|menor|entre|mais|menos|por|para|sobre|tem|ter|todas?|todos?)\b/g,' ')
+    .replace(/\d+(?:[.,]\d+)?\s*(?:%|x|bi|mi|mil)?/g,' ')   // números e unidades
+    .replace(/[><=$/()\-.,;:!?]+/g,' ')
+    .replace(/\s+/g,' ').trim();
+
+  return {
+    escopo: escopoAchado,
+    filtros,
+    naoEntendi: sobra ? sobra.split(' ').filter(w=>w.length>2).slice(0,6) : [],
+    frase: bruto,
+  };
+}
 // KPIs operacionais para comparação: cada empresa nomeia do seu jeito, então
 // agrupamos em FAMÍLIAS por palavra-chave (SSS da RD casa com o da Renner).
 const KPI_FAMILIAS = [
@@ -1600,15 +1760,35 @@ function renderCmp(){
       cmpSel.opind, v=>cmpSel.opind=v, 'Indicador operacional'));
   } else if(cmpSel.modo!=='scr' && cmpSel.modo!=='peer')
     bar.append(mkSel(CMP_INDS.map(x=>[x[0],x[1]]), cmpSel.ind, v=>cmpSel.ind=v, 'Indicador'));
-  const setores = [...new Set(COS.map(c=>c.setor))].sort();
-  bar.append(mkSel([['','Todos os setores'],...setores.map(s=>[s,s])], cmpSel.setor, v=>{cmpSel.setor=v; cmpSel.emp='';}, 'Setor'));
+  // seletor de escopo em 3 níveis, agrupado por tipo (setor / subsetor / segmento)
+  const selEsc = document.createElement('select');
+  selEsc.setAttribute('aria-label','Setor, subsetor ou segmento');
+  const o0 = el('option',null,'Todos os setores ('+COS.length+')'); o0.value=''; selEsc.append(o0);
+  const OPC = escopoOpcoes();
+  for(const [pref, nome] of NIVEIS){
+    const g = document.createElement('optgroup');
+    g.label = nome.charAt(0).toUpperCase()+nome.slice(1)+' ('+OPC[pref].length+')';
+    for(const [v,n] of OPC[pref]){
+      const o = el('option',null,v+' ('+n+')'); o.value = pref+':'+v;
+      g.append(o);
+    }
+    selEsc.append(g);
+  }
+  selEsc.value = escopoNorm(cmpSel.setor);
+  selEsc.onchange = () => {
+    cmpSel.setor = selEsc.value;
+    // a empresa selecionada só cai se realmente sair do escopo novo
+    if(cmpSel.emp && !escopoFiltra(COS, cmpSel.setor).some(c=>c.cvm===cmpSel.emp)) cmpSel.emp = '';
+    lsSet('cmp_sel', cmpSel); renderCmp();
+  };
+  bar.append(selEsc);
   bar.append(mkSel([['rank','Ranking'],['emp','Empresa × setor'],['hist','Histórico (linhas)'],
                     ['op','KPIs operacionais'],['scr','Screener (filtros)'],['peer','Peer set (tabela)']],
                    cmpSel.modo, v=>cmpSel.modo=v, 'Modo'));
   if(cmpSel.modo==='rank')
     bar.append(mkSel([['desc','Maiores'],['asc','Menores']], cmpSel.dir, v=>cmpSel.dir=v, 'Direção'));
   const [key,label,getter,fmt] = CMP_INDS.find(x=>x[0]===cmpSel.ind);
-  const escopo = COS.filter(c=>!cmpSel.setor || c.setor===cmpSel.setor);
+  const escopo = escopoFiltra(COS, cmpSel.setor);
   if(cmpSel.modo==='hist'){
     const cands = escopo.filter(c=>c.q && c.q.length).sort((a,b)=>(a.name||'').localeCompare(b.name||'','pt-BR'));
     const add = mkSel([['','+ adicionar empresa…'],...cands.filter(c=>!cmpSel.emps.includes(c.cvm)).map(c=>[c.cvm,c.name])],
@@ -1616,9 +1796,18 @@ function renderCmp(){
     bar.append(add);
   }
   if(cmpSel.modo==='emp'){
-    const cands = escopo.filter(c=>getter(c)!=null).sort((a,b)=>(a.name||'').localeCompare(b.name||'','pt-BR'));
-    if(!cands.some(c=>c.cvm===cmpSel.emp)) cmpSel.emp = cands.length? cands[0].cvm : '';
-    bar.append(mkSel(cands.map(c=>[c.cvm,c.name]), cmpSel.emp, v=>cmpSel.emp=v, 'Empresa'));
+    // O seletor lista TODAS as empresas do escopo, não só as que têm o indicador
+    // atual — assim trocar o indicador não faz a empresa escolhida desaparecer da
+    // lista (e o painel não pula para outra empresa, às vezes de outro setor).
+    const cands = escopo.slice().sort((a,b)=>(a.name||'').localeCompare(b.name||'','pt-BR'));
+    if(cmpSel.emp && !cands.some(c=>c.cvm===cmpSel.emp)) cmpSel.emp = '';   // saiu do escopo
+    if(!cmpSel.emp){
+      // primeira escolha: prefere uma empresa que tenha o indicador, para não abrir vazio
+      const comDado = cands.find(c=>getter(c)!=null);
+      cmpSel.emp = (comDado || cands[0] || {}).cvm || '';
+    }
+    const marca = c => c.name + (getter(c)==null ? ' — sem dado' : '');
+    bar.append(mkSel(cands.map(c=>[c.cvm, marca(c)]), cmpSel.emp, v=>cmpSel.emp=v, 'Empresa'));
   }
   m.append(bar);
 
@@ -1685,6 +1874,51 @@ function renderCmp(){
       r.append(x);
       return r;
     };
+    // ---- busca por texto: escreve a pergunta e ela vira filtros ----
+    const bq = el('div'); bq.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px';
+    const inpQ = document.createElement('input');
+    inpQ.type = 'text';
+    inpQ.placeholder = 'Ex.: varejo com ROIC acima de 15 e alavancagem abaixo de 2';
+    inpQ.value = cmpSel.busca || '';
+    inpQ.setAttribute('aria-label','Buscar por texto');
+    inpQ.style.cssText = 'flex:1 1 380px;min-width:240px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit';
+    const aplicaBusca = () => {
+      const r = buscaInterpreta(inpQ.value);
+      cmpSel.busca = inpQ.value;
+      if(r){
+        if(r.escopo) cmpSel.setor = r.escopo;
+        if(r.filtros.length) cmpSel.filtros = r.filtros;
+        cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi};
+      } else { cmpSel.buscaLida = null; }
+      lsSet('cmp_sel', cmpSel); renderCmp();
+    };
+    inpQ.onkeydown = e => { if(e.key==='Enter'){ e.preventDefault(); aplicaBusca(); } };
+    const btnQ = el('button','btn','🔍 Buscar');
+    btnQ.onclick = aplicaBusca;
+    const btnLimpa = el('button','btn','limpar');
+    btnLimpa.onclick = () => { cmpSel.busca=''; cmpSel.buscaLida=null; cmpSel.filtros=[]; cmpSel.setor=''; lsSet('cmp_sel', cmpSel); renderCmp(); };
+    bq.append(inpQ, btnQ, btnLimpa);
+    box.append(bq);
+    // como a frase foi entendida (e o que ficou de fora)
+    if(cmpSel.buscaLida){
+      const lida = el('div','note'); lida.style.margin = '0 0 10px';
+      const partes = [];
+      if(cmpSel.buscaLida.escopo) partes.push(escopoRotulo(cmpSel.buscaLida.escopo));
+      for(const f of cmpSel.filtros){
+        const g = CMP_INDS.find(x=>x[0]===f.ind); if(!g) continue;
+        const sinal = f.op==='gt' ? '>' : f.op==='lt' ? '<' : 'entre';
+        partes.push(g[1]+' '+sinal+' '+(f.op==='bt' ? (f.v1+' e '+f.v2) : f.v1));
+      }
+      lida.append(el('b',null,'Entendi: '), document.createTextNode(partes.length? partes.join(' · ') : 'nada aproveitável na frase'));
+      if(cmpSel.buscaLida.naoEntendi && cmpSel.buscaLida.naoEntendi.length){
+        const av = el('div'); av.style.marginTop='4px';
+        av.append(el('b',null,'Não reconheci: '), document.createTextNode(cmpSel.buscaLida.naoEntendi.join(', ')
+          + ' — esses termos não entraram no filtro. Ajuste nos seletores abaixo.'));
+        lida.append(av);
+      }
+      box.append(lida);
+    }
+
     cmpSel.filtros.forEach((f,i) => fbox.append(linhaFiltro(f,i)));
     const add = el('button','btn','+ adicionar filtro');
     add.onclick = () => { cmpSel.filtros.push({ind:'roic', op:'gt', v1:null, v2:null}); lsSet('cmp_sel', cmpSel); renderCmp(); };
@@ -1716,7 +1950,7 @@ function renderCmp(){
     resumo.style.marginTop = '12px';
     resumo.textContent = ativos.length
       ? res.length + ' empresa' + (res.length===1?'':'s') + ' passam nos ' + ativos.length + ' filtro' + (ativos.length===1?'':'s')
-        + (cmpSel.setor ? ' · ' + cmpSel.setor : '') + ' (de ' + escopo.length + ' no escopo)'
+        + (escopoNorm(cmpSel.setor) ? ' · ' + escopoRotulo(cmpSel.setor) : '') + ' (de ' + escopo.length + ' no escopo)'
       : 'Adicione um filtro e preencha o valor para ver o resultado.';
     box.append(resumo);
 
@@ -1834,7 +2068,8 @@ function renderCmp(){
     }
 
   } else if(cmpSel.modo==='op'){
-    let lista = (OPIDX[cmpSel.opind] || []).filter(x => !cmpSel.setor || x.setor===cmpSel.setor);
+    const cvmsNoEscopo = new Set(escopo.map(c=>c.cvm));
+    let lista = (OPIDX[cmpSel.opind] || []).filter(x => cvmsNoEscopo.has(x.cvm));
     // dentro da família, compara só o grupo de unidade dominante (% com %, R$ com R$…)
     let omitidos = [];
     if(lista.length > 1){
@@ -1952,34 +2187,46 @@ function renderCmp(){
   } else if(cmpSel.modo==='rank'){
     let rows = escopo.map(c=>({label:c.name, v:getter(c), cvm:c.cvm})).filter(r=>r.v!=null && isFinite(r.v));
     rows.sort((a,b)=>cmpSel.dir==='asc'? a.v-b.v : b.v-a.v);
-    titulo.textContent = (cmpSel.dir==='asc'?'Menores':'Maiores')+' — '+label+(cmpSel.setor?' · '+cmpSel.setor:' · todos os setores');
+    titulo.textContent = (cmpSel.dir==='asc'?'Menores':'Maiores')+' — '+label+' · '+escopoRotulo(cmpSel.setor);
     const mostra20 = rows.slice(0,20);
     hbarChart(box, mostra20, fmt, cvm=>openDetail(cvm));
     card.append(chartTools(() => box.querySelector('svg'),
       () => ({headers: ['Empresa', label], linhas: rows.map(r=>[r.label, r.v])}),
-      () => 'Ranking '+label+(cmpSel.setor?' - '+cmpSel.setor:'')));
+      () => 'Ranking '+label+(escopoNorm(cmpSel.setor)?' - '+escopoRotulo(cmpSel.setor):'')));
     noteEl2.textContent = 'Top 20 de '+rows.length+' empresas com o dado disponível (o "copiar dados" leva a lista completa). Clique numa barra para abrir a empresa. Fontes: Fundamentus (múltiplos, último fechamento) e CVM (12 meses).';
   } else {
     const emp = COS.find(c=>c.cvm===cmpSel.emp);
-    if(!emp){ box.append(el('div','dim','nenhuma empresa com esse indicador neste filtro')); return; }
-    const peers = COS.filter(c=>c.setor===emp.setor);
+    if(!emp){ box.append(el('div','dim','escolha uma empresa no seletor acima')); return; }
+    // Compara dentro do escopo escolhido: se o filtro está num segmento (ex.:
+    // Eletrodomésticos), os pares são desse segmento — não do setor inteiro.
+    const usaEscopo = !!escopoNorm(cmpSel.setor);
+    const peers = usaEscopo ? escopo : COS.filter(c=>c.setor===emp.setor);
+    const grupo = usaEscopo ? escopoRotulo(cmpSel.setor) : ('setor '+emp.setor);
     let rows = peers.map(c=>({label:c.name, v:getter(c), cvm:c.cvm, hl:c.cvm===emp.cvm})).filter(r=>r.v!=null && isFinite(r.v));
     rows.sort((a,b)=>b.v-a.v);
     const pos = rows.findIndex(r=>r.hl)+1;
     const mediana = med(rows.map(r=>r.v));
+    const semDado = getter(emp)==null;
     let mostra = rows.slice(0,15);
     if(!mostra.some(r=>r.hl)){ const eu = rows.find(r=>r.hl); if(eu) mostra = mostra.slice(0,14).concat([eu]); }
     if(mediana!=null){
       const ins = mostra.findIndex(r=>r.v<mediana);
-      const medRow = {label:'· mediana do setor', v:+mediana.toFixed(2), med:true};
+      const medRow = {label:'· mediana do grupo', v:+mediana.toFixed(2), med:true};
       if(ins<0) mostra.push(medRow); else mostra.splice(ins,0,medRow);
     }
-    titulo.textContent = emp.name+' × setor '+emp.setor+' — '+label;
+    titulo.textContent = emp.name+' × '+grupo+' — '+label;
+    // A empresa continua selecionada mesmo sem o indicador: mostra o aviso e o grupo,
+    // em vez de trocar a empresa por baixo do usuário. O aviso vai ANTES do box no
+    // card — hbarChart limpa o container, e dentro dele o aviso seria apagado.
+    if(semDado)
+      card.insertBefore(el('div','notice','⚠ '+emp.name+' não tem '+label+' disponível — o indicador não se aplica ao setor dela ou o dado não foi divulgado. O gráfico abaixo mostra o grupo; troque o indicador para ver a empresa.'), box);
     hbarChart(box, mostra, fmt, cvm=>openDetail(cvm));
     card.append(chartTools(() => box.querySelector('svg'),
       () => ({headers: ['Empresa', label], linhas: rows.map(r=>[r.label, r.v])}),
-      () => emp.name+' vs setor - '+label));
-    noteEl2.textContent = emp.name+' é '+(pos>0? pos+'ª de '+rows.length : 'sem dado')+' em '+label+' no setor '+emp.setor+'. Barra laranja = empresa selecionada; barra clara = mediana do setor. Clique numa barra para abrir a empresa.';
+      () => emp.name+' vs '+grupo+' - '+label));
+    noteEl2.textContent = emp.name+' é '+(pos>0? pos+'ª de '+rows.length : 'sem dado')+' em '+label+' em '+grupo
+      + '. Barra laranja = empresa selecionada; barra clara = mediana do grupo. Clique numa barra para abrir a empresa.'
+      + (usaEscopo ? ' O grupo segue o filtro escolhido — limpe o filtro para comparar com o setor inteiro.' : '');
   }
   m.append(el('div','foot','Comparações com os dados já carregados no painel (CVM 12 meses + Fundamentus no último fechamento). Uso informativo; não é recomendação de investimento.'));
 }
