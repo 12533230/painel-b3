@@ -512,7 +512,9 @@ function abreConsulta(consulta){
   const r = buscaInterpreta(consulta);
   if(!r || !r.intencao) return false;
   cmpSel.busca = consulta;
-  if(r.escopo) cmpSel.setor = r.escopo;
+  // Busca nova define o escopo por completo: sem setor na frase, o filtro anterior
+  // e limpo — senao o resultado sairia restrito a algo que o usuario nao pediu.
+  cmpSel.setor = r.escopo || '';
   if(r.intencao === 'scr'){
     cmpSel.modo = 'scr';
     cmpSel.filtros = r.filtros;
@@ -2103,8 +2105,8 @@ function renderCmp(){
       const r = buscaInterpreta(inpQ.value);
       cmpSel.busca = inpQ.value;
       if(r){
-        if(r.escopo) cmpSel.setor = r.escopo;
-        if(r.filtros.length) cmpSel.filtros = r.filtros;
+        cmpSel.setor = r.escopo || '';
+        cmpSel.filtros = r.filtros;
         cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi, intencao:r.intencao};
         // pedido de ranking (sem valor) sai do screener e mostra o ranking
         if(r.intencao==='rank'){ cmpSel.modo='rank'; cmpSel.ind=r.ind; cmpSel.dir=r.dir; }
@@ -2163,7 +2165,7 @@ function renderCmp(){
           b.onclick = () => {
             const r2 = buscaInterpreta(e);
             cmpSel.busca = e;
-            if(r2.escopo) cmpSel.setor = r2.escopo;
+            cmpSel.setor = r2.escopo || '';
             if(r2.intencao === 'rank'){ cmpSel.modo='rank'; cmpSel.ind=r2.ind; cmpSel.dir=r2.dir; cmpSel.filtros=[]; }
             else { cmpSel.modo='scr'; cmpSel.filtros=r2.filtros; }
             cmpSel.buscaLida = {escopo:r2.escopo, n:r2.filtros.length, naoEntendi:r2.naoEntendi, intencao:r2.intencao};
