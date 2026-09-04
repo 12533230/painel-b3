@@ -511,6 +511,33 @@ const qin = $('#q'), sugg = $('#sugg');
 function abreConsulta(consulta){
   const r = buscaInterpreta(consulta);
   if(!r || !r.intencao) return false;
+  // KPI + empresa: o dado vive no detalhe da empresa (curadoria dos releases)
+  if(r.intencao === 'kpiEmpresa'){
+    sugg.style.display='none'; qin.value='';
+    openDetail(r.empresa.cvm);
+    // rola até a tabela de indicadores operacionais quando ela terminar de montar
+    let tentativas = 0;
+    const rolar = () => {
+      const h3 = [...document.querySelectorAll('#panel h3')].find(e=>/Indicadores operacionais|Segmentos —/i.test(e.textContent));
+      if(h3){ h3.scrollIntoView({block:'start', behavior:'smooth'}); return; }
+      if(++tentativas < 20) setTimeout(rolar, 200);
+    };
+    setTimeout(rolar, 250);
+    return true;
+  }
+  // KPI sem empresa: compara o indicador entre as empresas que o divulgam
+  if(r.intencao === 'kpi'){
+    cmpSel.modo = 'op';
+    cmpSel.opind = r.kpi;
+    cmpSel.setor = r.escopo || '';
+    cmpSel.busca = consulta;
+    cmpSel.buscaLida = {escopo:r.escopo, n:0, naoEntendi:r.naoEntendi, intencao:'kpi'};
+    lsSet('cmp_sel', cmpSel);
+    sugg.style.display='none'; qin.value='';
+    setView('cmp');
+    $('#cmpview').scrollIntoView({block:'start'});
+    return true;
+  }
   cmpSel.busca = consulta;
   // Busca nova define o escopo por completo: sem setor na frase, o filtro anterior
   // e limpo — senao o resultado sairia restrito a algo que o usuario nao pediu.
@@ -532,6 +559,8 @@ function abreConsulta(consulta){
 }
 function resumoConsulta(r){
   const p = [];
+  if(r.intencao==='kpiEmpresa' && r.empresa) return r.kpi+' de '+r.empresa.nome;
+  if(r.intencao==='kpi') return 'KPI: '+r.kpi+(r.escopo? ' · '+escopoRotulo(r.escopo):'');
   if(r.escopo) p.push(escopoRotulo(r.escopo));
   if(r.intencao === 'rank'){
     const g = CMP_INDS.find(x=>x[0]===r.ind);
@@ -558,13 +587,19 @@ qin.addEventListener('input', () => {
     // vê que parte da frase será ignorada antes de rodar a busca.
     const ignora = (q.naoEntendi||[]).length ? ' · IGNORA: '+q.naoEntendi.join(', ') : '';
     d.append(el('span','nm','🔍 '+resumoConsulta(q)+ignora),
-             el('span','tk', (q.intencao==='rank' ? 'ver o ranking' : 'buscar empresas com esses critérios')+' · Enter'));
+             el('span','tk', (q.intencao==='rank' ? 'ver o ranking' : q.intencao==='kpiEmpresa' ? 'abrir a empresa nos indicadores operacionais' : q.intencao==='kpi' ? 'comparar esse KPI entre empresas' : 'buscar empresas com esses critérios')+' · Enter'));
     d.onclick = () => abreConsulta(bruto);
     sugg.append(d);
   }
 
-  const hits = COS.filter(c => norm(c.name).includes(v) || norm(c.fullName).includes(v) ||
+  let hits = COS.filter(c => norm(c.name).includes(v) || norm(c.fullName).includes(v) ||
     c.root.toLowerCase().includes(v) || c.tickers.some(t=>t.t.toLowerCase().includes(v))).slice(0,12);
+  // Nada pelo nome literal: tenta apelido ("magalu") e nome aproximado.
+  if(!hits.length){
+    const alt = achaEmpresaNaFrase(bruto);
+    if(alt && alt.ambiguo) hits = alt.ambiguo.map(a=>COS.find(x=>x.cvm===a.cvm)).filter(Boolean);
+    else if(alt){ const c = COS.find(x=>x.cvm===alt.cvm); if(c) hits = [c]; }
+  }
   for(const c of hits){
     const d = el('div'); d.append(el('span','nm',c.name), el('span','tk', c.tickers.map(t=>t.t).join(' ')+' · '+c.setor));
     d.onclick = () => { sugg.style.display='none'; qin.value=''; openDetail(c.cvm); };
@@ -1785,6 +1820,123 @@ function sugereTermos(palavras, limite){
   }
   return saida;
 }
+// ---- acha a empresa DENTRO da frase (não só a frase inteira) ----
+// "SSS Magazine Luiza" tem de encontrar a Magalu, cujo nome no painel é
+// "MAGAZ LUIZA" e o razão social "MAGAZINE LUIZA S.A.".
+const LIXO_RAZAO = /\b(s\.?a\.?|sa|ltda|holding|holdings|participacoes|participac|part|cia|companhia|do|da|de|e|brasil|brasileira|group|grupo|on|pn|units?)\b/g;
+function tokensNome(s){
+  return semAcento(s).replace(/[^a-z0-9 ]/g,' ').replace(LIXO_RAZAO,' ')
+    .split(/\s+/).filter(t=>t.length>=4);
+}
+// Como as pessoas chamam as empresas no dia a dia → como elas estão no painel.
+// O painel guarda o nome curto da B3 ("MAGAZ LUIZA"), que quase nunca é o apelido.
+const APELIDOS_EMPRESA = [
+  [/\bmagalu\b/, 'MAGAZ LUIZA'], [/\bvia\s*varejo\b|\bvia\b(?!\s*gem)/, 'CASAS BAHIA'],
+  [/\bita[uú]\b|\bitau\s*unibanco\b/, 'ITAUUNIBANCO'], [/\bbradesco\b/, 'BRADESCO'],
+  [/\bbb\b|\bbanco do brasil\b/, 'BRASIL'], [/\bcaixa\b/, 'CAIXA SEGURI'],
+  [/\bbtg\b/, 'BTGP BANCO'], [/\bsantander\b/, 'SANTANDER BR'],
+  [/\bvivo\b|\btelef[oô]nica\b/, 'TELEF BRASIL'], [/\btim\b/, 'TIM'],
+  [/\bpetro(bras)?\b/, 'PETROBRAS'], [/\bipiranga\b|\bultra\b/, 'ULTRAPAR'],
+  [/\bbr distribuidora\b|\bvibra\b/, 'VIBRA'], [/\bprio\b|\bpetrorio\b/, 'PRIO'],
+  [/\bhavaianas\b|\balpargatas\b/, 'ALPARGATAS'], [/\barezzo\b|\bazzas\b|\bsoma\b/, 'AZZAS 2154'],
+  [/\bdroga\s*raia\b|\braia\b|\brd sa[uú]de\b|\bdrogasil\b/, 'RD SAUDE'],
+  [/\bp[aã]o de a[cç][uú]car\b|\bgpa\b/, 'PAO DE ACUCAR'], [/\bassa[ií]\b/, 'ASSAI'],
+  [/\bcarrefour\b/, 'CARREFOUR BR'], [/\bamericanas\b|\blojas americanas\b/, 'AMERICANAS'],
+  [/\brenner\b/, 'LOJAS RENNER'], [/\briachuelo\b|\bguararapes\b/, 'GUARARAPES'],
+  [/\bc&a\b|\bcea\b/, 'CEA MODAS'], [/\bmarisa\b/, 'LOJAS MARISA'],
+  [/\bsmart\s*fit\b/, 'SMART FIT'], [/\bpetz\b/, 'PETZ'],
+  [/\bambev\b|\bbrahma\b|\bskol\b/, 'AMBEV S/A'], [/\bjbs\b|\bfriboi\b/, 'JBS'],
+  [/\bbrf\b|\bsadia\b|\bperdig[aã]o\b/, 'BRF SA'], [/\bmarfrig\b/, 'MARFRIG'],
+  [/\bminerva\b/, 'MINERVA'], [/\bvale\b/, 'VALE'], [/\bcsn\b/, 'SID NACIONAL'],
+  [/\bgerdau\b/, 'GERDAU'], [/\busiminas\b/, 'USIMINAS'], [/\bsuzano\b/, 'SUZANO S.A.'],
+  [/\bklabin\b/, 'KLABIN S/A'], [/\bbraskem\b/, 'BRASKEM'], [/\bweg\b/, 'WEG'],
+  [/\bembraer\b/, 'EMBRAER'], [/\brandon\b/, 'RANDON PART'], [/\bmarcopolo\b/, 'MARCOPOLO'],
+  [/\bhapvida\b/, 'HAPVIDA'], [/\brede\s*d.?or\b|\brdor\b/, 'REDE D OR'],
+  [/\bfleury\b/, 'FLEURY'], [/\bdasa\b/, 'DASA'], [/\bhypera\b|\bneo\s*qu[ií]mica\b/, 'HYPERA'],
+  [/\beletrobras\b/, 'ELETROBRAS'], [/\bsabesp\b/, 'SABESP'], [/\bcopel\b/, 'COPEL'],
+  [/\bcemig\b/, 'CEMIG'], [/\bequatorial\b/, 'EQUATORIAL'], [/\bengie\b/, 'ENGIE BRASIL'],
+  [/\btaesa\b/, 'TAESA'], [/\bcpfl\b/, 'CPFL ENERGIA'], [/\bneoenergia\b/, 'NEOENERGIA'],
+  [/\bcyrela\b/, 'CYRELA REALT'], [/\bmrv\b/, 'MRV'], [/\beztec\b/, 'EZTEC'],
+  [/\bdirecional\b/, 'DIRECIONAL'], [/\btenda\b/, 'TENDA'], [/\bcury\b/, 'CURY S/A'],
+  [/\bmultiplan\b/, 'MULTIPLAN'], [/\biguatemi\b/, 'IGUATEMI'], [/\bbrmalls\b|\ballos\b/, 'ALLOS'],
+  [/\blocaliza\b/, 'LOCALIZA'], [/\bmovida\b/, 'MOVIDA'], [/\bazul\b/, 'AZUL'],
+  [/\bgol\b/, 'GOL'], [/\bcvc\b/, 'CVC BRASIL'], [/\brumo\b/, 'RUMO S.A.'],
+  [/\bcosan\b/, 'COSAN'], [/\bs[aã]o martinho\b/, 'SAO MARTINHO'], [/\btotvs\b/, 'TOTVS'],
+  [/\bintelbras\b/, 'INTELBRAS'], [/\bpositivo\b/, 'POSITIVO TEC'],
+  [/\byduqs\b|\bestacio\b/, 'YDUQS PART'], [/\bcogna\b|\bkroton\b/, 'COGNA ON'],
+  [/\bvivara\b/, 'VIVARA S.A.'], [/\b3tentos\b|\btres tentos\b/, '3TENTOS'],
+  [/\bslc\b/, 'SLC AGRICOLA'], [/\bnatura\b|\bavon\b/, 'NATURA'],
+];
+// Acha a empresa citada na frase: apelido, ticker, nome por prefixo ou aproximado.
+function achaEmpresaNaFrase(frase){
+  const f = semAcento(frase).replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+  const palavras = f.split(' ');
+
+  // 1) apelido do dia a dia
+  for(const [re, nome] of APELIDOS_EMPRESA){
+    if(re.test(f)){
+      const c = COS.find(x => semAcento(x.name) === semAcento(nome))
+             || COS.find(x => semAcento(x.name).startsWith(semAcento(nome).slice(0,8)));
+      if(c) return {cvm:c.cvm, nome:c.name, nota:100, via:'apelido'};
+    }
+  }
+  // 2) ticker escrito na frase
+  for(const c of COS)
+    for(const t of (c.tickers||[]))
+      if(palavras.includes(t.t.toLowerCase())) return {cvm:c.cvm, nome:c.name, nota:99, via:'ticker'};
+
+  // 3) nome/razão social por prefixo de token
+  let melhor = null;
+  for(const c of COS){
+    for(const fonte of [c.name, c.fullName]){
+      if(!fonte) continue;
+      const toks = tokensNome(fonte);
+      if(!toks.length) continue;
+      const casam = toks.filter(t => palavras.some(w => w.startsWith(t) || (t.startsWith(w) && w.length>=4)));
+      if(casam.length === toks.length && (toks.length >= 2 || toks[0].length >= 5)){
+        const nota = toks.join('').length;
+        if(!melhor || nota > melhor.nota) melhor = {cvm:c.cvm, nome:c.name, nota, via:'nome'};
+      }
+    }
+  }
+  if(melhor) return melhor;
+
+  // 4) aproximado — só com vencedor CLARO. "brakem" empata Braskem, Bradesco e
+  // Bradespar em 0,333; "lojas" empata Quero-Quero, Marisa e Renner. Nesses casos
+  // escolher seria adivinhar: devolvemos os candidatos para o usuário decidir.
+  const cands = [];
+  for(const c of COS){
+    let melhorDaEmpresa = null;
+    for(const fonte of [c.name, c.fullName]){
+      if(!fonte) continue;
+      const junto = semAcento(fonte).replace(LIXO_RAZAO,' ').replace(/[^a-z0-9]/g,'');
+      if(junto.length < 4) continue;
+      for(const w of palavras){
+        if(w.length < 5 || GENERICAS.has(w)) continue;
+        const d = distancia(w, junto.slice(0, Math.max(w.length, 6)));
+        const nota = d / Math.max(w.length, 5);
+        if(nota <= 0.34 && (!melhorDaEmpresa || nota < melhorDaEmpresa.nota))
+          melhorDaEmpresa = {cvm:c.cvm, nome:c.name, nota};
+      }
+    }
+    if(melhorDaEmpresa) cands.push(melhorDaEmpresa);
+  }
+  if(!cands.length) return null;
+  cands.sort((a,b)=>a.nota-b.nota);
+  const primeiro = cands[0];
+  const segundo = cands.find(x => x.cvm !== primeiro.cvm);
+  const claro = primeiro.nota <= 0.25 && (!segundo || segundo.nota - primeiro.nota >= 0.08);
+  if(claro) return {...primeiro, via:'aproximado'};
+  return {ambiguo: cands.slice(0,5).map(x=>({cvm:x.cvm, nome:x.nome}))};
+}
+// Palavras de negócio que aparecem em nome de empresa mas que, sozinhas, não
+// identificam ninguém — sem isso "número de lojas" viraria "Lojas Quero-Quero".
+const GENERICAS = new Set(['lojas','loja','vendas','venda','producao','clientes','cliente',
+  'receita','lucro','total','media','medio','mercado','capital','credito','energia','agua',
+  'papel','banco','bancos','seguros','saude','educacao','transporte','servicos','industria',
+  'comercio','tecnologia','participacoes','empresas','empresa','setor','indice','margem',
+  'ticket','carteira','volume','preco','custo','ativos','acoes','geral','brasil']);
+
 // exemplos que sempre funcionam, para o usuário partir de algo concreto
 const BUSCA_EXEMPLOS = [
   'bancos com maior ROE',
@@ -1857,7 +2009,28 @@ function buscaInterpreta(txt){
   for(const a of achados.slice().reverse()) resto = resto.slice(0, a.ini) + ' ' + resto.slice(a.fim);
   for(const [,re] of OPS) resto = resto.replace(new RegExp(re.source,'g'),' ');
 
-  // 3) o que sobrou de relevante (ignora conectivos e números já consumidos)
+  // 3) KPI operacional (SSS, nº de lojas, produção…) e empresa citada na frase.
+  // Esses dados vêm da curadoria dos releases, não da CVM estruturada, e vivem
+  // no modo "KPIs operacionais" e no detalhe da empresa.
+  // Vem ANTES do cálculo da sobra: senão o KPI e o nome da empresa acabariam na
+  // lista de "não reconheci", como se tivessem sido ignorados.
+  let kpiAchado = null;
+  for(const [re, fam] of KPI_FAMILIAS){
+    if(re.test(s)){ kpiAchado = fam; const m = resto.match(re); if(m) resto = resto.replace(m[0],' '); break; }
+  }
+  const empRaw = achaEmpresaNaFrase(bruto);
+  const empAmbigua = (empRaw && empRaw.ambiguo) ? empRaw.ambiguo : null;
+  const empAchada = (empRaw && !empRaw.ambiguo) ? empRaw : null;
+  if(empAchada){
+    const c = COS.find(x=>x.cvm===empAchada.cvm) || {};
+    const toks = [...new Set([...tokensNome(c.fullName||''), ...tokensNome(c.name||''), ...semAcento(String(empAchada.nome)).split(/\s+/)])];
+    resto = resto.split(' ').filter(w => !w || !toks.some(t => t.length>=4 && (w.startsWith(t) || t.startsWith(w)))).join(' ');
+    for(const t of (c.tickers||[])) resto = resto.split(' ').filter(w=>w!==t.t.toLowerCase()).join(' ');
+    // apelido usado na frase (magalu, ambev…) também não é "não reconhecido"
+    for(const [re] of APELIDOS_EMPRESA){ const m = resto.match(re); if(m) resto = resto.replace(m[0],' '); }
+  }
+
+  // 3b) o que sobrou de relevante (ignora conectivos e números já consumidos)
   const sobra = resto
     .replace(/\b(e|com|de|do|da|dos|das|em|no|na|que|as|os|a|o|empresas?|setor|subsetor|segmento|ultimo|trimestre|ano|acima|abaixo|maior|menor|entre|mais|menos|por|para|sobre|tem|ter|todas?|todos?)\b/g,' ')
     .replace(/\d+(?:[.,]\d+)?\s*(?:%|x|bi|mi|mil)?/g,' ')   // números e unidades
@@ -1870,7 +2043,9 @@ function buscaInterpreta(txt){
   const ehMaior = /\b(maior(es)?|melhor(es)?|mais alt|top\s*\d*|ranking|rank)\b/.test(s);
   const semValor = achados.find(a => a.semValor);
   let intencao = null, indRank = null, dir = 'desc';
-  if(filtros.length) intencao = 'scr';
+  if(kpiAchado && empAchada) intencao = 'kpiEmpresa';   // "SSS Magazine Luiza" → detalhe da empresa
+  else if(kpiAchado) intencao = 'kpi';                  // "SSS" → compara o KPI entre empresas
+  else if(filtros.length) intencao = 'scr';
   else if(semValor){ intencao = 'rank'; indRank = semValor.chave; dir = ehMenor ? 'asc' : 'desc'; }
   else if((ehMaior || ehMenor) && escopoAchado){
     // "maiores empresas do varejo" → ranking por valor de mercado
@@ -1885,6 +2060,9 @@ function buscaInterpreta(txt){
     intencao,
     ind: indRank,
     dir,
+    kpi: kpiAchado,
+    empresa: empAchada,
+    empresaAmbigua: empAmbigua,
     naoEntendi: sobraLimpa ? sobraLimpa.split(' ').filter(w=>w.length>2).slice(0,6) : [],
     frase: bruto,
   };
