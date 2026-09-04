@@ -270,7 +270,7 @@
   <span class="src" id="srcline"></span>
   <span class="sp"></span>
   <div class="search">
-    <input id="q" type="text" placeholder="Buscar empresa ou ticker… (ex.: WEGE3, Sabesp)" autocomplete="off">
+    <input id="q" type="text" placeholder="Buscar empresa, ticker ou pergunta (ex.: varejo com ROIC acima de 15)" autocomplete="off">
     <div class="sugg" id="sugg"></div>
   </div>
   <button class="btn" id="infobtn" title="Fontes, datas de atualização e avisos">ⓘ Dados</button>
@@ -504,9 +504,49 @@ function renderAll(){ buildTree(); buildMobSec(); renderCrumb(); const f = filte
 
 // ---------- busca ----------
 const qin = $('#q'), sugg = $('#sugg');
+// A busca do topo aceita duas coisas: nome/ticker de empresa (abre o detalhe) e
+// perguntas com critério ("varejo com ROIC acima de 15"), que caem no screener.
+// Sem isso a busca por critério ficava escondida dentro de Comparar → Screener.
+function abreScreener(consulta){
+  const r = buscaInterpreta(consulta);
+  if(!r) return false;
+  cmpSel.modo = 'scr';
+  cmpSel.busca = consulta;
+  if(r.escopo) cmpSel.setor = r.escopo;
+  if(r.filtros.length) cmpSel.filtros = r.filtros;
+  cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi};
+  lsSet('cmp_sel', cmpSel);
+  sugg.style.display='none'; qin.value='';
+  setView('cmp');
+  $('#cmpview').scrollIntoView({block:'start'});
+  return true;
+}
+function resumoConsulta(r){
+  const p = [];
+  if(r.escopo) p.push(escopoRotulo(r.escopo));
+  for(const f of r.filtros){
+    const g = CMP_INDS.find(x=>x[0]===f.ind); if(!g) continue;
+    p.push(g[1] + ' ' + (f.op==='gt'?'>':f.op==='lt'?'<':'entre') + ' ' + (f.op==='bt' ? (f.v1+'–'+f.v2) : f.v1));
+  }
+  return p.join(' · ');
+}
 qin.addEventListener('input', () => {
-  const v = norm(qin.value.trim());
+  const bruto = qin.value.trim();
+  const v = norm(bruto);
   sugg.textContent=''; if(v.length<2){ sugg.style.display='none'; return; }
+
+  // pergunta com critério? só oferece quando há indicador com valor, para não
+  // atrapalhar quem está só digitando o nome de uma empresa
+  const q = buscaInterpreta(bruto);
+  const temCriterio = q && q.filtros.length > 0;
+  if(temCriterio){
+    const d = el('div');
+    d.append(el('span','nm','🔍 '+resumoConsulta(q)),
+             el('span','tk','buscar empresas com esses critérios · Enter'));
+    d.onclick = () => abreScreener(bruto);
+    sugg.append(d);
+  }
+
   const hits = COS.filter(c => norm(c.name).includes(v) || norm(c.fullName).includes(v) ||
     c.root.toLowerCase().includes(v) || c.tickers.some(t=>t.t.toLowerCase().includes(v))).slice(0,12);
   for(const c of hits){
@@ -514,7 +554,20 @@ qin.addEventListener('input', () => {
     d.onclick = () => { sugg.style.display='none'; qin.value=''; openDetail(c.cvm); };
     sugg.append(d);
   }
-  sugg.style.display = hits.length ? 'block' : 'none';
+  sugg.style.display = (temCriterio || hits.length) ? 'block' : 'none';
+});
+// Enter: pergunta com critério vai para o screener; senão abre a primeira empresa
+qin.addEventListener('keydown', e => {
+  if(e.key !== 'Enter') return;
+  const bruto = qin.value.trim();
+  if(bruto.length < 2) return;
+  e.preventDefault();
+  const q = buscaInterpreta(bruto);
+  if(q && q.filtros.length){ abreScreener(bruto); return; }
+  const v = norm(bruto);
+  const c = COS.find(c => norm(c.name).includes(v) || norm(c.fullName).includes(v) ||
+    c.root.toLowerCase().includes(v) || c.tickers.some(t=>t.t.toLowerCase().includes(v)));
+  if(c){ sugg.style.display='none'; qin.value=''; openDetail(c.cvm); }
 });
 document.addEventListener('click', e => { if(!e.target.closest('.search')) sugg.style.display='none'; });
 
@@ -1949,7 +2002,7 @@ function renderCmp(){
     const resumo = el('div','ct');
     resumo.style.marginTop = '12px';
     resumo.textContent = ativos.length
-      ? res.length + ' empresa' + (res.length===1?'':'s') + ' passam nos ' + ativos.length + ' filtro' + (ativos.length===1?'':'s')
+      ? res.length + ' empresa' + (res.length===1?'':'s') + (res.length===1?' passa ':' passam ') + (ativos.length===1?'no ':'nos ') + ativos.length + ' filtro' + (ativos.length===1?'':'s')
         + (escopoNorm(cmpSel.setor) ? ' · ' + escopoRotulo(cmpSel.setor) : '') + ' (de ' + escopo.length + ' no escopo)'
       : 'Adicione um filtro e preencha o valor para ver o resultado.';
     box.append(resumo);
