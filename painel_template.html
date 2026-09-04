@@ -567,8 +567,9 @@ function resumoConsulta(r){
     if(g) p.push((r.dir==='asc' ? 'menores' : 'maiores') + ' ' + g[1]);
   }
   for(const f of r.filtros){
-    const g = CMP_INDS.find(x=>x[0]===f.ind); if(!g) continue;
-    p.push(g[1] + ' ' + (f.op==='gt'?'>':f.op==='lt'?'<':'entre') + ' ' + (f.op==='bt' ? (f.v1+'–'+f.v2) : f.v1));
+    const nome = f.kpi ? f.ind : ((CMP_INDS.find(x=>x[0]===f.ind)||[])[1]);
+    if(!nome) continue;
+    p.push(nome + ' ' + (f.op==='gt'?'>':f.op==='lt'?'<':'entre') + ' ' + (f.op==='bt' ? (f.v1+'–'+f.v2) : f.v1));
   }
   return p.join(' · ');
 }
@@ -1626,7 +1627,8 @@ if(typeof cmpSel.opind !== 'string') cmpSel.opind = '';
 if(!['desc','asc'].includes(cmpSel.dir)) cmpSel.dir = 'desc';
 if(!Array.isArray(cmpSel.emps)) cmpSel.emps = [];
 if(!Array.isArray(cmpSel.filtros)) cmpSel.filtros = [];
-cmpSel.filtros = cmpSel.filtros.filter(f => f && CMP_INDS.some(x=>x[0]===f.ind) && ['gt','lt','bt'].includes(f.op));
+cmpSel.filtros = cmpSel.filtros.filter(f => f && ['gt','lt','bt'].includes(f.op)
+  && (f.kpi ? typeof f.ind === 'string' && f.ind.length > 0 : CMP_INDS.some(x=>x[0]===f.ind)));
 if(typeof cmpSel.busca !== 'string') cmpSel.busca = '';
 if(typeof cmpSel.setor !== 'string') cmpSel.setor = '';
 if(cmpSel.buscaLida && typeof cmpSel.buscaLida !== 'object') cmpSel.buscaLida = null;
@@ -1912,7 +1914,7 @@ function achaEmpresaNaFrase(frase){
       const junto = semAcento(fonte).replace(LIXO_RAZAO,' ').replace(/[^a-z0-9]/g,'');
       if(junto.length < 4) continue;
       for(const w of palavras){
-        if(w.length < 5 || GENERICAS.has(w)) continue;
+        if(w.length < 6 || GENERICAS.has(w)) continue;
         const d = distancia(w, junto.slice(0, Math.max(w.length, 6)));
         const nota = d / Math.max(w.length, 5);
         if(nota <= 0.34 && (!melhorDaEmpresa || nota < melhorDaEmpresa.nota))
@@ -1931,11 +1933,19 @@ function achaEmpresaNaFrase(frase){
 }
 // Palavras de negócio que aparecem em nome de empresa mas que, sozinhas, não
 // identificam ninguém — sem isso "número de lojas" viraria "Lojas Quero-Quero".
-const GENERICAS = new Set(['lojas','loja','vendas','venda','producao','clientes','cliente',
-  'receita','lucro','total','media','medio','mercado','capital','credito','energia','agua',
-  'papel','banco','bancos','seguros','saude','educacao','transporte','servicos','industria',
-  'comercio','tecnologia','participacoes','empresas','empresa','setor','indice','margem',
-  'ticket','carteira','volume','preco','custo','ativos','acoes','geral','brasil']);
+const GENERICAS = new Set([
+  // termos de negócio que aparecem em razão social mas não identificam ninguém
+  'lojas','loja','vendas','venda','producao','clientes','cliente','receita','lucro','total',
+  'media','medio','mercado','capital','credito','energia','agua','papel','banco','bancos',
+  'seguros','saude','educacao','transporte','servicos','industria','comercio','tecnologia',
+  'participacoes','empresas','empresa','setor','indice','margem','ticket','carteira','volume',
+  'preco','custo','ativos','acoes','geral','brasil','holding','grupo','uniao','nacional',
+  // palavras funcionais da consulta — "acima" fica a 1 letra de "ANIMA"
+  'acima','abaixo','maior','maiores','menor','menores','melhor','melhores','pior','piores',
+  'entre','mais','menos','superior','inferior','positivo','negativo','quais','qual','quem',
+  'tenha','tenham','todas','todos','ranking','ultimo','ultimos','ultima','trimestre','anual',
+  'alta','baixa','crescimento','queda','sobre','tambem','desde','apenas','somente','desses',
+]);
 
 // exemplos que sempre funcionam, para o usuário partir de algo concreto
 const BUSCA_EXEMPLOS = [
@@ -2014,10 +2024,54 @@ function buscaInterpreta(txt){
   // no modo "KPIs operacionais" e no detalhe da empresa.
   // Vem ANTES do cálculo da sobra: senão o KPI e o nome da empresa acabariam na
   // lista de "não reconheci", como se tivessem sido ignorados.
-  let kpiAchado = null;
+  // Lê da frase original (s), não de `resto`: o bloco dos indicadores financeiros
+  // roda antes e apaga os operadores do resto — "acima de 5" já teria sumido.
+  // Aceita VÁRIOS KPIs na mesma frase ("SSS acima de 5 e nº de lojas acima de 300"),
+  // e cada um só lê o trecho até o próximo, como nos indicadores financeiros.
+  const nn = '(-?\\d+(?:[.,]\\d+)?)';
+  const OPS_K = [
+    ['bt', new RegExp('entre\\s*'+nn+'\\s*(?:e|a|-)\\s*'+nn)],
+    ['gt', new RegExp('(?:acima de|maior que|maior do que|superior a|mais de|>=?|acima|positivo)\\s*'+nn)],
+    ['lt', new RegExp('(?:abaixo de|menor que|menor do que|inferior a|menos de|<=?|abaixo)\\s*'+nn)],
+  ];
+  // Algumas famílias de KPI repetem um indicador financeiro (o ROIC que a empresa
+  // divulga no release vs. o ROIC calculado da CVM). Quando o financeiro já foi
+  // reconhecido, o KPI é descartado: ele cobre poucas empresas e criaria um
+  // segundo filtro sobre a mesma coisa, zerando o resultado.
+  const KPI_DUPLICA_FINANCEIRO = {
+    'ROIC (divulgado pela empresa)': 'roic',
+    'Margem EBITDA (empresa)': 'mgE12',
+    'Margem bruta (empresa)': 'mgL12',
+    'Alavancagem (dív. líq./EBITDA)': 'dlEbitda',
+  };
+  const jaFinanceiro = new Set(filtros.map(f=>f.ind));
+  const kpisNaFrase = [];
   for(const [re, fam] of KPI_FAMILIAS){
-    if(re.test(s)){ kpiAchado = fam; const m = resto.match(re); if(m) resto = resto.replace(m[0],' '); break; }
+    const equiv = KPI_DUPLICA_FINANCEIRO[fam];
+    if(equiv && (jaFinanceiro.has(equiv) || achados.some(a=>a.chave===equiv))) continue;
+    const m = s.match(re);
+    if(m && !kpisNaFrase.some(k=>k.fam===fam))
+      kpisNaFrase.push({fam, ini:m.index, fim:m.index+m[0].length, texto:m[0]});
   }
+  kpisNaFrase.sort((a,b)=>a.ini-b.ini);
+  let kpiAchado = kpisNaFrase.length ? kpisNaFrase[0].fam : null;
+  const kpiFiltros = [];
+  kpisNaFrase.forEach((k, ix) => {
+    const limite = ix+1 < kpisNaFrase.length ? kpisNaFrase[ix+1].ini : Math.min(s.length, k.fim + 60);
+    const depois = s.slice(k.fim, limite);
+    let melhorK = null;
+    for(const [op, reOp] of OPS_K){
+      const mm = depois.match(reOp);
+      if(!mm || mm[1]==null) continue;
+      if(!melhorK || mm.index < melhorK.pos)
+        melhorK = {op, pos:mm.index, v1:+mm[1].replace(',','.'), v2: mm[2]!=null ? +mm[2].replace(',','.') : null};
+    }
+    if(melhorK) kpiFiltros.push({kpi:true, ind:k.fam, op:melhorK.op, v1:melhorK.v1, v2:melhorK.v2});
+    // limpa o que foi lido para não sobrar em "não reconheci"
+    resto = resto.split(k.texto).join(' ');
+    if(melhorK) for(const [,reOp] of OPS_K) resto = resto.replace(new RegExp(reOp.source,'g'), ' ');
+  });
+  const kpiFiltro = kpiFiltros.length ? kpiFiltros[0] : null;
   const empRaw = achaEmpresaNaFrase(bruto);
   const empAmbigua = (empRaw && empRaw.ambiguo) ? empRaw.ambiguo : null;
   const empAchada = (empRaw && !empRaw.ambiguo) ? empRaw : null;
@@ -2043,8 +2097,12 @@ function buscaInterpreta(txt){
   const ehMaior = /\b(maior(es)?|melhor(es)?|mais alt|top\s*\d*|ranking|rank)\b/.test(s);
   const semValor = achados.find(a => a.semValor);
   let intencao = null, indRank = null, dir = 'desc';
-  if(kpiAchado && empAchada) intencao = 'kpiEmpresa';   // "SSS Magazine Luiza" → detalhe da empresa
-  else if(kpiAchado) intencao = 'kpi';                  // "SSS" → compara o KPI entre empresas
+  if(kpiFiltros.length){                                // "SSS acima de 5" → filtra
+    intencao = 'scr';
+    for(const kf of kpiFiltros) filtros.push(kf);
+  }
+  else if(kpiAchado && empAchada) intencao = 'kpiEmpresa';   // "SSS Magazine Luiza" → detalhe
+  else if(kpiAchado) intencao = 'kpi';                       // "SSS" → compara entre empresas
   else if(filtros.length) intencao = 'scr';
   else if(semValor){ intencao = 'rank'; indRank = semValor.chave; dir = ehMenor ? 'asc' : 'desc'; }
   else if((ehMaior || ehMenor) && escopoAchado){
@@ -2134,6 +2192,50 @@ function opsIndex(){
   return idx;
 }
 const ultimoPeriodo = valores => Object.keys(valores||{}).sort().pop();
+
+// ============ KPIs operacionais como filtro do screener ============
+// Diferente dos indicadores financeiros, aqui cada empresa nomeia o KPI do seu
+// jeito, usa a unidade que quer e reporta até um trimestre diferente. Três
+// proteções para o filtro não comparar coisas diferentes:
+//  1. só famílias com 2+ empresas entram (uma empresa só não é comparação)
+//  2. dentro da família, filtra apenas o grupo de unidade DOMINANTE — quem
+//     reporta em outra unidade fica de fora e é listado no aviso
+//  3. o período de cada valor viaja junto e aparece na tabela
+function ucDominante(arr){
+  const cont = {};
+  for(const x of arr) cont[x.uc] = (cont[x.uc]||0)+1;
+  const e = Object.entries(cont).sort((a,b)=>b[1]-a[1])[0];
+  return e ? e[0] : null;
+}
+function kpiFamiliasFiltraveis(idx){
+  return Object.keys(idx)
+    .filter(f => new Set(idx[f].map(x=>x.cvm)).size >= 2)
+    .sort((a,b) => (new Set(idx[b].map(x=>x.cvm)).size - new Set(idx[a].map(x=>x.cvm)).size)
+                   || a.localeCompare(b,'pt-BR'));
+}
+// valor mais recente do KPI para uma empresa, já restrito à unidade dominante
+function kpiValor(idx, fam, cvm){
+  const arr = idx[fam] || [];
+  const uc = ucDominante(arr);
+  const x = arr.find(a => a.cvm === cvm && a.uc === uc);
+  if(!x) return null;
+  const p = ultimoPeriodo(x.valores);
+  if(!p || x.valores[p] == null || !isFinite(x.valores[p])) return null;
+  return {v: x.valores[p], p, unidade: x.unidade, uc: x.uc, nome: x.nomeOriginal};
+}
+// quem ficou fora da família por reportar em outra unidade
+function kpiForaDaUnidade(idx, fam){
+  const arr = idx[fam] || [];
+  const uc = ucDominante(arr);
+  return arr.filter(x => x.uc !== uc).map(x => x.empresa + ' (' + (x.unidade||'sem unidade') + ')');
+}
+const fmtKpi = (idx, fam) => {
+  const arr = idx[fam] || [];
+  const uc = ucDominante(arr);
+  const un = (arr.find(x=>x.uc===uc)||{}).unidade || '';
+  const uns = new Set(arr.filter(x=>x.uc===uc).map(x=>x.unidade||'')).size;
+  return v => v==null ? '—' : nbr2.format(v) + (un && un.length<12 && uns===1 ? ' '+un : '');
+};
 function renderCmp(){
   const m = $('#cmpview'); m.textContent = '';
   m.append(noticeEl());
@@ -2251,9 +2353,33 @@ function renderCmp(){
     titulo.textContent = 'Screener — filtros combinados';
     const OPS = [['gt','maior que'],['lt','menor que'],['bt','entre']];
     const fbox = el('div');
+    const KPI_FILTRAVEIS = kpiFamiliasFiltraveis(OPIDX);
     const linhaFiltro = (f, i) => {
       const r = el('div','cmpbar'); r.style.margin = '0 0 8px';
-      r.append(mkSel(CMP_INDS.map(x=>[x[0],x[1]]), f.ind, v=>cmpSel.filtros[i].ind=v, 'Indicador do filtro'));
+      // um seletor com os dois mundos: financeiro (CVM/Fundamentus) e operacional (releases)
+      const s = document.createElement('select');
+      s.setAttribute('aria-label','Indicador do filtro');
+      const gF = document.createElement('optgroup'); gF.label = 'Financeiros (CVM · Fundamentus)';
+      for(const [k, lb] of CMP_INDS.map(x=>[x[0],x[1]])){
+        const o = el('option',null,lb); o.value = 'f:'+k; gF.append(o);
+      }
+      s.append(gF);
+      if(KPI_FILTRAVEIS.length){
+        const gK = document.createElement('optgroup');
+        gK.label = 'Operacionais — curadoria dos releases ('+KPI_FILTRAVEIS.length+')';
+        for(const fam of KPI_FILTRAVEIS){
+          const n = new Set(OPIDX[fam].map(x=>x.cvm)).size;
+          const o = el('option',null,fam+' ('+n+' empresas)'); o.value = 'k:'+fam; gK.append(o);
+        }
+        s.append(gK);
+      }
+      s.value = (f.kpi ? 'k:' : 'f:') + f.ind;
+      s.onchange = () => {
+        const v = s.value;
+        cmpSel.filtros[i] = {...cmpSel.filtros[i], kpi: v.startsWith('k:'), ind: v.slice(2)};
+        lsSet('cmp_sel', cmpSel); renderCmp();
+      };
+      r.append(s);
       r.append(mkSel(OPS, f.op, v=>cmpSel.filtros[i].op=v, 'Operador'));
       const inp = (val, onch, ph) => {
         const e = document.createElement('input');
@@ -2304,9 +2430,10 @@ function renderCmp(){
       const partes = [];
       if(bl.escopo) partes.push(escopoRotulo(bl.escopo));
       for(const f of cmpSel.filtros){
-        const g = CMP_INDS.find(x=>x[0]===f.ind); if(!g) continue;
+        const nome = f.kpi ? f.ind : ((CMP_INDS.find(x=>x[0]===f.ind)||[])[1]);
+        if(!nome) continue;
         const sinal = f.op==='gt' ? '>' : f.op==='lt' ? '<' : 'entre';
-        partes.push(g[1]+' '+sinal+' '+(f.op==='bt' ? (f.v1+' e '+f.v2) : f.v1));
+        partes.push(nome+' '+sinal+' '+(f.op==='bt' ? (f.v1+' e '+f.v2) : f.v1));
       }
       const falhou = bl.falhou || (!partes.length && !cmpSel.filtros.length);
       if(falhou){
@@ -2384,13 +2511,21 @@ function renderCmp(){
     const add = el('button','btn','+ adicionar filtro');
     add.onclick = () => { cmpSel.filtros.push({ind:'roic', op:'gt', v1:null, v2:null}); lsSet('cmp_sel', cmpSel); renderCmp(); };
     fbox.append(add);
+    if(!OPD) fbox.append(el('div','dim','carregando os KPIs operacionais — eles aparecem na lista de indicadores em instantes…'));
     box.append(fbox);
 
     // aplica os filtros que já têm valor preenchido
     const ativos = cmpSel.filtros.filter(f => f.v1!=null || (f.op==='bt' && f.v2!=null));
+    // valor de um filtro para uma empresa, seja financeiro ou operacional
+    const valorDe = (f, c) => {
+      if(f.kpi){ const k = kpiValor(OPIDX, f.ind, c.cvm); return k ? k.v : null; }
+      const g = CMP_INDS.find(x=>x[0]===f.ind);
+      return g ? g[2](c) : null;
+    };
+    const rotuloDe = f => f.kpi ? f.ind : ((CMP_INDS.find(x=>x[0]===f.ind)||[])[1] || f.ind);
+    const fmtDe = f => f.kpi ? fmtKpi(OPIDX, f.ind) : ((CMP_INDS.find(x=>x[0]===f.ind)||[])[3] || (v=>String(v)));
     const passa = c => ativos.every(f => {
-      const g = CMP_INDS.find(x=>x[0]===f.ind); if(!g) return true;
-      const v = g[2](c);
+      const v = valorDe(f, c);
       if(v==null || !isFinite(v)) return false;            // sem o dado → fora do resultado
       if(f.op==='gt') return v > f.v1;
       if(f.op==='lt') return v < f.v1;
@@ -2400,11 +2535,14 @@ function renderCmp(){
     });
     const res = escopo.filter(passa);
     // colunas: os indicadores filtrados + valor de mercado como referência
-    const colKeys = [...new Set([...ativos.map(f=>f.ind), 'mktCap'])];
-    const cols = colKeys.map(k => CMP_INDS.find(x=>x[0]===k)).filter(Boolean);
-    const ordKey = (cols[0]||CMP_INDS[0])[0];
-    const ordG = CMP_INDS.find(x=>x[0]===ordKey)[2];
-    res.sort((a,b) => { const va=ordG(a), vb=ordG(b);
+    const cols = [...ativos.map(f=>({kpi:!!f.kpi, ind:f.ind})),
+                  {kpi:false, ind:'mktCap'}]
+      .filter((x,i,a) => a.findIndex(y=>y.kpi===x.kpi && y.ind===x.ind) === i);
+    const valorCol = (col, c) => valorDe(col, c);
+    const rotuloCol = col => rotuloDe(col);
+    const fmtCol = col => fmtDe(col);
+    const ordCol = cols[0];
+    res.sort((a,b) => { const va=valorCol(ordCol,a), vb=valorCol(ordCol,b);
       return (vb==null?-Infinity:vb) - (va==null?-Infinity:va); });
 
     const resumo = el('div','ct');
@@ -2423,36 +2561,36 @@ function renderCmp(){
         document.createTextNode('Veja abaixo o efeito de cada um separadamente — o que está cortando tudo aparece com poucas empresas.'));
       box.append(diag);
       const linhas = ativos.map(f => {
-        const g = CMP_INDS.find(x=>x[0]===f.ind);
         const passaSo = escopo.filter(c => {
-          const v = g[2](c);
+          const v = valorDe(f, c);
           if(v==null || !isFinite(v)) return false;
           if(f.op==='gt') return v > f.v1;
           if(f.op==='lt') return v < f.v1;
           const lo=Math.min(f.v1,f.v2), hi=Math.max(f.v1,f.v2);
           return v>=lo && v<=hi;
         });
-        // qual valor traria pelo menos 3 empresas neste filtro
-        const vals = escopo.map(c=>g[2](c)).filter(v=>v!=null && isFinite(v)).sort((a,b)=>f.op==='lt'? a-b : b-a);
+        const vals = escopo.map(c=>valorDe(f,c)).filter(v=>v!=null && isFinite(v)).sort((a,b)=>f.op==='lt'? a-b : b-a);
         const sugerido = vals.length>=3 ? vals[2] : (vals.length? vals[vals.length-1] : null);
         const sinal = f.op==='gt' ? '>' : f.op==='lt' ? '<' : 'entre';
-        return [g[1] + ' ' + sinal + ' ' + (f.op==='bt' ? (f.v1+'–'+f.v2) : f.v1),
-                passaSo.length,
-                sugerido==null ? '—' : (f.op==='bt' ? '—' : (sinal+' '+g[3](sugerido)+' traria 3'))];
+        const fm = fmtDe(f);
+        return [rotuloDe(f) + ' ' + sinal + ' ' + (f.op==='bt' ? (f.v1+'–'+f.v2) : f.v1),
+                passaSo.length + (f.kpi ? ' (de ' + new Set((OPIDX[f.ind]||[]).map(x=>x.cvm)).size + ' que divulgam)' : ''),
+                sugerido==null ? '—' : (f.op==='bt' ? '—' : (sinal+' '+fm(sugerido)+' traria 3'))];
       });
       box.append(tabelaValores(['Filtro','Empresas que passam só neste','Para ter resultado'], linhas));
       const solto = el('div'); solto.style.cssText='display:flex;gap:8px;margin:8px 0 0;flex-wrap:wrap';
       ativos.forEach((f,i) => {
-        const g = CMP_INDS.find(x=>x[0]===f.ind);
-        const b = el('button','btn','remover "'+g[1]+'"');
+        const b = el('button','btn','remover "'+rotuloDe(f)+'"');
         b.onclick = () => { cmpSel.filtros = cmpSel.filtros.filter(x=>x!==f); lsSet('cmp_sel', cmpSel); renderCmp(); };
         solto.append(b);
       });
       box.append(solto);
     }
     if(ativos.length && res.length){
-      const headers = ['Empresa','Setor', ...cols.map(c=>c[1])];
-      const linhas = res.map(c => [c.name, c.subsetor || c.setor, ...cols.map(k => k[2](c))]);
+      const temKpi = cols.some(c=>c.kpi);
+      const headers = ['Empresa','Setor', ...cols.map(rotuloCol), ...(temKpi?['Período do KPI']:[])];
+      const perKpi = c => { const k = cols.find(x=>x.kpi); const kv = k ? kpiValor(OPIDX, k.ind, c.cvm) : null; return kv ? kv.p : null; };
+      const linhas = res.map(c => [c.name, c.subsetor || c.setor, ...cols.map(k => valorCol(k,c)), ...(temKpi?[perKpi(c)]:[])]);
       const w = el('div','qtblwrap'); w.style.marginTop='8px';
       const t = el('table','qtbl');
       const hr = el('tr'); for(const h of headers) hr.append(el('th',null,h));
@@ -2462,7 +2600,8 @@ function renderCmp(){
         const tr = el('tr'); tr.style.cursor='pointer';
         tr.onclick = () => openDetail(c.cvm);
         tr.append(el('td',null,c.name), el('td',null,c.subsetor||c.setor));
-        cols.forEach(k => tr.append(el('td',null, k[3](k[2](c)))));
+        cols.forEach(k => tr.append(el('td',null, fmtCol(k)(valorCol(k,c)))));
+        if(temKpi) tr.append(el('td',null, perKpi(c) || '—'));
         tb.append(tr);
       });
       t.append(tb); w.append(t); box.append(w);
@@ -2481,8 +2620,22 @@ function renderCmp(){
       if(res.length > PEER_MAX)
         box.append(el('div','dim','O peer set leva as '+PEER_MAX+' primeiras (ordenado por '+(cols[0]||CMP_INDS[0])[1]+').'));
     }
+    const kpisAtivos = ativos.filter(f=>f.kpi);
+    let avisoKpi = '';
+    if(kpisAtivos.length){
+      const partes = kpisAtivos.map(f => {
+        const fora = kpiForaDaUnidade(OPIDX, f.ind);
+        const quantos = new Set((OPIDX[f.ind]||[]).map(x=>x.cvm)).size;
+        return f.ind + ': ' + quantos + ' empresas divulgam'
+          + (fora.length ? '; fora do filtro por reportarem em outra unidade — ' + fora.join(', ') : '');
+      });
+      avisoKpi = ' ⚠ Os KPIs operacionais vêm da curadoria dos releases, não da CVM estruturada: '
+        + 'cada empresa nomeia e mede do seu jeito, e o valor usado é o do ÚLTIMO trimestre que ela divulgou (a coluna Período mostra qual). '
+        + 'O filtro compara só dentro da unidade dominante da família. ' + partes.join(' · ') + '.';
+    }
     noteEl2.textContent = 'Empresas sem o dado de algum filtro ficam fora do resultado — o screener não presume valor ausente. '
-      + 'Múltiplos (P/L, P/VP, EV/EBITDA, DY) vêm do Fundamentus no último fechamento; ROIC, margens e alavancagem são calculados dos 12 meses da CVM. Os filtros ficam salvos neste navegador.';
+      + 'Múltiplos (P/L, P/VP, EV/EBITDA, DY) vêm do Fundamentus no último fechamento; ROIC, margens e alavancagem são calculados dos 12 meses da CVM. Os filtros ficam salvos neste navegador.'
+      + avisoKpi;
 
   } else if(cmpSel.modo==='peer'){
     // ---------- PEER SET: tabela empresas × indicadores + estatísticas ----------
