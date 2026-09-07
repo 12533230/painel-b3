@@ -1,17 +1,50 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Coletor de notícias por empresa (roda 1x/dia no update.yml).
-Para cada empresa listada (data/b3_companies.json), busca as manchetes mais
-recentes no RSS do Google News (query: nome + B3) e grava data/news.json:
+Coletor de notícias por empresa (roda no noticias.yml, a cada 2h, todos os dias).
 
-  {"updatedAt": iso, "n": {codigoCVM: [{"t": título, "src": veículo,
-                                        "d": "dd/mm", "u": link}, ...]}}
+Para cada empresa listada (data/b3_companies.json) consulta o RSS do Google News
+e grava data/news.json:
 
-Tolerante a falha: empresa que falhar mantém as notícias do arquivo anterior.
+  {"updatedAt": iso, "janelaDias": 30, "comNoticia": n,
+   "n": {codigoCVM: [{"t": título, "src": veículo, "d": "dd/mm",
+                      "iso": "AAAA-MM-DD", "u": link}, ...]}}
+
+O painel mostrava "Notícias recentes" com matéria de 2021. As causas foram
+medidas em 07/09/2026 (267 consultas ao feed, 1.415 itens) e cada uma tem um
+tratamento aqui:
+
+  1. A query não tinha filtro de recência. Sem `when:`, 90% dos 6 itens que o
+     script gravava por empresa tinham mais de 30 dias (mediana 193 dias; o mais
+     antigo era de 2017). Agora vai `when:30d`, e o filtro do Google se mostrou
+     confiável (0 item fora da janela em 259 medidos).
+  2. O feed vem por RELEVÂNCIA, não por data (só 44,9% dos pares em ordem
+     cronológica; `scoring=n` não muda nada). Pegar os 6 primeiros do XML
+     descartava a notícia mais nova em 21 de 30 feeds. Agora lê o feed inteiro e
+     ordena aqui.
+  3. A data era gravada como "dd/mm", sem ano: 16,9% dos itens do arquivo
+     publicado tinham dia/mês POSTERIOR ao próprio updatedAt — matéria de um ano
+     atrás parecendo da semana. O pubDate traz ano em 100% dos itens; agora vai
+     a data completa.
+  4. Página automática de cotação não é notícia. Os oito filtros de título abaixo
+     pegaram 130 de 1.415 itens (9,2%) com 1 falso positivo (99,2% de precisão).
+     Eles valem sobre o título CRU, antes de cortar o sufixo do veículo.
+  5. Nada expirava: item herdado do arquivo anterior ficava para sempre. Agora
+     item com data velha (ou sem data) sai do arquivo.
+  6. ~40% das empresas não têm notícia na janela (24 de 40 na amostra tinham).
+     Isso é estado normal, não falha: a empresa fica com lista vazia e o painel
+     diz "nenhuma notícia nos últimos 30 dias". Ampliar a janela para 90 dias
+     recuperaria 4 empresas — e 4 dos 5 itens recuperados eram lixo.
+
+Tolerância a falha: falha de rede (None) mantém as notícias anteriores da
+empresa; feed vazio é resposta legítima e sobrescreve. Se a coleta inteira
+desabar, ou se a cobertura despencar (bloqueio do Google), o arquivo publicado
+NÃO é sobrescrito.
 """
 import datetime as dt
-import json, re, sys, time
+import json, re, sys, time, unicodedata
+from collections import Counter
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 import requests
 from lxml import etree
@@ -22,6 +55,9 @@ OUT_FILE = DATA / "news.json"
 UA = {"User-Agent": "Mozilla/5.0 (painel-b3; uso educacional/interno; contato via repo)"}
 RSS = "https://news.google.com/rss/search"
 MAX_POR_EMPRESA = 6
+JANELA_DIAS = 30          # o que a query pede ao Google (when:30d)
+MAX_IDADE_DIAS = 35       # cinto de segurança: item mais velho que isso sai do arquivo
+GENERICA_MIN = 10         # manchete que aparece em N empresas é notícia de mercado, não da empresa
 
 def log(*a): print("[news]", *a, file=sys.stderr)
 
@@ -31,42 +67,169 @@ def load_json(p, default):
     except Exception:
         return default
 
-def parse_dt(s):
-    # "Tue, 25 Aug 2026 14:03:00 GMT" -> "25/08"
-    m = re.match(r"\w+, (\d{2}) (\w{3}) (\d{4})", s or "")
-    if not m:
-        return ""
-    meses = {"Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04", "May": "05", "Jun": "06",
-             "Jul": "07", "Aug": "08", "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12"}
-    return f"{m.group(1)}/{meses.get(m.group(2), '01')}"
+def semacento(s):
+    return "".join(c for c in unicodedata.normalize("NFD", s or "")
+                   if unicodedata.category(c) != "Mn")
+
+# ---- páginas automáticas de cotação/ticker que o Google indexa como notícia ----
+# Derivados de 1.415 itens reais: 130 capturados, 1 falso positivo.
+LIXO_TITULO = [
+    re.compile(r"^[A-Z]{4}\d{1,2}\b[^.!?]{0,90}\b(cota[çc][ãa]o|resultados|indicadores)\b", re.I),
+    re.compile(r"\b(cota[çc][ãa]o|cota[çc][õo]es)\s*,\s*(dividendos|indicadores|balan[çc]os|gr[áa]ficos?)", re.I),
+    re.compile(r"BMFBOVESPA\s*:\s*[A-Z]{4}\d{1,2}", re.I),
+    re.compile(r"^(A[çc][ãa]o\s+[A-Z]{4}\d{1,2}\s*:|[A-Z]{4}\d{1,2}\s+ETF\s+Hoje|Previs[ãa]o\s+[A-Z]{4}\d{1,2}\b|Gr[áa]ficos\s+Sazonais\b)", re.I),
+    re.compile(r"(^An[áa]lise\s+t[ée]cnica\s+d[oe]|Demonstrativo\s+(Financeiro|de\s+Resultados)|Detalhamento\s+da\s+Receita|^Vis[ãa]o\s+geral\s+dos\s+fundamentos)", re.I),
+    re.compile(r"(\([A-Z]{4}\d{1,2}\)\s*Pre[çc]o\s+da\s+a[çc][ãa]o|\b(Stock|ETF)\s+Price\s+and\s+Chart\b)", re.I),
+    re.compile(r"^(Cota[çc][ãa]o\s+.{0,60}hoje\s*:|Cota[çc][õo]es\s+(de\s+A[çc][õo]es|em\s+Tempo\s+Real))", re.I),
+    re.compile(r"^[A-Z]{4}\d{1,2}\b[^\n]{0,90}(\d+,\d+\s*%|Ibovespa)"),   # sem re.I: o ticker é maiúsculo
+    # páginas de cotação do InvestNews ("Ação AGXY3.SA - Ações Agrogalaxy – AGXY3 - Cotação"):
+    # 6 acertos e 0 falso positivo em 1.906 títulos do corpus medido
+    re.compile(r"^A[çc][ãa]o\s+[A-Z]{4}\d{1,2}(\.SA)?\s*[-–]", re.I),
+    re.compile(r"^Not[íi]cias\s+da\s+Bolsa\s+de\s+Valores", re.I),
+]
+def eh_lixo(titulo_cru, fonte):
+    if any(r.search(titulo_cru) for r in LIXO_TITULO):
+        return True
+    # a própria B3 publica página institucional sem notícia ("IPO", "Novo Mercado")
+    if (fonte or "").strip() == "B3" and len(titulo_cru.split()) <= 3:
+        return True
+    return False
+
+def norm_titulo(t):
+    return re.sub(r"[^a-z0-9]+", " ", semacento(t or "").lower()).strip()
+
+# palavras de razão social que não identificam a empresa
+LIXO_RAZAO = {"s.a.", "sa", "ltda", "holding", "holdings", "participacoes", "participacao",
+              "part", "cia", "companhia", "brasil", "brasileira", "brasileiro", "group",
+              "grupo", "industria", "industrias", "comercio", "servicos", "empreendimentos",
+              "distribuidora", "nacional", "unidas", "units", "banco"}
+def termos_empresa(c):
+    """Tokens que, no título, indicam que a matéria é sobre ESTA empresa."""
+    t = set()
+    for cod in (c.get("codes") or []):
+        if cod: t.add(cod.lower())
+    if c.get("issuer"): t.add(str(c["issuer"]).lower())
+    for campo in ("trad", "name"):
+        for w in re.split(r"[^a-z0-9]+", semacento(str(c.get(campo) or "")).lower()):
+            if len(w) >= 4 and w not in LIXO_RAZAO:
+                t.add(w)
+    return t
+
+def menciona(titulo, termos):
+    tl = semacento(titulo).lower()
+    return any(t in tl for t in termos)
+
+def data_iso(s):
+    """'Wed, 02 Sep 2026 17:33:14 GMT' -> (date, 'AAAA-MM-DD', 'dd/mm'); None se ilegível."""
+    try:
+        d = parsedate_to_datetime(s)
+        if d is None:
+            return None
+        d = d.date()
+        return (d, d.isoformat(), f"{d.day:02d}/{d.month:02d}")
+    except Exception:
+        return None
 
 EXCL_MKT = {"BALCAO NAO ORG.", "OUTROS", "SOMA"}
 EXCL_SECTORS = {"Carga Inicial", "Setor Inicial"}
 
-def fetch_news(session, nome):
-    """Lista de notícias (possivelmente vazia) no sucesso; None só em falha real."""
+# razão social sem o entulho jurídico, para a consulta de reserva. Medido: com o
+# nome curto ("ITAUUNIBANCO", tudo junto) o feed vem VAZIO; com "ITAU UNIBANCO"
+# vem notícia de 6 dias. Não substitui o nome curto — em SABESP, CPFL, MILLS e
+# SMART FIT o curto é bem melhor —, entra só quando o primeiro não achou nada.
+RE_LEGAL = re.compile(r"\b(s\s*\.?\s*a\.?|sa|ltda|me|epp|cia|companhia|holdings?|"
+                      r"participa[çc][õo]es|participa[çc][ãa]o|part\.?)\b", re.I)
+def nome_alternativo(c):
+    n = re.sub(r"[.,]", " ", str(c.get("name") or ""))
+    n = RE_LEGAL.sub(" ", n)
+    n = re.sub(r"\s+", " ", n).strip()
+    n = " ".join(n.split(" ")[:5])
+    curto = str(c.get("trad") or "").strip()
+    if len(n) < 5 or semacento(n).lower() == semacento(curto).lower():
+        return ""
+    return n
+
+def busca_rss(session, consulta):
+    """XML do feed, ou None em falha de rede/parse."""
     try:
-        r = session.get(RSS, params={"q": f'"{nome}" B3', "hl": "pt-BR", "gl": "BR",
-                                     "ceid": "BR:pt-419"}, timeout=(5, 10))
+        r = session.get(RSS, params={"q": consulta, "hl": "pt-BR", "gl": "BR", "ceid": "BR:pt-419"},
+                        timeout=(5, 15))
         r.raise_for_status()
-        root = etree.fromstring(r.content)
-        out = []
-        for it in root.iter("item"):
-            t = (it.findtext("title") or "").strip()
-            u = (it.findtext("link") or "").strip()
-            src = (it.findtext("source") or "").strip()
-            # Google News costuma anexar " - Veículo" ao título
-            t = re.sub(r" - [^-]+$", "", t)[:140]
-            d = parse_dt(it.findtext("pubDate"))
-            if t and u:
-                out.append({"t": t, "src": src[:40], "d": d, "u": u})
-            if len(out) >= MAX_POR_EMPRESA:
-                break
-        return out  # [] = feed válido sem manchetes (não é falha)
+        return etree.fromstring(r.content)
     except Exception:
         return None
 
+def fetch_news(session, empresa, hoje):
+    """Lista de notícias (possivelmente vazia) no sucesso; None só em falha real."""
+    nome = (empresa.get("trad") or empresa.get("name") or "").strip()
+    root = busca_rss(session, f'"{nome}" B3 when:{JANELA_DIAS}d')
+    if root is None:
+        return None
+    if not len(list(root.iter("item"))):
+        # nada com o nome curto: tenta a razão social antes de dizer "sem notícia"
+        alt = nome_alternativo(empresa)
+        if alt:
+            time.sleep(0.35)
+            r2 = busca_rss(session, f'"{alt}" B3 when:{JANELA_DIAS}d')
+            if r2 is not None:
+                root = r2
+    termos = termos_empresa(empresa)
+    itens, vistos = [], set()
+    for it in root.iter("item"):                 # o feed inteiro: a ordem dele é por relevância
+        cru = (it.findtext("title") or "").strip()
+        u = (it.findtext("link") or "").strip()
+        src = (it.findtext("source") or "").strip()
+        if not cru or not u or eh_lixo(cru, src):
+            continue
+        # o Google News anexa " - <source>" ao título; cortar pelo próprio campo
+        # acerta 100% dos casos (a regex antiga errava quando o veículo tem hífen)
+        t = cru[:-(len(src) + 3)].strip() if src and cru.endswith(" - " + src) else cru
+        t = t[:140]
+        if not t:
+            continue
+        d = data_iso(it.findtext("pubDate"))
+        if not d:
+            continue                             # sem data não entra: não dá para dizer se é recente
+        data, iso, ddmm = d
+        idade = (hoje - data).days
+        if idade > MAX_IDADE_DIAS or idade < -1:  # -1 tolera fuso; futuro além disso é erro da fonte
+            continue
+        k = norm_titulo(t)
+        if k in vistos:
+            continue
+        vistos.add(k)
+        itens.append({"t": t, "src": src[:40], "d": ddmm, "iso": iso, "u": u,
+                      "_men": menciona(t, termos)})
+    # Quem cita a empresa primeiro, depois o mais recente: metade dos itens do
+    # feed é notícia de mercado que só menciona a empresa de passagem. Duas
+    # ordenações estáveis fazem isso sem chave composta.
+    itens.sort(key=lambda x: x["iso"], reverse=True)
+    itens.sort(key=lambda x: 0 if x["_men"] else 1)
+    return itens[:MAX_POR_EMPRESA]
+
+def limpa_antigos(itens, hoje):
+    """Item herdado do arquivo anterior também expira — e sem data não fica."""
+    out = []
+    for it in itens or []:
+        iso = it.get("iso")
+        if not iso:
+            continue          # arquivo antigo gravava só "dd/mm": sem ano, não dá para datar
+        try:
+            data = dt.date.fromisoformat(str(iso)[:10])
+        except Exception:
+            continue
+        if (hoje - data).days <= MAX_IDADE_DIAS:
+            out.append(it)
+    return out
+
 def main():
+    # --amostra N  usa 1 empresa a cada k (determinístico) e NÃO grava o arquivo:
+    # é como o autoteste.yml confere a coleta de verdade sem 4 minutos de fila.
+    amostra = 0
+    if "--amostra" in sys.argv:
+        try: amostra = int(sys.argv[sys.argv.index("--amostra") + 1])
+        except Exception: amostra = 12
+    hoje = dt.datetime.utcnow().date()
     b3 = load_json(DATA / "b3_companies.json", {})
     empresas = []
     for c in b3.get("companies") or []:
@@ -78,34 +241,95 @@ def main():
             cvm = str(int(c["codeCVM"]))
         except Exception:
             continue
-        nome = (c.get("trad") or c.get("name") or "").strip()
-        if nome:
-            empresas.append((cvm, nome))
+        if (c.get("trad") or c.get("name") or "").strip():
+            empresas.append((cvm, c))
+    if not empresas:
+        log("nenhuma empresa no universo — abortando sem gravar")
+        sys.exit(1)
+    if amostra:
+        empresas.sort(key=lambda x: (x[1].get("trad") or ""))
+        k = max(1, len(empresas) // amostra)
+        empresas = empresas[::k][:amostra]
+        log(f"MODO AMOSTRA: {len(empresas)} empresas, sem gravar arquivo")
+
     prev = load_json(OUT_FILE, {})
-    n = dict(prev.get("n") or {})
+    prev_n = dict(prev.get("n") or {})
+    prev_com_item = sum(1 for v in prev_n.values() if v)
+    n = {}
+    falhas_seguidas = 0
+    com_item = 0
     s = requests.Session(); s.headers.update(UA)
-    ok = 0
-    vazios_seguidos = 0
-    for i, (cvm, nome) in enumerate(empresas):
-        itens = fetch_news(s, nome)
-        if itens is None:  # falha real (HTTP/parse) — feed vazio NÃO conta
-            vazios_seguidos += 1
-            if vazios_seguidos >= 30:  # bloqueio/limite geral: preserva o publicado
+    for i, (cvm, emp) in enumerate(empresas):
+        itens = fetch_news(s, emp, hoje)
+        if itens is None:                        # falha real (HTTP/parse)
+            falhas_seguidas += 1
+            herdado = limpa_antigos(prev_n.get(cvm), hoje)
+            if herdado:
+                n[cvm] = herdado                 # mantém o que ainda está no prazo
+            if falhas_seguidas >= 30:
                 log("30 falhas de rede em sequência — abortando a coleta")
                 break
         else:
-            vazios_seguidos = 0
-            if itens:  # feed vazio mantém as notícias antigas da empresa
-                n[cvm] = itens
-                ok += 1
+            falhas_seguidas = 0
+            n[cvm] = itens                       # inclusive vazio: "sem notícia na janela"
+            if itens:
+                com_item += 1
         if i % 100 == 0:
-            log(f"{i}/{len(empresas)} ({ok} ok)")
-        time.sleep(0.35)  # educado com o Google News
-    log(f"{ok} empresas com notícias de {len(empresas)} ({len(n)} no arquivo)")
-    if ok == 0:
-        log("nada coletado — abortando sem gravar")
+            log(f"{i}/{len(empresas)} ({com_item} com notícia)")
+        time.sleep(0.35)                          # educado com o Google News
+
+    # empresa que não chegou a ser consultada mantém o que havia, já expirado
+    # (no modo amostra isso traria as ~340 empresas do arquivo anterior)
+    if not amostra:
+        for cvm, v in prev_n.items():
+            if cvm not in n:
+                resto = limpa_antigos(v, hoje)
+                if resto:
+                    n[cvm] = resto
+
+    # manchete de mercado ("Ibovespa fecha em alta") aparece no feed de dezenas de
+    # empresas: sai de quem tem notícia própria, fica em quem não tem mais nada
+    cont = Counter()
+    for itens in n.values():
+        for it in itens:
+            cont[norm_titulo(it["t"])] += 1
+    genericas = 0
+    if not amostra:      # com 12 empresas o limiar de 10 não significa nada
+        for cvm, itens in n.items():
+            if not any(it.get("_men") for it in itens):
+                continue
+            mantidos = [it for it in itens if it.get("_men") or cont[norm_titulo(it["t"])] < GENERICA_MIN]
+            genericas += len(itens) - len(mantidos)
+            n[cvm] = mantidos
+    for itens in n.values():                      # marca interna não vai para o arquivo
+        for it in itens:
+            it.pop("_men", None)
+
+    com_item = sum(1 for v in n.values() if v)
+    log(f"{com_item} empresas com notícia na janela de {JANELA_DIAS}d "
+        f"(antes: {prev_com_item}) · {len(n)} no arquivo · {genericas} manchetes de mercado removidas")
+    if amostra:
+        # mostra o que sairia na tela, para dar para conferir a olho no log do CI
+        for cvm, itens in list(n.items())[:amostra]:
+            nome = next((str(e[1].get("trad")) for e in empresas if e[0] == cvm), cvm)
+            log(f"--- {nome} ({cvm}): {len(itens)} item(ns)")
+            for it in itens:
+                log(f"      {it['iso']} | {it['src'][:18]:<18} | {it['t'][:80]}")
+        log("MODO AMOSTRA: nada gravado")
+        return
+    if com_item == 0:
+        log("nada coletado — abortando sem gravar (o painel mantém o arquivo anterior)")
         sys.exit(1)
-    snap = {"updatedAt": dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"), "n": n}
+    # queda brusca de cobertura = bloqueio/soft-ban do Google, não notícia que acabou.
+    # A primeira execução depois desta reescrita cai de propósito (o arquivo antigo
+    # tinha item de qualquer idade), por isso o piso é 40% e não 80%.
+    if prev_com_item >= 50 and com_item < prev_com_item * 0.4:
+        log(f"cobertura caiu de {prev_com_item} para {com_item} (<40%) — "
+            f"provável bloqueio; abortando sem gravar")
+        sys.exit(1)
+
+    snap = {"updatedAt": dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "janelaDias": JANELA_DIAS, "comNoticia": com_item, "n": n}
     OUT_FILE.write_text(json.dumps(snap, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     log(f"OK {OUT_FILE} ({OUT_FILE.stat().st_size/1024:.0f} KB)")
 
