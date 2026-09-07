@@ -137,6 +137,10 @@
   .livechip{display:inline-block;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700;background:var(--wash);color:var(--ink2)}
   /* ---- disclaimer & frescor dos dados ---- */
   .notice{background:var(--wash);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--ink2);margin:0 0 12px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  /* faixa de "dado atrasado": só existe quando algum conjunto passou do prazo */
+  #idadeaviso:empty{display:none}
+  #idadeaviso{margin:10px 14px 0;background:var(--wash);border:1px solid var(--bad);border-left:4px solid var(--bad);
+    border-radius:10px;padding:9px 12px;font-size:12px;color:var(--ink);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
   .notice b{color:var(--ink)}
   .notice a{color:var(--link);cursor:pointer;font-weight:700;text-decoration:none;white-space:nowrap}
   .notice a:hover{text-decoration:underline}
@@ -280,8 +284,9 @@
 </div>
 <div class="ticker" id="ticker" title="Cotações — passe o mouse para pausar"><div class="tk-track" id="tkt"></div></div>
 </div>
-<script id="macrodados" type="application/json">{"snapshotEm": "2026-09-07", "core": {"coletadoEm": "2026-09-07T15:01:51.771820Z", "selic": {"data": "16/09/2026", "valor": "14.00"}, "ipca12": {"data": "01/07/2026", "valor": "4.44"}, "cdi": {"data": "04/09/2026", "valor": "13.90"}, "dolarPtax": {"data": "04/09/2026", "valor": "5.1253"}, "focus": [{"i": "Câmbio", "ref": "2026", "med": 5.2, "d": "2026-08-28"}, {"i": "Câmbio", "ref": "2027", "med": 5.3, "d": "2026-08-28"}, {"i": "Câmbio", "ref": "2028", "med": 5.3, "d": "2026-08-28"}, {"i": "Câmbio", "ref": "2029", "med": 5.363, "d": "2026-08-28"}, {"i": "Câmbio", "ref": "2030", "med": 5.4, "d": "2026-08-28"}, {"i": "IGP-M", "ref": "2026", "med": 4.3752, "d": "2026-08-28"}, {"i": "IGP-M", "ref": "2027", "med": 4.1, "d": "2026-08-28"}, {"i": "IGP-M", "ref": "2028", "med": 3.915, "d": "2026-08-28"}, {"i": "IGP-M", "ref": "2029", "med": 3.825, "d": "2026-08-28"}, {"i": "IGP-M", "ref": "2030", "med": 3.8, "d": "2026-08-28"}, {"i": "IPCA", "ref": "2026", "med": 5.0062, "d": "2026-08-28"}, {"i": "IPCA", "ref": "2027", "med": 4.28, "d": "2026-08-28"}, {"i": "IPCA", "ref": "2028", "med": 3.8, "d": "2026-08-28"}, {"i": "IPCA", "ref": "2029", "med": 3.5, "d": "2026-08-28"}, {"i": "IPCA", "ref": "2030", "med": 3.5, "d": "2026-08-28"}, {"i": "PIB Total", "ref": "2026", "med": 1.9233, "d": "2026-08-28"}, {"i": "PIB Total", "ref": "2027", "med": 1.5, "d": "2026-08-28"}, {"i": "PIB Total", "ref": "2028", "med": 1.98, "d": "2026-08-28"}, {"i": "PIB Total", "ref": "2029", "med": 2.0, "d": "2026-08-28"}, {"i": "PIB Total", "ref": "2030", "med": 2.0, "d": "2026-08-28"}, {"i": "Selic", "ref": "2026", "med": 13.75, "d": "2026-08-28"}, {"i": "Selic", "ref": "2027", "med": 12.0, "d": "2026-08-28"}, {"i": "Selic", "ref": "2028", "med": 10.5, "d": "2026-08-28"}, {"i": "Selic", "ref": "2029", "med": 10.0, "d": "2026-08-28"}, {"i": "Selic", "ref": "2030", "med": 10.0, "d": "2026-08-28"}], "fx": {"USDBRL": {"bid": 5.22, "pct": 0.303605, "ts": "2026-08-18 17:36:26", "name": "Dólar Americano/Real Brasileiro"}, "EURBRL": {"bid": 6.0421, "pct": 0.247209, "ts": "2026-08-18 17:34:57", "name": "Euro/Real Brasileiro"}, "GBPBRL": {"bid": 7.06163, "pct": 0.171969, "ts": "2026-08-18 17:36:26", "name": "Libra Esterlina/Real Brasileiro"}, "JPYBRL": {"bid": 0.03268912, "pct": 0.120772, "ts": "2026-08-18 17:36:26", "name": "Iene Japonês/Real Brasileiro"}, "CNYBRL": {"bid": 0.77451504, "pct": 0.832441, "ts": "2026-08-14 17:59:56", "name": "Yuan Chinês/Real Brasileiro"}, "ARSBRL": {"bid": 0.00349184, "pct": -0.165823, "ts": "2026-08-18 17:35:29", "name": "Peso Argentino/Real Brasileiro"}, "BTCBRL": {"bid": 337868, "pct": 0.647, "ts": "2026-08-18 17:36:28", "name": "Bitcoin/Real Brasileiro"}}, "cripto": {"bitcoin": {"brl": 405937, "brl_24h_change": -0.31452164139893973, "usd": 79176, "usd_24h_change": -0.3281319076074544}, "ethereum": {"usd": 2489.62, "usd_24h_change": 0.6371369018292531, "brl": 12764.28, "brl_24h_change": 0.6508789761969888}}}, "ibov": {"date": "2026-09-04", "hora": "17:19:00", "pontos": 185147.15, "varDia": -0.02}, "agenda": [{"dt": "2026-09-09", "fim": "2026-09-10", "ev": "BCE — decisão de juros", "tag": "ZE"}, {"dt": "2026-09-11", "fim": "2026-09-11", "ev": "IPCA de agosto (IBGE)", "tag": "BR"}, {"dt": "2026-09-15", "fim": "2026-09-16", "ev": "Copom — decisão da Selic", "tag": "BR", "super": true}, {"dt": "2026-09-15", "fim": "2026-09-16", "ev": "FOMC — decisão de juros (Fed)", "tag": "EUA", "super": true}, {"dt": "2026-10-27", "fim": "2026-10-28", "ev": "FOMC — decisão de juros (Fed)", "tag": "EUA"}, {"dt": "2026-10-28", "fim": "2026-10-29", "ev": "BCE — decisão de juros", "tag": "ZE"}, {"dt": "2026-11-03", "fim": "2026-11-04", "ev": "Copom — decisão da Selic", "tag": "BR"}, {"dt": "2026-12-01", "fim": "2026-12-01", "ev": "PIB 3º trimestre 2026 (IBGE, data típica — confirmar)", "tag": "BR"}, {"dt": "2026-12-08", "fim": "2026-12-09", "ev": "Copom — decisão da Selic", "tag": "BR", "super": true}, {"dt": "2026-12-08", "fim": "2026-12-09", "ev": "FOMC — decisão de juros (Fed)", "tag": "EUA", "super": true}, {"dt": "2026-12-16", "fim": "2026-12-17", "ev": "BCE — decisão de juros", "tag": "ZE"}], "reddit": {"news": [{"t": "Correios têm prejuízo de R$ 5,4 bilhões no 1º semestre de 2026 | G1", "sub": "investimentos", "sc": 112, "nc": 215, "u": "https://g1.globo.com/economia/noticia/2026/08/17/correios-balanco-previo-aponta-prejuizo-de-r-54-bilhoes-no-1o-semestre-de-2026.ghtml", "dom": "g1.globo.com", "utc": 1786972035}, {"t": "Casas Bahia é só a ponta do iceberg: 986 varejistas estão em recuperação", "sub": "investimentos", "sc": 125, "nc": 82, "u": "https://www.infomoney.com.br/business/casas-bahia-e-so-a-ponta-do-iceberg-986-varejistas-estao-em-recuperacao/", "dom": "infomoney.com.br", "utc": 1787055331}, {"t": "Pablo Marçal declara patrimônio de R$ 7,4 bilhões; vice diz ter R$ 495 milhões", "sub": "investimentos", "sc": 186, "nc": 79, "u": "https://g1.globo.com/politica/eleicoes/2026/noticia/2026/08/15/pablo-marcal-declara-patrimonio-de-r-74-bilhoes-vice-diz-ter-r-495-milhoes.ghtml", "dom": "g1.globo.com", "utc": 1786839981}, {"t": "Brasil e Bolívia entram em lista global de economias com maior dívida pública", "sub": "investimentos", "sc": 107, "nc": 63, "u": "https://www.bloomberglinea.com.br/internacional/brasil-e-bolivia-entram-em-lista-global-de-economias-com-maior-divida-publica/", "dom": "bloomberglinea.com.br", "utc": 1786504343}, {"t": "BC multa Banco Genial em R$ 21,6 milhões e inabilita CEO por 4 anos", "sub": "investimentos", "sc": 122, "nc": 42, "u": "https://www.metropoles.com/brasil/economia-br/bc-multa-banco-genial-em-r-216-milhoes-e-inabilita-ceo-por-4-anos", "dom": "metropoles.com", "utc": 1786729619}, {"t": "Gerdau suspende investimento no Peru enquanto tenta bloquear projeto siderúrgico chinês", "sub": "economia", "sc": 52, "nc": 36, "u": "https://oglobo.globo.com/economia/negocios/noticia/2026/08/06/gerdau-suspende-investimento-no-peru-enquanto-tenta-bloquear-projeto-siderurgico-chines.ghtml", "dom": "oglobo.globo.com", "utc": 1786634718}, {"t": "CVM processa CEO do Banco do Brasil por excesso de otimismo", "sub": "investimentos", "sc": 91, "nc": 35, "u": "https://oglobo.globo.com/blogs/capital/post/2026/08/cvm-processa-ceo-do-banco-do-brasil-por-excesso-de-otimismo.ghtml", "dom": "oglobo.globo.com", "utc": 1786993783}, {"t": "Ações da Casas Bahia despencam na Bolsa e passam de mais de R$ 400 para centavos em cinco anos", "sub": "investimentos", "sc": 129, "nc": 30, "u": "https://g1.globo.com/economia/noticia/2026/08/17/acoes-da-casas-bahia.ghtml", "dom": "g1.globo.com", "utc": 1786978506}, {"t": "Inflação desacelera a 0,07% em julho, menor taxa para o mês desde 2022", "sub": "economia", "sc": 17, "nc": 12, "u": "https://economia.uol.com.br/noticias/redacao/2026/08/11/ipca---julho-2026.ghtm", "dom": "economia.uol.com.br", "utc": 1786526723}, {"t": "PT repete divisão sobre rumos da economia; veja análise", "sub": "economia", "sc": 2, "nc": 10, "u": "https://www.cnnbrasil.com.br/blogs/thais-heredia/eleicoes/analise-pt-repete-divisao-sobre-rumos-da-economia/", "dom": "cnnbrasil.com.br", "utc": 1786504467}], "disc": [{"t": "Caso Casas Bahia em recuperação judicial: você já comprou (ou comprava) nas Casas Bahia?", "sub": "investimentos", "sc": 121, "nc": 149, "u": "https://www.reddit.com/r/investimentos/comments/1vrmyvy/", "utc": 1787053959}, {"t": "O que seria preciso mudar para o Brasil atingir o nível de produção econômica de Alemanha, Japão, China ou Coreia do Sul?", "sub": "economia", "sc": 25, "nc": 128, "u": "https://www.reddit.com/r/Economia/comments/1vn01ev/", "utc": 1786593539}, {"t": "BB cobrando R$ 5/mês para mandar notificação", "sub": "investimentos", "sc": 581, "nc": 108, "u": "https://www.reddit.com/r/investimentos/comments/1vn63zy/", "utc": 1786614107}, {"t": "Novo cartão Nubank Croma — primeiras impressões", "sub": "investimentos", "sc": 245, "nc": 156, "u": "https://www.reddit.com/r/investimentos/comments/1vnb5l0/", "utc": 1786628700}, {"t": "Como estaria a economia argentina sem os três pacotes de até US$ 20 bi dos EUA?", "sub": "economia", "sc": 11, "nc": 83, "u": "https://www.reddit.com/r/Economia/comments/1vlx9p2/", "utc": 1786490068}, {"t": "Independência do Bacen", "sub": "economia", "sc": 8, "nc": 70, "u": "https://www.reddit.com/r/Economia/comments/1vrqevx/", "utc": 1787062513}]}, "manchetes": [{"t": "Jorge Paulo Lemann Aos 87 Anos e Patrimônio de R$ 103,5 Bilhões É o Terceiro Homem Mais Rico do Brasil", "src": "Forbes Brasil", "d": "07 Sep 2026"}, {"t": "Jaguar Land Rover anuncia corte de 4.000 empregos nos próximos dois anos para reduzir custos", "src": "Folha de S.Paulo", "d": "07 Sep 2026"}, {"t": "Lotofácil da Independência 2026: veja data, horário e valor do prêmio", "src": "G1", "d": "07 Sep 2026"}, {"t": "Mega-Sena acumula e próximo sorteio terá prêmio de R$ 70 milhões", "src": "Agência Brasil", "d": "06 Sep 2026"}, {"t": "ChatGPT já pode ajudar a comprar e vender ações; entenda como", "src": "Estadão", "d": "07 Sep 2026"}, {"t": "'No mercado, uns riem, outros vendem lenços', diz 'Faraó dos Bitcoins' em depoimento no qual admitiu manipulação de ativ", "src": "O GLOBO", "d": "07 Sep 2026"}, {"t": "Greve nacional nos bancos vai fechar agências bancárias em todo o Brasil a partir desta semana", "src": "Portal Tempo Novo", "d": "06 Sep 2026"}, {"t": "Saiba quais são as propostas de Lula e Flávio para as contas públicas", "src": "Poder360", "d": "06 Sep 2026"}, {"t": "Timemania hoje: resultado do concurso 2438 e números sorteados", "src": "G1", "d": "06 Sep 2026"}, {"t": "Ninguém acerta Quina, e prêmio sobe para R$ 18,5 milhões; veja números", "src": "UOL Notícias", "d": "06 Sep 2026"}, {"t": "Contas do governo pioram com Dario Durigan", "src": "Poder360", "d": "06 Sep 2026"}, {"t": "Anatel autoriza venda da telefonia fixa da Oi", "src": "CNN Brasil", "d": "07 Sep 2026"}], "veiculos": {"br": [{"n": "G1 Economia", "u": "https://g1.globo.com/economia/", "itens": [{"t": "IA avançada pode representar um 'risco existencial para a humanidade', alerta ONU", "u": "https://g1.globo.com/tecnologia/noticia/2026/09/07/ia-avancada-pode-representar-um-risco-existencial-para-a-humanidade-alerta-onu.ghtml", "d": "07 Sep"}, {"t": "Jaguar Land Rover anuncia corte de 4 mil vagas em plano para reduzir custos", "u": "https://g1.globo.com/carros/noticia/2026/09/07/jaguar-land-rover-anuncia-corte-de-4-mil-vagas-em-plano-para-reduzir-custos.ghtml", "d": "07 Sep"}, {"t": "Trabalhar, dever, trabalhar mais: como crédito caro prende entregadores argentinos aos aplicativos", "u": "https://g1.globo.com/economia/noticia/2026/09/07/trabalhar-dever-trabalhar-mais-como-credito-caro-prende-entregadores-argentinos-aos-aplicativos.ghtml", "d": "07 Sep"}]}, {"n": "Valor Econômico", "u": "https://valor.globo.com/", "itens": [{"t": "FT: O primeiro teste de John Ternus na Apple: vender um iPhone dobrável de US$ 2.000", "u": "https://valor.globo.com/empresas/noticia/2026/09/07/ft-o-primeiro-teste-de-john-ternus-na-apple-vender-um-iphone-dobrvel-de-us-2000.ghtml", "d": "07 Sep"}, {"t": "Traders estão errados sobre taxas de juros ou preços, diz estrategista do Deutsche Bank", "u": "https://valor.globo.com/financas/noticia/2026/09/07/traders-estao-errados-sobre-taxas-de-juros-ou-precos-diz-estrategista-do-deutsche-bank.ghtml", "d": "07 Sep"}, {"t": "Huawei lança linha de smartphones dobráveis para enfrentar Apple e Xiaomi na China", "u": "https://valor.globo.com/empresas/noticia/2026/09/07/huawei-lana-linha-de-smartphones-dobrveis-para-enfrentar-apple-e-xiaomi-na-china.ghtml", "d": "07 Sep"}]}, {"n": "InfoMoney", "u": "https://www.infomoney.com.br/mercados/", "itens": [{"t": "Irã ameaça atacar ativos dos EUA e empresas de petróleo no Golfo: “estão expostas”", "u": "https://www.infomoney.com.br/mundo/ira-ameaca-atacar-ativos-dos-eua-e-empresas-de-petroleo-no-golfo-estao-expostas/", "d": "07 Sep"}, {"t": "Como empresas e países tentam transformar o degelo do Ártico em vantagem econômica", "u": "https://www.infomoney.com.br/mundo/como-empresas-e-paises-tentam-transformar-o-degelo-do-artico-em-vantagem-economica/", "d": "07 Sep"}, {"t": "Bilionário anuncia venda de ilha por US$ 7,9 mi, mas governo diz que terra não é dele", "u": "https://www.infomoney.com.br/business/bilionario-anuncia-ilha-por-us-79-milhoes-mas-governo-diz-que-a-terra-nao-e-dele/", "d": "07 Sep"}]}, {"n": "Brazil Journal", "u": "https://braziljournal.com/", "itens": [{"t": "Que País É Este", "u": "https://braziljournal.com/que-pais-e-este/", "d": "07 Sep"}, {"t": "O Que Será", "u": "https://braziljournal.com/o-que-sera/", "d": "05 Sep"}, {"t": "Essa fase da minha vida — by Pedro Vinicio", "u": "https://braziljournal.com/essa-fase-da-minha-vida-by-pedro-vinicio/", "d": "04 Sep"}]}, {"n": "InvestNews", "u": "https://investnews.com.br/", "itens": [{"t": "Volkswagen converte fábrica de carros na Alemanha para a indústria de defesa", "u": "https://investnews.com.br/negocios/volkswagen-fabrica-industria-defesa/", "d": "07 Sep"}, {"t": "Dona do TikTok, ByteDance prepara IA para criar mundos virtuais em tempo real", "u": "https://investnews.com.br/negocios/tiktok-byte-dance-ia-mundos-virtuais/", "d": "07 Sep"}, {"t": "Banco central da China faz maior compra de ouro desde 2023, apesar da alta dos preços", "u": "https://investnews.com.br/economia/banco-central-china-maior-compra-ouro/", "d": "07 Sep"}]}, {"n": "Exame Invest", "u": "https://exame.com/invest/", "itens": []}], "int": [{"n": "NY Times Business", "u": "https://www.nytimes.com/section/business", "itens": [{"t": "Social Media in China Is Getting Really Dark", "u": "https://www.nytimes.com/2026/09/07/business/china-social-media-pessimism.html", "d": "07 Sep"}, {"t": "Rivian R2 Review: A Tidier (in Size and Price) SUV Is Ready for the Suburbs", "u": "https://www.nytimes.com/2026/09/07/business/rivian-r2-review.html", "d": "07 Sep"}, {"t": "Oil Prices Rise After U.S. and Iran Trade Strikes", "u": "https://www.nytimes.com/2026/09/06/business/oil-gas-prices-iran-war.html", "d": "07 Sep"}]}, {"n": "The Economist", "u": "https://www.economist.com/finance-and-economics", "itens": [{"t": "Inflation is back around the world—as is the fight against it", "u": "https://www.economist.com/finance-and-economics/2026/09/06/inflation-is-back-around-the-world-as-is-the-fight-against-it", "d": "06 Sep"}, {"t": "The jobs apocalypse is postponed. An AI jobs boom is here", "u": "https://www.economist.com/finance-and-economics/2026/09/04/the-jobs-apocalypse-is-postponed-an-ai-jobs-boom-is-here", "d": "04 Sep"}, {"t": "Mexico is struggling to win over bond markets", "u": "https://www.economist.com/finance-and-economics/2026/09/03/mexico-is-struggling-to-win-over-bond-markets", "d": "03 Sep"}]}, {"n": "The Guardian Business", "u": "https://www.theguardian.com/business", "itens": [{"t": "Jaguar Land Rover confirms plan to cut 4,000 jobs over two years", "u": "https://www.theguardian.com/business/2026/sep/07/jaguar-land-rover-job-trump-tariffs", "d": "07 Sep"}, {"t": "John Healey backs growth but says Labour must be honest on spending", "u": "https://www.theguardian.com/business/2026/sep/07/john-healey-growth-labour-spending-raise-taxes", "d": "07 Sep"}, {"t": "Architect of UK’s AI policy quits after Anthropic conflict of interest concerns", "u": "https://www.theguardian.com/technology/2026/sep/07/architect-uk-ai-policy-quits-anthropic-conflict-of-interest-concerns", "d": "07 Sep"}]}, {"n": "BBC Business", "u": "https://www.bbc.com/business", "itens": [{"t": "Why Jaguar Land Rover has decided change is needed", "u": "https://www.bbc.co.uk/news/articles/c5y4l22p262o?at_medium=RSS&at_campaign=rss", "d": "07 Sep"}, {"t": "Chancellor refuses to rule out tax hikes in October Budget", "u": "https://www.bbc.co.uk/news/articles/cgjqg450w28o?at_medium=RSS&at_campaign=rss", "d": "07 Sep"}, {"t": "The £70 refund letter that isn't a scam", "u": "https://www.bbc.co.uk/news/articles/c23x0kd8eleo?at_medium=RSS&at_campaign=rss", "d": "07 Sep"}]}, {"n": "Financial Times", "u": "https://www.ft.com/markets", "itens": []}, {"n": "Bloomberg", "u": "https://www.bloomberg.com/markets", "itens": []}, {"n": "Reuters Business", "u": "https://www.reuters.com/business/", "itens": []}, {"n": "WSJ Finance", "u": "https://www.wsj.com/finance", "itens": []}]}, "fontesAgenda": "BCB (Copom), Federal Reserve (FOMC), BCE, IBGE"}</script>
-<script id="quotesdados" type="application/json">{"updatedAt":"2026-09-07T15:02:09Z","q":{"AFLT3":{"n":"AFLUENTE T  ON","p":7.39,"pv":7.39,"cur":"BRL","t":1788457562},"ALPA3":{"n":"ALPARGATAS  ON      N1","p":10.2,"pv":10.2,"cur":"BRL","t":1788552000},"AALR3":{"n":"ALLIAR      ON      NM","p":3.3,"pv":3.28,"cur":"BRL","t":1788552000},"AERI3":{"n":"AERIS       ON      NM","p":2.07,"pv":2.09,"cur":"BRL","t":1788552000},"ACWI11":{"n":"XPETFACWI   CI","p":17.5,"pv":17.44,"cur":"BRL","t":1788552960},"ALPK3":{"n":"ESTAPAR     ON      NM","p":4.5,"pv":4.52,"cur":"BRL","t":1788552000},"ABCB4":{"n":"ABC BRASIL  PN      N2","p":24.58,"pv":24.84,"cur":"BRL","t":1788552240},"AHEB6":{"n":"SPTURIS     PNB","p":55.0,"pv":55.0,"cur":"BRL","t":1788481900},"AGRO3":{"n":"BRASILAGRO  ON      NM","p":19.27,"pv":19.0,"cur":"BRL","t":1788552180},"AHEB3":{"n":"SPTURIS     ON","p":23.89,"pv":23.89,"cur":"BRL","t":1786130114},"ABEV3":{"n":"AMBEV S/A   ON","p":15.74,"pv":15.76,"cur":"BRL","t":1788552359},"AHEB5":{"n":"SPTURIS     PNA","p":58.0,"pv":58.0,"cur":"BRL","t":1788481900},"ABCB10":{"n":"ABC BRASIL  PN REC NN2","p":25.5,"pv":25.2,"cur":"BRL","t":1788549023},"ALOS3":{"n":"ALLOS       ON      NM","p":28.81,"pv":29.02,"cur":"BRL","t":1788552347},"AAPL":{"n":"Apple Inc.","p":319.97,"pv":328.21,"cur":"USD","t":1788552001},"ALLD3":{"n":"ALLIED      ON      NM","p":5.19,"pv":5.23,"cur":"BRL","t":1788552180},"AGXY3":{"n":"AGROGALAXY  ON      NM","p":1.33,"pv":1.34,"cur":"BRL","t":1788551369},"ALPA4":{"n":"ALPARGATAS  PN      N1","p":13.57,"pv":13.74,"cur":"BRL","t":1788552240},"AMAR3":{"n":"LOJAS MARISAON      NM","p":0.8,"pv":0.79,"cur":"BRL","t":1788552180},"APTI4":{"n":"APTI4.SA,0P0000D5O8,0","p":0,"pv":null,"cur":"BRL","t":1721419200},"ALUP4":{"n":"ALUPAR      PN      N2","p":10.92,"pv":10.86,"cur":"BRL","t":1788549356},"AMD":{"n":"Advanced Micro Devices, Inc.","p":477.57,"pv":456.16,"cur":"USD","t":1788552001},"ALUP3":{"n":"ALUPAR      ON      N2","p":11.66,"pv":11.74,"cur":"BRL","t":1788550660},"AMBP3":{"n":"AMBIPAR     ON      NM","p":0.14,"pv":0.14,"cur":"BRL","t":1788552300},"ANIM3":{"n":"ANIMA       ON      NM","p":2.93,"pv":2.89,"cur":"BRL","t":1788552342},"ARND3":{"n":"ARANDU      ON      NM","p":0.51,"pv":0.5,"cur":"BRL","t":1788552000},"AMER3":{"n":"AMERICANAS  ON      NM","p":5.55,"pv":5.32,"cur":"BRL","t":1788552180},"ATED3":{"n":"ATOM EDUC   ON","p":1.17,"pv":1.17,"cur":"BRL","t":1788547169},"ALUP11":{"n":"ALUPAR      UNT     N2","p":33.64,"pv":33.47,"cur":"BRL","t":1788552240},"AMOB3":{"n":"AUTOMOB     ON      NM","p":12.4,"pv":11.76,"cur":"BRL","t":1788552180},"AUAU3":{"n":"PETZCOBASI  ON      NM","p":4.0,"pv":3.93,"cur":"BRL","t":1788552240},"ARML3":{"n":"ARMAC       ON      NM","p":3.84,"pv":3.8,"cur":"BRL","t":1788552000},"AMZN":{"n":"Amazon.com, Inc.","p":258.51,"pv":258.9,"cur":"USD","t":1788552001},"AUPO11":{"n":"BTGP AUPO   F11","p":109.92,"pv":109.86,"cur":"BRL","t":1788553020},"ASAI3":{"n":"ASSAI       ON      NM","p":9.08,"pv":9.11,"cur":"BRL","t":1788552352},"AVLL3":{"n":"ALPHAVILLE  ON      NM","p":6.9,"pv":6.9,"cur":"BRL","t":1788464344},"AZUL3":{"n":"AZUL        ON      N2","p":19.0,"pv":18.3,"cur":"BRL","t":1788552180},"AXIA7":{"n":"AXIA ENERGIAPNC     NM","p":55.35,"pv":55.87,"cur":"BRL","t":1788552633},"AVGO":{"n":"Broadcom Inc.","p":357.895,"pv":357.16,"cur":"USD","t":1788552001},"AURE3":{"n":"AUREN       ON      NM","p":12.0,"pv":11.63,"cur":"BRL","t":1788552341},"AZEV3":{"n":"AZEVEDO     ON","p":8.39,"pv":9.0,"cur":"BRL","t":1788552345},"AZEV4":{"n":"AZEVEDO     PN","p":1.45,"pv":1.51,"cur":"BRL","t":1788552180},"AZUL97":{"n":"AZUL        UNT     N2","p":6.98,"pv":6.22,"cur":"BRL","t":1788552180},"AXIA3":{"n":"AXIA ENERGIAON      NM","p":55.28,"pv":55.75,"cur":"BRL","t":1788552341},"AZTE3":{"n":"AZT ENERGIA ON","p":1.47,"pv":1.51,"cur":"BRL","t":1788552000},"AZUL98":{"n":"AZUL        UNT     N2","p":7.8,"pv":7.8,"cur":"BRL","t":1788283454},"B1003":{"n":"B100 S.A.   ON      NM","p":32.0,"pv":32.0,"cur":"BRL","t":1788448763},"BALM3":{"n":"BAUMER      ON","p":26.0,"pv":26.0,"cur":"BRL","t":1788440400},"BAUH3":{"n":"BAUH3.SA,0P0000C5JD,0","p":0,"pv":null,"cur":"BRL","t":1721764800},"B3SA3":{"n":"B3          ON      NM","p":17.37,"pv":17.35,"cur":"BRL","t":1788552351},"BAZA3":{"n":"AMAZONIA    ON","p":68.15,"pv":68.49,"cur":"BRL","t":1788548920},"BAUH4":{"n":"EXCELSIOR   PN","p":93.39,"pv":93.39,"cur":"BRL","t":1788457415},"AZUL99":{"n":"AZUL        UNT     N2","p":5.99,"pv":5.99,"cur":"BRL","t":1788540959},"B5P211":{"n":"IT NOW B5P2 F11","p":111.26,"pv":111.19,"cur":"BRL","t":1788553020},"AZZA3":{"n":"AZZAS 2154  ON      NM","p":17.69,"pv":17.08,"cur":"BRL","t":1788552354},"BALM4":{"n":"BAUMER      PN","p":14.99,"pv":14.99,"cur":"BRL","t":1788534306},"BDLL3":{"n":"BARDELLA    ON","p":4.5,"pv":4.5,"cur":"BRL","t":1788378657},"BBDC4":{"n":"BRADESCO    PN  EJ  N1","p":17.9,"pv":17.79,"cur":"BRL","t":1788552629},"BBDC2":{"n":"BRADESCO    DP   17,64","p":0.01,"pv":0.01,"cur":"BRL","t":1788395494},"BBAS3":{"n":"BRASIL      ON  EX  NM","p":22.52,"pv":22.45,"cur":"BRL","t":1788552355},"BBDC3":{"n":"BRADESCO    ON  EJ  N1","p":15.81,"pv":15.67,"cur":"BRL","t":1788552335},"BBSE3":{"n":"BBSEGURIDADEON      NM","p":42.16,"pv":41.69,"cur":"BRL","t":1788552357},"BBDC1":{"n":"BRADESCO    DO   15,43","p":0.01,"pv":0.01,"cur":"BRL","t":1788395494},"BGIP4":{"n":"BANESE      PN","p":34.0,"pv":34.0,"cur":"BRL","t":1788545673},"BIOM3":{"n":"BIOMM       ON      N2","p":6.63,"pv":6.42,"cur":"BRL","t":1788552000},"BIED3":{"n":"BIOMA EDUC  ON","p":6.01,"pv":6.09,"cur":"BRL","t":1788550174},"BEES4":{"n":"BANESTES    PN  EJ","p":8.97,"pv":9.11,"cur":"BRL","t":1788550396},"BEES3":{"n":"BANESTES    ON  EJ","p":8.85,"pv":8.95,"cur":"BRL","t":1788550414},"BEEF3":{"n":"MINERVA     ON      NM","p":3.95,"pv":3.79,"cur":"BRL","t":1788552343},"BMEB3":{"n":"MERCANTIL   ON      N1","p":50.64,"pv":50.61,"cur":"BRL","t":1788543840},"BGIP3":{"n":"BANESE      ON","p":46.37,"pv":45.7,"cur":"BRL","t":1788552000},"BDLL4":{"n":"BARDELLA    PN","p":3.25,"pv":3.25,"cur":"BRL","t":1788379500},"BHIA3":{"n":"CASAS BAHIA ON      NM","p":0.69,"pv":0.69,"cur":"BRL","t":1788552300},"BMIN3":{"n":"MERC INVEST ON","p":19.5,"pv":19.5,"cur":"BRL","t":1787062093},"BMGB4":{"n":"BANCO BMG   PN      N1","p":5.98,"pv":5.93,"cur":"BRL","t":1788552633},"BLAU3":{"n":"BLAU        ON      NM","p":9.68,"pv":9.5,"cur":"BRL","t":1788552351},"BMEB4":{"n":"MERCANTIL   PN      N1","p":61.23,"pv":60.14,"cur":"BRL","t":1788551368},"BITH11":{"n":"BITCOIN HASHCI","p":91.15,"pv":93.26,"cur":"BRL","t":1788552960},"BOBR4":{"n":"BOMBRIL     PN","p":1.29,"pv":1.21,"cur":"BRL","t":1788552180},"BRKM6":{"n":"BRASKEM     PNB     N1","p":7.0,"pv":7.0,"cur":"BRL","t":1788464061},"BRKM3":{"n":"BRASKEM     ON      N1","p":4.27,"pv":4.31,"cur":"BRL","t":1788552180},"BMOB3":{"n":"BEMOBI TECH ON      NM","p":26.05,"pv":25.04,"cur":"BRL","t":1788552349},"BOVV11":{"n":"IT NOW IBOV CI","p":191.0,"pv":191.28,"cur":"BRL","t":1788552960},"BRAP3":{"n":"BRADESPAR   ON      N1","p":19.3,"pv":19.15,"cur":"BRL","t":1788552000},"BPAC11":{"n":"BTGP BANCO  UNT     N2","p":59.24,"pv":58.81,"cur":"BRL","t":1788552340},"BRKM5":{"n":"BRASKEM     PNA     N1","p":4.8,"pv":4.94,"cur":"BRL","t":1788552240},"BPAR3":{"n":"BANPARA     ON","p":180.0,"pv":176.3854,"cur":"BRL","t":1788481905},"BMKS3":{"n":"BIC MONARK  ON      MP","p":377.0,"pv":371.55,"cur":"BRL","t":1788547490},"BRK-B":{"n":"Berkshire Hathaway Inc. New","p":506.03,"pv":508.13,"cur":"USD","t":1788552123},"BOVA11":{"n":"ISHARES BOVACI","p":181.94,"pv":182.25,"cur":"BRL","t":1788553128},"BOBR3":{"n":"BOBR3.SA,0P0000H6RI,0","p":0,"pv":1,"cur":"BRL","t":1721764800},"BPAC3":{"n":"BTGP BANCO  ON      N2","p":23.47,"pv":23.21,"cur":"BRL","t":1788552180},"BRBI11":{"n":"BR PARTNERS UNT     N2","p":14.3,"pv":14.19,"cur":"BRL","t":1788552180},"BPAC5":{"n":"BTGP BANCO  PNA     N2","p":19.61,"pv":19.36,"cur":"BRL","t":1788547874},"BMIN4":{"n":"MERC INVEST PN","p":18.86,"pv":18.86,"cur":"BRL","t":1788457528},"BNBR3":{"n":"NORD BRASIL ON","p":109.25,"pv":107.0,"cur":"BRL","t":1788537377},"BRAV3":{"n":"BRAVA       ON      NM","p":17.88,"pv":18.66,"cur":"BRL","t":1788552333},"BRAP4":{"n":"BRADESPAR   PN      N1","p":22.48,"pv":22.54,"cur":"BRL","t":1788552358},"CASN4":{"n":"CASN4.SA,0P0000D5NK,0","p":0,"pv":6.0759,"cur":"BRL","t":1721332800},"BSLI3":{"n":"BRB BANCO   ON","p":2.59,"pv":2.6,"cur":"BRL","t":1788552000},"BRSR6":{"n":"BANRISUL    PNB     N1","p":14.88,"pv":15.0,"cur":"BRL","t":1788552341},"CASN3":{"n":"CASN3.SA,0P0000D5NJ,0","p":8.807,"pv":null,"cur":"BRL","t":1788481906},"CALI3":{"n":"CONST A LINDON","p":29.99,"pv":29.99,"cur":"BRL","t":1786564068},"BRSR3":{"n":"BANRISUL    ON      N1","p":17.76,"pv":17.94,"cur":"BRL","t":1788552000},"BRSR5":{"n":"BANRISUL    PNA     N1","p":18.0,"pv":18.0,"cur":"BRL","t":1788464402},"CAMB3":{"n":"CAMBUCI     ON","p":8.52,"pv":8.65,"cur":"BRL","t":1788550594},"BRST3":{"n":"BRISANET    ON      NM","p":2.82,"pv":2.87,"cur":"BRL","t":1788552000},"BSLI10":{"n":"BRB BANCO   PN  REC","p":3.75,"pv":3.75,"cur":"BRL","t":1787147715},"CAML3":{"n":"CAMIL       ON  ED  NM","p":4.94,"pv":5.08,"cur":"BRL","t":1788552633},"BSLI4":{"n":"BRB BANCO   PN","p":2.6,"pv":2.6,"cur":"BRL","t":1788552180},"CASH3":{"n":"MELIUZ      ON      NM","p":5.38,"pv":5.62,"cur":"BRL","t":1788552350},"CEBR3":{"n":"CEB         ON","p":23.56,"pv":23.54,"cur":"BRL","t":1788552180},"CEBR6":{"n":"CEB         PNB","p":27.08,"pv":27.55,"cur":"BRL","t":1788540646},"CCTY3":{"n":"RDVC CITY   ON      NM","p":5.75,"pv":5.75,"cur":"BRL","t":1787600922},"CEGR3":{"n":"CEG         ON","p":35.0,"pv":35.0,"cur":"BRL","t":1788200863},"CEEB5":{"n":"COELBA      PNA","p":40.0,"pv":40.0,"cur":"BRL","t":1785441900},"CEDO3":{"n":"CEDRO       ON      N1","p":9.0,"pv":9.0,"cur":"BRL","t":1788481907},"CBEE3":{"n":"AMPLA ENERG ON","p":8.82,"pv":8.81,"cur":"BRL","t":1788547470},"CEBR5":{"n":"CEB         PNA","p":23.61,"pv":23.46,"cur":"BRL","t":1788552000},"CEEB3":{"n":"COELBA      ON","p":47.2,"pv":46.45,"cur":"BRL","t":1788526935},"CGRA3":{"n":"GRAZZIOTIN  ON","p":23.75,"pv":23.95,"cur":"BRL","t":1788546353},"CGAS5":{"n":"COMGAS      PNA","p":121.06,"pv":121.0,"cur":"BRL","t":1788546479},"CGRA4":{"n":"GRAZZIOTIN  PN","p":23.61,"pv":23.46,"cur":"BRL","t":1788550056},"CEED3":{"n":"CEEE,D      ON","p":10.0,"pv":10.0,"cur":"BRL","t":1788549292},"CEED4":{"n":"CEEE,D      PN","p":20.0,"pv":20.0,"cur":"BRL","t":1788481907},"CBAV3":{"n":"CBA         ON      NM","p":11.15,"pv":11.2,"cur":"BRL","t":1788552346},"CEAB3":{"n":"CEA MODAS   ON      NM","p":9.21,"pv":9.32,"cur":"BRL","t":1788552355},"CGAS3":{"n":"COMGAS      ON","p":125.69,"pv":125.69,"cur":"BRL","t":1788354650},"CEDO4":{"n":"CEDRO       PN      N1","p":5.12,"pv":5.16,"cur":"BRL","t":1788537478},"COCE6":{"n":"COCE6.SA,0P0000D5R7,0","p":0,"pv":35,"cur":"BRL","t":1721764800},"COCE5":{"n":"COELCE      PNA","p":31.22,"pv":31.79,"cur":"BRL","t":1788552000},"CLSC4":{"n":"CELESC      PN      N2","p":156.99,"pv":156.95,"cur":"BRL","t":1788552180},"CLSC3":{"n":"CELESC      ON      N2","p":133.98,"pv":133.98,"cur":"BRL","t":1788287148},"COCE3":{"n":"COELCE      ON","p":28.8,"pv":28.8,"cur":"BRL","t":1788291758},"CRPG3":{"n":"CRISTAL     ON","p":17.0,"pv":17.0,"cur":"BRL","t":1785334018},"CRPG5":{"n":"CRISTAL     PNA","p":8.99,"pv":9.05,"cur":"BRL","t":1788552000},"CSED3":{"n":"CRUZEIRO EDUON      NM","p":5.58,"pv":5.23,"cur":"BRL","t":1788552240},"CRPG6":{"n":"CRISTAL     PNB","p":9.45,"pv":9.45,"cur":"BRL","t":1788464992},"CMIN3":{"n":"CSNMINERACAOON      N2","p":6.59,"pv":6.66,"cur":"BRL","t":1788552359},"COGN3":{"n":"COGNA ON    ON      NM","p":2.44,"pv":2.4,"cur":"BRL","t":1788552340},"CMIG3":{"n":"CEMIG       ON      N1","p":17.04,"pv":16.75,"cur":"BRL","t":1788552180},"CPLE3":{"n":"COPEL       ON      NM","p":15.85,"pv":15.78,"cur":"BRL","t":1788552629},"CPFE3":{"n":"CPFL ENERGIAON      NM","p":46.83,"pv":46.73,"cur":"BRL","t":1788552343},"CMIG4":{"n":"CEMIG       PN      N1","p":11.26,"pv":11.18,"cur":"BRL","t":1788552353},"CSAN3":{"n":"COSAN       ON      NM","p":3.8,"pv":3.82,"cur":"BRL","t":1788552351},"CTSA3":{"n":"SANTANENSE  ON","p":2.0,"pv":2.0,"cur":"BRL","t":1788481908},"CTKA4":{"n":"KARSTEN     PN","p":31.01,"pv":31.0,"cur":"BRL","t":1788552180},"CSUD3":{"n":"CSU DIGITAL ON      NM","p":14.15,"pv":14.22,"cur":"BRL","t":1788551384},"CTKA3":{"n":"KARSTEN     ON","p":44.0,"pv":44.0,"cur":"BRL","t":1788481908},"CVCB3":{"n":"CVC BRASIL  ON      NM","p":1.88,"pv":1.79,"cur":"BRL","t":1788552240},"CTSA4":{"n":"SANTANENSE  PN","p":1.29,"pv":1.29,"cur":"BRL","t":1788481908},"CTAX3":{"n":"CONTAX      ON","p":1.59,"pv":1.64,"cur":"BRL","t":1788550695},"DEXP3":{"n":"DEXXOS PAR  ON      N1","p":7.49,"pv":7.47,"cur":"BRL","t":1788551384},"DEXP4":{"n":"DEXXOS PAR  PN      N1","p":7.5,"pv":7.4,"cur":"BRL","t":1788532217},"CSMG3":{"n":"COPASA      ON      NM","p":55.91,"pv":56.88,"cur":"BRL","t":1788552353},"CYRE3":{"n":"CYRELA REALTON      NM","p":25.6,"pv":25.34,"cur":"BRL","t":1788552338},"CURY3":{"n":"CURY S/A    ON      NM","p":33.21,"pv":32.8,"cur":"BRL","t":1788552356},"CSNA3":{"n":"SID NACIONALON","p":6.36,"pv":6.38,"cur":"BRL","t":1788552349},"DEBB11":{"n":"BTG DEB DI  F11","p":17.06,"pv":17.05,"cur":"BRL","t":1788553020},"CYRE4":{"n":"CYRELA REALTPN      NM","p":24.11,"pv":23.66,"cur":"BRL","t":1788552331},"DASA3":{"n":"DASA        ON      NM","p":2.82,"pv":2.8,"cur":"BRL","t":1788552336},"CXSE3":{"n":"CAIXA SEGURION      NM","p":19.98,"pv":19.77,"cur":"BRL","t":1788552337},"DESK3":{"n":"DESKTOP     ON  ED  NM","p":18.85,"pv":18.94,"cur":"BRL","t":1788552334},"EKTR3":{"n":"ELEKTRO     ON","p":51.52,"pv":51.52,"cur":"BRL","t":1788481910},"EMAE3":{"n":"EMAE        ON","p":150.0,"pv":150.0,"cur":"BRL","t":1788481910},"DOHL4":{"n":"DOHLER      PN","p":3.73,"pv":3.69,"cur":"BRL","t":1788527063},"DTCY3":{"n":"DTCOM,DIRECTON","p":1.95,"pv":1.95,"cur":"BRL","t":1788283153},"DMVF3":{"n":"D1000VFARMA ON      NM","p":6.23,"pv":6.18,"cur":"BRL","t":1788552180},"DIVO11":{"n":"IT NOW IDIV CI","p":132.85,"pv":132.5,"cur":"BRL","t":1788552900},"EGIE3":{"n":"ENGIE BRASILON      NM","p":30.14,"pv":30.36,"cur":"BRL","t":1788552341},"DXCO3":{"n":"DEXCO       ON      NM","p":5.64,"pv":5.64,"cur":"BRL","t":1788552359},"DOHL3":{"n":"DOHLER      ON","p":6.46,"pv":6.46,"cur":"BRL","t":1787324628},"ECOR3":{"n":"ECORODOVIAS ON      NM","p":7.92,"pv":7.64,"cur":"BRL","t":1788552341},"EKTR4":{"n":"ELEKTRO     PN","p":38.0,"pv":38.0,"cur":"BRL","t":1788535112},"DOTZ3":{"n":"DOTZ SA     ON      NM","p":10.26,"pv":10.8,"cur":"BRL","t":1788552633},"ECOM3":{"n":"ECONOMATICA ON      NM","p":1.12,"pv":1.14,"cur":"BRL","t":1788550750},"DIRR3":{"n":"DIRECIONAL  ON      NM","p":11.46,"pv":11.47,"cur":"BRL","t":1788552352},"EALT4":{"n":"ACO ALTONA  PN","p":11.19,"pv":11.08,"cur":"BRL","t":1788545620},"EGGY3":{"n":"GRANJA FARIAON","p":0.17,"pv":0.17,"cur":"BRL","t":1788481910},"EALT3":{"n":"ACO ALTONA  ON","p":12.3,"pv":11.9,"cur":"BRL","t":1788530226},"EEM":{"n":"iShares MSCI Emerging Index Fun","p":68.7,"pv":67.47,"cur":"USD","t":1788552000},"ENGI4":{"n":"ENERGISA    PN      N2","p":9.86,"pv":9.81,"cur":"BRL","t":1788551335},"ENGI3":{"n":"ENERGISA    ON      N2","p":12.39,"pv":12.4,"cur":"BRL","t":1788548222},"ENMT3":{"n":"ENERGISA MT ON","p":34.0,"pv":33.6,"cur":"BRL","t":1788551389},"EQPA7":{"n":"EQTL PARA   PNC ED","p":10.0,"pv":9.9042,"cur":"BRL","t":1788481910},"ENEV3":{"n":"ENEVA       ON      NM","p":27.59,"pv":27.64,"cur":"BRL","t":1788552350},"EMBJ3":{"n":"EMBRAER     ON  ATZ NM","p":94.98,"pv":93.93,"cur":"BRL","t":1788552355},"EQPA3":{"n":"EQTL PARA   ON","p":5.52,"pv":5.51,"cur":"BRL","t":1788552000},"ENJU3":{"n":"ENJOEI      ON      NM","p":0.75,"pv":0.75,"cur":"BRL","t":1788552180},"ENGI11":{"n":"ENERGISA    UNT     N2","p":51.43,"pv":51.37,"cur":"BRL","t":1788552351},"EQPA6":{"n":"EQTL PARA   PNB","p":6.59,"pv":6.59,"cur":"BRL","t":1788481910},"EMAE4":{"n":"EMAE        PN","p":34.3,"pv":34.74,"cur":"BRL","t":1788552000},"EQPA5":{"n":"EQTL PARA   PNA","p":9.78,"pv":9.78,"cur":"BRL","t":1788460883},"ENMT4":{"n":"ENERGISA MT PN","p":34.31,"pv":34.99,"cur":"BRL","t":1788552000},"EQMA3B":{"n":"EQUATORIAL MARANHA","p":29.24,"pv":29.24,"cur":"BRL","t":1788360842},"ESPA3":{"n":"ESPACOLASER ON      NM","p":7.01,"pv":7.48,"cur":"BRL","t":1788552000},"EQTL3":{"n":"EQUATORIAL  ON  ATZ NM","p":39.16,"pv":38.92,"cur":"BRL","t":1788552358},"EPAR3":{"n":"EMBPAR S/A  ON","p":1.35,"pv":1.34,"cur":"BRL","t":1788549660},"ESTR3":{"n":"ESTRELA     ON","p":3.01,"pv":3.01,"cur":"BRL","t":1788481911},"ESTR4":{"n":"ESTRELA     PN","p":1.39,"pv":1.44,"cur":"BRL","t":1788551399},"FIGE4":{"n":"FIGE4.SA,0P0000D6DX,0","p":0,"pv":null,"cur":"BRL","t":1721764800},"FIGE3":{"n":"INVEST BEMGEON","p":33.0,"pv":33.0,"cur":"BRL","t":1788481912},"ETER3":{"n":"ETERNIT     ON      NM","p":3.75,"pv":3.77,"cur":"BRL","t":1788551395},"FHER3":{"n":"FER HERINGERON      NM","p":3.07,"pv":3.15,"cur":"BRL","t":1788529299},"FICT3":{"n":"FICTORALIMENON","p":0.19,"pv":0.19,"cur":"BRL","t":1787944285},"EUCA3":{"n":"EUCATEX     ON      N1","p":21.5,"pv":21.5,"cur":"BRL","t":1788464601},"FIEI3":{"n":"FICA        ON","p":7.49,"pv":7.69,"cur":"BRL","t":1788546926},"FRIO3":{"n":"METALFRIO   ON      NM","p":205.0,"pv":205.0,"cur":"BRL","t":1788481912},"FLRY3":{"n":"FLEURY      ON      NM","p":20.17,"pv":20.1,"cur":"BRL","t":1788552332},"GEPA3":{"n":"GER PARANAP ON","p":33.71,"pv":33.71,"cur":"BRL","t":1788205018},"FESA3":{"n":"FERBASA     ON      N1","p":10.15,"pv":10.15,"cur":"BRL","t":1788540390},"EVEN3":{"n":"EVEN        ON      NM","p":4.23,"pv":4.34,"cur":"BRL","t":1788552357},"FESA4":{"n":"FERBASA     PN      N1","p":5.61,"pv":5.72,"cur":"BRL","t":1788552357},"FRAS3":{"n":"FRAS,LE     ON      N1","p":22.65,"pv":22.75,"cur":"BRL","t":1788552180},"EUCA4":{"n":"EUCATEX     PN      N1","p":21.06,"pv":21.24,"cur":"BRL","t":1788552340},"FIQE3":{"n":"UNIFIQUE    ON      NM","p":4.92,"pv":4.97,"cur":"BRL","t":1788552180},"EZTC3":{"n":"EZTEC       ON      NM","p":13.0,"pv":13.25,"cur":"BRL","t":1788552240},"GOAU3":{"n":"GERDAU MET  ON      N1","p":9.96,"pv":9.95,"cur":"BRL","t":1788552180},"HAGA3":{"n":"HAGA S/A    ON","p":2.63,"pv":2.64,"cur":"BRL","t":1788537417},"GGBR3":{"n":"GERDAU      ON      N1","p":21.55,"pv":21.38,"cur":"BRL","t":1788552180},"GFSA3":{"n":"GAFISA      ON      NM","p":0.21,"pv":0.22,"cur":"BRL","t":1788552633},"GPAR3":{"n":"CELGPAR     ON","p":10.51,"pv":10.51,"cur":"BRL","t":1788481913},"GSHP3":{"n":"GENERALSHOPPON","p":2.75,"pv":2.75,"cur":"BRL","t":1787682408},"HAPV3":{"n":"HAPVIDA     ON      NM","p":7.26,"pv":7.33,"cur":"BRL","t":1788552334},"HAGA4":{"n":"HAGA S/A    PN","p":1.95,"pv":1.96,"cur":"BRL","t":1788538475},"GMAT3":{"n":"GRUPO MATEUSON      NM","p":4.87,"pv":4.8,"cur":"BRL","t":1788552345},"GGBR4":{"n":"GERDAU      PN      N1","p":25.34,"pv":25.14,"cur":"BRL","t":1788552352},"GOLD11":{"n":"TREND OURO  CI","p":23.66,"pv":23.68,"cur":"BRL","t":1788552900},"GGPS3":{"n":"GPS         ON      NM","p":13.09,"pv":12.9,"cur":"BRL","t":1788552334},"GRND3":{"n":"GRENDENE    ON      NM","p":3.68,"pv":3.69,"cur":"BRL","t":1788552350},"GOAU4":{"n":"GERDAU MET  PN      N1","p":11.17,"pv":11.1,"cur":"BRL","t":1788552354},"GEPA4":{"n":"GER PARANAP PN","p":36.26,"pv":35.99,"cur":"BRL","t":1788545781},"GLD":{"n":"SPDR Gold Shares","p":406.77,"pv":410.22,"cur":"USD","t":1788552000},"GOOGL":{"n":"Alphabet Inc.","p":338.46,"pv":342.26,"cur":"USD","t":1788552001},"GPCA11":{"n":"GRAO IPCA 2YF11","p":25.95,"pv":25.93,"cur":"BRL","t":1788552900},"HBTS5":{"n":"HABITASUL   PNA","p":32.0,"pv":32.0,"cur":"BRL","t":1787595500},"HETA3":{"n":"HERCULES    ON","p":96.0,"pv":null,"cur":"BRL","t":1788481914},"HETA4":{"n":"HERCULES    PN","p":4.8,"pv":4.8,"cur":"BRL","t":1785441600},"IFCM3":{"n":"INFRACOMM   ON      NM","p":1.73,"pv":1.76,"cur":"BRL","t":1788552000},"HOOT3":{"n":"HOOT3.SA,0P0000DFJL,0","p":0,"pv":null,"cur":"BRL","t":1721764800},"HOOT4":{"n":"HOTEIS OTHONPN","p":8.89,"pv":8.1,"cur":"BRL","t":1788531944},"HYPE3":{"n":"HYPERA      ON      NM","p":23.16,"pv":22.73,"cur":"BRL","t":1788552333},"IGTI4":{"n":"IGUATEMI S.APN      N1","p":11.32,"pv":11.72,"cur":"BRL","t":1788552240},"IGTI11":{"n":"IGUATEMI S.AUNT     N1","p":26.43,"pv":26.57,"cur":"BRL","t":1788552355},"HBRE3":{"n":"HBR REALTY  ON      NM","p":2.59,"pv":2.69,"cur":"BRL","t":1788552240},"HBOR3":{"n":"HELBOR      ON      NM","p":2.07,"pv":2.2,"cur":"BRL","t":1788552180},"HBSA3":{"n":"HIDROVIAS   ON      NM","p":3.42,"pv":3.42,"cur":"BRL","t":1788552240},"IGTI3":{"n":"IGUATEMI S.AON      N1","p":3.36,"pv":3.36,"cur":"BRL","t":1788552180},"IMAB11":{"n":"IT NOW IMA,BF11","p":116.72,"pv":116.31,"cur":"BRL","t":1788551194},"HASH11":{"n":"HASHDEX NCI CI","p":53.1,"pv":54.03,"cur":"BRL","t":1788552960},"JFEN3":{"n":"JOAO FORTES ON","p":0.46,"pv":0.44,"cur":"BRL","t":1788552000},"ISAE3":{"n":"ISA ENERGIA ON      N1","p":32.6,"pv":33.05,"cur":"BRL","t":1788552000},"IRFM11":{"n":"IT NOW IRF,MF11","p":104.52,"pv":104.49,"cur":"BRL","t":1788553020},"INEP4":{"n":"INEPAR      PN","p":1.41,"pv":1.38,"cur":"BRL","t":1788552180},"INEP3":{"n":"INEPAR      ON","p":1.45,"pv":1.45,"cur":"BRL","t":1788545672},"ITUB4":{"n":"ITAUUNIBANCOPN  EJ  N1","p":41.92,"pv":41.92,"cur":"BRL","t":1788552333},"ITSA3":{"n":"ITAUSA      ON  EJ  N1","p":14.06,"pv":14.04,"cur":"BRL","t":1788552180},"ITUB3":{"n":"ITAUUNIBANCOON  EJ  N1","p":45.72,"pv":45.79,"cur":"BRL","t":1788552341},"JOPA3":{"n":"JOSAPAR     ON","p":17.1,"pv":17.1,"cur":"BRL","t":1785520959},"IRBR3":{"n":"IRBBRASIL REON      NM","p":62.21,"pv":59.45,"cur":"BRL","t":1788552335},"IVVB11":{"n":"ISHARE SP500CI","p":447.35,"pv":446.0,"cur":"BRL","t":1788552900},"ISAE4":{"n":"ISA ENERGIA PN      N1","p":27.7,"pv":27.64,"cur":"BRL","t":1788552331},"JALL3":{"n":"JALLESMACHADON      NM","p":2.66,"pv":2.65,"cur":"BRL","t":1788552000},"ITSA4":{"n":"ITAUSA      PN  EJ  N1","p":13.95,"pv":13.74,"cur":"BRL","t":1788552333},"IWM":{"n":"iShares Russell 2000 Index Fund","p":296.01,"pv":295.19,"cur":"USD","t":1788552000},"JHSF3":{"n":"JHSF PART   ON  ED  NM","p":11.45,"pv":11.66,"cur":"BRL","t":1788552358},"INTB3":{"n":"INTELBRAS   ON      NM","p":14.94,"pv":15.13,"cur":"BRL","t":1788552240},"JOPA4":{"n":"JOSAPAR     PN","p":18.0,"pv":18.0,"cur":"BRL","t":1788481916},"LFTS11":{"n":"INVESTO LFTSF11","p":159.37,"pv":159.25,"cur":"BRL","t":1788553020},"KEPL3":{"n":"KEPLER WEBERON      NM","p":6.68,"pv":6.6,"cur":"BRL","t":1788552338},"KLBN3":{"n":"KLABIN S/A  ON      N2","p":4.03,"pv":4.05,"cur":"BRL","t":1788552180},"LAND3":{"n":"TERRASANTAPAON      NM","p":9.54,"pv":9.35,"cur":"BRL","t":1788552000},"KLBN4":{"n":"KLABIN S/A  PN      N2","p":3.85,"pv":3.86,"cur":"BRL","t":1788552000},"JSLG3":{"n":"JSL         ON      NM","p":5.82,"pv":5.9,"cur":"BRL","t":1788552351},"LJQQ3":{"n":"QUERO,QUERO ON      NM","p":1.25,"pv":1.23,"cur":"BRL","t":1788552633},"KLBN11":{"n":"KLABIN S/A  UNT     N2","p":19.47,"pv":19.56,"cur":"BRL","t":1788552332},"JPM":{"n":"JP Morgan Chase & Co.","p":358.64,"pv":362.06,"cur":"USD","t":1788552002},"LEVE3":{"n":"METAL LEVE  ON      NM","p":32.81,"pv":32.78,"cur":"BRL","t":1788552347},"LFTB11":{"n":"INVESTO LFTBF11","p":126.16,"pv":126.09,"cur":"BRL","t":1788553080},"LAVV3":{"n":"LAVVI       ON      NM","p":10.61,"pv":10.69,"cur":"BRL","t":1788552341},"KO":{"n":"Coca-Cola Company (The)","p":88.07,"pv":88.81,"cur":"USD","t":1788552002},"LLY":{"n":"Eli Lilly and Company","p":1149.36,"pv":1159.6,"cur":"USD","t":1788552195},"LIGT3":{"n":"LIGHT S/A   ON      NM","p":3.57,"pv":3.64,"cur":"BRL","t":1788552346},"LUXM4":{"n":"TREVISA     PN","p":2.6,"pv":2.63,"cur":"BRL","t":1788546453},"LUPA3":{"n":"LUPATECH    ON      NM","p":3.63,"pv":3.7,"cur":"BRL","t":1788550708},"LPSB3":{"n":"LOPES BRASILON      NM","p":1.29,"pv":1.29,"cur":"BRL","t":1788552000},"LOGG3":{"n":"LOG COM PROPON      NM","p":24.71,"pv":25.09,"cur":"BRL","t":1788552344},"LOGN3":{"n":"LOG,IN      ON      NM","p":28.0,"pv":28.0,"cur":"BRL","t":1788552000},"LUXM3":{"n":"LUXM3.SA,0P0000D743,0","p":0,"pv":null,"cur":"BRL","t":1721332800},"MAPT4":{"n":"CEMEPE      PN","p":3.0,"pv":3.0,"cur":"BRL","t":1788481918},"MAPT3":{"n":"CEMEPE      ON","p":2.06,"pv":2.5,"cur":"BRL","t":1788532744},"MELK3":{"n":"MELNICK     ON      NM","p":2.91,"pv":2.94,"cur":"BRL","t":1788552000},"LWSA3":{"n":"LWSA        ON      NM","p":4.22,"pv":4.18,"cur":"BRL","t":1788552240},"MA":{"n":"Mastercard Incorporated","p":579.21,"pv":585.71,"cur":"USD","t":1788552003},"LREN3":{"n":"LOJAS RENNERON      NM","p":11.35,"pv":11.4,"cur":"BRL","t":1788552344},"MBRF3":{"n":"MARFRIG     ON      NM","p":17.69,"pv":18.37,"cur":"BRL","t":1788552340},"MEAL3":{"n":"IMC S/A     ON      NM","p":0.68,"pv":0.66,"cur":"BRL","t":1788552180},"MDIA3":{"n":"M.DIASBRANCOON      NM","p":17.78,"pv":17.63,"cur":"BRL","t":1788552347},"MATD3":{"n":"MATER DEI   ON      NM","p":5.17,"pv":5.05,"cur":"BRL","t":1788552180},"MDNE3":{"n":"MOURA DUBEUXON      NM","p":25.81,"pv":25.85,"cur":"BRL","t":1788552331},"MGEL3":{"n":"MGEL3.SA,0P0000D5N8,0","p":0,"pv":75,"cur":"BRL","t":1721764800},"MGEL4":{"n":"MANGELS INDLPN","p":5.34,"pv":5.25,"cur":"BRL","t":1788538811},"MMAQ3":{"n":"MINASMAQUINAON","p":2550.01,"pv":null,"cur":"BRL","t":1788481919},"MNDL3":{"n":"MUNDIAL     ON","p":18.5,"pv":18.5,"cur":"BRL","t":1788530706},"MMAQ4":{"n":"MINASMAQUINAPN","p":2550.01,"pv":null,"cur":"BRL","t":1788481919},"MRVE3":{"n":"MRV         ON      NM","p":5.55,"pv":5.61,"cur":"BRL","t":1788552343},"MOVI1":{"n":"MOVIDA      DO    6,65","p":0.87,"pv":0.87,"cur":"BRL","t":1788309115},"MSFT":{"n":"Microsoft Corporation","p":499.7,"pv":510.12,"cur":"USD","t":1788552001},"MNPR3":{"n":"MINUPAR     ON","p":4.12,"pv":4.05,"cur":"BRL","t":1788552000},"MOTV3":{"n":"MOTIVA SA   ON      NM","p":16.78,"pv":16.46,"cur":"BRL","t":1788552341},"MOVI3":{"n":"MOVIDA      ON      NM","p":8.11,"pv":7.76,"cur":"BRL","t":1788552342},"MILS3":{"n":"MILLS       ON      NM","p":15.79,"pv":15.72,"cur":"BRL","t":1788552240},"META":{"n":"Meta Platforms, Inc.","p":616.77,"pv":610.68,"cur":"USD","t":1788552001},"MRSA3B":{"n":"MRS LOGISTICA","p":42.01,"pv":44.5,"cur":"BRL","t":1788529079},"MRSA5B":{"n":"MRS LOGISTICA","p":38.0,"pv":38.0,"cur":"BRL","t":1785765747},"MRSA6B":{"n":"MRS LOGISTICA","p":34.89,"pv":34.89,"cur":"BRL","t":1787855829},"MLAS3":{"n":"MULTILASER  ON      NM","p":1.86,"pv":1.88,"cur":"BRL","t":1788552000},"MSPA3":{"n":"MELHOR SP   ON","p":37.4,"pv":37.4,"cur":"BRL","t":1786551124},"MSPA4":{"n":"MELHOR SP   PN","p":35.11,"pv":35.11,"cur":"BRL","t":1788355947},"MGLU3":{"n":"MAGAZ LUIZA ON      NM","p":5.79,"pv":5.56,"cur":"BRL","t":1788552347},"MWET3":{"n":"WETZEL S/A  ON","p":24.5,"pv":24.5,"cur":"BRL","t":1788449098},"NEMO3":{"n":"NEMO3.SA,0P0000D7M0,0","p":0,"pv":null,"cur":"BRL","t":1721332800},"NEXP3":{"n":"NEXPE       ON","p":2.33,"pv":2.35,"cur":"BRL","t":1788545019},"MTSA4":{"n":"METISA      PN","p":46.75,"pv":47.0,"cur":"BRL","t":1788552346},"NORD3":{"n":"NORDON MET  ON","p":1.39,"pv":1.49,"cur":"BRL","t":1788550474},"MTSA3":{"n":"METISA      ON","p":76.0,"pv":75.49,"cur":"BRL","t":1788481919},"MWET4":{"n":"WETZEL S/A  PN","p":31.89,"pv":31.8,"cur":"BRL","t":1788549588},"ODER4":{"n":"ODERICH     PN","p":100.0,"pv":null,"cur":"BRL","t":1788481920},"NUTR3":{"n":"NUTRIPLANT  ON      MP","p":2.17,"pv":2.18,"cur":"BRL","t":1788549952},"NATU3":{"n":"NATURA      ON      NM","p":8.85,"pv":9.2,"cur":"BRL","t":1788552332},"OFSA3":{"n":"OUROFINO S/AON      NM","p":27.0,"pv":27.51,"cur":"BRL","t":1788552180},"OIBR3":{"n":"OI          ON      N1","p":0.1,"pv":0.1,"cur":"BRL","t":1787601960},"NVDA":{"n":"NVIDIA Corporation","p":230.36,"pv":228.45,"cur":"USD","t":1788552000},"OBTC3":{"n":"ORANJEBTC   ON","p":7.0,"pv":6.41,"cur":"BRL","t":1788552240},"MULT3":{"n":"MULTIPLAN   ON      N2","p":30.18,"pv":30.35,"cur":"BRL","t":1788552344},"NASD11":{"n":"TREND NASDAQCI","p":21.07,"pv":21.0,"cur":"BRL","t":1788552960},"MTRE3":{"n":"MITRE REALTYON      NM","p":3.42,"pv":3.41,"cur":"BRL","t":1788552240},"NFLX":{"n":"Netflix, Inc.","p":78.25,"pv":82.67,"cur":"USD","t":1788552000},"MYPK3":{"n":"IOCHP,MAXIONON      NM","p":9.81,"pv":9.63,"cur":"BRL","t":1788552240},"PEAB3":{"n":"PAR AL BAHIAON","p":38.86,"pv":38.86,"cur":"BRL","t":1788288334},"PEAB4":{"n":"PAR AL BAHIAPN","p":38.87,"pv":38.87,"cur":"BRL","t":1788453844},"PATI3":{"n":"PANATLANTICAON","p":28.99,"pv":30.88,"cur":"BRL","t":1788552180},"PATI4":{"n":"PANATLANTICAPN","p":30.37,"pv":30.37,"cur":"BRL","t":1787930121},"PDTC3":{"n":"PADTEC      ON      NM","p":1.74,"pv":1.69,"cur":"BRL","t":1788552000},"ONCO3":{"n":"ONCOCLINICASON      NM","p":1.37,"pv":1.36,"cur":"BRL","t":1788552358},"PDGR3":{"n":"PDG REALT   ON      NM","p":1.17,"pv":1.19,"cur":"BRL","t":1788552000},"PDGR1":{"n":"PDG REALT   DO    1,62","p":0.01,"pv":0.01,"cur":"BRL","t":1788549922},"PASS3":{"n":"COMPASS     ON      NM","p":23.51,"pv":23.6,"cur":"BRL","t":1788552346},"OSXB3":{"n":"OSX BRASIL  ON      NM","p":1.15,"pv":1.04,"cur":"BRL","t":1788552180},"OIBR4":{"n":"OI          PN      N1","p":0.5,"pv":0.5,"cur":"BRL","t":1787601840},"PCAR3":{"n":"P.ACUCAR,CBDON      NM","p":2.83,"pv":2.7,"cur":"BRL","t":1788552000},"ORVR3":{"n":"ORIZON      ON      NM","p":17.1,"pv":16.83,"cur":"BRL","t":1788552240},"OPCT3":{"n":"OCEANPACT   ON      NM","p":11.36,"pv":10.93,"cur":"BRL","t":1788552344},"PINE3":{"n":"PINE        ON      N2","p":11.13,"pv":10.96,"cur":"BRL","t":1788526980},"PPAR3":{"n":"PPAR3.SA,0P0000D725,0","p":0,"pv":null,"cur":"BRL","t":1721332800},"PLPL3":{"n":"PLANOEPLANO ON      NM","p":7.23,"pv":7.18,"cur":"BRL","t":1788552358},"PMAM1":{"n":"PARANAPANEMADO    0,61","p":0.01,"pv":0.01,"cur":"BRL","t":1784057797},"PLAS3":{"n":"PLASCAR PARTON","p":2.59,"pv":2.42,"cur":"BRL","t":1788544494},"PFRM3":{"n":"PROFARMA    ON      NM","p":7.87,"pv":7.67,"cur":"BRL","t":1788552000},"PGMN3":{"n":"PAGUE MENOS ON      NM","p":3.84,"pv":3.75,"cur":"BRL","t":1788552240},"POMO4":{"n":"MARCOPOLO   PN  ED  N2","p":4.58,"pv":4.56,"cur":"BRL","t":1788552357},"PIBB11":{"n":"IT NOW PIBB CI","p":331.15,"pv":331.25,"cur":"BRL","t":1788552900},"PG":{"n":"Procter & Gamble Company (The)","p":146.44,"pv":146.92,"cur":"USD","t":1788552241},"PMAM3":{"n":"PARANAPANEMAON      NM","p":0.32,"pv":0.23,"cur":"BRL","t":1788552624},"PETR4":{"n":"PETROBRAS   PN      N2","p":47.11,"pv":47.56,"cur":"BRL","t":1788552350},"PETR3":{"n":"PETROBRAS   ON      N2","p":52.01,"pv":52.58,"cur":"BRL","t":1788552358},"PNVL3":{"n":"DIMED       ON      NM","p":13.16,"pv":12.86,"cur":"BRL","t":1788552337},"PINE4":{"n":"PINE        PN      N2","p":11.14,"pv":11.28,"cur":"BRL","t":1788552337},"POSI3":{"n":"POSITIVO TECON      NM","p":3.42,"pv":3.44,"cur":"BRL","t":1788552240},"PRIO3":{"n":"PRIO        ON      NM","p":60.19,"pv":61.5,"cur":"BRL","t":1788552332},"POMO3":{"n":"MARCOPOLO   ON  ED  N2","p":4.26,"pv":4.3,"cur":"BRL","t":1788552356},"QETH11":{"n":"QR ETHER    CI","p":8.85,"pv":9.06,"cur":"BRL","t":1788551382},"PSSA3":{"n":"PORTO SEGUROON      NM","p":51.66,"pv":51.24,"cur":"BRL","t":1788552340},"PRNR3":{"n":"PRINER      ON      NM","p":18.15,"pv":18.26,"cur":"BRL","t":1788552240},"PSVM11":{"n":"PORTO VM    TPR","p":16.0,"pv":16.0,"cur":"BRL","t":1788292800},"QUAL3":{"n":"QUALICORP   ON      NM","p":1.5,"pv":1.53,"cur":"BRL","t":1788552180},"RAPT4":{"n":"RANDON PART PN      N1","p":4.8,"pv":5.16,"cur":"BRL","t":1788552353},"RAPT3":{"n":"RANDON PART ON      N1","p":8.44,"pv":8.5,"cur":"BRL","t":1788552000},"RAIZ4":{"n":"RAIZEN      PN      N2","p":0.28,"pv":0.27,"cur":"BRL","t":1788552347},"PTBL3":{"n":"PORTOBELLO  ON      NM","p":1.67,"pv":1.69,"cur":"BRL","t":1788552000},"QBTC11":{"n":"QR BITCOIN  CI","p":24.85,"pv":25.0,"cur":"BRL","t":1788552900},"RANI3":{"n":"IRANI       ON      NM","p":7.66,"pv":7.65,"cur":"BRL","t":1788552346},"RAIL3":{"n":"RUMO S.A.   ON      NM","p":14.55,"pv":14.81,"cur":"BRL","t":1788552629},"RADL3":{"n":"RAIADROGASILON      NM","p":19.99,"pv":20.27,"cur":"BRL","t":1788552342},"QQQ":{"n":"Invesco QQQ Trust, Series 1","p":718.96,"pv":717.67,"cur":"USD","t":1788552000},"RENT4":{"n":"LOCALIZA    PN      NM","p":35.29,"pv":36.04,"cur":"BRL","t":1788552420},"RNEW4":{"n":"RENOVA      PN      N2","p":0.86,"pv":0.81,"cur":"BRL","t":1788552180},"REDE3":{"n":"REDE ENERGIAON","p":5.54,"pv":5.63,"cur":"BRL","t":1788551244},"RNEW3":{"n":"RENOVA      ON      N2","p":0.86,"pv":0.9,"cur":"BRL","t":1788552300},"RPAD5":{"n":"ALFA HOLDINGPNA","p":7.79,"pv":7.7095,"cur":"BRL","t":1787067387},"RPMG3":{"n":"PET MANGUINHON","p":0.85,"pv":0.85,"cur":"BRL","t":1786391107},"RECV3":{"n":"PETRORECSA  ON      NM","p":11.16,"pv":11.44,"cur":"BRL","t":1788552339},"RCSL3":{"n":"RECRUSUL    ON","p":0.4,"pv":0.37,"cur":"BRL","t":1788552000},"RSUL3":{"n":"RSUL3.SA,0P0000D7LV,0","p":0,"pv":null,"cur":"BRL","t":1721332800},"RSUL4":{"n":"RIOSULENSE  PN","p":38.27,"pv":38.25,"cur":"BRL","t":1788552240},"ROMI3":{"n":"ROMI        ON      NM","p":5.96,"pv":5.87,"cur":"BRL","t":1788552000},"RIAA3":{"n":"RIACHUELO   ON      NM","p":7.16,"pv":7.35,"cur":"BRL","t":1788552354},"RSID3":{"n":"ROSSI RESID ON      NM","p":1.6,"pv":1.6,"cur":"BRL","t":1788481924},"RCSL4":{"n":"RECRUSUL    PN","p":0.42,"pv":0.43,"cur":"BRL","t":1788552356},"RPAD3":{"n":"ALFA HOLDINGON","p":7.0,"pv":7.0,"cur":"BRL","t":1788366509},"RPAD6":{"n":"ALFA HOLDINGPNB","p":7.0,"pv":7.0,"cur":"BRL","t":1787155223},"RENT3":{"n":"LOCALIZA    ON      NM","p":36.64,"pv":36.75,"cur":"BRL","t":1788552331},"RDOR3":{"n":"REDE D OR   ON      NM","p":37.13,"pv":37.39,"cur":"BRL","t":1788552357},"RVEE3":{"n":"REVEE       ON","p":0.69,"pv":0.67,"cur":"BRL","t":1788552000},"SHUL3":{"n":"SCHULZ      ON","p":27.94,"pv":null,"cur":"BRL","t":1788481925},"SHOW3":{"n":"TIME FOR FUNON","p":6.24,"pv":6.24,"cur":"BRL","t":1788293100},"SCAR3":{"n":"SAO CARLOS  ON      NM","p":12.8,"pv":12.8,"cur":"BRL","t":1788552000},"SEQL3":{"n":"SEQUOIA LOG ON      NM","p":0.07,"pv":0.07,"cur":"BRL","t":1788552352},"SAPR3":{"n":"SANEPAR     ON      N2","p":7.69,"pv":7.67,"cur":"BRL","t":1788552000},"SAUD3":{"n":"BRADSAUDE   ON      NM","p":14.69,"pv":14.82,"cur":"BRL","t":1788552240},"SBSP3":{"n":"SABESP      ON      NM","p":26.53,"pv":26.25,"cur":"BRL","t":1788552629},"SAPR4":{"n":"SANEPAR     PN      N2","p":6.84,"pv":6.91,"cur":"BRL","t":1788552240},"SAPR11":{"n":"SANEPAR     UNT     N2","p":34.95,"pv":35.51,"cur":"BRL","t":1788552240},"SEER3":{"n":"SER EDUCA   ON  ED  NM","p":13.52,"pv":13.36,"cur":"BRL","t":1788552332},"SIMH3":{"n":"SIMPAR      ON      NM","p":7.72,"pv":7.5,"cur":"BRL","t":1788552240},"SANB3":{"n":"SANTANDER BRON","p":15.19,"pv":15.17,"cur":"BRL","t":1788552180},"SHUL4":{"n":"SCHULZ      PN","p":4.47,"pv":4.47,"cur":"BRL","t":1788552000},"SBFG3":{"n":"GRUPO SBF   ON      NM","p":9.04,"pv":8.99,"cur":"BRL","t":1788552352},"SANB4":{"n":"SANTANDER BRPN","p":15.03,"pv":15.14,"cur":"BRL","t":1788552240},"SCHD":{"n":"Schwab US Dividend Equity ETF","p":34.8,"pv":35.08,"cur":"USD","t":1788552000},"SANB11":{"n":"SANTANDER BRUNT","p":30.43,"pv":30.44,"cur":"BRL","t":1788552335},"SNSY6":{"n":"SANSUY      PNB","p":11.51,"pv":null,"cur":"BRL","t":1788481926},"SNSY5":{"n":"SANSUY      PNA","p":2.29,"pv":2.35,"cur":"BRL","t":1788552240},"SOND3":{"n":"SONDOTECNICAON","p":38.66,"pv":38.66,"cur":"BRL","t":1788481926},"SMAL11":{"n":"ISHARES SMALCI","p":110.99,"pv":111.06,"cur":"BRL","t":1788552960},"SOND5":{"n":"SONDOTECNICAPNA     MP","p":82.1,"pv":82.1,"cur":"BRL","t":1787924429},"SOND6":{"n":"SONDOTECNICAPNB     MP","p":78.56,"pv":78.56,"cur":"BRL","t":1788465934},"SNSY3":{"n":"SANSUY      ON","p":9.13,"pv":9.13,"cur":"BRL","t":1788481926},"SOJA3":{"n":"BOA SAFRA   ON      NM","p":7.88,"pv":7.81,"cur":"BRL","t":1788552240},"SPY":{"n":"State Street SPDR S&P 500 ETF T","p":770.19,"pv":773.17,"cur":"USD","t":1788552000},"SLCE3":{"n":"SLC AGRICOLAON      NM","p":16.41,"pv":16.49,"cur":"BRL","t":1788552330},"TASA3":{"n":"TAURUS ARMASON      N2","p":5.67,"pv":5.58,"cur":"BRL","t":1788549746},"TAEE11":{"n":"TAESA       UNT     N2","p":41.53,"pv":41.55,"cur":"BRL","t":1788552356},"TASA4":{"n":"TAURUS ARMASPN      N2","p":5.63,"pv":5.51,"cur":"BRL","t":1788552180},"TAEE3":{"n":"TAESA       ON      N2","p":13.72,"pv":13.76,"cur":"BRL","t":1788552180},"TCSA3":{"n":"TECNISA     ON      NM","p":0.63,"pv":0.65,"cur":"BRL","t":1788551369},"SYNE3":{"n":"SYN PROP TECON      NM","p":3.78,"pv":3.95,"cur":"BRL","t":1788552000},"SUZB3":{"n":"SUZANO S.A. ON      NM","p":46.89,"pv":46.79,"cur":"BRL","t":1788552352},"SMTO3":{"n":"SAO MARTINHOON      NM","p":20.6,"pv":20.24,"cur":"BRL","t":1788552351},"SMFT3":{"n":"SMART FIT   ON  EJ  NM","p":17.97,"pv":17.686,"cur":"BRL","t":1788552353},"TAEE4":{"n":"TAESA       PN      N2","p":14.05,"pv":13.91,"cur":"BRL","t":1788552180},"TELB3":{"n":"TELEBRAS    ON","p":17.86,"pv":18.05,"cur":"BRL","t":1788535620},"TPIS3":{"n":"TRIUNFO PARTON      NM","p":9.77,"pv":10.01,"cur":"BRL","t":1788552240},"UCAS3":{"n":"UNICASA     ON      NM","p":1.14,"pv":1.17,"cur":"BRL","t":1788552180},"TGMA3":{"n":"TEGMA       ON      NM","p":33.66,"pv":34.28,"cur":"BRL","t":1788552354},"TELB4":{"n":"TELEBRAS    PN","p":8.11,"pv":8.06,"cur":"BRL","t":1788549074},"TFCO4":{"n":"TRACK FIELD PN      N2","p":13.06,"pv":13.1,"cur":"BRL","t":1788552355},"TXRX4":{"n":"TEX RENAUX  PN","p":1.65,"pv":1.65,"cur":"BRL","t":1788481930},"TEND3":{"n":"TENDA       ON      NM","p":34.63,"pv":33.62,"cur":"BRL","t":1788552345},"TLT":{"n":"iShares 20+ Year Treasury Bond ","p":82.21,"pv":82.07,"cur":"USD","t":1788552000},"TUPY3":{"n":"TUPY        ON      NM","p":15.72,"pv":15.7,"cur":"BRL","t":1788552330},"TECN3":{"n":"TECHNOS     ON      NM","p":10.09,"pv":9.88,"cur":"BRL","t":1788552000},"TXRX3":{"n":"TEX RENAUX  ON","p":9.0,"pv":9.0,"cur":"BRL","t":1788481930},"TOTS3":{"n":"TOTVS       ON      NM","p":34.5,"pv":34.82,"cur":"BRL","t":1788552351},"TOKY3":{"n":"GRUPO TOKY  ON  EG  NM","p":10.5,"pv":10.7,"cur":"BRL","t":1788552180},"TRIS3":{"n":"TRISUL      ON      NM","p":4.97,"pv":4.96,"cur":"BRL","t":1788552349},"TIMS3":{"n":"TIM         ON      NM","p":18.99,"pv":18.97,"cur":"BRL","t":1788552344},"TTEN3":{"n":"3TENTOS     ON      NM","p":11.28,"pv":11.59,"cur":"BRL","t":1788552240},"TSLA":{"n":"Tesla, Inc.","p":354.08,"pv":376.365,"cur":"USD","t":1788552000},"USIM6":{"n":"USIMINAS    PNB     N1","p":6.47,"pv":6.47,"cur":"BRL","t":1788289933},"UGPA3":{"n":"ULTRAPAR    ON      NM","p":37.42,"pv":36.45,"cur":"BRL","t":1788552335},"UNIP3":{"n":"UNIPAR      ON","p":56.21,"pv":56.19,"cur":"BRL","t":1788551372},"UNH":{"n":"UnitedHealth Group Incorporated","p":397.14,"pv":400.94,"cur":"USD","t":1788552002},"VITT3":{"n":"VITTIA      ON      NM","p":3.23,"pv":3.18,"cur":"BRL","t":1788552180},"UNIP5":{"n":"UNIPAR      PNA","p":57.7,"pv":57.7,"cur":"BRL","t":1788462213},"VIVA3":{"n":"VIVARA S.A. ON      NM","p":23.13,"pv":23.27,"cur":"BRL","t":1788552341},"USIM5":{"n":"USIMINAS    PNA     N1","p":7.63,"pv":7.81,"cur":"BRL","t":1788552352},"UNIP6":{"n":"UNIPAR      PNB","p":56.97,"pv":57.24,"cur":"BRL","t":1788552330},"USIM3":{"n":"USIMINAS    ON      N1","p":7.12,"pv":7.28,"cur":"BRL","t":1788552180},"VALE3":{"n":"VALE        ON      NM","p":78.62,"pv":78.45,"cur":"BRL","t":1788552347},"VAMO3":{"n":"VAMOS       ON      NM","p":3.5,"pv":3.38,"cur":"BRL","t":1788552333},"VIVR3":{"n":"VIVER       ON      NM","p":1.51,"pv":1.48,"cur":"BRL","t":1788545788},"VBBR3":{"n":"VIBRA       ON      NM","p":36.99,"pv":36.87,"cur":"BRL","t":1788552330},"V":{"n":"Visa Inc.","p":375.07,"pv":378.75,"cur":"USD","t":1788552002},"VIVT3":{"n":"TELEF BRASILON  EJ","p":30.06,"pv":30.31,"cur":"BRL","t":1788552339},"VSPT3":{"n":"VSPT3.SA,0P0000NJLN,0","p":0,"pv":1.5,"cur":"BRL","t":1721764800},"WLMM3":{"n":"WLM IND COM ON","p":19.69,"pv":19.4751,"cur":"BRL","t":1787594538},"WLMM4":{"n":"WLM IND COM PN","p":15.7,"pv":15.8,"cur":"BRL","t":1788552300},"WEST3":{"n":"WESTWING    ON      NM","p":2.9,"pv":3.03,"cur":"BRL","t":1788551173},"VVEO3":{"n":"VIVEO       ON      NM","p":0.76,"pv":0.79,"cur":"BRL","t":1788552180},"VVEO1":{"n":"VIVEO       DO    0,90","p":0.01,"pv":0.01,"cur":"BRL","t":1787877112},"VTRU3":{"n":"VITRUEDUCA  ON      NM","p":14.77,"pv":14.5,"cur":"BRL","t":1788552354},"VULC3":{"n":"VULCABRAS   ON      NM","p":13.01,"pv":13.01,"cur":"BRL","t":1788552180},"WIZC3":{"n":"WIZ CO      ON      NM","p":8.1,"pv":8.08,"cur":"BRL","t":1788552240},"VTI":{"n":"Vanguard Morningstar Total Stoc","p":379.73,"pv":380.93,"cur":"USD","t":1788552000},"WHRL4":{"n":"WHIRLPOOL   PN","p":3.73,"pv":3.82,"cur":"BRL","t":1788550356},"WDCN3":{"n":"WDC NETWORKSON      NM","p":2.59,"pv":2.46,"cur":"BRL","t":1788551323},"VSTE3":{"n":"VESTE       ON      NM","p":2.4,"pv":2.74,"cur":"BRL","t":1788552180},"WHRL3":{"n":"WHIRLPOOL   ON","p":3.67,"pv":3.67,"cur":"BRL","t":1788550499},"WRLD11":{"n":"INVESTO WRLDCI","p":149.91,"pv":149.2,"cur":"BRL","t":1788552960},"WEGE3":{"n":"WEG         ON      NM","p":51.74,"pv":52.06,"cur":"BRL","t":1788552334},"VSPT4":{"n":"Ferrovia Centro-Atlantica SA","p":0,"pv":null,"cur":"BRL","t":1630328732},"VOO":{"n":"Vanguard S&P 500 ETF","p":708.01,"pv":710.72,"cur":"USD","t":1788552000},"VLID3":{"n":"VALID       ON      NM","p":17.88,"pv":17.78,"cur":"BRL","t":1788552633},"WMT":{"n":"Walmart Inc.","p":107.14,"pv":108.42,"cur":"USD","t":1788552000},"^IXIC":{"n":"NASDAQ Composite","p":26506.99,"pv":26584.1,"cur":"USD","t":1788556559},"XINA11":{"n":"XPETFCHINA  CI","p":7.32,"pv":7.23,"cur":"BRL","t":1788552900},"YDUQ3":{"n":"YDUQS PART  ON      NM","p":9.64,"pv":9.49,"cur":"BRL","t":1788552340},"^DJI":{"n":"Dow Jones Industrial Average","p":53414.25,"pv":53686.1,"cur":"USD","t":1788554009},"^RUT":{"n":"Russell 2000","p":2975.648,"pv":2968.27,"cur":"USD","t":1788553813},"^GSPC":{"n":"S&P 500","p":7718.6,"pv":7747.71,"cur":"USD","t":1788553986},"^TNX":{"n":"CBOE Interest Rate 10 Year T No","p":4.784,"pv":4.784,"cur":"USD","t":1788548394},"XOM":{"n":"ExxonMobil Holdings Corporation","p":159.47,"pv":162.21,"cur":"USD","t":1788552245},"^VIX":{"n":"CBOE Volatility Index","p":15.2,"pv":14.53,"cur":"USD","t":1788792421},"^BVSP":{"n":"IBOVESPA","p":185147.16,"pv":185188.0,"cur":"BRL","t":1788553140},"USTK11":{"n":"INVESTO USTKCI","p":22.27,"pv":22.1,"cur":"BRL","t":1788552900}}}</script>
+<div id="idadeaviso" role="status"></div>
+<script id="macrodados" type="application/json">{"snapshotEm": "2026-09-07", "core": {"coletadoEm": "2026-09-07T17:12:01.462510Z", "selic": {"data": "16/09/2026", "valor": "14.00"}, "ipca12": {"data": "01/07/2026", "valor": "4.44"}, "cdi": {"data": "04/09/2026", "valor": "13.90"}, "dolarPtax": {"data": "04/09/2026", "valor": "5.1253"}, "focus": [{"i": "Câmbio", "ref": "2026", "med": 5.2, "d": "2026-08-28"}, {"i": "Câmbio", "ref": "2027", "med": 5.3, "d": "2026-08-28"}, {"i": "Câmbio", "ref": "2028", "med": 5.3, "d": "2026-08-28"}, {"i": "Câmbio", "ref": "2029", "med": 5.363, "d": "2026-08-28"}, {"i": "Câmbio", "ref": "2030", "med": 5.4, "d": "2026-08-28"}, {"i": "IGP-M", "ref": "2026", "med": 4.3752, "d": "2026-08-28"}, {"i": "IGP-M", "ref": "2027", "med": 4.1, "d": "2026-08-28"}, {"i": "IGP-M", "ref": "2028", "med": 3.915, "d": "2026-08-28"}, {"i": "IGP-M", "ref": "2029", "med": 3.825, "d": "2026-08-28"}, {"i": "IGP-M", "ref": "2030", "med": 3.8, "d": "2026-08-28"}, {"i": "IPCA", "ref": "2026", "med": 5.0062, "d": "2026-08-28"}, {"i": "IPCA", "ref": "2027", "med": 4.28, "d": "2026-08-28"}, {"i": "IPCA", "ref": "2028", "med": 3.8, "d": "2026-08-28"}, {"i": "IPCA", "ref": "2029", "med": 3.5, "d": "2026-08-28"}, {"i": "IPCA", "ref": "2030", "med": 3.5, "d": "2026-08-28"}, {"i": "PIB Total", "ref": "2026", "med": 1.9233, "d": "2026-08-28"}, {"i": "PIB Total", "ref": "2027", "med": 1.5, "d": "2026-08-28"}, {"i": "PIB Total", "ref": "2028", "med": 1.98, "d": "2026-08-28"}, {"i": "PIB Total", "ref": "2029", "med": 2.0, "d": "2026-08-28"}, {"i": "PIB Total", "ref": "2030", "med": 2.0, "d": "2026-08-28"}, {"i": "Selic", "ref": "2026", "med": 13.75, "d": "2026-08-28"}, {"i": "Selic", "ref": "2027", "med": 12.0, "d": "2026-08-28"}, {"i": "Selic", "ref": "2028", "med": 10.5, "d": "2026-08-28"}, {"i": "Selic", "ref": "2029", "med": 10.0, "d": "2026-08-28"}, {"i": "Selic", "ref": "2030", "med": 10.0, "d": "2026-08-28"}], "fx": {"USDBRL": {"bid": 5.22, "pct": 0.303605, "ts": "2026-08-18 17:36:26", "name": "Dólar Americano/Real Brasileiro"}, "EURBRL": {"bid": 6.0421, "pct": 0.247209, "ts": "2026-08-18 17:34:57", "name": "Euro/Real Brasileiro"}, "GBPBRL": {"bid": 7.06163, "pct": 0.171969, "ts": "2026-08-18 17:36:26", "name": "Libra Esterlina/Real Brasileiro"}, "JPYBRL": {"bid": 0.03268912, "pct": 0.120772, "ts": "2026-08-18 17:36:26", "name": "Iene Japonês/Real Brasileiro"}, "CNYBRL": {"bid": 0.77451504, "pct": 0.832441, "ts": "2026-08-14 17:59:56", "name": "Yuan Chinês/Real Brasileiro"}, "ARSBRL": {"bid": 0.00349184, "pct": -0.165823, "ts": "2026-08-18 17:35:29", "name": "Peso Argentino/Real Brasileiro"}, "BTCBRL": {"bid": 337868, "pct": 0.647, "ts": "2026-08-18 17:36:28", "name": "Bitcoin/Real Brasileiro"}}, "cripto": {"bitcoin": {"usd": 79079, "usd_24h_change": -0.6549108385725725, "brl": 405507, "brl_24h_change": -0.6239036515842271}, "ethereum": {"usd": 2486.28, "usd_24h_change": 0.09114486908188388, "brl": 12749.4, "brl_24h_change": 0.12238491195698553}}}, "ibov": {"date": "2026-09-04", "hora": "17:19:00", "pontos": 185147.15, "varDia": -0.02}, "agenda": [{"dt": "2026-09-09", "fim": "2026-09-10", "ev": "BCE — decisão de juros", "tag": "ZE"}, {"dt": "2026-09-11", "fim": "2026-09-11", "ev": "IPCA de agosto (IBGE)", "tag": "BR"}, {"dt": "2026-09-15", "fim": "2026-09-16", "ev": "Copom — decisão da Selic", "tag": "BR", "super": true}, {"dt": "2026-09-15", "fim": "2026-09-16", "ev": "FOMC — decisão de juros (Fed)", "tag": "EUA", "super": true}, {"dt": "2026-10-27", "fim": "2026-10-28", "ev": "FOMC — decisão de juros (Fed)", "tag": "EUA"}, {"dt": "2026-10-28", "fim": "2026-10-29", "ev": "BCE — decisão de juros", "tag": "ZE"}, {"dt": "2026-11-03", "fim": "2026-11-04", "ev": "Copom — decisão da Selic", "tag": "BR"}, {"dt": "2026-12-01", "fim": "2026-12-01", "ev": "PIB 3º trimestre 2026 (IBGE, data típica — confirmar)", "tag": "BR"}, {"dt": "2026-12-08", "fim": "2026-12-09", "ev": "Copom — decisão da Selic", "tag": "BR", "super": true}, {"dt": "2026-12-08", "fim": "2026-12-09", "ev": "FOMC — decisão de juros (Fed)", "tag": "EUA", "super": true}, {"dt": "2026-12-16", "fim": "2026-12-17", "ev": "BCE — decisão de juros", "tag": "ZE"}], "reddit": {"news": [{"t": "Correios têm prejuízo de R$ 5,4 bilhões no 1º semestre de 2026 | G1", "sub": "investimentos", "sc": 112, "nc": 215, "u": "https://g1.globo.com/economia/noticia/2026/08/17/correios-balanco-previo-aponta-prejuizo-de-r-54-bilhoes-no-1o-semestre-de-2026.ghtml", "dom": "g1.globo.com", "utc": 1786972035}, {"t": "Casas Bahia é só a ponta do iceberg: 986 varejistas estão em recuperação", "sub": "investimentos", "sc": 125, "nc": 82, "u": "https://www.infomoney.com.br/business/casas-bahia-e-so-a-ponta-do-iceberg-986-varejistas-estao-em-recuperacao/", "dom": "infomoney.com.br", "utc": 1787055331}, {"t": "Pablo Marçal declara patrimônio de R$ 7,4 bilhões; vice diz ter R$ 495 milhões", "sub": "investimentos", "sc": 186, "nc": 79, "u": "https://g1.globo.com/politica/eleicoes/2026/noticia/2026/08/15/pablo-marcal-declara-patrimonio-de-r-74-bilhoes-vice-diz-ter-r-495-milhoes.ghtml", "dom": "g1.globo.com", "utc": 1786839981}, {"t": "Brasil e Bolívia entram em lista global de economias com maior dívida pública", "sub": "investimentos", "sc": 107, "nc": 63, "u": "https://www.bloomberglinea.com.br/internacional/brasil-e-bolivia-entram-em-lista-global-de-economias-com-maior-divida-publica/", "dom": "bloomberglinea.com.br", "utc": 1786504343}, {"t": "BC multa Banco Genial em R$ 21,6 milhões e inabilita CEO por 4 anos", "sub": "investimentos", "sc": 122, "nc": 42, "u": "https://www.metropoles.com/brasil/economia-br/bc-multa-banco-genial-em-r-216-milhoes-e-inabilita-ceo-por-4-anos", "dom": "metropoles.com", "utc": 1786729619}, {"t": "Gerdau suspende investimento no Peru enquanto tenta bloquear projeto siderúrgico chinês", "sub": "economia", "sc": 52, "nc": 36, "u": "https://oglobo.globo.com/economia/negocios/noticia/2026/08/06/gerdau-suspende-investimento-no-peru-enquanto-tenta-bloquear-projeto-siderurgico-chines.ghtml", "dom": "oglobo.globo.com", "utc": 1786634718}, {"t": "CVM processa CEO do Banco do Brasil por excesso de otimismo", "sub": "investimentos", "sc": 91, "nc": 35, "u": "https://oglobo.globo.com/blogs/capital/post/2026/08/cvm-processa-ceo-do-banco-do-brasil-por-excesso-de-otimismo.ghtml", "dom": "oglobo.globo.com", "utc": 1786993783}, {"t": "Ações da Casas Bahia despencam na Bolsa e passam de mais de R$ 400 para centavos em cinco anos", "sub": "investimentos", "sc": 129, "nc": 30, "u": "https://g1.globo.com/economia/noticia/2026/08/17/acoes-da-casas-bahia.ghtml", "dom": "g1.globo.com", "utc": 1786978506}, {"t": "Inflação desacelera a 0,07% em julho, menor taxa para o mês desde 2022", "sub": "economia", "sc": 17, "nc": 12, "u": "https://economia.uol.com.br/noticias/redacao/2026/08/11/ipca---julho-2026.ghtm", "dom": "economia.uol.com.br", "utc": 1786526723}, {"t": "PT repete divisão sobre rumos da economia; veja análise", "sub": "economia", "sc": 2, "nc": 10, "u": "https://www.cnnbrasil.com.br/blogs/thais-heredia/eleicoes/analise-pt-repete-divisao-sobre-rumos-da-economia/", "dom": "cnnbrasil.com.br", "utc": 1786504467}], "disc": [{"t": "Caso Casas Bahia em recuperação judicial: você já comprou (ou comprava) nas Casas Bahia?", "sub": "investimentos", "sc": 121, "nc": 149, "u": "https://www.reddit.com/r/investimentos/comments/1vrmyvy/", "utc": 1787053959}, {"t": "O que seria preciso mudar para o Brasil atingir o nível de produção econômica de Alemanha, Japão, China ou Coreia do Sul?", "sub": "economia", "sc": 25, "nc": 128, "u": "https://www.reddit.com/r/Economia/comments/1vn01ev/", "utc": 1786593539}, {"t": "BB cobrando R$ 5/mês para mandar notificação", "sub": "investimentos", "sc": 581, "nc": 108, "u": "https://www.reddit.com/r/investimentos/comments/1vn63zy/", "utc": 1786614107}, {"t": "Novo cartão Nubank Croma — primeiras impressões", "sub": "investimentos", "sc": 245, "nc": 156, "u": "https://www.reddit.com/r/investimentos/comments/1vnb5l0/", "utc": 1786628700}, {"t": "Como estaria a economia argentina sem os três pacotes de até US$ 20 bi dos EUA?", "sub": "economia", "sc": 11, "nc": 83, "u": "https://www.reddit.com/r/Economia/comments/1vlx9p2/", "utc": 1786490068}, {"t": "Independência do Bacen", "sub": "economia", "sc": 8, "nc": 70, "u": "https://www.reddit.com/r/Economia/comments/1vrqevx/", "utc": 1787062513}]}, "manchetes": [{"t": "\"Faraó dos Bitcoins\" diz à Justiça que tem senha de fortuna bilionária", "src": "UOL Notícias", "d": "07 Sep 2026"}, {"t": "Lotofácil da Independência 2026: veja data, horário e valor do prêmio", "src": "G1", "d": "07 Sep 2026"}, {"t": "Jaguar Land Rover anuncia corte de 4.000 empregos nos próximos dois anos para reduzir custos", "src": "Folha de S.Paulo", "d": "07 Sep 2026"}, {"t": "Formações em Tecnologia: confira mais de 18 mil vagas abertas em cursos gratuitos e online", "src": "Extra online", "d": "07 Sep 2026"}, {"t": "Jorge Paulo Lemann Aos 87 Anos e Patrimônio de R$ 103,5 Bilhões É o Terceiro Homem Mais Rico do Brasil", "src": "Forbes Brasil", "d": "07 Sep 2026"}, {"t": "Anatel autoriza venda da telefonia fixa da Oi", "src": "CNN Brasil", "d": "07 Sep 2026"}, {"t": "'Enxurrada de investimento': indústria projeta R$ 1,5 tri para data centers", "src": "UOL", "d": "07 Sep 2026"}, {"t": "ChatGPT já pode ajudar a comprar e vender ações; entenda como", "src": "Estadão", "d": "07 Sep 2026"}, {"t": "Mega-Sena acumula e próximo sorteio terá prêmio de R$ 70 milhões", "src": "Agência Brasil", "d": "06 Sep 2026"}, {"t": "Greve nacional nos bancos vai fechar agências bancárias em todo o Brasil a partir desta semana", "src": "Portal Tempo Novo", "d": "06 Sep 2026"}, {"t": "Timemania hoje: resultado do concurso 2438 e números sorteados", "src": "G1", "d": "06 Sep 2026"}, {"t": "Contas do governo pioram com Dario Durigan", "src": "Poder360", "d": "06 Sep 2026"}], "veiculos": {"br": [{"n": "G1 Economia", "u": "https://g1.globo.com/economia/", "itens": [{"t": "IA avançada pode representar um 'risco existencial para a humanidade', alerta ONU", "u": "https://g1.globo.com/tecnologia/noticia/2026/09/07/ia-avancada-pode-representar-um-risco-existencial-para-a-humanidade-alerta-onu.ghtml", "d": "07 Sep"}, {"t": "Jaguar Land Rover anuncia corte de 4 mil vagas em plano para reduzir custos", "u": "https://g1.globo.com/carros/noticia/2026/09/07/jaguar-land-rover-anuncia-corte-de-4-mil-vagas-em-plano-para-reduzir-custos.ghtml", "d": "07 Sep"}, {"t": "Trabalhar, dever, trabalhar mais: como crédito caro prende entregadores argentinos aos aplicativos", "u": "https://g1.globo.com/economia/noticia/2026/09/07/trabalhar-dever-trabalhar-mais-como-credito-caro-prende-entregadores-argentinos-aos-aplicativos.ghtml", "d": "07 Sep"}]}, {"n": "Valor Econômico", "u": "https://valor.globo.com/", "itens": [{"t": "Flávio diz que Alexandre de Moraes toma decisões 'na base da grana’", "u": "https://valor.globo.com/politica/eleicoes-2026/noticia/2026/09/07/flavio-diz-que-alexandre-de-moraes-toma-decisoes-na-base-da-grana.ghtml", "d": "07 Sep"}, {"t": "KPMG: Fusões e aquisições em energia caem 30% no primeiro semestre na comparação anual", "u": "https://valor.globo.com/empresas/noticia/2026/09/07/kpmg-fusoes-e-aquisicoes-em-energia-caem-30percent-no-primeiro-semestre-na-comparacao-anual.ghtml", "d": "07 Sep"}, {"t": "Aliados atribuem ausência de Michelle no ato na Paulista a Alexandre de Moraes", "u": "https://valor.globo.com/noticia/2026/09/07/aliados-atribuem-ausencia-de-michelle-no-ato-na-paulista-a-alexandre-de-moraes.ghtml", "d": "07 Sep"}]}, {"n": "InfoMoney", "u": "https://www.infomoney.com.br/mercados/", "itens": [{"t": "Eleição será 50% construção e 50% destruição do adversário, prevê marqueteiro", "u": "https://www.infomoney.com.br/politica/eleicao-sera-50-construcao-e-50-destruicao-do-adversario-preve-marqueteiro/", "d": "07 Sep"}, {"t": "Nepal concentra esforços para encontrar 900 trabalhadores de usinas hidrelétricas", "u": "https://www.infomoney.com.br/mundo/nepal-concentra-esforcos-para-encontrar-900-trabalhadores-de-usinas-hidreletricas/", "d": "07 Sep"}, {"t": "IA representa risco existencial para humanidade, diz chefe de direitos humanos da ONU", "u": "https://www.infomoney.com.br/mundo/ia-representa-risco-existencial-para-humanidade-diz-chefe-de-direitos-humanos-da-onu/", "d": "07 Sep"}]}, {"n": "Brazil Journal", "u": "https://braziljournal.com/", "itens": [{"t": "Que País É Este", "u": "https://braziljournal.com/que-pais-e-este/", "d": "07 Sep"}, {"t": "O Que Será", "u": "https://braziljournal.com/o-que-sera/", "d": "05 Sep"}, {"t": "Essa fase da minha vida — by Pedro Vinicio", "u": "https://braziljournal.com/essa-fase-da-minha-vida-by-pedro-vinicio/", "d": "04 Sep"}]}, {"n": "InvestNews", "u": "https://investnews.com.br/", "itens": [{"t": "Tragédia com avião da Amazon recoloca segurança da aviação de carga em debate", "u": "https://investnews.com.br/negocios/tragedia-aviao-amazon-seguranca-debate/", "d": "07 Sep"}, {"t": "Volkswagen converte fábrica de carros na Alemanha para a indústria de defesa", "u": "https://investnews.com.br/negocios/volkswagen-fabrica-industria-defesa/", "d": "07 Sep"}, {"t": "Dona do TikTok, ByteDance prepara IA para criar mundos virtuais em tempo real", "u": "https://investnews.com.br/negocios/tiktok-byte-dance-ia-mundos-virtuais/", "d": "07 Sep"}]}, {"n": "Exame Invest", "u": "https://exame.com/invest/", "itens": []}], "int": [{"n": "NY Times Business", "u": "https://www.nytimes.com/section/business", "itens": [{"t": "WYouth, New Magazine for Teens, Debuts With Justin and Hailey Bieber Cover", "u": "https://www.nytimes.com/2026/09/07/style/wyouth-teen-magazine-gen-z.html", "d": "07 Sep"}, {"t": "Social Media in China Is Getting Really Dark", "u": "https://www.nytimes.com/2026/09/07/business/china-social-media-pessimism.html", "d": "07 Sep"}, {"t": "Rivian R2 Review: A Tidier (in Size and Price) SUV Is Ready for the Suburbs", "u": "https://www.nytimes.com/2026/09/07/business/rivian-r2-review.html", "d": "07 Sep"}]}, {"n": "The Economist", "u": "https://www.economist.com/finance-and-economics", "itens": [{"t": "Inflation is back around the world—as is the fight against it", "u": "https://www.economist.com/finance-and-economics/2026/09/06/inflation-is-back-around-the-world-as-is-the-fight-against-it", "d": "06 Sep"}, {"t": "The jobs apocalypse is postponed. An AI jobs boom is here", "u": "https://www.economist.com/finance-and-economics/2026/09/04/the-jobs-apocalypse-is-postponed-an-ai-jobs-boom-is-here", "d": "04 Sep"}, {"t": "Mexico is struggling to win over bond markets", "u": "https://www.economist.com/finance-and-economics/2026/09/03/mexico-is-struggling-to-win-over-bond-markets", "d": "03 Sep"}]}, {"n": "The Guardian Business", "u": "https://www.theguardian.com/business", "itens": [{"t": "Jaguar Land Rover confirms plan to cut 4,000 jobs over two years", "u": "https://www.theguardian.com/business/2026/sep/07/jaguar-land-rover-job-trump-tariffs", "d": "07 Sep"}, {"t": "John Healey backs growth but says Labour must be honest on spending", "u": "https://www.theguardian.com/business/2026/sep/07/john-healey-growth-labour-spending-raise-taxes", "d": "07 Sep"}, {"t": "Architect of UK’s AI policy quits after Anthropic conflict of interest concerns", "u": "https://www.theguardian.com/technology/2026/sep/07/architect-uk-ai-policy-quits-anthropic-conflict-of-interest-concerns", "d": "07 Sep"}]}, {"n": "BBC Business", "u": "https://www.bbc.com/business", "itens": [{"t": "Next wins key appeal to overturn £30m equal pay ruling", "u": "https://www.bbc.co.uk/news/articles/c05r61rqe4yo?at_medium=RSS&at_campaign=rss", "d": "07 Sep"}, {"t": "Faisal Islam: Chancellor's attempts to boost vibes may limit tax rises", "u": "https://www.bbc.co.uk/news/articles/c39mz7xlvjzo?at_medium=RSS&at_campaign=rss", "d": "07 Sep"}, {"t": "Why the 'Temu Range Rover' is such a threat to Jaguar Land Rover", "u": "https://www.bbc.co.uk/news/articles/c5y4l22p262o?at_medium=RSS&at_campaign=rss", "d": "07 Sep"}]}, {"n": "Financial Times", "u": "https://www.ft.com/markets", "itens": []}, {"n": "Bloomberg", "u": "https://www.bloomberg.com/markets", "itens": []}, {"n": "Reuters Business", "u": "https://www.reuters.com/business/", "itens": []}, {"n": "WSJ Finance", "u": "https://www.wsj.com/finance", "itens": []}]}, "fontesAgenda": "BCB (Copom), Federal Reserve (FOMC), BCE, IBGE"}</script>
+<script id="quotesdados" type="application/json">{"updatedAt":"2026-09-07T17:12:19Z","q":{"AFLT3":{"n":"AFLUENTE T  ON","p":7.39,"pv":7.39,"cur":"BRL","t":1788457562},"ALPA3":{"n":"ALPARGATAS  ON      N1","p":10.2,"pv":10.2,"cur":"BRL","t":1788552000},"AALR3":{"n":"ALLIAR      ON      NM","p":3.3,"pv":3.28,"cur":"BRL","t":1788552000},"AERI3":{"n":"AERIS       ON      NM","p":2.07,"pv":2.09,"cur":"BRL","t":1788552000},"ACWI11":{"n":"XPETFACWI   CI","p":17.5,"pv":17.44,"cur":"BRL","t":1788552960},"ALPK3":{"n":"ESTAPAR     ON      NM","p":4.5,"pv":4.52,"cur":"BRL","t":1788552000},"ABCB4":{"n":"ABC BRASIL  PN      N2","p":24.58,"pv":24.84,"cur":"BRL","t":1788552240},"AHEB6":{"n":"SPTURIS     PNB","p":55.0,"pv":55.0,"cur":"BRL","t":1788481900},"AGRO3":{"n":"BRASILAGRO  ON      NM","p":19.27,"pv":19.0,"cur":"BRL","t":1788552180},"AHEB3":{"n":"SPTURIS     ON","p":23.89,"pv":23.89,"cur":"BRL","t":1786130114},"ABEV3":{"n":"AMBEV S/A   ON","p":15.74,"pv":15.76,"cur":"BRL","t":1788552359},"AHEB5":{"n":"SPTURIS     PNA","p":58.0,"pv":58.0,"cur":"BRL","t":1788481900},"ABCB10":{"n":"ABC BRASIL  PN REC NN2","p":25.5,"pv":25.2,"cur":"BRL","t":1788549023},"ALOS3":{"n":"ALLOS       ON      NM","p":28.81,"pv":29.02,"cur":"BRL","t":1788552347},"AAPL":{"n":"Apple Inc.","p":319.97,"pv":328.21,"cur":"USD","t":1788552001},"ALLD3":{"n":"ALLIED      ON      NM","p":5.19,"pv":5.23,"cur":"BRL","t":1788552180},"AGXY3":{"n":"AGROGALAXY  ON      NM","p":1.33,"pv":1.34,"cur":"BRL","t":1788551369},"ALPA4":{"n":"ALPARGATAS  PN      N1","p":13.57,"pv":13.74,"cur":"BRL","t":1788552240},"AMAR3":{"n":"LOJAS MARISAON      NM","p":0.8,"pv":0.79,"cur":"BRL","t":1788552180},"APTI4":{"n":"APTI4.SA,0P0000D5O8,0","p":0,"pv":null,"cur":"BRL","t":1721419200},"ALUP4":{"n":"ALUPAR      PN      N2","p":10.92,"pv":10.86,"cur":"BRL","t":1788549356},"AMD":{"n":"Advanced Micro Devices, Inc.","p":477.57,"pv":456.16,"cur":"USD","t":1788552001},"ALUP3":{"n":"ALUPAR      ON      N2","p":11.66,"pv":11.74,"cur":"BRL","t":1788550660},"AMBP3":{"n":"AMBIPAR     ON      NM","p":0.14,"pv":0.14,"cur":"BRL","t":1788552300},"ANIM3":{"n":"ANIMA       ON      NM","p":2.93,"pv":2.89,"cur":"BRL","t":1788552342},"ARND3":{"n":"ARANDU      ON      NM","p":0.51,"pv":0.5,"cur":"BRL","t":1788552000},"AMER3":{"n":"AMERICANAS  ON      NM","p":5.55,"pv":5.32,"cur":"BRL","t":1788552180},"ATED3":{"n":"ATOM EDUC   ON","p":1.17,"pv":1.17,"cur":"BRL","t":1788547169},"ALUP11":{"n":"ALUPAR      UNT     N2","p":33.64,"pv":33.47,"cur":"BRL","t":1788552240},"AMOB3":{"n":"AUTOMOB     ON      NM","p":12.4,"pv":11.76,"cur":"BRL","t":1788552180},"AUAU3":{"n":"PETZCOBASI  ON      NM","p":4.0,"pv":3.93,"cur":"BRL","t":1788552240},"ARML3":{"n":"ARMAC       ON      NM","p":3.84,"pv":3.8,"cur":"BRL","t":1788552000},"AMZN":{"n":"Amazon.com, Inc.","p":258.51,"pv":258.9,"cur":"USD","t":1788552001},"AUPO11":{"n":"BTGP AUPO   F11","p":109.92,"pv":109.86,"cur":"BRL","t":1788553020},"ASAI3":{"n":"ASSAI       ON      NM","p":9.08,"pv":9.11,"cur":"BRL","t":1788552352},"AVLL3":{"n":"ALPHAVILLE  ON      NM","p":6.9,"pv":6.9,"cur":"BRL","t":1788464344},"AZUL3":{"n":"AZUL        ON      N2","p":19.0,"pv":18.3,"cur":"BRL","t":1788552180},"AXIA7":{"n":"AXIA ENERGIAPNC     NM","p":55.35,"pv":55.87,"cur":"BRL","t":1788552633},"AVGO":{"n":"Broadcom Inc.","p":357.895,"pv":357.16,"cur":"USD","t":1788552001},"AURE3":{"n":"AUREN       ON      NM","p":12.0,"pv":11.63,"cur":"BRL","t":1788552341},"AZEV3":{"n":"AZEVEDO     ON","p":8.39,"pv":9.0,"cur":"BRL","t":1788552345},"AZEV4":{"n":"AZEVEDO     PN","p":1.45,"pv":1.51,"cur":"BRL","t":1788552180},"AZUL97":{"n":"AZUL        UNT     N2","p":6.98,"pv":6.22,"cur":"BRL","t":1788552180},"AXIA3":{"n":"AXIA ENERGIAON      NM","p":55.28,"pv":55.75,"cur":"BRL","t":1788552341},"AZTE3":{"n":"AZT ENERGIA ON","p":1.47,"pv":1.51,"cur":"BRL","t":1788552000},"AZUL98":{"n":"AZUL        UNT     N2","p":7.8,"pv":7.8,"cur":"BRL","t":1788283454},"B1003":{"n":"B100 S.A.   ON      NM","p":32.0,"pv":32.0,"cur":"BRL","t":1788448763},"BALM3":{"n":"BAUMER      ON","p":26.0,"pv":26.0,"cur":"BRL","t":1788440400},"BAUH3":{"n":"BAUH3.SA,0P0000C5JD,0","p":0,"pv":null,"cur":"BRL","t":1721764800},"B3SA3":{"n":"B3          ON      NM","p":17.37,"pv":17.35,"cur":"BRL","t":1788552351},"BAZA3":{"n":"AMAZONIA    ON","p":68.15,"pv":68.49,"cur":"BRL","t":1788548920},"BAUH4":{"n":"EXCELSIOR   PN","p":93.39,"pv":93.39,"cur":"BRL","t":1788457415},"AZUL99":{"n":"AZUL        UNT     N2","p":5.99,"pv":5.99,"cur":"BRL","t":1788540959},"B5P211":{"n":"IT NOW B5P2 F11","p":111.26,"pv":111.19,"cur":"BRL","t":1788553020},"AZZA3":{"n":"AZZAS 2154  ON      NM","p":17.69,"pv":17.08,"cur":"BRL","t":1788552354},"BALM4":{"n":"BAUMER      PN","p":14.99,"pv":14.99,"cur":"BRL","t":1788534306},"BDLL3":{"n":"BARDELLA    ON","p":4.5,"pv":4.5,"cur":"BRL","t":1788378657},"BBDC4":{"n":"BRADESCO    PN  EJ  N1","p":17.9,"pv":17.79,"cur":"BRL","t":1788552629},"BBDC2":{"n":"BRADESCO    DP   17,64","p":0.01,"pv":0.01,"cur":"BRL","t":1788395494},"BBAS3":{"n":"BRASIL      ON  EX  NM","p":22.52,"pv":22.45,"cur":"BRL","t":1788552355},"BBDC3":{"n":"BRADESCO    ON  EJ  N1","p":15.81,"pv":15.67,"cur":"BRL","t":1788552335},"BBSE3":{"n":"BBSEGURIDADEON      NM","p":42.16,"pv":41.69,"cur":"BRL","t":1788552357},"BBDC1":{"n":"BRADESCO    DO   15,43","p":0.01,"pv":0.01,"cur":"BRL","t":1788395494},"BGIP4":{"n":"BANESE      PN","p":34.0,"pv":34.0,"cur":"BRL","t":1788545673},"BIOM3":{"n":"BIOMM       ON      N2","p":6.63,"pv":6.42,"cur":"BRL","t":1788552000},"BIED3":{"n":"BIOMA EDUC  ON","p":6.01,"pv":6.09,"cur":"BRL","t":1788550174},"BEES4":{"n":"BANESTES    PN  EJ","p":8.97,"pv":9.11,"cur":"BRL","t":1788550396},"BEES3":{"n":"BANESTES    ON  EJ","p":8.85,"pv":8.95,"cur":"BRL","t":1788550414},"BEEF3":{"n":"MINERVA     ON      NM","p":3.95,"pv":3.79,"cur":"BRL","t":1788552343},"BMEB3":{"n":"MERCANTIL   ON      N1","p":50.64,"pv":50.61,"cur":"BRL","t":1788543840},"BGIP3":{"n":"BANESE      ON","p":46.37,"pv":45.7,"cur":"BRL","t":1788552000},"BDLL4":{"n":"BARDELLA    PN","p":3.25,"pv":3.25,"cur":"BRL","t":1788379500},"BHIA3":{"n":"CASAS BAHIA ON      NM","p":0.69,"pv":0.69,"cur":"BRL","t":1788552300},"BMIN3":{"n":"MERC INVEST ON","p":19.5,"pv":19.5,"cur":"BRL","t":1787062093},"BMGB4":{"n":"BANCO BMG   PN      N1","p":5.98,"pv":5.93,"cur":"BRL","t":1788552633},"BLAU3":{"n":"BLAU        ON      NM","p":9.68,"pv":9.5,"cur":"BRL","t":1788552351},"BMEB4":{"n":"MERCANTIL   PN      N1","p":61.23,"pv":60.14,"cur":"BRL","t":1788551368},"BITH11":{"n":"BITCOIN HASHCI","p":91.15,"pv":93.26,"cur":"BRL","t":1788552960},"BOBR4":{"n":"BOMBRIL     PN","p":1.29,"pv":1.21,"cur":"BRL","t":1788552180},"BRKM6":{"n":"BRASKEM     PNB     N1","p":7.0,"pv":7.0,"cur":"BRL","t":1788464061},"BRKM3":{"n":"BRASKEM     ON      N1","p":4.27,"pv":4.31,"cur":"BRL","t":1788552180},"BMOB3":{"n":"BEMOBI TECH ON      NM","p":26.05,"pv":25.04,"cur":"BRL","t":1788552349},"BOVV11":{"n":"IT NOW IBOV CI","p":191.0,"pv":191.28,"cur":"BRL","t":1788552960},"BRAP3":{"n":"BRADESPAR   ON      N1","p":19.3,"pv":19.15,"cur":"BRL","t":1788552000},"BPAC11":{"n":"BTGP BANCO  UNT     N2","p":59.24,"pv":58.81,"cur":"BRL","t":1788552340},"BRKM5":{"n":"BRASKEM     PNA     N1","p":4.8,"pv":4.94,"cur":"BRL","t":1788552240},"BPAR3":{"n":"BANPARA     ON","p":180.0,"pv":176.3854,"cur":"BRL","t":1788481905},"BMKS3":{"n":"BIC MONARK  ON      MP","p":377.0,"pv":371.55,"cur":"BRL","t":1788547490},"BRK-B":{"n":"Berkshire Hathaway Inc. New","p":506.03,"pv":508.13,"cur":"USD","t":1788552123},"BOVA11":{"n":"ISHARES BOVACI","p":181.94,"pv":182.25,"cur":"BRL","t":1788553128},"BOBR3":{"n":"BOBR3.SA,0P0000H6RI,0","p":0,"pv":1,"cur":"BRL","t":1721764800},"BPAC3":{"n":"BTGP BANCO  ON      N2","p":23.47,"pv":23.21,"cur":"BRL","t":1788552180},"BRBI11":{"n":"BR PARTNERS UNT     N2","p":14.3,"pv":14.19,"cur":"BRL","t":1788552180},"BPAC5":{"n":"BTGP BANCO  PNA     N2","p":19.61,"pv":19.36,"cur":"BRL","t":1788547874},"BMIN4":{"n":"MERC INVEST PN","p":18.86,"pv":18.86,"cur":"BRL","t":1788457528},"BNBR3":{"n":"NORD BRASIL ON","p":109.25,"pv":107.0,"cur":"BRL","t":1788537377},"BRAV3":{"n":"BRAVA       ON      NM","p":17.88,"pv":18.66,"cur":"BRL","t":1788552333},"BRAP4":{"n":"BRADESPAR   PN      N1","p":22.48,"pv":22.54,"cur":"BRL","t":1788552358},"CASN4":{"n":"CASN4.SA,0P0000D5NK,0","p":0,"pv":6.0759,"cur":"BRL","t":1721332800},"BSLI3":{"n":"BRB BANCO   ON","p":2.59,"pv":2.6,"cur":"BRL","t":1788552000},"BRSR6":{"n":"BANRISUL    PNB     N1","p":14.88,"pv":15.0,"cur":"BRL","t":1788552341},"CASN3":{"n":"CASN3.SA,0P0000D5NJ,0","p":8.807,"pv":null,"cur":"BRL","t":1788481906},"CALI3":{"n":"CONST A LINDON","p":29.99,"pv":29.99,"cur":"BRL","t":1786564068},"BRSR3":{"n":"BANRISUL    ON      N1","p":17.76,"pv":17.94,"cur":"BRL","t":1788552000},"BRSR5":{"n":"BANRISUL    PNA     N1","p":18.0,"pv":18.0,"cur":"BRL","t":1788464402},"CAMB3":{"n":"CAMBUCI     ON","p":8.52,"pv":8.65,"cur":"BRL","t":1788550594},"BRST3":{"n":"BRISANET    ON      NM","p":2.82,"pv":2.87,"cur":"BRL","t":1788552000},"BSLI10":{"n":"BRB BANCO   PN  REC","p":3.75,"pv":3.75,"cur":"BRL","t":1787147715},"CAML3":{"n":"CAMIL       ON  ED  NM","p":4.94,"pv":5.08,"cur":"BRL","t":1788552633},"BSLI4":{"n":"BRB BANCO   PN","p":2.6,"pv":2.6,"cur":"BRL","t":1788552180},"CASH3":{"n":"MELIUZ      ON      NM","p":5.38,"pv":5.62,"cur":"BRL","t":1788552350},"CEBR3":{"n":"CEB         ON","p":23.56,"pv":23.54,"cur":"BRL","t":1788552180},"CEBR6":{"n":"CEB         PNB","p":27.08,"pv":27.55,"cur":"BRL","t":1788540646},"CCTY3":{"n":"RDVC CITY   ON      NM","p":5.75,"pv":5.75,"cur":"BRL","t":1787600922},"CEGR3":{"n":"CEG         ON","p":35.0,"pv":35.0,"cur":"BRL","t":1788200863},"CEEB5":{"n":"COELBA      PNA","p":40.0,"pv":40.0,"cur":"BRL","t":1785441900},"CEDO3":{"n":"CEDRO       ON      N1","p":9.0,"pv":9.0,"cur":"BRL","t":1788481907},"CBEE3":{"n":"AMPLA ENERG ON","p":8.82,"pv":8.81,"cur":"BRL","t":1788547470},"CEBR5":{"n":"CEB         PNA","p":23.61,"pv":23.46,"cur":"BRL","t":1788552000},"CEEB3":{"n":"COELBA      ON","p":47.2,"pv":46.45,"cur":"BRL","t":1788526935},"CGRA3":{"n":"GRAZZIOTIN  ON","p":23.75,"pv":23.95,"cur":"BRL","t":1788546353},"CGAS5":{"n":"COMGAS      PNA","p":121.06,"pv":121.0,"cur":"BRL","t":1788546479},"CGRA4":{"n":"GRAZZIOTIN  PN","p":23.61,"pv":23.46,"cur":"BRL","t":1788550056},"CEED3":{"n":"CEEE,D      ON","p":10.0,"pv":10.0,"cur":"BRL","t":1788549292},"CEED4":{"n":"CEEE,D      PN","p":20.0,"pv":20.0,"cur":"BRL","t":1788481907},"CBAV3":{"n":"CBA         ON      NM","p":11.15,"pv":11.2,"cur":"BRL","t":1788552346},"CEAB3":{"n":"CEA MODAS   ON      NM","p":9.21,"pv":9.32,"cur":"BRL","t":1788552355},"CGAS3":{"n":"COMGAS      ON","p":125.69,"pv":125.69,"cur":"BRL","t":1788354650},"CEDO4":{"n":"CEDRO       PN      N1","p":5.12,"pv":5.16,"cur":"BRL","t":1788537478},"COCE6":{"n":"COCE6.SA,0P0000D5R7,0","p":0,"pv":35,"cur":"BRL","t":1721764800},"COCE5":{"n":"COELCE      PNA","p":31.22,"pv":31.79,"cur":"BRL","t":1788552000},"CLSC4":{"n":"CELESC      PN      N2","p":156.99,"pv":156.95,"cur":"BRL","t":1788552180},"CLSC3":{"n":"CELESC      ON      N2","p":133.98,"pv":133.98,"cur":"BRL","t":1788287148},"COCE3":{"n":"COELCE      ON","p":28.8,"pv":28.8,"cur":"BRL","t":1788291758},"CRPG3":{"n":"CRISTAL     ON","p":17.0,"pv":17.0,"cur":"BRL","t":1785334018},"CRPG5":{"n":"CRISTAL     PNA","p":8.99,"pv":9.05,"cur":"BRL","t":1788552000},"CSED3":{"n":"CRUZEIRO EDUON      NM","p":5.58,"pv":5.23,"cur":"BRL","t":1788552240},"CRPG6":{"n":"CRISTAL     PNB","p":9.45,"pv":9.45,"cur":"BRL","t":1788464992},"CMIN3":{"n":"CSNMINERACAOON      N2","p":6.59,"pv":6.66,"cur":"BRL","t":1788552359},"COGN3":{"n":"COGNA ON    ON      NM","p":2.44,"pv":2.4,"cur":"BRL","t":1788552340},"CMIG3":{"n":"CEMIG       ON      N1","p":17.04,"pv":16.75,"cur":"BRL","t":1788552180},"CPLE3":{"n":"COPEL       ON      NM","p":15.85,"pv":15.78,"cur":"BRL","t":1788552629},"CPFE3":{"n":"CPFL ENERGIAON      NM","p":46.83,"pv":46.73,"cur":"BRL","t":1788552343},"CMIG4":{"n":"CEMIG       PN      N1","p":11.26,"pv":11.18,"cur":"BRL","t":1788552353},"CSAN3":{"n":"COSAN       ON      NM","p":3.8,"pv":3.82,"cur":"BRL","t":1788552351},"CTSA3":{"n":"SANTANENSE  ON","p":2.0,"pv":2.0,"cur":"BRL","t":1788481908},"CTKA4":{"n":"KARSTEN     PN","p":31.01,"pv":31.0,"cur":"BRL","t":1788552180},"CSUD3":{"n":"CSU DIGITAL ON      NM","p":14.15,"pv":14.22,"cur":"BRL","t":1788551384},"CTKA3":{"n":"KARSTEN     ON","p":44.0,"pv":44.0,"cur":"BRL","t":1788481908},"CVCB3":{"n":"CVC BRASIL  ON      NM","p":1.88,"pv":1.79,"cur":"BRL","t":1788552240},"CTSA4":{"n":"SANTANENSE  PN","p":1.29,"pv":1.29,"cur":"BRL","t":1788481908},"CTAX3":{"n":"CONTAX      ON","p":1.59,"pv":1.64,"cur":"BRL","t":1788550695},"DEXP3":{"n":"DEXXOS PAR  ON      N1","p":7.49,"pv":7.47,"cur":"BRL","t":1788551384},"DEXP4":{"n":"DEXXOS PAR  PN      N1","p":7.5,"pv":7.4,"cur":"BRL","t":1788532217},"CSMG3":{"n":"COPASA      ON      NM","p":55.91,"pv":56.88,"cur":"BRL","t":1788552353},"CYRE3":{"n":"CYRELA REALTON      NM","p":25.6,"pv":25.34,"cur":"BRL","t":1788552338},"CURY3":{"n":"CURY S/A    ON      NM","p":33.21,"pv":32.8,"cur":"BRL","t":1788552356},"CSNA3":{"n":"SID NACIONALON","p":6.36,"pv":6.38,"cur":"BRL","t":1788552349},"DEBB11":{"n":"BTG DEB DI  F11","p":17.06,"pv":17.05,"cur":"BRL","t":1788553020},"CYRE4":{"n":"CYRELA REALTPN      NM","p":24.11,"pv":23.66,"cur":"BRL","t":1788552331},"DASA3":{"n":"DASA        ON      NM","p":2.82,"pv":2.8,"cur":"BRL","t":1788552336},"CXSE3":{"n":"CAIXA SEGURION      NM","p":19.98,"pv":19.77,"cur":"BRL","t":1788552337},"DESK3":{"n":"DESKTOP     ON  ED  NM","p":18.85,"pv":18.94,"cur":"BRL","t":1788552334},"EKTR3":{"n":"ELEKTRO     ON","p":51.52,"pv":51.52,"cur":"BRL","t":1788481910},"EMAE3":{"n":"EMAE        ON","p":150.0,"pv":150.0,"cur":"BRL","t":1788481910},"DOHL4":{"n":"DOHLER      PN","p":3.73,"pv":3.69,"cur":"BRL","t":1788527063},"DTCY3":{"n":"DTCOM,DIRECTON","p":1.95,"pv":1.95,"cur":"BRL","t":1788283153},"DMVF3":{"n":"D1000VFARMA ON      NM","p":6.23,"pv":6.18,"cur":"BRL","t":1788552180},"DIVO11":{"n":"IT NOW IDIV CI","p":132.85,"pv":132.5,"cur":"BRL","t":1788552900},"EGIE3":{"n":"ENGIE BRASILON      NM","p":30.14,"pv":30.36,"cur":"BRL","t":1788552341},"DXCO3":{"n":"DEXCO       ON      NM","p":5.64,"pv":5.64,"cur":"BRL","t":1788552359},"DOHL3":{"n":"DOHLER      ON","p":6.46,"pv":6.46,"cur":"BRL","t":1787324628},"ECOR3":{"n":"ECORODOVIAS ON      NM","p":7.92,"pv":7.64,"cur":"BRL","t":1788552341},"EKTR4":{"n":"ELEKTRO     PN","p":38.0,"pv":38.0,"cur":"BRL","t":1788535112},"DOTZ3":{"n":"DOTZ SA     ON      NM","p":10.26,"pv":10.8,"cur":"BRL","t":1788552633},"ECOM3":{"n":"ECONOMATICA ON      NM","p":1.12,"pv":1.14,"cur":"BRL","t":1788550750},"DIRR3":{"n":"DIRECIONAL  ON      NM","p":11.46,"pv":11.47,"cur":"BRL","t":1788552352},"EALT4":{"n":"ACO ALTONA  PN","p":11.19,"pv":11.08,"cur":"BRL","t":1788545620},"EGGY3":{"n":"GRANJA FARIAON","p":0.17,"pv":0.17,"cur":"BRL","t":1788481910},"EALT3":{"n":"ACO ALTONA  ON","p":12.3,"pv":11.9,"cur":"BRL","t":1788530226},"EEM":{"n":"iShares MSCI Emerging Index Fun","p":68.7,"pv":67.47,"cur":"USD","t":1788552000},"ENGI4":{"n":"ENERGISA    PN      N2","p":9.86,"pv":9.81,"cur":"BRL","t":1788551335},"ENGI3":{"n":"ENERGISA    ON      N2","p":12.39,"pv":12.4,"cur":"BRL","t":1788548222},"ENMT3":{"n":"ENERGISA MT ON","p":34.0,"pv":33.6,"cur":"BRL","t":1788551389},"EQPA7":{"n":"EQTL PARA   PNC ED","p":10.0,"pv":9.9042,"cur":"BRL","t":1788481910},"ENEV3":{"n":"ENEVA       ON      NM","p":27.59,"pv":27.64,"cur":"BRL","t":1788552350},"EMBJ3":{"n":"EMBRAER     ON  ATZ NM","p":94.98,"pv":93.93,"cur":"BRL","t":1788552355},"EQPA3":{"n":"EQTL PARA   ON","p":5.52,"pv":5.51,"cur":"BRL","t":1788552000},"ENJU3":{"n":"ENJOEI      ON      NM","p":0.75,"pv":0.75,"cur":"BRL","t":1788552180},"ENGI11":{"n":"ENERGISA    UNT     N2","p":51.43,"pv":51.37,"cur":"BRL","t":1788552351},"EQPA6":{"n":"EQTL PARA   PNB","p":6.59,"pv":6.59,"cur":"BRL","t":1788481910},"EMAE4":{"n":"EMAE        PN","p":34.3,"pv":34.74,"cur":"BRL","t":1788552000},"EQPA5":{"n":"EQTL PARA   PNA","p":9.78,"pv":9.78,"cur":"BRL","t":1788460883},"ENMT4":{"n":"ENERGISA MT PN","p":34.31,"pv":34.99,"cur":"BRL","t":1788552000},"EQMA3B":{"n":"EQUATORIAL MARANHA","p":29.24,"pv":29.24,"cur":"BRL","t":1788360842},"ESPA3":{"n":"ESPACOLASER ON      NM","p":7.01,"pv":7.48,"cur":"BRL","t":1788552000},"EQTL3":{"n":"EQUATORIAL  ON  ATZ NM","p":39.16,"pv":38.92,"cur":"BRL","t":1788552358},"EPAR3":{"n":"EMBPAR S/A  ON","p":1.35,"pv":1.34,"cur":"BRL","t":1788549660},"ESTR3":{"n":"ESTRELA     ON","p":3.01,"pv":3.01,"cur":"BRL","t":1788481911},"ESTR4":{"n":"ESTRELA     PN","p":1.39,"pv":1.44,"cur":"BRL","t":1788551399},"FIGE4":{"n":"FIGE4.SA,0P0000D6DX,0","p":0,"pv":null,"cur":"BRL","t":1721764800},"FIGE3":{"n":"INVEST BEMGEON","p":33.0,"pv":33.0,"cur":"BRL","t":1788481912},"ETER3":{"n":"ETERNIT     ON      NM","p":3.75,"pv":3.77,"cur":"BRL","t":1788551395},"FHER3":{"n":"FER HERINGERON      NM","p":3.07,"pv":3.15,"cur":"BRL","t":1788529299},"FICT3":{"n":"FICTORALIMENON","p":0.19,"pv":0.19,"cur":"BRL","t":1787944285},"EUCA3":{"n":"EUCATEX     ON      N1","p":21.5,"pv":21.5,"cur":"BRL","t":1788464601},"FIEI3":{"n":"FICA        ON","p":7.49,"pv":7.69,"cur":"BRL","t":1788546926},"FRIO3":{"n":"METALFRIO   ON      NM","p":205.0,"pv":205.0,"cur":"BRL","t":1788481912},"FLRY3":{"n":"FLEURY      ON      NM","p":20.17,"pv":20.1,"cur":"BRL","t":1788552332},"GEPA3":{"n":"GER PARANAP ON","p":33.71,"pv":33.71,"cur":"BRL","t":1788205018},"FESA3":{"n":"FERBASA     ON      N1","p":10.15,"pv":10.15,"cur":"BRL","t":1788540390},"EVEN3":{"n":"EVEN        ON      NM","p":4.23,"pv":4.34,"cur":"BRL","t":1788552357},"FESA4":{"n":"FERBASA     PN      N1","p":5.61,"pv":5.72,"cur":"BRL","t":1788552357},"FRAS3":{"n":"FRAS,LE     ON      N1","p":22.65,"pv":22.75,"cur":"BRL","t":1788552180},"EUCA4":{"n":"EUCATEX     PN      N1","p":21.06,"pv":21.24,"cur":"BRL","t":1788552340},"FIQE3":{"n":"UNIFIQUE    ON      NM","p":4.92,"pv":4.97,"cur":"BRL","t":1788552180},"EZTC3":{"n":"EZTEC       ON      NM","p":13.0,"pv":13.25,"cur":"BRL","t":1788552240},"GOAU3":{"n":"GERDAU MET  ON      N1","p":9.96,"pv":9.95,"cur":"BRL","t":1788552180},"HAGA3":{"n":"HAGA S/A    ON","p":2.63,"pv":2.64,"cur":"BRL","t":1788537417},"GGBR3":{"n":"GERDAU      ON      N1","p":21.55,"pv":21.38,"cur":"BRL","t":1788552180},"GFSA3":{"n":"GAFISA      ON      NM","p":0.21,"pv":0.22,"cur":"BRL","t":1788552633},"GPAR3":{"n":"CELGPAR     ON","p":10.51,"pv":10.51,"cur":"BRL","t":1788481913},"GSHP3":{"n":"GENERALSHOPPON","p":2.75,"pv":2.75,"cur":"BRL","t":1787682408},"HAPV3":{"n":"HAPVIDA     ON      NM","p":7.26,"pv":7.33,"cur":"BRL","t":1788552334},"HAGA4":{"n":"HAGA S/A    PN","p":1.95,"pv":1.96,"cur":"BRL","t":1788538475},"GMAT3":{"n":"GRUPO MATEUSON      NM","p":4.87,"pv":4.8,"cur":"BRL","t":1788552345},"GGBR4":{"n":"GERDAU      PN      N1","p":25.34,"pv":25.14,"cur":"BRL","t":1788552352},"GOLD11":{"n":"TREND OURO  CI","p":23.66,"pv":23.68,"cur":"BRL","t":1788552900},"GGPS3":{"n":"GPS         ON      NM","p":13.09,"pv":12.9,"cur":"BRL","t":1788552334},"GRND3":{"n":"GRENDENE    ON      NM","p":3.68,"pv":3.69,"cur":"BRL","t":1788552350},"GOAU4":{"n":"GERDAU MET  PN      N1","p":11.17,"pv":11.1,"cur":"BRL","t":1788552354},"GEPA4":{"n":"GER PARANAP PN","p":36.26,"pv":35.99,"cur":"BRL","t":1788545781},"GLD":{"n":"SPDR Gold Shares","p":406.77,"pv":410.22,"cur":"USD","t":1788552000},"GOOGL":{"n":"Alphabet Inc.","p":338.46,"pv":342.26,"cur":"USD","t":1788552001},"GPCA11":{"n":"GRAO IPCA 2YF11","p":25.95,"pv":25.93,"cur":"BRL","t":1788552900},"HBTS5":{"n":"HABITASUL   PNA","p":32.0,"pv":32.0,"cur":"BRL","t":1787595500},"HETA3":{"n":"HERCULES    ON","p":96.0,"pv":null,"cur":"BRL","t":1788481914},"HETA4":{"n":"HERCULES    PN","p":4.8,"pv":4.8,"cur":"BRL","t":1785441600},"IFCM3":{"n":"INFRACOMM   ON      NM","p":1.73,"pv":1.76,"cur":"BRL","t":1788552000},"HOOT3":{"n":"HOOT3.SA,0P0000DFJL,0","p":0,"pv":null,"cur":"BRL","t":1721764800},"HOOT4":{"n":"HOTEIS OTHONPN","p":8.89,"pv":8.1,"cur":"BRL","t":1788531944},"HYPE3":{"n":"HYPERA      ON      NM","p":23.16,"pv":22.73,"cur":"BRL","t":1788552333},"IGTI4":{"n":"IGUATEMI S.APN      N1","p":11.32,"pv":11.72,"cur":"BRL","t":1788552240},"IGTI11":{"n":"IGUATEMI S.AUNT     N1","p":26.43,"pv":26.57,"cur":"BRL","t":1788552355},"HBRE3":{"n":"HBR REALTY  ON      NM","p":2.59,"pv":2.69,"cur":"BRL","t":1788552240},"HBOR3":{"n":"HELBOR      ON      NM","p":2.07,"pv":2.2,"cur":"BRL","t":1788552180},"HBSA3":{"n":"HIDROVIAS   ON      NM","p":3.42,"pv":3.42,"cur":"BRL","t":1788552240},"IGTI3":{"n":"IGUATEMI S.AON      N1","p":3.36,"pv":3.36,"cur":"BRL","t":1788552180},"IMAB11":{"n":"IT NOW IMA,BF11","p":116.72,"pv":116.31,"cur":"BRL","t":1788551194},"HASH11":{"n":"HASHDEX NCI CI","p":53.1,"pv":54.03,"cur":"BRL","t":1788552960},"JFEN3":{"n":"JOAO FORTES ON","p":0.46,"pv":0.44,"cur":"BRL","t":1788552000},"ISAE3":{"n":"ISA ENERGIA ON      N1","p":32.6,"pv":33.05,"cur":"BRL","t":1788552000},"IRFM11":{"n":"IT NOW IRF,MF11","p":104.52,"pv":104.49,"cur":"BRL","t":1788553020},"INEP4":{"n":"INEPAR      PN","p":1.41,"pv":1.38,"cur":"BRL","t":1788552180},"INEP3":{"n":"INEPAR      ON","p":1.45,"pv":1.45,"cur":"BRL","t":1788545672},"ITUB4":{"n":"ITAUUNIBANCOPN  EJ  N1","p":41.92,"pv":41.92,"cur":"BRL","t":1788552333},"ITSA3":{"n":"ITAUSA      ON  EJ  N1","p":14.06,"pv":14.04,"cur":"BRL","t":1788552180},"ITUB3":{"n":"ITAUUNIBANCOON  EJ  N1","p":45.72,"pv":45.79,"cur":"BRL","t":1788552341},"JOPA3":{"n":"JOSAPAR     ON","p":17.1,"pv":17.1,"cur":"BRL","t":1785520959},"IRBR3":{"n":"IRBBRASIL REON      NM","p":62.21,"pv":59.45,"cur":"BRL","t":1788552335},"IVVB11":{"n":"ISHARE SP500CI","p":447.35,"pv":446.0,"cur":"BRL","t":1788552900},"ISAE4":{"n":"ISA ENERGIA PN      N1","p":27.7,"pv":27.64,"cur":"BRL","t":1788552331},"JALL3":{"n":"JALLESMACHADON      NM","p":2.66,"pv":2.65,"cur":"BRL","t":1788552000},"ITSA4":{"n":"ITAUSA      PN  EJ  N1","p":13.95,"pv":13.74,"cur":"BRL","t":1788552333},"IWM":{"n":"iShares Russell 2000 Index Fund","p":296.01,"pv":295.19,"cur":"USD","t":1788552000},"JHSF3":{"n":"JHSF PART   ON  ED  NM","p":11.45,"pv":11.66,"cur":"BRL","t":1788552358},"INTB3":{"n":"INTELBRAS   ON      NM","p":14.94,"pv":15.13,"cur":"BRL","t":1788552240},"JOPA4":{"n":"JOSAPAR     PN","p":18.0,"pv":18.0,"cur":"BRL","t":1788481916},"LFTS11":{"n":"INVESTO LFTSF11","p":159.37,"pv":159.25,"cur":"BRL","t":1788553020},"KEPL3":{"n":"KEPLER WEBERON      NM","p":6.68,"pv":6.6,"cur":"BRL","t":1788552338},"KLBN3":{"n":"KLABIN S/A  ON      N2","p":4.03,"pv":4.05,"cur":"BRL","t":1788552180},"LAND3":{"n":"TERRASANTAPAON      NM","p":9.54,"pv":9.35,"cur":"BRL","t":1788552000},"KLBN4":{"n":"KLABIN S/A  PN      N2","p":3.85,"pv":3.86,"cur":"BRL","t":1788552000},"JSLG3":{"n":"JSL         ON      NM","p":5.82,"pv":5.9,"cur":"BRL","t":1788552351},"LJQQ3":{"n":"QUERO,QUERO ON      NM","p":1.25,"pv":1.23,"cur":"BRL","t":1788552633},"KLBN11":{"n":"KLABIN S/A  UNT     N2","p":19.47,"pv":19.56,"cur":"BRL","t":1788552332},"JPM":{"n":"JP Morgan Chase & Co.","p":358.64,"pv":362.06,"cur":"USD","t":1788552002},"LEVE3":{"n":"METAL LEVE  ON      NM","p":32.81,"pv":32.78,"cur":"BRL","t":1788552347},"LFTB11":{"n":"INVESTO LFTBF11","p":126.16,"pv":126.09,"cur":"BRL","t":1788553080},"LAVV3":{"n":"LAVVI       ON      NM","p":10.61,"pv":10.69,"cur":"BRL","t":1788552341},"KO":{"n":"Coca-Cola Company (The)","p":88.07,"pv":88.81,"cur":"USD","t":1788552002},"LLY":{"n":"Eli Lilly and Company","p":1149.36,"pv":1159.6,"cur":"USD","t":1788552195},"LIGT3":{"n":"LIGHT S/A   ON      NM","p":3.57,"pv":3.64,"cur":"BRL","t":1788552346},"LUXM4":{"n":"TREVISA     PN","p":2.6,"pv":2.63,"cur":"BRL","t":1788546453},"LUPA3":{"n":"LUPATECH    ON      NM","p":3.63,"pv":3.7,"cur":"BRL","t":1788550708},"LPSB3":{"n":"LOPES BRASILON      NM","p":1.29,"pv":1.29,"cur":"BRL","t":1788552000},"LOGG3":{"n":"LOG COM PROPON      NM","p":24.71,"pv":25.09,"cur":"BRL","t":1788552344},"LOGN3":{"n":"LOG,IN      ON      NM","p":28.0,"pv":28.0,"cur":"BRL","t":1788552000},"LUXM3":{"n":"LUXM3.SA,0P0000D743,0","p":0,"pv":null,"cur":"BRL","t":1721332800},"MAPT4":{"n":"CEMEPE      PN","p":3.0,"pv":3.0,"cur":"BRL","t":1788481918},"MAPT3":{"n":"CEMEPE      ON","p":2.06,"pv":2.5,"cur":"BRL","t":1788532744},"MELK3":{"n":"MELNICK     ON      NM","p":2.91,"pv":2.94,"cur":"BRL","t":1788552000},"LWSA3":{"n":"LWSA        ON      NM","p":4.22,"pv":4.18,"cur":"BRL","t":1788552240},"MA":{"n":"Mastercard Incorporated","p":579.21,"pv":585.71,"cur":"USD","t":1788552003},"LREN3":{"n":"LOJAS RENNERON      NM","p":11.35,"pv":11.4,"cur":"BRL","t":1788552344},"MBRF3":{"n":"MARFRIG     ON      NM","p":17.69,"pv":18.37,"cur":"BRL","t":1788552340},"MEAL3":{"n":"IMC S/A     ON      NM","p":0.68,"pv":0.66,"cur":"BRL","t":1788552180},"MDIA3":{"n":"M.DIASBRANCOON      NM","p":17.78,"pv":17.63,"cur":"BRL","t":1788552347},"MATD3":{"n":"MATER DEI   ON      NM","p":5.17,"pv":5.05,"cur":"BRL","t":1788552180},"MDNE3":{"n":"MOURA DUBEUXON      NM","p":25.81,"pv":25.85,"cur":"BRL","t":1788552331},"MGEL3":{"n":"MGEL3.SA,0P0000D5N8,0","p":0,"pv":75,"cur":"BRL","t":1721764800},"MGEL4":{"n":"MANGELS INDLPN","p":5.34,"pv":5.25,"cur":"BRL","t":1788538811},"MMAQ3":{"n":"MINASMAQUINAON","p":2550.01,"pv":null,"cur":"BRL","t":1788481919},"MNDL3":{"n":"MUNDIAL     ON","p":18.5,"pv":18.5,"cur":"BRL","t":1788530706},"MMAQ4":{"n":"MINASMAQUINAPN","p":2550.01,"pv":null,"cur":"BRL","t":1788481919},"MRVE3":{"n":"MRV         ON      NM","p":5.55,"pv":5.61,"cur":"BRL","t":1788552343},"MOVI1":{"n":"MOVIDA      DO    6,65","p":0.87,"pv":0.87,"cur":"BRL","t":1788309115},"MSFT":{"n":"Microsoft Corporation","p":499.7,"pv":510.12,"cur":"USD","t":1788552001},"MNPR3":{"n":"MINUPAR     ON","p":4.12,"pv":4.05,"cur":"BRL","t":1788552000},"MOTV3":{"n":"MOTIVA SA   ON      NM","p":16.78,"pv":16.46,"cur":"BRL","t":1788552341},"MOVI3":{"n":"MOVIDA      ON      NM","p":8.11,"pv":7.76,"cur":"BRL","t":1788552342},"MILS3":{"n":"MILLS       ON      NM","p":15.79,"pv":15.72,"cur":"BRL","t":1788552240},"META":{"n":"Meta Platforms, Inc.","p":616.77,"pv":610.68,"cur":"USD","t":1788552001},"MRSA3B":{"n":"MRS LOGISTICA","p":42.01,"pv":44.5,"cur":"BRL","t":1788529079},"MRSA5B":{"n":"MRS LOGISTICA","p":38.0,"pv":38.0,"cur":"BRL","t":1785765747},"MRSA6B":{"n":"MRS LOGISTICA","p":34.89,"pv":34.89,"cur":"BRL","t":1787855829},"MLAS3":{"n":"MULTILASER  ON      NM","p":1.86,"pv":1.88,"cur":"BRL","t":1788552000},"MSPA3":{"n":"MELHOR SP   ON","p":37.4,"pv":37.4,"cur":"BRL","t":1786551124},"MSPA4":{"n":"MELHOR SP   PN","p":35.11,"pv":35.11,"cur":"BRL","t":1788355947},"MGLU3":{"n":"MAGAZ LUIZA ON      NM","p":5.79,"pv":5.56,"cur":"BRL","t":1788552347},"MWET3":{"n":"WETZEL S/A  ON","p":24.5,"pv":24.5,"cur":"BRL","t":1788449098},"NEMO3":{"n":"NEMO3.SA,0P0000D7M0,0","p":0,"pv":null,"cur":"BRL","t":1721332800},"NEXP3":{"n":"NEXPE       ON","p":2.33,"pv":2.35,"cur":"BRL","t":1788545019},"MTSA4":{"n":"METISA      PN","p":46.75,"pv":47.0,"cur":"BRL","t":1788552346},"NORD3":{"n":"NORDON MET  ON","p":1.39,"pv":1.49,"cur":"BRL","t":1788550474},"MTSA3":{"n":"METISA      ON","p":76.0,"pv":75.49,"cur":"BRL","t":1788481919},"MWET4":{"n":"WETZEL S/A  PN","p":31.89,"pv":31.8,"cur":"BRL","t":1788549588},"ODER4":{"n":"ODERICH     PN","p":100.0,"pv":null,"cur":"BRL","t":1788481920},"NUTR3":{"n":"NUTRIPLANT  ON      MP","p":2.17,"pv":2.18,"cur":"BRL","t":1788549952},"NATU3":{"n":"NATURA      ON      NM","p":8.85,"pv":9.2,"cur":"BRL","t":1788552332},"OFSA3":{"n":"OUROFINO S/AON      NM","p":27.0,"pv":27.51,"cur":"BRL","t":1788552180},"OIBR3":{"n":"OI          ON      N1","p":0.1,"pv":0.1,"cur":"BRL","t":1787601960},"NVDA":{"n":"NVIDIA Corporation","p":230.36,"pv":228.45,"cur":"USD","t":1788552000},"OBTC3":{"n":"ORANJEBTC   ON","p":7.0,"pv":6.41,"cur":"BRL","t":1788552240},"MULT3":{"n":"MULTIPLAN   ON      N2","p":30.18,"pv":30.35,"cur":"BRL","t":1788552344},"NASD11":{"n":"TREND NASDAQCI","p":21.07,"pv":21.0,"cur":"BRL","t":1788552960},"MTRE3":{"n":"MITRE REALTYON      NM","p":3.42,"pv":3.41,"cur":"BRL","t":1788552240},"NFLX":{"n":"Netflix, Inc.","p":78.25,"pv":82.67,"cur":"USD","t":1788552000},"MYPK3":{"n":"IOCHP,MAXIONON      NM","p":9.81,"pv":9.63,"cur":"BRL","t":1788552240},"PEAB3":{"n":"PAR AL BAHIAON","p":38.86,"pv":38.86,"cur":"BRL","t":1788288334},"PEAB4":{"n":"PAR AL BAHIAPN","p":38.87,"pv":38.87,"cur":"BRL","t":1788453844},"PATI3":{"n":"PANATLANTICAON","p":28.99,"pv":30.88,"cur":"BRL","t":1788552180},"PATI4":{"n":"PANATLANTICAPN","p":30.37,"pv":30.37,"cur":"BRL","t":1787930121},"PDTC3":{"n":"PADTEC      ON      NM","p":1.74,"pv":1.69,"cur":"BRL","t":1788552000},"ONCO3":{"n":"ONCOCLINICASON      NM","p":1.37,"pv":1.36,"cur":"BRL","t":1788552358},"PDGR3":{"n":"PDG REALT   ON      NM","p":1.17,"pv":1.19,"cur":"BRL","t":1788552000},"PDGR1":{"n":"PDG REALT   DO    1,62","p":0.01,"pv":0.01,"cur":"BRL","t":1788549922},"PASS3":{"n":"COMPASS     ON      NM","p":23.51,"pv":23.6,"cur":"BRL","t":1788552346},"OSXB3":{"n":"OSX BRASIL  ON      NM","p":1.15,"pv":1.04,"cur":"BRL","t":1788552180},"OIBR4":{"n":"OI          PN      N1","p":0.5,"pv":0.5,"cur":"BRL","t":1787601840},"PCAR3":{"n":"P.ACUCAR,CBDON      NM","p":2.83,"pv":2.7,"cur":"BRL","t":1788552000},"ORVR3":{"n":"ORIZON      ON      NM","p":17.1,"pv":16.83,"cur":"BRL","t":1788552240},"OPCT3":{"n":"OCEANPACT   ON      NM","p":11.36,"pv":10.93,"cur":"BRL","t":1788552344},"PINE3":{"n":"PINE        ON      N2","p":11.13,"pv":10.96,"cur":"BRL","t":1788526980},"PPAR3":{"n":"PPAR3.SA,0P0000D725,0","p":0,"pv":null,"cur":"BRL","t":1721332800},"PLPL3":{"n":"PLANOEPLANO ON      NM","p":7.23,"pv":7.18,"cur":"BRL","t":1788552358},"PMAM1":{"n":"PARANAPANEMADO    0,61","p":0.01,"pv":0.01,"cur":"BRL","t":1784057797},"PLAS3":{"n":"PLASCAR PARTON","p":2.59,"pv":2.42,"cur":"BRL","t":1788544494},"PFRM3":{"n":"PROFARMA    ON      NM","p":7.87,"pv":7.67,"cur":"BRL","t":1788552000},"PGMN3":{"n":"PAGUE MENOS ON      NM","p":3.84,"pv":3.75,"cur":"BRL","t":1788552240},"POMO4":{"n":"MARCOPOLO   PN  ED  N2","p":4.58,"pv":4.56,"cur":"BRL","t":1788552357},"PIBB11":{"n":"IT NOW PIBB CI","p":331.15,"pv":331.25,"cur":"BRL","t":1788552900},"PG":{"n":"Procter & Gamble Company (The)","p":146.44,"pv":146.92,"cur":"USD","t":1788552241},"PMAM3":{"n":"PARANAPANEMAON      NM","p":0.32,"pv":0.23,"cur":"BRL","t":1788552624},"PETR4":{"n":"PETROBRAS   PN      N2","p":47.11,"pv":47.56,"cur":"BRL","t":1788552350},"PETR3":{"n":"PETROBRAS   ON      N2","p":52.01,"pv":52.58,"cur":"BRL","t":1788552358},"PNVL3":{"n":"DIMED       ON      NM","p":13.16,"pv":12.86,"cur":"BRL","t":1788552337},"PINE4":{"n":"PINE        PN      N2","p":11.14,"pv":11.28,"cur":"BRL","t":1788552337},"POSI3":{"n":"POSITIVO TECON      NM","p":3.42,"pv":3.44,"cur":"BRL","t":1788552240},"PRIO3":{"n":"PRIO        ON      NM","p":60.19,"pv":61.5,"cur":"BRL","t":1788552332},"POMO3":{"n":"MARCOPOLO   ON  ED  N2","p":4.26,"pv":4.3,"cur":"BRL","t":1788552356},"QETH11":{"n":"QR ETHER    CI","p":8.85,"pv":9.06,"cur":"BRL","t":1788551382},"PSSA3":{"n":"PORTO SEGUROON      NM","p":51.66,"pv":51.24,"cur":"BRL","t":1788552340},"PRNR3":{"n":"PRINER      ON      NM","p":18.15,"pv":18.26,"cur":"BRL","t":1788552240},"PSVM11":{"n":"PORTO VM    TPR","p":16.0,"pv":16.0,"cur":"BRL","t":1788292800},"QUAL3":{"n":"QUALICORP   ON      NM","p":1.5,"pv":1.53,"cur":"BRL","t":1788552180},"RAPT4":{"n":"RANDON PART PN      N1","p":4.8,"pv":5.16,"cur":"BRL","t":1788552353},"RAPT3":{"n":"RANDON PART ON      N1","p":8.44,"pv":8.5,"cur":"BRL","t":1788552000},"RAIZ4":{"n":"RAIZEN      PN      N2","p":0.28,"pv":0.27,"cur":"BRL","t":1788552347},"PTBL3":{"n":"PORTOBELLO  ON      NM","p":1.67,"pv":1.69,"cur":"BRL","t":1788552000},"QBTC11":{"n":"QR BITCOIN  CI","p":24.85,"pv":25.0,"cur":"BRL","t":1788552900},"RANI3":{"n":"IRANI       ON      NM","p":7.66,"pv":7.65,"cur":"BRL","t":1788552346},"RAIL3":{"n":"RUMO S.A.   ON      NM","p":14.55,"pv":14.81,"cur":"BRL","t":1788552629},"RADL3":{"n":"RAIADROGASILON      NM","p":19.99,"pv":20.27,"cur":"BRL","t":1788552342},"QQQ":{"n":"Invesco QQQ Trust, Series 1","p":718.96,"pv":717.67,"cur":"USD","t":1788552000},"RENT4":{"n":"LOCALIZA    PN      NM","p":35.29,"pv":36.04,"cur":"BRL","t":1788552420},"RNEW4":{"n":"RENOVA      PN      N2","p":0.86,"pv":0.81,"cur":"BRL","t":1788552180},"REDE3":{"n":"REDE ENERGIAON","p":5.54,"pv":5.63,"cur":"BRL","t":1788551244},"RNEW3":{"n":"RENOVA      ON      N2","p":0.86,"pv":0.9,"cur":"BRL","t":1788552300},"RPAD5":{"n":"ALFA HOLDINGPNA","p":7.79,"pv":7.7095,"cur":"BRL","t":1787067387},"RPMG3":{"n":"PET MANGUINHON","p":0.85,"pv":0.85,"cur":"BRL","t":1786391107},"RECV3":{"n":"PETRORECSA  ON      NM","p":11.16,"pv":11.44,"cur":"BRL","t":1788552339},"RCSL3":{"n":"RECRUSUL    ON","p":0.4,"pv":0.37,"cur":"BRL","t":1788552000},"RSUL3":{"n":"RSUL3.SA,0P0000D7LV,0","p":0,"pv":null,"cur":"BRL","t":1721332800},"RSUL4":{"n":"RIOSULENSE  PN","p":38.27,"pv":38.25,"cur":"BRL","t":1788552240},"ROMI3":{"n":"ROMI        ON      NM","p":5.96,"pv":5.87,"cur":"BRL","t":1788552000},"RIAA3":{"n":"RIACHUELO   ON      NM","p":7.16,"pv":7.35,"cur":"BRL","t":1788552354},"RSID3":{"n":"ROSSI RESID ON      NM","p":1.6,"pv":1.6,"cur":"BRL","t":1788481924},"RCSL4":{"n":"RECRUSUL    PN","p":0.42,"pv":0.43,"cur":"BRL","t":1788552356},"RPAD3":{"n":"ALFA HOLDINGON","p":7.0,"pv":7.0,"cur":"BRL","t":1788366509},"RPAD6":{"n":"ALFA HOLDINGPNB","p":7.0,"pv":7.0,"cur":"BRL","t":1787155223},"RENT3":{"n":"LOCALIZA    ON      NM","p":36.64,"pv":36.75,"cur":"BRL","t":1788552331},"RDOR3":{"n":"REDE D OR   ON      NM","p":37.13,"pv":37.39,"cur":"BRL","t":1788552357},"RVEE3":{"n":"REVEE       ON","p":0.69,"pv":0.67,"cur":"BRL","t":1788552000},"SHUL3":{"n":"SCHULZ      ON","p":27.94,"pv":null,"cur":"BRL","t":1788481925},"SHOW3":{"n":"TIME FOR FUNON","p":6.24,"pv":6.24,"cur":"BRL","t":1788293100},"SCAR3":{"n":"SAO CARLOS  ON      NM","p":12.8,"pv":12.8,"cur":"BRL","t":1788552000},"SEQL3":{"n":"SEQUOIA LOG ON      NM","p":0.07,"pv":0.07,"cur":"BRL","t":1788552352},"SAPR3":{"n":"SANEPAR     ON      N2","p":7.69,"pv":7.67,"cur":"BRL","t":1788552000},"SAUD3":{"n":"BRADSAUDE   ON      NM","p":14.69,"pv":14.82,"cur":"BRL","t":1788552240},"SBSP3":{"n":"SABESP      ON      NM","p":26.53,"pv":26.25,"cur":"BRL","t":1788552629},"SAPR4":{"n":"SANEPAR     PN      N2","p":6.84,"pv":6.91,"cur":"BRL","t":1788552240},"SAPR11":{"n":"SANEPAR     UNT     N2","p":34.95,"pv":35.51,"cur":"BRL","t":1788552240},"SEER3":{"n":"SER EDUCA   ON  ED  NM","p":13.52,"pv":13.36,"cur":"BRL","t":1788552332},"SIMH3":{"n":"SIMPAR      ON      NM","p":7.72,"pv":7.5,"cur":"BRL","t":1788552240},"SANB3":{"n":"SANTANDER BRON","p":15.19,"pv":15.17,"cur":"BRL","t":1788552180},"SHUL4":{"n":"SCHULZ      PN","p":4.47,"pv":4.47,"cur":"BRL","t":1788552000},"SBFG3":{"n":"GRUPO SBF   ON      NM","p":9.04,"pv":8.99,"cur":"BRL","t":1788552352},"SANB4":{"n":"SANTANDER BRPN","p":15.03,"pv":15.14,"cur":"BRL","t":1788552240},"SCHD":{"n":"Schwab US Dividend Equity ETF","p":34.8,"pv":35.08,"cur":"USD","t":1788552000},"SANB11":{"n":"SANTANDER BRUNT","p":30.43,"pv":30.44,"cur":"BRL","t":1788552335},"SNSY6":{"n":"SANSUY      PNB","p":11.51,"pv":null,"cur":"BRL","t":1788481926},"SNSY5":{"n":"SANSUY      PNA","p":2.29,"pv":2.35,"cur":"BRL","t":1788552240},"SOND3":{"n":"SONDOTECNICAON","p":38.66,"pv":38.66,"cur":"BRL","t":1788481926},"SMAL11":{"n":"ISHARES SMALCI","p":110.99,"pv":111.06,"cur":"BRL","t":1788552960},"SOND5":{"n":"SONDOTECNICAPNA     MP","p":82.1,"pv":82.1,"cur":"BRL","t":1787924429},"SOND6":{"n":"SONDOTECNICAPNB     MP","p":78.56,"pv":78.56,"cur":"BRL","t":1788465934},"SNSY3":{"n":"SANSUY      ON","p":9.13,"pv":9.13,"cur":"BRL","t":1788481926},"SOJA3":{"n":"BOA SAFRA   ON      NM","p":7.88,"pv":7.81,"cur":"BRL","t":1788552240},"SPY":{"n":"State Street SPDR S&P 500 ETF T","p":770.19,"pv":773.17,"cur":"USD","t":1788552000},"SLCE3":{"n":"SLC AGRICOLAON      NM","p":16.41,"pv":16.49,"cur":"BRL","t":1788552330},"TASA3":{"n":"TAURUS ARMASON      N2","p":5.67,"pv":5.58,"cur":"BRL","t":1788549746},"TAEE11":{"n":"TAESA       UNT     N2","p":41.53,"pv":41.55,"cur":"BRL","t":1788552356},"TASA4":{"n":"TAURUS ARMASPN      N2","p":5.63,"pv":5.51,"cur":"BRL","t":1788552180},"TAEE3":{"n":"TAESA       ON      N2","p":13.72,"pv":13.76,"cur":"BRL","t":1788552180},"TCSA3":{"n":"TECNISA     ON      NM","p":0.63,"pv":0.65,"cur":"BRL","t":1788551369},"SYNE3":{"n":"SYN PROP TECON      NM","p":3.78,"pv":3.95,"cur":"BRL","t":1788552000},"SUZB3":{"n":"SUZANO S.A. ON      NM","p":46.89,"pv":46.79,"cur":"BRL","t":1788552352},"SMTO3":{"n":"SAO MARTINHOON      NM","p":20.6,"pv":20.24,"cur":"BRL","t":1788552351},"SMFT3":{"n":"SMART FIT   ON  EJ  NM","p":17.97,"pv":17.686,"cur":"BRL","t":1788552353},"TAEE4":{"n":"TAESA       PN      N2","p":14.05,"pv":13.91,"cur":"BRL","t":1788552180},"TELB3":{"n":"TELEBRAS    ON","p":17.86,"pv":18.05,"cur":"BRL","t":1788535620},"TPIS3":{"n":"TRIUNFO PARTON      NM","p":9.77,"pv":10.01,"cur":"BRL","t":1788552240},"UCAS3":{"n":"UNICASA     ON      NM","p":1.14,"pv":1.17,"cur":"BRL","t":1788552180},"TGMA3":{"n":"TEGMA       ON      NM","p":33.66,"pv":34.28,"cur":"BRL","t":1788552354},"TELB4":{"n":"TELEBRAS    PN","p":8.11,"pv":8.06,"cur":"BRL","t":1788549074},"TFCO4":{"n":"TRACK FIELD PN      N2","p":13.06,"pv":13.1,"cur":"BRL","t":1788552355},"TXRX4":{"n":"TEX RENAUX  PN","p":1.65,"pv":1.65,"cur":"BRL","t":1788481930},"TEND3":{"n":"TENDA       ON      NM","p":34.63,"pv":33.62,"cur":"BRL","t":1788552345},"TLT":{"n":"iShares 20+ Year Treasury Bond ","p":82.21,"pv":82.07,"cur":"USD","t":1788552000},"TUPY3":{"n":"TUPY        ON      NM","p":15.72,"pv":15.7,"cur":"BRL","t":1788552330},"TECN3":{"n":"TECHNOS     ON      NM","p":10.09,"pv":9.88,"cur":"BRL","t":1788552000},"TXRX3":{"n":"TEX RENAUX  ON","p":9.0,"pv":9.0,"cur":"BRL","t":1788481930},"TOTS3":{"n":"TOTVS       ON      NM","p":34.5,"pv":34.82,"cur":"BRL","t":1788552351},"TOKY3":{"n":"GRUPO TOKY  ON  EG  NM","p":10.5,"pv":10.7,"cur":"BRL","t":1788552180},"TRIS3":{"n":"TRISUL      ON      NM","p":4.97,"pv":4.96,"cur":"BRL","t":1788552349},"TIMS3":{"n":"TIM         ON      NM","p":18.99,"pv":18.97,"cur":"BRL","t":1788552344},"TTEN3":{"n":"3TENTOS     ON      NM","p":11.28,"pv":11.59,"cur":"BRL","t":1788552240},"TSLA":{"n":"Tesla, Inc.","p":354.08,"pv":376.365,"cur":"USD","t":1788552000},"USIM6":{"n":"USIMINAS    PNB     N1","p":6.47,"pv":6.47,"cur":"BRL","t":1788289933},"UGPA3":{"n":"ULTRAPAR    ON      NM","p":37.42,"pv":36.45,"cur":"BRL","t":1788552335},"UNIP3":{"n":"UNIPAR      ON","p":56.21,"pv":56.19,"cur":"BRL","t":1788551372},"UNH":{"n":"UnitedHealth Group Incorporated","p":397.14,"pv":400.94,"cur":"USD","t":1788552002},"VITT3":{"n":"VITTIA      ON      NM","p":3.23,"pv":3.18,"cur":"BRL","t":1788552180},"UNIP5":{"n":"UNIPAR      PNA","p":57.7,"pv":57.7,"cur":"BRL","t":1788462213},"VIVA3":{"n":"VIVARA S.A. ON      NM","p":23.13,"pv":23.27,"cur":"BRL","t":1788552341},"USIM5":{"n":"USIMINAS    PNA     N1","p":7.63,"pv":7.81,"cur":"BRL","t":1788552352},"UNIP6":{"n":"UNIPAR      PNB","p":56.97,"pv":57.24,"cur":"BRL","t":1788552330},"USIM3":{"n":"USIMINAS    ON      N1","p":7.12,"pv":7.28,"cur":"BRL","t":1788552180},"VALE3":{"n":"VALE        ON      NM","p":78.62,"pv":78.45,"cur":"BRL","t":1788552347},"VAMO3":{"n":"VAMOS       ON      NM","p":3.5,"pv":3.38,"cur":"BRL","t":1788552333},"VIVR3":{"n":"VIVER       ON      NM","p":1.51,"pv":1.48,"cur":"BRL","t":1788545788},"VBBR3":{"n":"VIBRA       ON      NM","p":36.99,"pv":36.87,"cur":"BRL","t":1788552330},"V":{"n":"Visa Inc.","p":375.07,"pv":378.75,"cur":"USD","t":1788552002},"VIVT3":{"n":"TELEF BRASILON  EJ","p":30.06,"pv":30.31,"cur":"BRL","t":1788552339},"VSPT3":{"n":"VSPT3.SA,0P0000NJLN,0","p":0,"pv":1.5,"cur":"BRL","t":1721764800},"WLMM3":{"n":"WLM IND COM ON","p":19.69,"pv":19.4751,"cur":"BRL","t":1787594538},"WLMM4":{"n":"WLM IND COM PN","p":15.7,"pv":15.8,"cur":"BRL","t":1788552300},"WEST3":{"n":"WESTWING    ON      NM","p":2.9,"pv":3.03,"cur":"BRL","t":1788551173},"VVEO3":{"n":"VIVEO       ON      NM","p":0.76,"pv":0.79,"cur":"BRL","t":1788552180},"VVEO1":{"n":"VIVEO       DO    0,90","p":0.01,"pv":0.01,"cur":"BRL","t":1787877112},"VTRU3":{"n":"VITRUEDUCA  ON      NM","p":14.77,"pv":14.5,"cur":"BRL","t":1788552354},"VULC3":{"n":"VULCABRAS   ON      NM","p":13.01,"pv":13.01,"cur":"BRL","t":1788552180},"WIZC3":{"n":"WIZ CO      ON      NM","p":8.1,"pv":8.08,"cur":"BRL","t":1788552240},"VTI":{"n":"Vanguard Morningstar Total Stoc","p":379.73,"pv":380.93,"cur":"USD","t":1788552000},"WHRL4":{"n":"WHIRLPOOL   PN","p":3.73,"pv":3.82,"cur":"BRL","t":1788550356},"WDCN3":{"n":"WDC NETWORKSON      NM","p":2.59,"pv":2.46,"cur":"BRL","t":1788551323},"VSTE3":{"n":"VESTE       ON      NM","p":2.4,"pv":2.74,"cur":"BRL","t":1788552180},"WHRL3":{"n":"WHIRLPOOL   ON","p":3.67,"pv":3.67,"cur":"BRL","t":1788550499},"WRLD11":{"n":"INVESTO WRLDCI","p":149.91,"pv":149.2,"cur":"BRL","t":1788552960},"WEGE3":{"n":"WEG         ON      NM","p":51.74,"pv":52.06,"cur":"BRL","t":1788552334},"VSPT4":{"n":"Ferrovia Centro-Atlantica SA","p":0,"pv":null,"cur":"BRL","t":1630328732},"VOO":{"n":"Vanguard S&P 500 ETF","p":708.01,"pv":710.72,"cur":"USD","t":1788552000},"VLID3":{"n":"VALID       ON      NM","p":17.88,"pv":17.78,"cur":"BRL","t":1788552633},"WMT":{"n":"Walmart Inc.","p":107.14,"pv":108.42,"cur":"USD","t":1788552000},"^IXIC":{"n":"NASDAQ Composite","p":26506.99,"pv":26584.1,"cur":"USD","t":1788556559},"XINA11":{"n":"XPETFCHINA  CI","p":7.32,"pv":7.23,"cur":"BRL","t":1788552900},"YDUQ3":{"n":"YDUQS PART  ON      NM","p":9.64,"pv":9.49,"cur":"BRL","t":1788552340},"^DJI":{"n":"Dow Jones Industrial Average","p":53414.25,"pv":53686.1,"cur":"USD","t":1788554009},"^RUT":{"n":"Russell 2000","p":2975.648,"pv":2968.27,"cur":"USD","t":1788553813},"^GSPC":{"n":"S&P 500","p":7718.6,"pv":7747.71,"cur":"USD","t":1788553986},"^TNX":{"n":"CBOE Interest Rate 10 Year T No","p":4.784,"pv":4.784,"cur":"USD","t":1788548394},"XOM":{"n":"ExxonMobil Holdings Corporation","p":159.47,"pv":162.21,"cur":"USD","t":1788552245},"^VIX":{"n":"CBOE Volatility Index","p":15.3,"pv":14.53,"cur":"USD","t":1788795001},"^BVSP":{"n":"IBOVESPA","p":185147.16,"pv":185188.0,"cur":"BRL","t":1788553140},"USTK11":{"n":"INVESTO USTKCI","p":22.27,"pv":22.1,"cur":"BRL","t":1788552900}}}</script>
 <script id="watchlists" type="application/json">{
   "_comment": "Listas padrão dos painéis ETFs e EUA. Edite aqui (e faça commit) para mudar o que o robô de cotações coleta a cada 15 min. No navegador dá para sobrepor a lista via botão ✎ (fica só no seu navegador).",
   "etfs_b3": {
@@ -413,6 +418,51 @@ const fmtPrice = v => v==null ? '—' : 'R$ ' + nbrP.format(v);
 function cls(v){ return v==null ? 'dim' : (v<0 ? 'neg' : ''); }
 function med(arr){ const a = arr.filter(x=>x!=null).sort((x,y)=>x-y); if(!a.length) return null; const m = a.length>>1; return a.length%2 ? a[m] : (a[m-1]+a[m])/2; }
 function mainTicker(c){ let best=null, bl=-1; for(const t of c.tickers){ const l=t.liq2m||0; if(l>bl){bl=l;best=t;} } return best; }
+// Um trimestre pode chegar da CVM inconsistente e contaminar os 12 meses. Caso
+// medido nesta base: EQTL PARA com lucro de R$ 18,1 bi em 2025T4, contra ~R$ 390
+// mi nos outros trimestres, e patrimônio líquido que passa de 5.073 para 5.179
+// no mesmo período — lucro dessa ordem não pode deixar o patrimônio parado. O
+// resultado era "ROE 366,8%" no topo do ranking. Regra (só com evidência interna):
+// se UM trimestre responde por mais de 80% do lucro absoluto dos 12 meses E é
+// maior que todo o patrimônio da empresa, a série está inconsistente e os
+// indicadores que dependem do lucro somado não são publicados.
+function niSuspeito(c){
+  if(c._niSusp !== undefined) return c._niSusp;
+  let susp = false;
+  const q = (c.q||[]).filter(x => x.ni != null);
+  if(q.length >= 4){
+    const abs = q.slice(-4).map(x => Math.abs(x.ni));
+    const soma = abs.reduce((a,b)=>a+b,0);
+    const maior = Math.max(...abs);
+    const pl = (c.bal||{}).pl;
+    susp = !!(soma && maior/soma > 0.8 && pl != null && maior > Math.abs(pl));
+  }
+  c._niSusp = susp;
+  return susp;
+}
+const ni12De = c => niSuspeito(c) ? null : (c.ind ? c.ind.ni12 : null);
+
+// ROE com patrimônio líquido negativo é armadilha aritmética: prejuízo ÷ PL
+// negativo devolve ROE POSITIVO. Medido nesta base: 42 empresas com PL ≤ 0, e 32
+// delas exibiam ROE positivo — a PORTOBELLO aparecia com "ROE 306,6%" tendo
+// perdido R$ 318,6 mi no ano, e ficava no topo do ranking de maior ROE. Sem PL
+// positivo o indicador não existe, então não se exibe número.
+function roeDe(c){
+  const pl = (c.bal||{}).pl;
+  if(pl != null && pl <= 0) return null;
+  if(niSuspeito(c)) return null;
+  const t = mainTicker(c);
+  return c.ind.roe != null ? c.ind.roe : (t ? t.roe : null);
+}
+// Alavancagem exige EBITDA positivo: com EBITDA negativo a razão fica NEGATIVA e
+// passa por "empresa sem dívida" no filtro. São 42 empresas com EBITDA ≤ 0, 26
+// delas exibindo alavancagem negativa (AERIS: R$ 1,9 bi de dívida, EBITDA −402,
+// aparecia como −4,81).
+function dlEbitdaDe(c){
+  const e = c.ind.ebitda12;
+  if(e != null && e <= 0) return null;
+  return c.ind.dlEbitda != null ? c.ind.dlEbitda : null;
+}
 
 // ---------- estado ----------
 let selSetor=null, selSub=null, selSeg=null, sortKey='mktCap', sortDir=-1, openCvm=null;
@@ -480,7 +530,7 @@ function renderTiles(list){
     ['Valor de mercado', fmtMi(mk.reduce((a,b)=>a+b,0)||null), 'soma das calculáveis'],
     ['P/L mediano', fmtX(med(tk.map(x=>x.pl>0?x.pl:null))), 'tickers com lucro'],
     ['EV/EBITDA mediano', fmtX(med(tk.map(x=>x.evebitda>0?x.evebitda:null))), 'Fundamentus'],
-    ['ROE mediano', fmtPct(med(tk.map(x=>x.roe))), 'Fundamentus'],
+    ['ROE mediano', fmtPct(med(list.map(roeDe))), 'CVM (lucro 12m ÷ PL); exclui PL negativo'],
     ['Div. Yield mediano', fmtPct(med(tk.map(x=>x.dy))), 'Fundamentus'],
   ];
   for(const [l,v,d] of tiles){
@@ -609,7 +659,7 @@ function abreConsulta(consulta){
     cmpSel.opind = r.kpi;
     cmpSel.setor = r.escopo || '';
     cmpSel.busca = consulta;
-    cmpSel.buscaLida = {escopo:r.escopo, n:0, naoEntendi:r.naoEntendi, intencao:'kpi'};
+    cmpSel.buscaLida = {escopo:r.escopo, n:0, naoEntendi:r.naoEntendi, intencao:'kpi', avisoGrupo:r.avisoGrupo||''};
     lsSet('cmp_sel', cmpSel);
     sugg.style.display='none'; qin.value='';
     setView('cmp');
@@ -620,15 +670,26 @@ function abreConsulta(consulta){
   // Busca nova define o escopo por completo: sem setor na frase, o filtro anterior
   // e limpo — senao o resultado sairia restrito a algo que o usuario nao pediu.
   cmpSel.setor = r.escopo || '';
-  if(r.intencao === 'scr'){
+  if(r.intencao === 'setores'){
+    // comparar os grupos entre si (setor / subsetor / segmento)
+    cmpSel.modo = 'set';
+    cmpSel.ind = r.ind; cmpSel.dir = r.dir;
+    cmpSel.setNivel = r.nivel || 'set';
+    if(r.setStat) cmpSel.setStat = r.setStat;
+    cmpSel.setFiltros = r.setFiltros || [];
+    cmpSel.filtros = [];
+  } else if(r.intencao === 'scr'){
     cmpSel.modo = 'scr';
     cmpSel.filtros = r.filtros;
+    cmpSel.setFiltros = [];
   } else {
     cmpSel.modo = 'rank';
     cmpSel.ind = r.ind;
     cmpSel.dir = r.dir;
+    cmpSel.setFiltros = [];
   }
-  cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi, intencao:r.intencao};
+  cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi, intencao:r.intencao,
+                      avisoGrupo:r.avisoGrupo||''};
   lsSet('cmp_sel', cmpSel);
   sugg.style.display='none'; qin.value='';
   setView('cmp');
@@ -639,6 +700,17 @@ function resumoConsulta(r){
   const p = [];
   if(r.intencao==='kpiEmpresa' && r.empresa) return r.kpi+' de '+r.empresa.nome;
   if(r.intencao==='kpi') return 'KPI: '+r.kpi+(r.escopo? ' · '+escopoRotulo(r.escopo):'');
+  if(r.intencao==='setores'){
+    const g = CMP_INDS.find(x=>x[0]===r.ind);
+    let t = (r.dir==='asc' ? 'menores ' : 'maiores ') + nivelPlural(r.nivel||'set')
+      + ' por ' + (g ? g[1] : 'valor de mercado') + ' (' + setStatRotulo(r.setStat||'med') + ' do grupo)';
+    if(r.escopo) t += ' · dentro de ' + escopoRotulo(r.escopo);
+    for(const f of (r.setFiltros||[])){
+      const nm = (CMP_INDS.find(x=>x[0]===f.ind)||[])[1] || f.ind;
+      t += ' · ' + nm + ' ' + (f.op==='gt'?'>':f.op==='lt'?'<':'entre') + ' ' + (f.op==='bt'?(f.v1+'–'+f.v2):f.v1);
+    }
+    return t;
+  }
   if(r.escopo) p.push(escopoRotulo(r.escopo));
   if(r.intencao === 'rank'){
     const g = CMP_INDS.find(x=>x[0]===r.ind);
@@ -666,7 +738,7 @@ qin.addEventListener('input', () => {
     // vê que parte da frase será ignorada antes de rodar a busca.
     const ignora = (q.naoEntendi||[]).length ? ' · IGNORA: '+q.naoEntendi.join(', ') : '';
     d.append(el('span','nm','🔍 '+resumoConsulta(q)+ignora),
-             el('span','tk', (q.intencao==='rank' ? 'ver o ranking' : q.intencao==='kpiEmpresa' ? 'abrir a empresa nos indicadores operacionais' : q.intencao==='kpi' ? 'comparar esse KPI entre empresas' : 'buscar empresas com esses critérios')+' · Enter'));
+             el('span','tk', (q.intencao==='rank' ? 'ver o ranking' : q.intencao==='setores' ? 'comparar os setores entre si' : q.intencao==='kpiEmpresa' ? 'abrir a empresa nos indicadores operacionais' : q.intencao==='kpi' ? 'comparar esse KPI entre empresas' : 'buscar empresas com esses critérios')+' · Enter'));
     d.onclick = () => abreConsulta(bruto);
     sugg.append(d);
   }
@@ -888,10 +960,12 @@ function openDetail(cvm){
     tiles.append(statTile('EV/EBIT', fmtX(t&&t.evebit), 'Fundamentus'));
   }
   tiles.append(statTile('Div. Yield', fmtPct(t&&t.dy), 'Fundamentus', 'pos'));
-  tiles.append(hz('roe', statTile('ROE', fmtPct(i.roe!=null?i.roe:(t&&t.roe)), i.roe!=null?'CVM · lucro 12m / PL':'Fundamentus', cls(i.roe!=null?i.roe:(t&&t.roe)))));
+  const roeC = roeDe(c);
+  tiles.append(hz('roe', statTile('ROE', fmtPct(roeC), roeC==null ? ((c.bal&&c.bal.pl!=null&&c.bal.pl<=0)?'patrimônio líquido negativo — ROE não se aplica': niSuspeito(c)?'trimestre inconsistente na CVM — 12m não publicado':'sem dado') : (i.roe!=null?'CVM · lucro 12m / PL':'Fundamentus'), cls(roeC))));
   if(!c.fin){
     tiles.append(hz('roic', statTile('ROIC', fmtPct(t&&t.roic!=null?t.roic:i.roic), t&&t.roic!=null?'Fundamentus':'CVM (aprox.)', cls(t&&t.roic!=null?t.roic:i.roic))));
-    tiles.append(hz('dlEbitda', statTile('Dív. líq./EBITDA', fmtX(i.dlEbitda), 'CVM · 12m', i.dlEbitda!=null&&i.dlEbitda>3?'neg':null)));
+    const dlC = dlEbitdaDe(c);
+    tiles.append(hz('dlEbitda', statTile('Dív. líq./EBITDA', fmtX(dlC), dlC==null && i.ebitda12!=null && i.ebitda12<=0 ? 'EBITDA negativo — a razão não se aplica' : 'CVM · 12m', dlC!=null&&dlC>3?'neg':null)));
     tiles.append(statTile('Dív. líq./Patrimônio', i.dlPl==null?'—':nbr2.format(i.dlPl), 'CVM'));
     tiles.append(hz('mgE', statTile('Margem EBITDA 12m', fmtPct(i.mgE12), 'CVM')));
   }
@@ -923,6 +997,19 @@ function openDetail(cvm){
 
   // ---- gráficos trimestrais
   pb.append(el('h3','sect','Resultados trimestrais — '+(c.con?'consolidado':'individual')+' (CVM)'));
+  // trimestre inconsistente contamina tudo que é acumulado de 12 meses: em vez de
+  // publicar o número, o painel diz qual trimestre está fora de escala
+  if(niSuspeito(c)){
+    const ult4 = (c.q||[]).slice(-4);
+    const pior = ult4.reduce((a,b)=> Math.abs((b.ni||0)) > Math.abs((a&&a.ni)||0) ? b : a, null);
+    const av = el('div','notice');
+    av.append(el('b',null,'⚠ Trimestre fora de escala nos dados da CVM. '),
+      document.createTextNode('O trimestre '+(pior?pior.p:'—')+' traz lucro/prejuízo de '
+        +fmtNum(pior?pior.ni:null)+', o que responde por quase todo o resultado dos 12 meses e supera o patrimônio líquido da empresa ('
+        +fmtNum((c.bal||{}).pl)+') — resultado dessa ordem não deixaria o patrimônio no lugar. '
+        +'Por isso ROE, margem líquida e P/L de 12 meses NÃO são publicados para esta empresa. Os trimestres abaixo são os valores como vieram da CVM; confira no documento oficial pelo link do trimestre.'));
+    pb.append(av);
+  }
   const ch = el('div','charts');
   const mkCard=(title)=>{ const card=el('div','card'); card.append(el('div','ct',title)); const box=el('div'); card.append(box); ch.append(card); return box; };
   const qd = c.q;
@@ -1011,22 +1098,37 @@ function openDetail(cvm){
   loadNews().then(() => {
     if(openCvm !== cvm) return;
     nwBox.textContent = ''; nwBox.className = '';
-    const itens = (NEWSD && NEWSD.n && NEWSD.n[c.cvm]) || [];
+    const janela = (NEWSD && NEWSD.janelaDias) || null;
+    // o robô já grava em ordem, mas arquivo antigo pode vir fora de ordem
+    const itens = ((NEWSD && NEWSD.n && NEWSD.n[c.cvm]) || []).slice()
+      .sort((a,b) => String(b.iso||'').localeCompare(String(a.iso||'')));
     const safeU = u => { try{ const x = new URL(u); return ['https:','http:'].includes(x.protocol) ? x.href : null; }catch(e){ return null; } };
     for(const nn of itens){
       const hu = safeU(nn.u);
       if(!hu) continue; // só http/https — news.json é dado externo
       const it = el('div','newsit');
       const a = el('a',null,nn.t); a.href = hu; a.target = '_blank'; a.rel = 'noopener'; it.append(a);
-      const meta = el('div','newsmeta'); meta.append(el('span',null,(nn.src||'')+(nn.d?' · '+nn.d:''))); it.append(meta);
+      // a data vai COM o ano: sem isso "13/09" de um ano atrás passava por notícia da semana
+      const dias = diasDesde(nn.iso);
+      const quando = nn.iso ? (nn.iso.slice(8,10)+'/'+nn.iso.slice(5,7)+'/'+nn.iso.slice(0,4)
+                               + (dias!=null ? ' · '+idadeTxt(dias) : ''))
+                            : (nn.d ? nn.d+' · ano não registrado nesta coleta' : '');
+      const meta = el('div','newsmeta'); meta.append(el('span',null,(nn.src||'')+(quando?' · '+quando:''))); it.append(meta);
       nwBox.append(it);
     }
-    if(!itens.length) nwBox.append(el('div','dim','sem notícias coletadas para esta empresa'));
+    if(!itens.length)
+      nwBox.append(el('div','dim','Nenhuma notícia'+(janela?' nos últimos '+janela+' dias':' coletada')
+        +' para esta empresa. O robô consulta o Google News a cada 2 horas; empresa pequena costuma passar semanas sem notícia.'));
     const more = el('a',null,'ver mais no Google News ↗');
     more.href = 'https://news.google.com/search?q='+encodeURIComponent('"'+c.name+'" B3')+'&hl=pt-BR&gl=BR&ceid=BR:pt-419';
     more.target = '_blank'; more.rel = 'noopener'; more.style.cssText = 'font-weight:700;color:var(--link);text-decoration:none';
     const wrap = el('div'); wrap.style.margin = '8px 10px'; wrap.append(more); nwBox.append(wrap);
-    nwBox.append(el('div','note','Google News'+(NEWSD&&NEWSD.updatedAt?' · coletado em '+dmy(NEWSD.updatedAt):'')+' · manchetes de veículos diversos; não são curadoria nem recomendação.'));
+    const hs = NEWSD && NEWSD.updatedAt ? horasDesde(NEWSD.updatedAt) : null;
+    const coleta = NEWSD && NEWSD.updatedAt
+      ? ' · coletado em '+hhmmDe(NEWSD.updatedAt)+(hs!=null && hs > 5 ? ' ⚠ há '+Math.round(hs)+'h — a coleta de 2h em 2h não rodou' : '')
+      : ' · não foi possível carregar o arquivo de notícias agora';
+    nwBox.append(el('div','note','Google News'+coleta+(janela?' · janela de '+janela+' dias':'')
+      +' · manchetes de veículos diversos; não são curadoria nem recomendação.'));
   });
 
   // ---- segmentos de negócio e indicadores operacionais (curadoria manual, quando houver)
@@ -1226,6 +1328,7 @@ function afterQuotes(){
   const v = document.body.dataset.view;
   if(v==='etf') renderETF();
   if(v==='eua') renderEUA();
+  renderAvisoIdade();   // chegou arquivo novo do robô: o aviso de atraso pode sair
 }
 
 // ---- células de cotação da lista de empresas (atualizadas sem redesenhar a tabela)
@@ -1464,16 +1567,16 @@ function indSeries(c, key){
     case 'ebitda12':{ return {rows:rows12(roll('ebitda')), fmt:fmtNum, titulo:'EBITDA acumulado 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
     case 'ni12': { return {rows:rows12(roll('ni')),  fmt:fmtNum, titulo:'Lucro líquido acumulado 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
     case 'roe':  { const r=roll('ni');
-      return {rows:q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.pl&&r[i]!=null)? p1(100*r[i]/b.pl):null}; }),
+      return {rows:q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.pl>0&&r[i]!=null)? p1(100*r[i]/b.pl):null}; }),
               fmt:fmtPct, titulo:'ROE — lucro 12m ÷ PL do trimestre', nota:'CVM · precisa do histórico de balanço'}; }
     case 'roic': { const r=roll('ebit');
       return {rows:q.map((x,i)=>{ const b=balAt(x.p);
         if(!b||b.pl==null||r[i]==null) return {p:x.p,v:null};
         const inv=b.pl+Math.max(b.divL||0,0);
-        return {p:x.p, v:inv? p1(100*(r[i]*0.66)/inv):null}; }),
+        return {p:x.p, v:inv>0? p1(100*(r[i]*0.66)/inv):null}; }),
               fmt:fmtPct, titulo:'ROIC — EBIT 12m × (1−34%) ÷ capital investido', nota:'CVM · aproximação'}; }
     case 'dlEbitda': { const r=roll('ebitda');
-      return {rows:q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.divL!=null&&r[i])? +(b.divL/r[i]).toFixed(2):null}; }),
+      return {rows:q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.divL!=null&&r[i]>0)? +(b.divL/r[i]).toFixed(2):null}; }),
               fmt:fmtX, titulo:'Dívida líquida ÷ EBITDA 12m', nota:'CVM'}; }
   }
   return null;
@@ -1616,12 +1719,74 @@ function multiLineChart(container, series, fmt){
 }
 
 // ---- notícias por empresa (data/news.json, robô diário) e curadorias manuais
-let NEWSD = null, SEGD = null, OPD = null;
-async function loadNews(){
-  if(NEWSD) return NEWSD;
-  try{ NEWSD = await jj('https://raw.githubusercontent.com/'+REPO+'/main/data/news.json?v='+Math.floor(Date.now()/36e5), 20000); }
-  catch(e){ NEWSD = {n:{}}; }
+let NEWSD = null, SEGD = null, OPD = null, NEWSMAC = null;
+// Bucket de 10 min no cache-buster: o robô publica notícia a cada 2h e o
+// raw.githubusercontent guarda ~5 min. Com o bucket de 1 hora que havia antes, o
+// navegador podia segurar o arquivo por uma hora depois de ele já ter mudado.
+const vBucket = () => Math.floor(Date.now()/6e5);
+const rawData = (branch, arq) => 'https://raw.githubusercontent.com/'+REPO+'/'+branch+'/data/'+arq+'?v='+vBucket();
+// idade de uma data ISO, em dias e em texto
+const diasDesde = iso => { if(!iso) return null;
+  const t = Date.parse(String(iso).length<=10 ? iso+'T12:00:00Z' : iso);
+  return isNaN(t) ? null : Math.floor((Date.now()-t)/864e5); };
+const horasDesde = iso => { if(!iso) return null; const t = Date.parse(iso);
+  return isNaN(t) ? null : (Date.now()-t)/36e5; };
+const idadeTxt = d => d==null ? '' : d<=0 ? 'hoje' : d===1 ? 'ontem' : 'há '+d+' dias';
+const hhmmDe = iso => { try{
+    return new Date(iso).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',
+      day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+' (Brasília)';
+  }catch(e){ return String(iso||'').slice(0,16).replace('T',' '); } };
+// Memória com validade: sem isso, aba (ou app) que fica aberta guardava o
+// news.json do instante do carregamento PARA SEMPRE — o robô publicava de 2 em 2
+// horas e a tela nunca via.
+let NEWSD_EM = 0;
+const NEWS_TTL_MS = 15*60*1000;
+async function loadNews(forcar){
+  if(NEWSD && !forcar && (Date.now() - NEWSD_EM) < NEWS_TTL_MS) return NEWSD;
+  // branch "news" é atualizado a cada 2 horas; main é a reserva do build diário
+  for(const br of ['news','main']){
+    try{
+      const d = await jj(rawData(br,'news.json'), 20000);
+      if(d && d.n){ d.origem = br; NEWSD = d; NEWSD_EM = Date.now(); break; }
+    }catch(e){}
+  }
+  if(!NEWSD) NEWSD = {n:{}, origem:null};
+  renderAvisoIdade();
   return NEWSD;
+}
+// releitura periódica: notícia e manchete voltam a mudar sozinhas na tela
+async function refreshNoticias(){
+  if(document.hidden) return;
+  const antesN = NEWSD && NEWSD.updatedAt, antesM = MACRO.noticiasAoVivoEm;
+  if(NEWSD) await loadNews(true);           // só relê o que já foi carregado uma vez
+  newsMacTentou = false; NEWSMAC = null;
+  await loadNewsMacro();
+  const mudou = (NEWSD && NEWSD.updatedAt) !== antesN || MACRO.noticiasAoVivoEm !== antesM;
+  if(!mudou) return;
+  if(document.body.dataset.view === 'macro') renderMacro();
+  if(openCvm) openDetail(openCvm);          // a empresa aberta recarrega as manchetes dela
+  renderAvisoIdade();
+}
+// manchetes gerais fora do HTML: sem isso elas só mudavam quando o painel inteiro
+// era regerado (1x/dia em dia útil — e nada quando a CVM falhava)
+let newsMacTentou = false;
+async function loadNewsMacro(){
+  if(newsMacTentou) return NEWSMAC;
+  newsMacTentou = true;
+  try{ NEWSMAC = await jj(rawData('news','news_macro.json'), 15000); }
+  catch(e){ NEWSMAC = null; }
+  if(NEWSMAC && NEWSMAC.updatedAt){
+    // só substitui o embutido se for mais novo que o snapshot do build
+    const emb = MACRO.snapshotEm ? Date.parse(MACRO.snapshotEm) : 0;
+    if(Date.parse(NEWSMAC.updatedAt) >= emb){
+      if((NEWSMAC.manchetes||[]).length) MACRO.manchetes = NEWSMAC.manchetes;
+      if(NEWSMAC.veiculos && (NEWSMAC.veiculos.br||[]).length) MACRO.veiculos = NEWSMAC.veiculos;
+      if(NEWSMAC.reddit && ((NEWSMAC.reddit.news||[]).length || (NEWSMAC.reddit.disc||[]).length)) MACRO.reddit = NEWSMAC.reddit;
+      MACRO.noticiasAoVivoEm = NEWSMAC.updatedAt;
+    }
+  }
+  renderAvisoIdade();
+  return NEWSMAC;
 }
 async function loadExtras(){
   if(SEGD && OPD) return;
@@ -1657,11 +1822,13 @@ function hbarChart(container, rows, fmt, onclickRow){
     const v = document.createElementNS(svg.namespaceURI,'text');
     v.setAttribute('x',labelW+bw+6); v.setAttribute('y',y+17); v.setAttribute('class','val');
     v.textContent = fmt(r.v); svg.append(v);
-    if(onclickRow && r.cvm){
+    // r.cvm = empresa (abre o detalhe); r.key = grupo setorial (desce para o ranking)
+    const alvo = r.cvm || r.key;
+    if(onclickRow && alvo){
       const hit = document.createElementNS(svg.namespaceURI,'rect');
       hit.setAttribute('x',0); hit.setAttribute('y',y); hit.setAttribute('width',W); hit.setAttribute('height',rowH);
       hit.setAttribute('fill','transparent'); hit.style.cursor='pointer';
-      hit.addEventListener('click', ()=>onclickRow(r.cvm));
+      hit.addEventListener('click', ()=>onclickRow(alvo));
       svg.append(hit);
     }
   });
@@ -1673,18 +1840,25 @@ const CMP_INDS = [
   // O Fundamentus devolve ROIC 0 para banco/seguradora porque não calcula o
   // indicador nesse caso (capital investido não tem o mesmo sentido). Exibir 0
   // sugeriria "retorno zero", o que é falso — melhor não ter o dado.
-  ['roic','ROIC (%)', c=>{const t=mainTicker(c);
-    const v = (t&&t.roic!=null)?t.roic:(c.ind.roic!=null?c.ind.roic:null);
-    if(c.fin && (v===0 || v==null)) return null;
-    return v;}, fmtPct],
-  ['roe','ROE (%)', c=>c.ind.roe!=null?c.ind.roe:(mainTicker(c)?mainTicker(c).roe:null), fmtPct],
-  ['evebitda','EV/EBITDA', c=>{const t=mainTicker(c); const v=(t&&t.evebitda>0)?t.evebitda:(c.ind.evEbitda>0?c.ind.evEbitda:null); return v;}, fmtX],
+  ['roic','ROIC (%)', c=>{
+    // Para banco/seguradora o ROIC não tem significado: "capital investido" não se
+    // separa do funding. O Fundamentus devolve 0 na maioria e um número calculado
+    // em alguns — nos dois casos o painel diz que o indicador não se aplica a
+    // financeira, então não pode exibir número para nenhuma delas.
+    if(c.fin) return null;
+    const t = mainTicker(c);
+    return (t&&t.roic!=null) ? t.roic : (c.ind.roic!=null ? c.ind.roic : null);}, fmtPct],
+  ['roe','ROE (%)', c=>roeDe(c), fmtPct],
+  // idem EV/EBITDA: a CVM não estrutura EBITDA de instituição financeira e dívida
+  // líquida de banco não é dívida no sentido do múltiplo — não exibir para fin
+  ['evebitda','EV/EBITDA', c=>{if(c.fin) return null; const t=mainTicker(c);
+    return (t&&t.evebitda>0)?t.evebitda:(c.ind.evEbitda>0?c.ind.evEbitda:null);}, fmtX],
   ['pl','P/L', c=>{const t=mainTicker(c); return (t&&t.pl>0)?t.pl:null;}, fmtX],
   ['pvp','P/VP', c=>{const t=mainTicker(c); return (t&&t.pvp>0)?t.pvp:null;}, fmtX],
   ['dy','Div. Yield (%)', c=>{const t=mainTicker(c); return t?t.dy:null;}, fmtPct],
   ['mgE12','Margem EBITDA 12m (%)', c=>c.ind.mgE12, fmtPct],
-  ['mgL12','Margem líquida 12m (%)', c=>c.ind.mgL12, fmtPct],
-  ['dlEbitda','Dív. líq./EBITDA', c=>c.ind.dlEbitda, fmtX],
+  ['mgL12','Margem líquida 12m (%)', c=>niSuspeito(c)?null:c.ind.mgL12, fmtPct],
+  ['dlEbitda','Dív. líq./EBITDA', c=>dlEbitdaDe(c), fmtX],
   ['mktCap','Valor de mercado', c=>c.ind.mktCap, fmtMi],
   ['ev','Valor da firma (EV)', c=>evOf(c), fmtMi],
   ['rev12','Receita 12m', c=>c.ind.rev12, fmtMi],
@@ -1700,9 +1874,17 @@ let cmpSel = lsGet('cmp_sel') || {ind:'roic', setor:'', modo:'rank', dir:'desc',
 // sane defaults se o localStorage trouxer estado antigo/inválido
 if(!CMP_INDS.some(x=>x[0]===cmpSel.ind)) cmpSel.ind = 'roic';
 if(!HIST_INDS.some(x=>x[0]===cmpSel.hind)) cmpSel.hind = 'roe';
-if(!['rank','emp','hist','op','scr','peer'].includes(cmpSel.modo)) cmpSel.modo = 'rank';
+if(!['rank','emp','hist','op','scr','peer','set'].includes(cmpSel.modo)) cmpSel.modo = 'rank';
 if(typeof cmpSel.opind !== 'string') cmpSel.opind = '';
 if(!['desc','asc'].includes(cmpSel.dir)) cmpSel.dir = 'desc';
+// modo "set" (comparar setores entre si): nível de agrupamento, estatística e o
+// mínimo de empresas por grupo para o número valer como comparação
+if(!['set','sub','seg'].includes(cmpSel.setNivel)) cmpSel.setNivel = 'set';
+if(!['med','avg','agg','sum'].includes(cmpSel.setStat)) cmpSel.setStat = 'med';
+if(!(cmpSel.setMin >= 1 && cmpSel.setMin <= 10)) cmpSel.setMin = 2;
+if(!Array.isArray(cmpSel.setFiltros)) cmpSel.setFiltros = [];
+cmpSel.setFiltros = cmpSel.setFiltros.filter(f => f && ['gt','lt','bt'].includes(f.op)
+  && typeof f.v1 === 'number' && CMP_INDS.some(x=>x[0]===f.ind));
 if(!Array.isArray(cmpSel.emps)) cmpSel.emps = [];
 if(!Array.isArray(cmpSel.filtros)) cmpSel.filtros = [];
 cmpSel.filtros = cmpSel.filtros.filter(f => f && ['gt','lt','bt'].includes(f.op)
@@ -1797,6 +1979,104 @@ function escopoRotulo(valor){
   const nome = (NIVEIS.find(x=>x[0]===nivel)||[])[1] || 'setor';
   return nome + ' ' + alvo;
 }
+
+// ================= comparar os SETORES entre si (modo "set") =================
+// "Qual setor tem a melhor margem?" tem duas respostas legítimas e diferentes:
+//  · mediana/média das razões de cada empresa → como é a empresa TÍPICA do grupo;
+//  · agregado = razão das SOMAS dos componentes → a margem do grupo somado, que é
+//    o que se quer dizer com "a margem do varejo".
+// O agregado só existe onde os componentes estão na base (CVM, 12 meses); onde não
+// estão, a opção simplesmente não aparece em vez de virar uma média de razões
+// disfarçada de agregado.
+const SET_AGG = {
+  mgE12:    {num: c=>c.ind.ebitda12,          den: c=>c.ind.rev12,     k:100, rot:'soma(EBITDA 12m) ÷ soma(receita 12m)'},
+  mgL12:    {num: c=>ni12De(c),               den: c=>c.ind.rev12,     k:100, rot:'soma(lucro líquido 12m) ÷ soma(receita 12m)'},
+  roe:      {num: c=>ni12De(c),               den: c=>(c.bal||{}).pl,  k:100, rot:'soma(lucro líquido 12m) ÷ soma(patrimônio líquido)'},
+  dlEbitda: {num: c=>(c.bal||{}).divL,        den: c=>c.ind.ebitda12,  k:1,   rot:'soma(dívida líquida) ÷ soma(EBITDA 12m)'},
+  evebitda: {num: c=>evOf(c),                 den: c=>c.ind.ebitda12,  k:1,   rot:'soma(valor da firma) ÷ soma(EBITDA 12m)'},
+  pl:       {num: c=>c.ind.mktCap,            den: c=>ni12De(c),       k:1,   rot:'soma(valor de mercado) ÷ soma(lucro líquido 12m)'},
+};
+// piso do denominador somado, em R$ milhões: abaixo disso o grupo não sustenta
+// indicador agregado (é bolso de holding, não setor)
+const SET_AGG_PISO = 100;
+// indicadores de NÍVEL (R$), onde somar o grupo faz sentido
+const SET_SOMA = new Set(['mktCap','ev','rev12']);
+const SET_STATS = [['med','Mediana do grupo'],['avg','Média do grupo'],
+                   ['agg','Agregado (soma dos componentes)'],['sum','Soma do grupo']];
+function setStatOpcoes(indKey){
+  return SET_STATS.filter(([k]) => k==='med' || k==='avg'
+    || (k==='agg' && SET_AGG[indKey]) || (k==='sum' && SET_SOMA.has(indKey)));
+}
+const setStatRotulo = st => ({med:'mediana', avg:'média', agg:'agregado', sum:'soma'})[st] || 'mediana';
+const nivelCampo = niv => niv==='set' ? 'setor' : niv==='sub' ? 'subsetor' : 'segmento';
+const nivelNome  = niv => (NIVEIS.find(x=>x[0]===niv)||[])[1] || 'setor';
+const nivelPlural = niv => niv==='seg' ? 'segmentos' : niv==='sub' ? 'subsetores' : 'setores';
+// Agrupar por um nível IGUAL OU ACIMA do filtro já escolhido daria um grupo só.
+// "compare os setores do varejo" quer dizer "compare as partes do varejo": desce
+// um nível a partir do escopo.
+function setNivelEfetivo(){
+  const ordem = ['set','sub','seg'];
+  const esc = escopoNorm(cmpSel.setor);
+  let niv = ordem.includes(cmpSel.setNivel) ? cmpSel.setNivel : 'set';
+  if(esc){
+    const iEsc = ordem.indexOf(esc.slice(0,3));
+    if(ordem.indexOf(niv) <= iEsc) niv = ordem[iEsc+1] || null;   // null = escopo já é segmento
+  }
+  return niv;
+}
+function gruposDe(lista, niv){
+  const campo = nivelCampo(niv), m = new Map();
+  for(const c of lista){
+    const v = c[campo]; if(!v) continue;
+    if(!m.has(v)) m.set(v, []);
+    m.get(v).push(c);
+  }
+  return [...m.entries()].map(([nome, empresas]) => ({nome, chave: niv+':'+nome, empresas}))
+    .sort((a,b) => a.nome.localeCompare(b.nome,'pt-BR'));
+}
+// todas as estatísticas de um grupo para um indicador (a tabela mostra todas;
+// o gráfico usa a escolhida)
+function setEstat(grupo, indKey){
+  const g = CMP_INDS.find(x=>x[0]===indKey);
+  const getter = g ? g[2] : (()=>null);
+  const vals = grupo.empresas.map(getter).filter(v => v!=null && isFinite(v));
+  const out = {n: vals.length, nGrupo: grupo.empresas.length,
+    med: med(vals),
+    avg: vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null,
+    min: vals.length ? Math.min(...vals) : null,
+    max: vals.length ? Math.max(...vals) : null,
+    sum: SET_SOMA.has(indKey) && vals.length ? vals.reduce((a,b)=>a+b,0) : null,
+    agg: null, nAgg: 0, somaNum: null, somaDen: null};
+  const A = SET_AGG[indKey];
+  if(A){
+    let sn = 0, sd = 0, k = 0, maiorDen = 0;
+    // Empresa com denominador negativo fica FORA da soma, e sai também do
+    // numerador: somar patrimônio negativo com positivo produz número sem
+    // significado. Foi o caso de Eletrodomésticos, onde a CASAS BAHIA (PL
+    // −8,3 bi e prejuízo de 13,2 bi) fazia o "ROE do segmento" virar −193%.
+    const fora = [];
+    for(const c of grupo.empresas){
+      const nu = A.num(c), de = A.den(c);
+      if(nu==null || de==null || !isFinite(nu) || !isFinite(de)) continue;
+      if(de <= 0){ fora.push(c.name); continue; }
+      sn += nu; sd += de; k++;
+      if(Math.abs(de) > Math.abs(maiorDen)) maiorDen = de;
+    }
+    out.foraNeg = fora;
+    out.nAgg = k; out.somaNum = k ? sn : null; out.somaDen = k ? sd : null;
+    // concentração: quanto a maior empresa pesa no denominador somado. Petrobras
+    // dominar o setor de petróleo é legítimo, mas o leitor precisa saber.
+    out.conc = (k && sd) ? Math.abs(maiorDen / sd) : null;
+    // Guardas do agregado, nesta ordem:
+    //  · denominador somado não positivo → múltiplo sem significado;
+    //  · denominador somado minúsculo → o setor "Outros" (8 holdings) somava R$ 39,7 mi
+    //    de patrimônio contra um prejuízo de R$ 86 mi e produzia "ROE do setor = -208%".
+    if(k && sd > 0 && sd >= SET_AGG_PISO) out.agg = A.k * sn / sd;
+  }
+  return out;
+}
+const setValor = (e, st) => st==='med' ? e.med : st==='avg' ? e.avg : st==='agg' ? e.agg : e.sum;
+const setN     = (e, st) => st==='agg' ? e.nAgg : e.n;
 
 // ================= busca por texto ("varejo com ROIC acima de 15") =================
 // Parser determinístico: traduz a frase em filtros do screener e MOSTRA como
@@ -2033,6 +2313,10 @@ const BUSCA_EXEMPLOS = [
   'maiores empresas de mineração',
   'construtoras com margem EBITDA entre 15 e 30',
   'menores P/L do setor de saúde',
+  'compare os setores por ROIC',
+  'quais subsetores têm maior margem EBITDA',
+  'setores com ROE acima de 15',
+  'compare os segmentos do varejo por receita',
 ];
 function buscaInterpreta(txt){
   const bruto = String(txt||'').trim();
@@ -2164,10 +2448,29 @@ function buscaInterpreta(txt){
 
   // 3b) o que sobrou de relevante (ignora conectivos e números já consumidos)
   const sobra = resto
-    .replace(/\b(e|com|de|do|da|dos|das|em|no|na|que|as|os|a|o|empresas?|setor|subsetor|segmento|ultimo|trimestre|ano|acima|abaixo|maior|menor|entre|mais|menos|por|para|sobre|tem|ter|todas?|todos?)\b/g,' ')
+    .replace(/\b(e|com|de|do|da|dos|das|em|no|na|que|as|os|a|o|empresas?|setor(es)?|subsetor(es)?|segmentos?|compar\w*|cada|nivel|niveis|medi[ao]s?|mediana|agregad[oa]s?|somad[oa]s?|soma|totais|total|ultimo|trimestre|ano|acima|abaixo|maior|menor|entre|mais|menos|por|para|sobre|tem|ter|todas?|todos?)\b/g,' ')
     .replace(/\d+(?:[.,]\d+)?\s*(?:%|x|bi|mi|mil)?/g,' ')   // números e unidades
     .replace(/[><=$/()\-.,;:!?]+/g,' ')
     .replace(/\s+/g,' ').trim();
+
+  // 3c) pedido de comparar os SETORES entre si ("compare os setores por ROIC")
+  // Só dispara com pedido explícito de comparação ENTRE grupos. "empresas do setor
+  // de varejo com ROIC acima de 15" tem "setor" no singular como filtro e continua
+  // sendo screener de empresas — por isso o singular só conta acompanhado de
+  // "por/cada/entre", de "qual/quais" ou de "compar…".
+  const RE_G_PLURAL  = /\b(setores|subsetores|segmentos)\b/;
+  const RE_G_POR     = /\b(por|cada|entre)\s+(subsetor|setor|segmento)\b/;
+  const RE_G_QUAL    = /\b(qual|quais)\s+(?:(?:o|a|os|as)\s+)?(?:(?:melhor|pior|maior|menor)(?:es)?\s+)?(subsetor|setor|segmento)(es|s)?\b/;
+  const RE_G_COMPARA = /\bcompar\w*\s+(?:(?:os|as|o|a)\s+)?(subsetor|setor|segmento)/;
+  const RE_G_SUPER   = /\b(subsetor|setor|segmento)\s+(?:com|de)\s+(?:o\s+|a\s+)?(maior|menor|melhor|pior)/;
+  const querGrupos = RE_G_PLURAL.test(s) || RE_G_POR.test(s) || RE_G_QUAL.test(s)
+                     || RE_G_COMPARA.test(s) || RE_G_SUPER.test(s);
+  const nivelPedido = /\bsubsetor/.test(s) ? 'sub' : /\bsegmento/.test(s) ? 'seg' : 'set';
+  // estatística pedida na frase: "ROIC médio por setor", "receita total por setor".
+  // "mediana" é explícita; "total/soma/agregado" quer o grupo somado.
+  const statPedido = /\bmediana\b/.test(s) ? 'med'
+    : /\bmedi[ao]s?\b/.test(s) ? 'avg'
+    : /\b(total|totais|somad[oa]s?|soma|agregad[oa]s?)\b/.test(s) ? 'somar' : null;
 
   // 4) intenção: com valor → screener (filtra); sem valor → ranking (ordena)
   // "bancos com maior ROIC" não tem número: é pedido de ranking, não de filtro.
@@ -2175,12 +2478,45 @@ function buscaInterpreta(txt){
   const ehMaior = /\b(maior(es)?|melhor(es)?|mais alt|top\s*\d*|ranking|rank)\b/.test(s);
   const semValor = achados.find(a => a.semValor);
   let intencao = null, indRank = null, dir = 'desc';
+  let nivel = null, setStat = null, setFiltros = [], avisoGrupo = '';
   if(kpiFiltros.length){                                // "SSS acima de 5" → filtra
     intencao = 'scr';
     for(const kf of kpiFiltros) filtros.push(kf);
+    if(querGrupos) avisoGrupo = 'KPI operacional (curadoria dos releases) não tem comparação por setor — '
+      + 'poucas empresas divulgam e a definição varia entre elas. O resultado abaixo é por empresa.';
   }
   else if(kpiAchado && empAchada) intencao = 'kpiEmpresa';   // "SSS Magazine Luiza" → detalhe
-  else if(kpiAchado) intencao = 'kpi';                       // "SSS" → compara entre empresas
+  else if(kpiAchado){                                        // "SSS" → compara entre empresas
+    intencao = 'kpi';
+    if(querGrupos) avisoGrupo = 'KPI operacional (curadoria dos releases) não tem comparação por setor — '
+      + 'poucas empresas divulgam e a definição varia entre elas. Comparei entre as empresas que divulgam.';
+  }
+  // comparar os grupos entre si: precisa de um indicador financeiro (os KPIs
+  // operacionais, tratados acima, não têm cobertura para virar média de setor)
+  else if(querGrupos && (achados.length || filtros.length)){
+    intencao = 'setores';
+    nivel = nivelPedido;
+    const fFin = filtros.find(f => !f.kpi);
+    indRank = fFin ? fFin.ind : (achados[0] ? achados[0].chave : 'mktCap');
+    dir = ehMenor ? 'asc' : 'desc';
+    setFiltros = filtros.filter(f => !f.kpi && typeof f.v1 === 'number');
+    // "somar" pedido na frase vira agregado (razão das somas) quando o indicador
+    // tem componentes na base, e soma simples quando é valor em R$
+    setStat = statPedido === 'somar'
+      ? (SET_AGG[indRank] ? 'agg' : (SET_SOMA.has(indRank) ? 'sum' : 'med'))
+      : statPedido || (SET_SOMA.has(indRank) ? 'sum' : 'med');
+  }
+  // sem indicador na frase: "compare os setores" = tamanho dos setores. Não vale
+  // quando a frase cita uma empresa e nenhum setor — "segmentos de negócio da Vale"
+  // é pedido do detalhe da empresa, não comparação de grupos. Só bloqueia com
+  // identificação FORTE da empresa (apelido, ticker ou nome escrito): a busca
+  // aproximada erra fácil ("energia" casa com AZT ENERGIA) e não pode barrar
+  // "segmentos de energia".
+  else if(querGrupos && (!(empAchada && ['apelido','ticker','nome'].includes(empAchada.via)) || escopoAchado)){
+    intencao = 'setores'; nivel = nivelPedido; indRank = 'mktCap';
+    setStat = statPedido === 'avg' ? 'avg' : statPedido === 'med' ? 'med' : 'sum';
+    dir = ehMenor ? 'asc' : 'desc';
+  }
   else if(filtros.length) intencao = 'scr';
   else if(semValor){ intencao = 'rank'; indRank = semValor.chave; dir = ehMenor ? 'asc' : 'desc'; }
   else if((ehMaior || ehMenor) && escopoAchado){
@@ -2199,6 +2535,7 @@ function buscaInterpreta(txt){
     kpi: kpiAchado,
     empresa: empAchada,
     empresaAmbigua: empAmbigua,
+    nivel, setStat, setFiltros, avisoGrupo,
     naoEntendi: sobraLimpa ? sobraLimpa.split(' ').filter(w=>w.length>2).slice(0,6) : [],
     frase: bruto,
   };
@@ -2314,6 +2651,33 @@ const fmtKpi = (idx, fam) => {
   const uns = new Set(arr.filter(x=>x.uc===uc).map(x=>x.unidade||'')).size;
   return v => v==null ? '—' : nbr2.format(v) + (un && un.length<12 && uns===1 ? ' '+un : '');
 };
+// Se a busca por texto trouxe termos que não foram entendidos, o aviso fica visível
+// junto do resultado — senão o usuário acha que pesquisou algo que na verdade foi
+// ignorado (ex.: "criptomoedas com maior receita").
+function avisoIgnorados(oQue){
+  if(!cmpSel.buscaLida || !(cmpSel.buscaLida.naoEntendi||[]).length) return null;
+  const ni = cmpSel.buscaLida.naoEntendi;
+  const av = el('div','notice');
+  av.append(el('b',null,'⚠ Ignorei: '+ni.join(', ')+'. '),
+    document.createTextNode((oQue||'Este resultado')+' NÃO considera esse(s) termo(s) — o painel não tem essa classificação. '
+      + 'Confira o filtro no seletor acima antes de usar o número.'));
+  const sug = sugereTermos(ni, 4);
+  if(sug.length){
+    const s2 = el('div'); s2.style.marginTop='6px';
+    s2.append(el('b',null,'Existe: '));
+    for(const sg2 of sug){
+      const b = el('button','btn', sg2.termo+' · '+sg2.tipo);
+      b.style.marginRight='6px';
+      b.onclick = () => {
+        if(sg2.tipo==='indicador') cmpSel.ind = sg2.chave; else cmpSel.setor = sg2.chave;
+        cmpSel.busca=''; cmpSel.buscaLida=null; lsSet('cmp_sel', cmpSel); renderCmp();
+      };
+      s2.append(b);
+    }
+    av.append(s2);
+  }
+  return av;
+}
 function renderCmp(){
   const m = $('#cmpview'); m.textContent = '';
   m.append(noticeEl());
@@ -2359,10 +2723,11 @@ function renderCmp(){
     lsSet('cmp_sel', cmpSel); renderCmp();
   };
   bar.append(selEsc);
-  bar.append(mkSel([['rank','Ranking'],['emp','Empresa × setor'],['hist','Histórico (linhas)'],
+  bar.append(mkSel([['rank','Ranking de empresas'],['set','Setores entre si'],['emp','Empresa × setor'],
+                    ['hist','Histórico (linhas)'],
                     ['op','KPIs operacionais'],['scr','Screener (filtros)'],['peer','Peer set (tabela)']],
                    cmpSel.modo, v=>cmpSel.modo=v, 'Modo'));
-  if(cmpSel.modo==='rank')
+  if(cmpSel.modo==='rank' || cmpSel.modo==='set')
     bar.append(mkSel([['desc','Maiores'],['asc','Menores']], cmpSel.dir, v=>cmpSel.dir=v, 'Direção'));
   const [key,label,getter,fmt] = CMP_INDS.find(x=>x[0]===cmpSel.ind);
   const escopo = escopoFiltra(COS, cmpSel.setor);
@@ -2385,6 +2750,21 @@ function renderCmp(){
     }
     const marca = c => c.name + (getter(c)==null ? ' — sem dado' : '');
     bar.append(mkSel(cands.map(c=>[c.cvm, marca(c)]), cmpSel.emp, v=>cmpSel.emp=v, 'Empresa'));
+  }
+  if(cmpSel.modo==='set'){
+    // nível de agrupamento: mostra quantos grupos cada nível daria DENTRO do escopo,
+    // para a escolha não ser às cegas
+    const nEsc = escopo.length;
+    bar.append(mkSel(NIVEIS.map(([p, nome]) => {
+        const q = new Set(escopo.map(c=>c[nivelCampo(p)]).filter(Boolean)).size;
+        return [p, nome.charAt(0).toUpperCase()+nome.slice(1)+' ('+q+' grupo'+(q===1?'':'s')+')'];
+      }), cmpSel.setNivel, v=>cmpSel.setNivel=v, 'Nível de agrupamento'));
+    const stats = setStatOpcoes(cmpSel.ind);
+    if(!stats.some(x=>x[0]===cmpSel.setStat)) cmpSel.setStat = 'med';
+    bar.append(mkSel(stats, cmpSel.setStat, v=>cmpSel.setStat=v, 'Estatística do grupo'));
+    bar.append(mkSel([[1,'mín. 1 empresa'],[2,'mín. 2 empresas'],[3,'mín. 3 empresas'],[5,'mín. 5 empresas']]
+      .map(([v,l])=>[String(v),l]), String(cmpSel.setMin), v=>cmpSel.setMin=+v, 'Mínimo de empresas por grupo'));
+    if(nEsc && nEsc < COS.length) bar.append(el('span','dim','escopo: '+nEsc+' empresas'));
   }
   m.append(bar);
 
@@ -2489,9 +2869,20 @@ function renderCmp(){
       if(r){
         cmpSel.setor = r.escopo || '';
         cmpSel.filtros = r.filtros;
-        cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi, intencao:r.intencao};
+        cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi, intencao:r.intencao,
+                            avisoGrupo:r.avisoGrupo||''};
         // pedido de ranking (sem valor) sai do screener e mostra o ranking
-        if(r.intencao==='rank'){ cmpSel.modo='rank'; cmpSel.ind=r.ind; cmpSel.dir=r.dir; }
+        if(r.intencao==='rank'){ cmpSel.modo='rank'; cmpSel.ind=r.ind; cmpSel.dir=r.dir; cmpSel.setFiltros=[]; }
+        // pedido de comparação entre setores sai do screener e vai para o modo "set"
+        else if(r.intencao==='setores'){
+          cmpSel.modo='set'; cmpSel.ind=r.ind; cmpSel.dir=r.dir;
+          cmpSel.setNivel = r.nivel || 'set';
+          if(r.setStat) cmpSel.setStat = r.setStat;
+          cmpSel.setFiltros = r.setFiltros || [];
+          cmpSel.filtros = [];
+        }
+        else if(r.intencao==='kpi'){ cmpSel.modo='op'; cmpSel.opind=r.kpi; cmpSel.setFiltros=[]; }
+        else cmpSel.setFiltros = [];
       } else { cmpSel.buscaLida = null; }
       lsSet('cmp_sel', cmpSel); renderCmp();
     };
@@ -2545,15 +2936,9 @@ function renderCmp(){
         const chipsEx = el('div','badges');
         for(const e of BUSCA_EXEMPLOS){
           const b = el('button','btn', e);
-          b.onclick = () => {
-            const r2 = buscaInterpreta(e);
-            cmpSel.busca = e;
-            cmpSel.setor = r2.escopo || '';
-            if(r2.intencao === 'rank'){ cmpSel.modo='rank'; cmpSel.ind=r2.ind; cmpSel.dir=r2.dir; cmpSel.filtros=[]; }
-            else { cmpSel.modo='scr'; cmpSel.filtros=r2.filtros; }
-            cmpSel.buscaLida = {escopo:r2.escopo, n:r2.filtros.length, naoEntendi:r2.naoEntendi, intencao:r2.intencao};
-            lsSet('cmp_sel', cmpSel); renderCmp();
-          };
+          // roda pelo mesmo caminho da busca digitada, para o exemplo nunca
+          // divergir do que a barra faria
+          b.onclick = () => { inpQ.value = e; aplicaBusca(); };
           chipsEx.append(b);
         }
         ex.append(chipsEx); box.append(ex);
@@ -2565,10 +2950,20 @@ function renderCmp(){
         vg.append(el('b',null,'Classificação: '),
           document.createTextNode('11 setores, 42 subsetores e 80 segmentos — todos no seletor abaixo. Também entende apelidos: varejo, banco, energia, saneamento, construtora, mineração, papel e celulose, frigorífico, shopping, educação, farmácia, agro, transporte.'));
         vocab.append(vg);
+        const vs = el('div'); vs.style.marginTop='4px';
+        vs.append(el('b',null,'Comparar os setores entre si: '),
+          document.createTextNode('"compare os setores por ROIC", "quais subsetores têm maior margem EBITDA", "setores com ROE acima de 15", '
+            + '"compare os segmentos do varejo por receita". Cada grupo entra com a mediana (ou o agregado, quando a base tem os componentes) das empresas dele.'));
+        vocab.append(vs);
         box.append(vocab);
       } else {
         const lida = el('div','note'); lida.style.margin = '0 0 10px';
         lida.append(el('b',null,'Entendi: '), document.createTextNode(partes.join(' · ')));
+        if(bl.avisoGrupo){
+          const ag = el('div'); ag.style.marginTop='4px';
+          ag.append(el('b',null,'⚠ '), document.createTextNode(bl.avisoGrupo));
+          lida.append(ag);
+        }
         if(bl.naoEntendi && bl.naoEntendi.length){
           const av = el('div'); av.style.marginTop='4px';
           av.append(el('b',null,'Não reconheci: '), document.createTextNode(bl.naoEntendi.join(', ')
@@ -2795,6 +3190,9 @@ function renderCmp(){
     }
 
   } else if(cmpSel.modo==='op'){
+    // pediu "por setor" num KPI operacional: diz por que o resultado é por empresa
+    if(cmpSel.buscaLida && cmpSel.buscaLida.avisoGrupo)
+      card.insertBefore(el('div','notice','⚠ '+cmpSel.buscaLida.avisoGrupo), box);
     const cvmsNoEscopo = new Set(escopo.map(c=>c.cvm));
     let lista = (OPIDX[cmpSel.opind] || []).filter(x => cvmsNoEscopo.has(x.cvm));
     // dentro da família, compara só o grupo de unidade dominante (% com %, R$ com R$…)
@@ -2911,33 +3309,200 @@ function renderCmp(){
           : 'CAGR não se aplica a percentual ou múltiplo, por isso a coluna não aparece neste indicador. ')
       + 'A mediana setorial só entra quando todas as empresas escolhidas são do mesmo setor. '
       + 'Sua seleção fica salva neste navegador. Copie os dados para o Excel ou baixe o gráfico em PNG para usar em slides.';
-  } else if(cmpSel.modo==='rank'){
-    // Se a busca por texto trouxe termos que não foram entendidos, o aviso fica
-    // visível junto do resultado — senão o usuário acha que pesquisou algo que
-    // na verdade foi ignorado (ex.: "criptomoedas com maior receita").
-    if(cmpSel.buscaLida && (cmpSel.buscaLida.naoEntendi||[]).length){
-      const ni = cmpSel.buscaLida.naoEntendi;
-      const av = el('div','notice');
-      av.append(el('b',null,'⚠ Ignorei: '+ni.join(', ')+'. '),
-        document.createTextNode('Este ranking NÃO considera esse(s) termo(s) — o painel não tem essa classificação. '
-          + 'Confira o filtro no seletor acima antes de usar o número.'));
-      const sug = sugereTermos(ni, 4);
-      if(sug.length){
-        const s2 = el('div'); s2.style.marginTop='6px';
-        s2.append(el('b',null,'Existe: '));
-        for(const sg2 of sug){
-          const b = el('button','btn', sg2.termo+' · '+sg2.tipo);
-          b.style.marginRight='6px';
-          b.onclick = () => {
-            if(sg2.tipo==='indicador') cmpSel.ind = sg2.chave; else cmpSel.setor = sg2.chave;
-            cmpSel.busca=''; cmpSel.buscaLida=null; lsSet('cmp_sel', cmpSel); renderCmp();
-          };
-          s2.append(b);
-        }
-        av.append(s2);
+  } else if(cmpSel.modo==='set'){
+    // ---------- SETORES ENTRE SI: uma barra por setor/subsetor/segmento ----------
+    const avIg0 = avisoIgnorados('Esta comparação de setores');
+    if(avIg0) card.insertBefore(avIg0, box);
+    const niv = setNivelEfetivo();
+    if(!niv){
+      // escopo já está no nível mais fino: não há grupo abaixo para comparar
+      titulo.textContent = 'Setores entre si — '+label;
+      box.append(el('div','notice','⚠ O filtro está em '+escopoRotulo(cmpSel.setor)+', o nível mais fino da classificação da B3 — '
+        + 'não existe grupo abaixo dele para comparar. Suba o filtro para subsetor ou setor (ou limpe-o) para comparar grupos entre si.'));
+      const wr = el('div'); wr.style.cssText = 'display:flex;gap:8px;margin:10px 0 0;flex-wrap:wrap';
+      const b1 = el('button','btn','ver o ranking das empresas deste segmento');
+      b1.onclick = () => { cmpSel.modo='rank'; lsSet('cmp_sel', cmpSel); renderCmp(); };
+      const b2 = el('button','btn','limpar o filtro e comparar todos os setores');
+      b2.onclick = () => { cmpSel.setor=''; cmpSel.setNivel='set'; lsSet('cmp_sel', cmpSel); renderCmp(); };
+      wr.append(b1, b2); box.append(wr);
+      noteEl2.textContent = 'A B3 classifica em três níveis: 11 setores, 42 subsetores e 80 segmentos.';
+    } else {
+      const st = cmpSel.setStat, minEmp = cmpSel.setMin;
+      const nivPedido = ['set','sub','seg'].includes(cmpSel.setNivel) ? cmpSel.setNivel : 'set';
+      // limites numéricos vindos da busca ("setores com ROIC acima de 15 e alavancagem
+      // abaixo de 2"): valem sobre a estatística do GRUPO, não sobre cada empresa
+      const fls = (Array.isArray(cmpSel.setFiltros) ? cmpSel.setFiltros : []).filter(f =>
+        f && ['gt','lt','bt'].includes(f.op) && typeof f.v1 === 'number' && CMP_INDS.some(x=>x[0]===f.ind));
+      // "Agregado" não existe para todo indicador (ROIC, P/VP, DY não têm componente
+      // na base): nesses casos o filtro cai para a mediana, e a nota diz isso.
+      const stDe = k => setStatOpcoes(k).some(x=>x[0]===st) ? st : 'med';
+      const trocouSt = fls.filter(f => stDe(f.ind) !== st).map(f => (CMP_INDS.find(x=>x[0]===f.ind)||[])[1]);
+      const indsNec = [...new Set([cmpSel.ind, ...fls.map(f=>f.ind)])];
+      const gs = gruposDe(escopo, niv).map(g => {
+        const es = {};
+        for(const k of indsNec) es[k] = setEstat(g, k);
+        return {g, es, e: es[cmpSel.ind]};
+      });
+      const semDado = gs.filter(x => setValor(x.e, st) == null);
+      const poucos  = gs.filter(x => setValor(x.e, st) != null && setN(x.e, st) < minEmp);
+      let vis      = gs.filter(x => setValor(x.e, st) != null && setN(x.e, st) >= minEmp);
+      const passaFiltro = (f, es) => {
+        const e2 = es[f.ind]; if(!e2) return false;
+        const s2 = stDe(f.ind);
+        const v = setValor(e2, s2), n = setN(e2, s2);
+        if(v == null || !isFinite(v) || n < minEmp) return false;   // grupo sem base não passa
+        if(f.op==='gt') return v > f.v1;
+        if(f.op==='lt') return v < f.v1;
+        const lo = Math.min(f.v1, f.v2==null ? f.v1 : f.v2), hi = Math.max(f.v1, f.v2==null ? f.v1 : f.v2);
+        return v >= lo && v <= hi;
+      };
+      let cortouFiltro = [];
+      if(fls.length){
+        cortouFiltro = vis.filter(x => !fls.every(f => passaFiltro(f, x.es)));
+        vis = vis.filter(x => fls.every(f => passaFiltro(f, x.es)));
       }
-      card.insertBefore(av, box);
+      vis.sort((a,b) => cmpSel.dir==='asc' ? setValor(a.e,st)-setValor(b.e,st) : setValor(b.e,st)-setValor(a.e,st));
+      titulo.textContent = (cmpSel.dir==='asc'?'Menores':'Maiores')+' — '+label+' · '+setStatRotulo(st)+' por '+nivelNome(niv)
+        + (escopoNorm(cmpSel.setor) ? ' · dentro de '+escopoRotulo(cmpSel.setor) : '');
+      // desceu de nível sozinho porque o pedido daria um grupo só
+      if(niv !== nivPedido)
+        box.append(el('div','note','Você pediu '+nivelNome(nivPedido)+', mas o filtro já está em '+escopoRotulo(cmpSel.setor)
+          +' — agrupei por '+nivelNome(niv)+', o nível abaixo, que é o que divide esse conjunto em partes comparáveis.'));
+      if(fls.length){
+        const chip = el('div'); chip.style.cssText = 'display:flex;gap:8px;align-items:center;margin:0 0 8px;flex-wrap:wrap';
+        chip.append(el('b',null,'Filtros sobre o grupo: '));
+        fls.forEach((f, ifl) => {
+          const nm = (CMP_INDS.find(x=>x[0]===f.ind)||[])[1] || f.ind;
+          const sinal = f.op==='gt' ? '>' : f.op==='lt' ? '<' : 'entre';
+          const b = el('span','badge', setStatRotulo(stDe(f.ind))+' de '+nm+' '+sinal+' '+(f.op==='bt' ? (f.v1+' e '+f.v2) : f.v1)+' ');
+          const x = el('button','rmv','✕');
+          x.title = 'tirar este filtro';
+          x.onclick = () => { cmpSel.setFiltros = fls.filter((_,j)=>j!==ifl); lsSet('cmp_sel', cmpSel); renderCmp(); };
+          b.append(x); chip.append(b);
+        });
+        box.append(chip);
+      }
+      // o rótulo carrega a cobertura: "(17/49)" quando menos da metade do grupo
+      // tem o dado, para o gráfico sozinho (num slide, por exemplo) não sugerir
+      // que a barra descreve o grupo inteiro
+      const rows = vis.map(x => {
+        const n = setN(x.e, st);
+        const parcial = n*2 < x.e.nGrupo;
+        return {label: x.g.nome+' ('+(parcial ? n+'/'+x.e.nGrupo : n)+')', v: setValor(x.e, st), key: x.g.chave};
+      });
+      const grafico = el('div'); box.append(grafico);
+      // clicar num grupo desce para o ranking das empresas dele
+      hbarChart(grafico, rows, fmt, chave => {
+        cmpSel.setor = chave; cmpSel.modo = 'rank';
+        lsSet('cmp_sel', cmpSel); renderCmp();
+        $('#cmpview').scrollIntoView({block:'start'});
+      });
+      const temAgg = !!SET_AGG[cmpSel.ind], temSum = SET_SOMA.has(cmpSel.ind);
+      const capNiv = nivelNome(niv).charAt(0).toUpperCase()+nivelNome(niv).slice(1);
+      const heads = [capNiv,'Empresas no grupo','Com o dado','Mediana','Média',
+        ...(temAgg?['Agregado','Peso da maior no agregado']:[]), ...(temSum?['Soma do grupo']:[]),'Mínimo','Máximo'];
+      const lnNum = vis.map(x => [x.g.nome, x.e.nGrupo, setN(x.e, st),
+        x.e.med, x.e.avg==null?null:+x.e.avg.toFixed(2),
+        ...(temAgg?[x.e.agg==null?null:+x.e.agg.toFixed(2), x.e.conc==null?null:+(100*x.e.conc).toFixed(0)]:[]),
+        ...(temSum?[x.e.sum]:[]), x.e.min, x.e.max]);
+      if(vis.length){
+        card.append(el('div','ct','Estatísticas de cada grupo'));
+        // a coluna de concentração é percentual, não usa o formato do indicador
+        const iConc = temAgg ? 6 : -1;
+        card.append(tabelaValores(heads, lnNum.map(l => l.map((v,i) => {
+          if(i <= 2) return v;
+          if(v == null) return '—';
+          return i === iConc ? v+'%' : fmt(v);
+        }))));
+        card.append(chartTools(() => grafico.querySelector('svg'),
+          () => ({headers: heads, linhas: lnNum}),
+          () => 'Setores '+label+' - '+setStatRotulo(st)));
+      }
+      // ---- por que um grupo não está no gráfico ----
+      const fora = [];
+      if(poucos.length) fora.push('abaixo do mínimo de '+minEmp+' empresa'+(minEmp===1?'':'s')+' com o dado: '
+        + poucos.map(x=>x.g.nome+' ('+setN(x.e, st)+')').join(', '));
+      if(semDado.length) fora.push('sem nenhuma empresa com '+label+': '
+        + semDado.slice(0,12).map(x=>x.g.nome).join(', ') + (semDado.length>12 ? ' e outros '+(semDado.length-12) : ''));
+      if(cortouFiltro.length) fora.push('reprovados no filtro do grupo: '
+        + cortouFiltro.map(x=>x.g.nome+' ('+fmt(setValor(x.e, st))+')').join(', '));
+      if(fora.length){
+        const d = el('div','note'); d.style.marginTop='10px';
+        d.append(el('b',null,'Grupos fora do gráfico — '), document.createTextNode(fora.join(' · ')+'.'));
+        card.append(d);
+      }
+      // grupo em que menos da metade das empresas tem o dado: o número existe, mas
+      // representa só uma parte do grupo — isso precisa estar escrito, não implícito
+      const parciais = vis.filter(x => setN(x.e, st) * 2 < x.e.nGrupo);
+      if(parciais.length){
+        const d2 = el('div','note'); d2.style.marginTop='6px';
+        d2.append(el('b',null,'⚠ Cobertura parcial — '), document.createTextNode(
+          'nestes grupos menos da metade das empresas tem '+label+', então a barra descreve só essa parte: '
+          + parciais.map(x=>x.g.nome+' ('+setN(x.e, st)+' de '+x.e.nGrupo+')').join(', ')
+          + '. Costuma ser indicador que não se aplica ao tipo de empresa (EBITDA de banco, múltiplo de empresa sem lucro).'));
+        card.append(d2);
+      }
+      if(!vis.length)
+        box.append(el('div','notice','⚠ Nenhum '+nivelNome(niv)+' tem '+minEmp+' ou mais empresas com '+label
+          +(fls.length?' que passem nos filtros do grupo':'')+'. Baixe o mínimo de empresas, troque a estatística ou escolha outro indicador — '
+          +'o painel não estima o valor que falta.'));
+      // ---- nota: o que o número é, exatamente ----
+      const A = SET_AGG[cmpSel.ind];
+      const nFinEsc = escopo.filter(c=>c.fin).length;
+      // a soma junta os 12 meses de cada empresa, e cada uma fecha o próprio
+      // trimestre: aqui vai o tamanho real dessa mistura
+      const ultimoP = c => { let m=''; for(const q of (c.q||[])) if(q.p > m) m = q.p; return m || null; };
+      const incluidas = vis.flatMap(x => x.g.empresas);
+      const pers = {};
+      for(const c of incluidas){ const p = ultimoP(c); if(p) pers[p] = (pers[p]||0)+1; }
+      const perOrd = Object.entries(pers).sort((a,b)=>b[1]-a[1]);
+      const perTxt = perOrd.length
+        ? perOrd[0][1]+' das '+incluidas.length+' empresas dos grupos exibidos fecham em '+perOrd[0][0]
+          + (incluidas.length > perOrd[0][1] ? ' e '+(incluidas.length - perOrd[0][1])+' em trimestre anterior' : '')+'. '
+        : '';
+      const nPrejuizo = incluidas.filter(c => c.ind && c.ind.ni12 != null && c.ind.ni12 < 0).length;
+      const foraNeg = [...new Set(vis.flatMap(x => x.e.foraNeg || []))];
+      const NAO_APLICA_FIN2 = new Set(['roic','evebitda','mgE12','dlEbitda','ev']);
+      noteEl2.textContent = 'Cada barra é ' + (st==='sum' ? 'a soma de ' : st==='agg' ? 'o agregado de ' : 'a '+setStatRotulo(st)+' de ')
+        + label + ' das empresas do ' + nivelNome(niv) + '; o número entre parênteses é quantas empresas entraram no cálculo. '
+        + 'Empresa sem o dado não entra e não conta como zero. '
+        + (st==='agg' && A
+            ? 'Agregado = ' + A.rot + ' — soma dos componentes de cada empresa, não média de razões: é o indicador do grupo somado, '
+              + 'e é o que costuma responder "qual a margem do setor". Como cada empresa fecha o próprio trimestre, a soma junta '
+              + 'os 12 meses acumulados de datas de fechamento diferentes: ' + perTxt
+              + 'A coluna "peso da maior" mostra quanto a maior empresa representa do denominador somado — quando passa de uns 50%, o número é praticamente o dela. '
+              + 'Grupo com denominador somado negativo, ou abaixo de R$ ' + SET_AGG_PISO + ' mi, fica sem número em vez de receber um múltiplo sem sentido '
+              + '(foi assim que "ROE do setor Outros" chegava a −208%: 8 holdings com R$ 40 mi de patrimônio somado). '
+              + (foraNeg.length
+                  ? '⚠ Fora do agregado por ter o próprio denominador negativo (somar patrimônio negativo com positivo não produz indicador): '
+                    + foraNeg.join(', ') + '. '
+                  : '')
+              + (cmpSel.ind === 'pl' && nPrejuizo
+                  ? '⚠ No P/L agregado entram as ' + nPrejuizo + ' empresas com prejuízo nos 12 meses, que reduzem o lucro somado do grupo — é o P/L do grupo somado, não a média dos P/L (a mediana ignora quem tem prejuízo, porque o painel só usa P/L positivo por empresa). '
+                  : '')
+            : st==='sum'
+            ? 'A soma faz sentido aqui porque o indicador é valor em R$, não razão. '
+            : st==='med'
+            ? 'A mediana é a empresa do meio do grupo: uma empresa fora do padrão não desloca o número (a média, sim). '
+              + (A ? 'Para o indicador do grupo somado, troque a estatística para "Agregado". ' : '')
+            : 'A média trata todas as empresas com o mesmo peso, então uma empresa fora do padrão desloca o número — a mediana não. '
+              + (A ? 'Para o indicador do grupo somado, troque para "Agregado". ' : ''))
+        + 'Clique numa barra para ver o ranking das empresas do grupo. '
+        + (fls.length ? 'Os filtros do grupo cortam pela estatística do grupo, não pela empresa: um '+nivelNome(niv)
+            +' passa quando o próprio número dele passa no limite. '
+            + (trocouSt.length ? '⚠ Não existe agregado para '+trocouSt.join(' nem para ')
+                +' (a base não tem os componentes), então nesse(s) filtro(s) o corte usou a mediana do grupo. ' : '')
+          : '')
+        + (NAO_APLICA_FIN2.has(cmpSel.ind) && nFinEsc > 0
+            ? '⚠ ' + label + ' não se aplica a banco e seguradora (a CVM não estrutura EBITDA/capital investido para instituição financeira): '
+              + nFinEsc + ' empresa' + (nFinEsc===1?'':'s') + ' do escopo ' + (nFinEsc===1?'fica':'ficam') + ' fora, e grupos financeiros aparecem com menos empresas ou nem aparecem. '
+            : '')
+        + 'Fontes: CVM (12 meses acumulados) para margens, retornos e alavancagem; Fundamentus (último fechamento) para P/L, P/VP, DY e EV/EBITDA.';
     }
+
+  } else if(cmpSel.modo==='rank'){
+    const avIg = avisoIgnorados('Este ranking');
+    if(avIg) card.insertBefore(avIg, box);
     let rows = escopo.map(c=>({label:c.name, v:getter(c), cvm:c.cvm})).filter(r=>r.v!=null && isFinite(r.v));
     rows.sort((a,b)=>cmpSel.dir==='asc'? a.v-b.v : b.v-a.v);
     titulo.textContent = (cmpSel.dir==='asc'?'Menores':'Maiores')+' — '+label+' · '+escopoRotulo(cmpSel.setor);
@@ -2955,7 +3520,11 @@ function renderCmp(){
       ? ' ⚠ '+nFin+' das '+escopo.length+' empresas deste filtro são bancos ou seguradoras, e '+label
         +' não se aplica a elas (a CVM não estrutura EBITDA/capital investido para instituição financeira) — por isso ficam fora do ranking. Para financeiras use ROE, P/VP ou Índice de Basileia.'
       : '';
-    noteEl2.textContent = 'Top 20 de '+rows.length+' empresas com o dado disponível (o "copiar dados" leva a lista completa). Clique numa barra para abrir a empresa. Fontes: Fundamentus (múltiplos, último fechamento) e CVM (12 meses).'+avisoFin;
+    const nSusp = escopo.filter(niSuspeito).length;
+    const avisoSusp = (nSusp && ['roe','mgL12'].includes(cmpSel.ind))
+      ? ' ⚠ '+nSusp+' empresa'+(nSusp===1?'':'s')+' do filtro '+(nSusp===1?'ficou':'ficaram')+' fora porque um trimestre chegou fora de escala na CVM e contamina o acumulado de 12 meses (o aviso aparece no detalhe da empresa).'
+      : '';
+    noteEl2.textContent = 'Top 20 de '+rows.length+' empresas com o dado disponível (o "copiar dados" leva a lista completa). Clique numa barra para abrir a empresa. Fontes: Fundamentus (múltiplos, último fechamento) e CVM (12 meses).'+avisoFin+avisoSusp;
   } else {
     const emp = COS.find(c=>c.cvm===cmpSel.emp);
     if(!emp){ box.append(el('div','dim','escolha uma empresa no seletor acima')); return; }
@@ -3200,6 +3769,9 @@ const FOCUS_LBL = {'IPCA':'IPCA (%)','IGP-M':'IGP-M (%)','Selic':'Selic — fim 
 function renderMacro(){
   const m=$('#macroview'); m.textContent='';
   const c=MACRO.core||{}, fx=c.fx||{}, cg=c.cripto||{};
+  // manchetes do arquivo ao vivo (branch news, a cada 2h) — o embutido no HTML é
+  // só a reserva, e ficaria parado até o próximo build do painel
+  if(!newsMacTentou) loadNewsMacro().then(() => { if(document.body.dataset.view==='macro') renderMacro(); });
   m.append(noticeEl());
   const status = el('div',null); status.style.margin='4px 0 10px';
   status.append(el('span','livechip', LIVE.ok ? '● ao vivo — APIs consultadas às '+LIVE.at : '◷ snapshot de '+brDate(MACRO.snapshotEm)+' — abra com internet para atualizar ao vivo'));
@@ -3280,7 +3852,17 @@ function renderMacro(){
   grid.append(agCard);
 
   const nw=el('div','card');
-  nw.append(el('div','ct','Notícias com mais repercussão na semana — fóruns de investimento'));
+  // O robô roda no servidor do GitHub, e o Reddit responde 403 para IP de
+  // datacenter: a coleta cai no último valor bom e ficava semanas parada
+  // enquanto o painel dizia "na semana". Agora o cartão mostra a data real dos
+  // posts, e avisa quando eles não são da semana.
+  const rdIdade = redditIdadeDias();
+  nw.append(el('div','ct','Notícias com mais repercussão nos fóruns de investimento'
+    + (rdIdade!=null ? ' — posts até '+redditMaisNovoTxt() : '')));
+  if(rdIdade!=null && rdIdade > 10)
+    nw.append(el('div','notice','⚠ Estes posts são de '+redditMaisNovoTxt()+' ('+idadeTxt(rdIdade)
+      +'), não da última semana: o Reddit recusa as consultas do robô (HTTP 403 para servidor). '
+      +'Enquanto isso não mudar, este bloco fica parado nessa data — as notícias por empresa e as manchetes por veículo continuam atualizando a cada 2 horas.'));
   for(const n of (MACRO.reddit&&MACRO.reddit.news)||[]){
     const it=el('div','newsit');
     const a=el('a',null,n.t); a.href=n.u; a.target='_blank'; a.rel='noopener'; it.append(a);
@@ -3289,12 +3871,15 @@ function renderMacro(){
     meta.append(el('span',null,(n.dom||'').replace('www.','')+' · r/'+n.sub));
     it.append(meta); nw.append(it);
   }
-  nw.append(el('div','note','Ranqueadas por nº de comentários em r/investimentos, r/economia e r/farialimabets nos últimos 7 dias.'));
+  nw.append(el('div','note','Ranqueadas por nº de comentários em r/investimentos, r/economia e r/farialimabets'
+    + (rdIdade!=null ? ' · post mais novo de '+redditMaisNovoTxt()+' ('+idadeTxt(rdIdade)+')' : '')
+    + '. '+noticiaTxt()));
   grid.append(nw);
   m.append(el('h3','sect','Agenda e repercussão')); m.append(grid);
 
   // manchetes por veículo (Brasil e internacionais)
   m.append(el('h3','sect','Manchetes por veículo'));
+  m.append(el('div','note', noticiaTxt()));
   const vg=el('div','m-grid');
   const vbr=(MACRO.veiculos&&MACRO.veiculos.br&&MACRO.veiculos.br.length)? MACRO.veiculos.br : OUTLETS_FALLBACK.br;
   const vint=(MACRO.veiculos&&MACRO.veiculos.int&&MACRO.veiculos.int.length)? MACRO.veiculos.int : OUTLETS_FALLBACK.int;
@@ -3304,13 +3889,17 @@ function renderMacro(){
 
   const grid2=el('div','m-grid'); grid2.style.marginTop='12px';
   const mc=el('div','card'); mc.append(el('div','ct','Radar Google News · Negócios (Brasil)'));
+  mc.append(el('div','note', noticiaTxt()));
   for(const g of MACRO.manchetes||[]){
     const it=el('div','newsit');
     const a=el('a',null,g.t); a.href='https://news.google.com/search?q='+encodeURIComponent('"'+g.t.slice(0,80)+'"')+'&hl=pt-BR&gl=BR&ceid=BR:pt-419'; a.target='_blank'; a.rel='noopener';
     it.append(a); const meta=el('div','newsmeta'); meta.append(el('span',null,g.src+' · '+g.d)); it.append(meta); mc.append(it);
   }
   grid2.append(mc);
-  const dc=el('div','card'); dc.append(el('div','ct','Discussões em alta nos fóruns'));
+  const dc=el('div','card');
+  dc.append(el('div','ct','Discussões em alta nos fóruns'+(rdIdade!=null ? ' — até '+redditMaisNovoTxt() : '')));
+  if(rdIdade!=null && rdIdade > 10)
+    dc.append(el('div','note','⚠ Mesma limitação do bloco acima: o Reddit recusa as consultas do robô, então este conteúdo está parado em '+redditMaisNovoTxt()+'.'));
   for(const n of (MACRO.reddit&&MACRO.reddit.disc)||[]){
     const it=el('div','newsit');
     const a=el('a',null,n.t); a.href=n.u; a.target='_blank'; a.rel='noopener'; it.append(a);
@@ -3359,7 +3948,7 @@ async function refreshLive(){
 }
 
 // ---------- disclaimer, fontes e frescor dos dados ----------
-const BUILDAT='2026-09-07T15:09:22Z';
+const BUILDAT='2026-09-07T17:20:43Z';
 const dmy = s => { if(!s) return '—'; const d=String(s).slice(0,10); return d.includes('-')? d.split('-').reverse().join('/') : d; };
 const META = {
   dadosAte: (()=>{ let m=''; for(const c of COS) for(const q of c.q) if(q.p>m) m=q.p; return m; })(),
@@ -3369,6 +3958,53 @@ function buildLocal(){
   if(!META.buildAt) return dmy(DB.updatedAt);
   try{ return new Date(META.buildAt).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+' (Brasília)'; }
   catch(e){ return dmy(META.buildAt); }
+}
+// ================= aviso de dado atrasado =================
+// Robô que não roda é falha silenciosa: o painel continua no ar mostrando o dado
+// da coleta anterior. Em setembro/2026 o branch "quotes" ficou 3 dias parado e
+// nada na tela dizia isso. Aqui a própria página mede a idade do que carregou e
+// avisa quando passa do prazo esperado de cada conjunto.
+function emPregao(){
+  try{
+    const br = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Sao_Paulo'}));
+    const d = br.getDay(), h = br.getHours() + br.getMinutes()/60;
+    return d>=1 && d<=5 && h>=10.25 && h<=18.25;
+  }catch(e){ return false; }
+}
+function idadeProblemas(){
+  const out = [];
+  const push = (nome, iso, limiteH, comoResolve) => {
+    if(!iso) return;
+    const h = horasDesde(String(iso).length<=10 ? iso+'T12:00:00Z' : iso);
+    if(h==null || h <= limiteH) return;
+    out.push({nome, h, limiteH, comoResolve});
+  };
+  push('painel gerado (CVM, múltiplos, valor de mercado)', META.buildAt || DB.updatedAt, 30);
+  if(CANDLES && CANDLES.updatedAt) push('gráficos de preço (candles)', CANDLES.updatedAt, 40);
+  if(NEWSD && NEWSD.updatedAt) push('notícias por empresa', NEWSD.updatedAt, 5);
+  if(MACRO.noticiasAoVivoEm) push('manchetes gerais', MACRO.noticiasAoVivoEm, 5);
+  // o arquivo do robô de cotações fica naturalmente parado fora do pregão
+  if(emPregao() && QSNAP && QSNAP.updatedAt) push('cotações do robô (lista completa da B3 + EUA)', QSNAP.updatedAt, 1.5);
+  return out;
+}
+function renderAvisoIdade(){
+  const box = document.getElementById('idadeaviso'); if(!box) return;
+  const p = idadeProblemas();
+  box.textContent = '';
+  if(!p.length) return;
+  // abaixo de 3h o arredondamento inteiro fazia "2h (esperado até 2h)"
+  const fmtH = h => h < 3 ? nbr2.format(+h.toFixed(1))+'h' : h < 48 ? Math.round(h)+'h' : Math.round(h/24)+' dias';
+  box.append(el('b',null,'⚠ Dado atrasado — '));
+  box.append(document.createTextNode(
+    p.map(x => x.nome+': '+fmtH(x.h)+' (esperado até '+fmtH(x.limiteH)+')').join(' · ')
+    + '. O robô desse conjunto não publicou no prazo; o que está na tela é a última coleta que deu certo, com a data acima.'));
+  const b = el('button','btn','recarregar a página');
+  b.onclick = () => location.reload();
+  box.append(b);
+  const a = el('a',null,'ver a data de cada conjunto');
+  a.onclick = openInfo;
+  a.style.cssText = 'color:var(--link);cursor:pointer;text-decoration:underline';
+  box.append(a);
 }
 function freshRows(){
   const c=MACRO.core||{};
@@ -3381,18 +4017,21 @@ function freshRows(){
    ['Classificação setorial','B3',dmy(DB.b3FetchedAt),'automática · ~45 dias'],
    ['Ibovespa e IFIX','B3',LIVEIDX.IBOV? '● ao vivo · '+(B3LIVE.at||'') : (MACRO.ibov? dmy(MACRO.ibov.date)+' às '+(MACRO.ibov.hora||'').slice(0,5):'—'),'no navegador · a cada 60 s'],
    ['Cotações B3 — ações e ETFs (ao vivo)','B3 (feed público, ~15 min de defasagem)',B3LIVE.ok? '● ao vivo · '+(B3LIVE.at||'') : 'aguardando primeira consulta','no navegador · a cada 60 s'],
-   ['Cotações EUA + lista completa da B3','Yahoo Finance via robô (branch quotes)',QSNAP.updatedAt? 'arquivo de '+relayLocal() : '—','robô a cada 15 min em pregão · página relê a cada 60 s'],
+   ['Cotações EUA + lista completa da B3','Yahoo Finance via robô (branch quotes)',QSNAP.updatedAt? 'arquivo de '+relayLocal() : '—','robô em ciclo de 10 min dentro do pregão · página relê a cada 60 s'],
    ['Candles (gráficos de preço)','Yahoo Finance via robô diário',CANDLES&&CANDLES.updatedAt? 'histórico de '+dmy(CANDLES.updatedAt) : 'carrega ao abrir o 1º gráfico','diário · candle de hoje completado ao vivo'],
-   ['Notícias por empresa','Google News via robô diário',NEWSD&&NEWSD.updatedAt? 'coletado em '+dmy(NEWSD.updatedAt) : 'carrega ao abrir uma empresa','robô · dias úteis'],
+   ['Notícias por empresa','Google News (janela de '+((NEWSD&&NEWSD.janelaDias)||30)+' dias) via robô',NEWSD&&NEWSD.updatedAt? 'coletado em '+hhmmDe(NEWSD.updatedAt)+(NEWSD.origem==='main'?' · reserva de main, o branch news não respondeu':'') : 'carrega ao abrir uma empresa','a cada 2 horas, todos os dias'],
    ['Segmentos e dados operacionais','curadoria manual (releases das empresas)','—','sob demanda · data/segmentos.json e operacionais.json'],
    ['Moedas','AwesomeAPI',LIVE.ok? liveTxt : ((c.fx&&c.fx.USDBRL&&c.fx.USDBRL.ts)? dmy(c.fx.USDBRL.ts)+' '+String(c.fx.USDBRL.ts).slice(11,16):snap),'no navegador · a cada 60 s'],
    ['Bitcoin e Ethereum','CoinGecko',LIVE.ok? liveTxt : snap,'no navegador · a cada 60 s'],
    ['Selic, CDI e IPCA 12m','Banco Central (SGS)',LIVE.ok? liveTxt : snap,'no navegador · a cada 5 min'],
    ['Boletim Focus','Banco Central','relatório de '+((c.focus&&c.focus[0])? dmy(c.focus[0].d):'—'),'BCB publica às segundas · busca ao abrir'],
-   ['Notícias e discussões','Reddit (fóruns de investimento)','semana encerrada em '+snap,'robô · dias úteis'],
-   ['Manchetes por veículo','RSS dos jornais (G1, Valor, NYT…)',snap,'robô · dias úteis'],
+   ['Notícias e discussões','Reddit (fóruns de investimento)',
+     (redditIdadeDias()!=null ? 'post mais novo de '+redditMaisNovoTxt()+' ('+idadeTxt(redditIdadeDias())+')' : 'sem posts carregados'),
+     redditIdadeDias()!=null && redditIdadeDias()>10 ? '⚠ parado: o Reddit responde 403 ao robô (IP de servidor)' : 'tenta a cada 2 horas'],
+   ['Manchetes por veículo','RSS dos jornais (G1, Valor, NYT…)',MACRO.noticiasAoVivoEm? 'coletado em '+hhmmDe(MACRO.noticiasAoVivoEm) : 'snapshot de '+snap,'a cada 2 horas, todos os dias'],
    ['Agenda de eventos','BCB · Fed · BCE · IBGE','calendários oficiais de 2026','manual quando saírem os de 2027'],
-   ['Geração do painel','GitHub Actions (github.com/12533230/painel-b3)',buildLocal(),'dias úteis ~06:10 (Brasília)'],
+   ['Geração do painel','GitHub Actions (github.com/12533230/painel-b3)',buildLocal(),'3 tentativas/dia (06:12, 10:12 e 14:12 BRT): a 1ª que rodar publica'],
+   ['Vigia das atualizações','GitHub Actions (vigia.yml)','checa a idade do que está publicado','de hora em hora · redispara o robô que passou do prazo'],
   ];
 }
 function renderFresh(container){
@@ -3419,7 +4058,7 @@ function openInfo(){
   const fr=el('div'); fr.style.marginTop='10px'; renderFresh(fr); ibox.append(fr);
   const ps=[
    ['Uso','painel interno da Insignia Partners, informativo e educacional — não é recomendação de investimento nem oferta. Os números vêm de fontes públicas e podem conter erros ou defasagens; confira sempre os documentos oficiais (cada empresa tem link direto para a CVM).'],
-   ['Como atualiza','um robô refaz balanços, múltiplos, notícias e manchetes em dias úteis por volta das 6h10 (Brasília). Com a página aberta e internet: cotações da B3 (ações, ETFs, Ibovespa, IFIX) são consultadas a cada 60 s direto na API pública da bolsa (defasagem ~15 min do pregão); câmbio e cripto a cada 60 s; Selic/CDI/IPCA e Focus a cada 5 min; EUA e a lista completa da B3 vêm de um segundo robô que roda a cada 15 min em pregão (Yahoo Finance) e publica um arquivo que a página relê a cada 60 s. Chaves gratuitas opcionais (botão "⚙ Ao vivo") deixam os EUA em tempo real (Finnhub) e a B3 em lote (brapi). A classificação setorial da B3 se renova a cada ~45 dias.'],
+   ['Como atualiza','três robôs independentes, para a falha de um não parar os outros. (1) Balanços, múltiplos e valor de mercado: 3 tentativas por dia, todos os dias — a primeira que conseguir rodar publica. (2) Notícias por empresa e manchetes gerais: a cada 2 horas, todos os dias, em arquivo próprio que a página relê sozinha (não depende de o painel ser regerado). (3) Cotações dos EUA e da lista completa da B3: ciclo de 10 minutos dentro do pregão. Um quarto robô (vigia) checa de hora em hora a idade do que está publicado e redispara quem passou do prazo; se ainda assim algo atrasar, aparece uma faixa vermelha no topo desta página com a idade real do dado. IMPORTANTE: o agendamento do GitHub é "melhor esforço" e já atrasou de 35 minutos a 11h39 nas medições de agosto/setembro de 2026 — por isso o que vale é a data de cada conjunto na tabela acima, não um horário prometido. Com a página aberta e internet: cotações da B3 (ações, ETFs, Ibovespa, IFIX) a cada 60 s direto na API pública da bolsa (defasagem ~15 min do pregão); câmbio e cripto a cada 60 s; Selic/CDI/IPCA e Focus a cada 5 min; notícias releem a cada 15 min. Chaves gratuitas opcionais (botão "⚙ Ao vivo") deixam os EUA em tempo real (Finnhub) e a B3 em lote (brapi). A classificação setorial da B3 se renova a cada ~45 dias.'],
    ['Defasagens naturais','resultados trimestrais seguem o calendário de entrega da CVM (até ~45 dias após o fim do trimestre); múltiplos e cotações de ações usam o último fechamento coletado; a agenda usa os calendários oficiais de 2026 (os de 2027 entram quando os bancos centrais publicarem).'],
    ['Convenções de cálculo','demonstrações consolidadas quando disponíveis; lucro atribuído aos sócios da controladora; EBITDA = EBIT + depreciação/amortização (DFC); dívida bruta = empréstimos e financiamentos; ROIC = EBIT 12m × (1−34%) ÷ (PL + dívida líquida); EBITDA e dívida não se aplicam a bancos e seguradoras.'],
    ['Saúde da automação','se as datas acima ficarem defasadas por vários dias, a automação precisa de atenção — o histórico de execuções fica em github.com/12533230/painel-b3/actions.'],
@@ -3436,6 +4075,36 @@ function noticeEl(){
   n.append(document.createTextNode(' Fontes públicas, cada uma com sua defasagem; ações refletem o último fechamento coletado. '));
   const a=el('a',null,'ⓘ Ver fontes e a data de cada conjunto de dados'); a.onclick=openInfo; n.append(a);
   return n;
+}
+
+// Data do post mais novo dos fóruns (os itens trazem created_utc em segundos).
+// Serve para o cartão dizer de quando é o conteúdo em vez de afirmar "na semana".
+function redditMaisNovoUtc(){
+  const r = MACRO.reddit || {};
+  const todos = [...(r.news||[]), ...(r.disc||[])].map(x=>+x.utc).filter(u=>u>0);
+  return todos.length ? Math.max(...todos) : null;
+}
+function redditIdadeDias(){
+  const u = redditMaisNovoUtc();
+  return u==null ? null : Math.floor((Date.now()/1000 - u)/86400);
+}
+function redditMaisNovoTxt(){
+  const u = redditMaisNovoUtc();
+  if(u==null) return '—';
+  try{ return new Date(u*1000).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit'}); }
+  catch(e){ return '—'; }
+}
+
+// De quando são as manchetes que estão na tela: do arquivo ao vivo (robô de 2h em
+// 2h) ou do snapshot embutido no HTML, quando o arquivo não carregou.
+function noticiaTxt(){
+  const vivo = MACRO.noticiasAoVivoEm;
+  if(vivo){
+    const hs = horasDesde(vivo);
+    return 'Coletado em '+hhmmDe(vivo)+' — robô a cada 2 horas, todos os dias.'
+      + (hs!=null && hs > 5 ? ' ⚠ há '+Math.round(hs)+'h sem coleta nova.' : '');
+  }
+  return 'Do último build do painel ('+dmy(MACRO.snapshotEm)+') — o arquivo ao vivo de manchetes não carregou agora.';
 }
 
 // ---------- manchetes por veículo (sugestão da equipe) ----------
@@ -3500,6 +4169,18 @@ $('#srcline').textContent = 'CVM (ITR/DFP) · B3 (setores + cotações ao vivo) 
 document.body.dataset.view='emp';
 document.querySelector('.main').insertBefore(noticeEl(), $('#crumb'));
 renderAll();
+renderAvisoIdade();
+// as manchetes ao vivo são pequenas (~20 KB) e valem no primeiro carregamento:
+// é o que diz se a coleta de 2h em 2h está de pé, mesmo sem abrir Brasil & Macro
+loadNewsMacro();
+setInterval(renderAvisoIdade, 5*60*1000);
+setInterval(refreshNoticias, 15*60*1000);   // notícia e manchete não congelam na aba aberta
+// voltar para a aba/app depois de horas: relê antes de o usuário ler dado velho
+addEventListener('visibilitychange', () => {
+  if(document.hidden) return;
+  renderAvisoIdade();
+  if(Date.now() - NEWSD_EM > NEWS_TTL_MS) refreshNoticias();
+});
 
 // ---------- peer set vindo de link compartilhado (#peer=nome|cvm,cvm,…) ----------
 function abrePeerDaURL(){
