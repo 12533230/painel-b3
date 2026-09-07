@@ -86,6 +86,9 @@ LIXO_TITULO = [
     # 6 acertos e 0 falso positivo em 1.906 títulos do corpus medido
     re.compile(r"^A[çc][ãa]o\s+[A-Z]{4}\d{1,2}(\.SA)?\s*[-–]", re.I),
     re.compile(r"^Not[íi]cias\s+da\s+Bolsa\s+de\s+Valores", re.I),
+    # "Itaú | ITUB3 | ITUB4 - Ações na bolsa" (página de ativo do Valor)
+    re.compile(r"[A-Z]{4}\d{1,2}\s*\|\s*[A-Z]{4}\d{1,2}"),
+    re.compile(r"A[çc][õo]es\s+na\s+bolsa\s*$", re.I),
 ]
 def eh_lixo(titulo_cru, fonte):
     if any(r.search(titulo_cru) for r in LIXO_TITULO):
@@ -162,17 +165,40 @@ def busca_rss(session, consulta):
 def fetch_news(session, empresa, hoje):
     """Lista de notícias (possivelmente vazia) no sucesso; None só em falha real."""
     nome = (empresa.get("trad") or empresa.get("name") or "").strip()
-    root = busca_rss(session, f'"{nome}" B3 when:{JANELA_DIAS}d')
+    itens = coleta(session, f'"{nome}" B3 when:{JANELA_DIAS}d', empresa, hoje)
+    # O nome curto de negociação não é como a imprensa escreve. Medido: "MAGAZ
+    # LUIZA" devolve 3 itens, nenhum citando a empresa; "MAGAZINE LUIZA" devolve
+    # 68, com a notícia de verdade. Então quando a 1ª consulta não trouxe NADA que
+    # cite a empresa (não só quando vem vazia), consulta a razão social e junta as
+    # duas listas. Custa 1 request extra em ~metade das empresas.
+    alt = nome_alternativo(empresa)
+    if alt and (itens is None or not any(x["_men"] for x in itens)):
+        time.sleep(0.35)
+        it2 = coleta(session, f'"{alt}" B3 when:{JANELA_DIAS}d', empresa, hoje)
+        if it2:
+            itens = (itens or []) + it2
+    if itens is None:
+        return None
+    # dedup entre as duas consultas, e a ordem final
+    vistos, unicos = set(), []
+    for it in itens:
+        k = norm_titulo(it["t"])
+        if k in vistos:
+            continue
+        vistos.add(k)
+        unicos.append(it)
+    # Quem cita a empresa primeiro, depois o mais recente: metade dos itens do
+    # feed é notícia de mercado que só menciona a empresa de passagem. Duas
+    # ordenações estáveis fazem isso sem chave composta.
+    unicos.sort(key=lambda x: x["iso"], reverse=True)
+    unicos.sort(key=lambda x: 0 if x["_men"] else 1)
+    return unicos[:MAX_POR_EMPRESA]
+
+def coleta(session, consulta, empresa, hoje):
+    """Itens válidos de UMA consulta (sem ordenar nem cortar); None em falha de rede."""
+    root = busca_rss(session, consulta)
     if root is None:
         return None
-    if not len(list(root.iter("item"))):
-        # nada com o nome curto: tenta a razão social antes de dizer "sem notícia"
-        alt = nome_alternativo(empresa)
-        if alt:
-            time.sleep(0.35)
-            r2 = busca_rss(session, f'"{alt}" B3 when:{JANELA_DIAS}d')
-            if r2 is not None:
-                root = r2
     termos = termos_empresa(empresa)
     itens, vistos = [], set()
     for it in root.iter("item"):                 # o feed inteiro: a ordem dele é por relevância
@@ -200,12 +226,7 @@ def fetch_news(session, empresa, hoje):
         vistos.add(k)
         itens.append({"t": t, "src": src[:40], "d": ddmm, "iso": iso, "u": u,
                       "_men": menciona(t, termos)})
-    # Quem cita a empresa primeiro, depois o mais recente: metade dos itens do
-    # feed é notícia de mercado que só menciona a empresa de passagem. Duas
-    # ordenações estáveis fazem isso sem chave composta.
-    itens.sort(key=lambda x: x["iso"], reverse=True)
-    itens.sort(key=lambda x: 0 if x["_men"] else 1)
-    return itens[:MAX_POR_EMPRESA]
+    return itens
 
 def limpa_antigos(itens, hoje):
     """Item herdado do arquivo anterior também expira — e sem data não fica."""
@@ -296,8 +317,10 @@ def main():
     genericas = 0
     if not amostra:      # com 12 empresas o limiar de 10 não significa nada
         for cvm, itens in n.items():
-            if not any(it.get("_men") for it in itens):
-                continue
+            # sai sempre, mesmo que a empresa fique sem nada: "Ibovespa fecha o
+            # último pregão aos 166.335 pontos" na aba da Panatlântica passa por
+            # notícia da empresa, e "nenhuma notícia nos últimos 30 dias" é mais
+            # honesto do que isso
             mantidos = [it for it in itens if it.get("_men") or cont[norm_titulo(it["t"])] < GENERICA_MIN]
             genericas += len(itens) - len(mantidos)
             n[cvm] = mantidos
