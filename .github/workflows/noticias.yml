@@ -48,19 +48,28 @@ jobs:
             fi
           done
 
+      # collect_news.py aborta de propósito em três casos (universo vazio, nada
+      # coletado, cobertura despencando = bloqueio do Google). Sem o "|| echo" o
+      # passo derrubava o workflow e as MANCHETES, que vêm de outras fontes e
+      # teriam funcionado, ficavam paradas junto.
       - name: Coletar notícias por empresa (Google News, janela de 30 dias)
-        run: python collect_news.py
+        run: python collect_news.py || echo "::warning::notícias por empresa falharam — mantém o arquivo anterior do branch"
 
       - name: Coletar manchetes gerais (Google News, RSS dos veículos, fóruns)
-        run: python collect_news_macro.py || echo "manchetes falharam — mantém o arquivo anterior"
+        run: python collect_news_macro.py || echo "::warning::manchetes falharam — mantém o arquivo anterior"
 
       - name: Publicar no branch news (force-push, 1 commit)
         run: |
+          # O commit é órfão: o que não estiver no disco DESAPARECE do branch.
+          # Sem esta checagem, uma falha no download do macro apagava o
+          # news_macro.json publicado — e o passo terminava verde.
+          for f in news.json news_macro.json; do
+            [ -f "data/$f" ] || { echo "::error::data/$f ausente — não vou publicar árvore incompleta e apagar o que está no branch"; exit 1; }
+          done
           git config user.name "painel-bot"
           git config user.email "actions@users.noreply.github.com"
           git checkout --orphan news-tmp
           git reset
-          git add -f data/news.json
-          git add -f data/news_macro.json 2>/dev/null || true
+          git add -f data/news.json data/news_macro.json
           git commit -m "notícias $(date -u +%FT%TZ)"
           git push -f origin news-tmp:news

@@ -32,6 +32,7 @@ jobs:
           dow=$(date -u +%u)     # 1=segunda … 7=domingo
           hora=$(date -u +%H)
           problemas=0
+          naoverificados=0
 
           # idade, em minutos, do último commit de um caminho num branch
           idade() {   # $1=branch  $2=caminho
@@ -45,15 +46,24 @@ jobs:
           checa() {   # $1=rótulo  $2=branch  $3=caminho  $4=limite(min)  $5=workflow
             m=$(idade "$2" "$3")
             if [ "$m" -lt 0 ]; then
-              echo "::warning::$1: não consegui ler a data de $2:$3"
+              # não medir NÃO é "está tudo bem": conta como problema próprio
+              naoverificados=$((naoverificados+1))
+              echo "::warning::$1: não consegui ler a data de $2:$3 — não verificado"
               return
             fi
             printf '%-28s %5s min (limite %s)\n' "$1" "$m" "$4"
-            if [ "$m" -gt "$4" ]; then
-              problemas=$((problemas+1))
-              echo "::warning::$1 está com $m min de idade (limite $4) — redisparando $5"
-              gh workflow run "$5" --repo "$REPO" || echo "::error::não consegui redisparar $5"
+            [ "$m" -gt "$4" ] || return
+            problemas=$((problemas+1))
+            # se o robô JÁ está rodando, redisparar só cancelaria/enfileiraria o
+            # que está em curso (no quotes.yml o ciclo em andamento seria morto)
+            emcurso=$(gh run list --workflow "$5" --repo "$REPO" --status in_progress --json databaseId --jq 'length' 2>/dev/null || echo 0)
+            fila=$(gh run list --workflow "$5" --repo "$REPO" --status queued --json databaseId --jq 'length' 2>/dev/null || echo 0)
+            if [ "${emcurso:-0}" -gt 0 ] || [ "${fila:-0}" -gt 0 ]; then
+              echo "::warning::$1 está com $m min, mas $5 já está rodando/na fila — não redisparo"
+              return
             fi
+            echo "::warning::$1 está com $m min de idade (limite $4) — redisparando $5"
+            gh workflow run "$5" --repo "$REPO" || echo "::error::não consegui redisparar $5"
           }
 
           # Painel (HTML gerado): 3 agendamentos/dia, então 30h é folga suficiente
@@ -69,8 +79,9 @@ jobs:
             echo "fora do pregão — cotações não são cobradas agora"
           fi
 
-          if [ "$problemas" -gt 0 ]; then
-            echo "::error::$problemas conjunto(s) de dados fora do prazo — redisparo acionado. Se repetir, a fonte está caindo."
+          if [ "$problemas" -gt 0 ] || [ "$naoverificados" -gt 0 ]; then
+            [ "$problemas" -gt 0 ] && echo "::error::$problemas conjunto(s) de dados fora do prazo. Se repetir, a fonte está caindo."
+            [ "$naoverificados" -gt 0 ] && echo "::error::$naoverificados conjunto(s) NÃO verificados (não consegui ler a data) — o vigia ficou cego nesses."
             exit 1
           fi
-          echo "tudo dentro do prazo"
+          echo "os três conjuntos verificados estão dentro do prazo"

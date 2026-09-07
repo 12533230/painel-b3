@@ -144,7 +144,11 @@ jobs:
               echo "publicado"; exit 0
             fi
             echo "push rejeitado (main andou) — rebase e nova tentativa $i"
-            git pull --rebase --autostash origin main || break
+            if ! git pull --rebase --autostash origin main; then
+              git rebase --abort 2>/dev/null || true
+              echo "::error::conflito ao integrar main durante o rebase — não consegui publicar; precisa de mão humana"
+              exit 1
+            fi
             sleep 5
           done
           echo "::error::não consegui publicar em main depois de 3 tentativas"

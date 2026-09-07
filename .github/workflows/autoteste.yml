@@ -32,6 +32,9 @@ jobs:
 
       - name: Compilar tudo e rodar a amostra
         run: |
+          # o contador de falhas vive em arquivo porque o stdout está redirecionado
+          echo 0 > autoteste.falhas
+          falhou(){ echo $(( $(cat autoteste.falhas) + 1 )) > autoteste.falhas; }
           exec > autoteste.log 2>&1
           echo "=== autoteste $(date -u +%FT%TZ) · commit ${GITHUB_SHA:0:8}"
           echo
@@ -39,19 +42,19 @@ jobs:
           if python -m py_compile collect.py collect_news.py collect_news_macro.py collect_quotes.py collect_candles.py process.py build_html.py build_public.py refresh_b3.py; then
             echo "OK: todos compilam"
           else
-            echo "ERRO DE SINTAXE (acima)"
+            echo "ERRO DE SINTAXE (acima)"; falhou
           fi
           echo
           echo "--- collect_news.py --amostra 10 (não grava arquivo)"
-          python collect_news.py --amostra 10 || echo "ERRO ao rodar collect_news.py"
+          python collect_news.py --amostra 10 || { echo "ERRO ao rodar collect_news.py"; falhou; }
           echo
           echo "--- collect_news_macro.py (grava data/news_macro.json)"
-          python collect_news_macro.py || echo "ERRO ao rodar collect_news_macro.py"
+          python collect_news_macro.py || { echo "ERRO ao rodar collect_news_macro.py"; falhou; }
           echo
           echo "--- conteúdo de data/news_macro.json"
-          python -c "import json,os;p='data/news_macro.json';d=json.load(open(p,encoding='utf-8')) if os.path.exists(p) else None;print('NAO GEROU') if d is None else print('updatedAt',d.get('updatedAt'),'| manchetes',len(d.get('manchetes') or []),'| reddit',len((d.get('reddit') or {}).get('news') or []),'| veiculos',[(v.get('n'),len(v.get('itens') or [])) for lista in (d.get('veiculos') or {}).values() for v in lista])" || echo "ERRO ao ler news_macro.json"
+          python -c "import json,os;p='data/news_macro.json';d=json.load(open(p,encoding='utf-8')) if os.path.exists(p) else None;print('NAO GEROU') if d is None else print('updatedAt',d.get('updatedAt'),'| manchetes',len(d.get('manchetes') or []),'| reddit',len((d.get('reddit') or {}).get('news') or []),'| veiculos',[(v.get('n'),len(v.get('itens') or [])) for lista in (d.get('veiculos') or {}).values() for v in lista])" || { echo "ERRO ao ler news_macro.json"; falhou; }
           echo
-          echo "=== fim do autoteste"
+          echo "=== fim do autoteste · falhas: $(cat autoteste.falhas)"
 
       - name: Mostrar o log no resumo da execução
         if: always()
@@ -71,3 +74,12 @@ jobs:
           rm -f "$tmpidx"
           commit=$(git commit-tree "$tree" -m "autoteste $(date -u +%FT%TZ)")
           git push -f origin "$commit:refs/heads/autoteste"
+
+      # Sem isto o autoteste ficava VERDE com tudo falhando — e era justamente
+      # ele o portão que valida o pipeline antes de confiar nele.
+      - name: Falhar se o autoteste acusou erro
+        if: always()
+        run: |
+          f=$(cat autoteste.falhas 2>/dev/null || echo 9)
+          echo "falhas registradas: $f"
+          [ "$f" = "0" ] || { echo "::error::autoteste com $f falha(s) — veja o log no branch autoteste"; exit 1; }

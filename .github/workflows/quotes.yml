@@ -54,31 +54,55 @@ jobs:
 
           # Publica no branch "quotes" um commit órfão único (sem histórico, sem
           # mexer no branch de trabalho) — dá para repetir dentro do laço.
+          # Só publica se o arquivo MUDOU: republicar conteúdo idêntico avançaria a
+          # data do commit e o vigia passaria a ver como fresco um dado congelado.
+          ultimo=""
           publica() {
+            novo=$(git hash-object data/quotes.json)
+            if [ "$novo" = "$ultimo" ]; then return 2; fi
             tmpidx=$(mktemp)
             GIT_INDEX_FILE="$tmpidx" git read-tree --empty
             GIT_INDEX_FILE="$tmpidx" git add -f data/quotes.json
             tree=$(GIT_INDEX_FILE="$tmpidx" git write-tree)
             rm -f "$tmpidx"
             commit=$(git commit-tree "$tree" -m "cotações $(date -u +%FT%TZ)")
-            git push -f origin "$commit:refs/heads/quotes"
+            git push -f origin "$commit:refs/heads/quotes" || return 1
+            ultimo="$novo"
+            return 0
           }
+          ultimo=$(git hash-object data/quotes.json 2>/dev/null || echo "")
 
-          h=$(date -u +%H)
-          if [ "$h" -lt 16 ]; then FIM=17; else FIM=22; fi   # hora UTC em que o ciclo para
-          echo "ciclo até ${FIM}:00 UTC"
-          i=0
+          # Dois limites, os dois em tempo ABSOLUTO: o fim do pregão e a folga do
+          # timeout do job (300 min). Usar hora-do-dia deixava o ciclo da tarde
+          # com folga zero — e qualquer início fora do horário previsto (o
+          # agendamento do GitHub atrasa horas) criava janela maior que o timeout.
+          LIMITE=$(( $(date -u +%s) + 255*60 ))
+          FIMPREGAO=$(date -u -d 'today 21:50' +%s)
+          [ "$(date -u +%s)" -ge "$FIMPREGAO" ] && FIMPREGAO=$(( $(date -u +%s) + 20*60 ))
+          echo "ciclo até $(date -u -d "@$(( LIMITE < FIMPREGAO ? LIMITE : FIMPREGAO ))" +%T) UTC"
+          i=0; pub=0; semnovo=0; erros=0
           while true; do
             i=$((i+1))
             echo "=== coleta $i · $(date -u +%T) UTC"
             if python collect_quotes.py; then
-              publica && echo "publicado no branch quotes"
+              publica; rc=$?
+              case "$rc" in
+                0) pub=$((pub+1)); echo "publicado no branch quotes" ;;
+                2) semnovo=$((semnovo+1)); echo "sem preço novo (mercado fechado/feriado) — nada a publicar" ;;
+                *) erros=$((erros+1)); echo "::warning::push falhou nesta volta" ;;
+              esac
             else
-              echo "coleta falhou — mantém o último publicado e segue no ciclo"
+              erros=$((erros+1)); echo "::warning::a coleta falhou nesta volta"
             fi
-            agora=$(date -u +%H)
-            if [ "$agora" -ge "$FIM" ]; then
+            agora=$(date -u +%s)
+            if [ "$agora" -ge "$LIMITE" ] || [ "$agora" -ge "$FIMPREGAO" ]; then
               echo "fim da janela"; break
             fi
             sleep 600
           done
+          echo "voltas: $i · publicações: $pub · sem preço novo: $semnovo · erros: $erros"
+          # Falha só quando NADA saiu e houve erro de verdade. Feriado (tudo
+          # "sem preço novo") é resultado legítimo e sai verde.
+          if [ "$pub" -eq 0 ] && [ "$semnovo" -eq 0 ]; then
+            echo "::error::a janela terminou sem nenhuma publicação e com $erros erro(s)"; exit 1
+          fi
