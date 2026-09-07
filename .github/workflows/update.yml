@@ -86,18 +86,27 @@ jobs:
         if: steps.guarda.outputs.pular != '1'
         run: python collect_candles.py || echo "candles falharam — painel usa o candles.json anterior"
 
-      # Redundância deliberada com o noticias.yml (que roda a cada 2h no branch
-      # "news"): esta cópia em main é a reserva que a página usa se o branch falhar.
-      - name: Coletar notícias por empresa (reserva em main)
+      # A página lê o branch "news" (robô de 2h em 2h) e usa main como reserva.
+      # Aqui basta COPIAR o arquivo do branch: coletar de novo custava 8 minutos
+      # por dia e atrasava o build sem melhorar nada. Só coleta se o branch faltar.
+      - name: Notícias — atualizar a reserva em main
         if: steps.guarda.outputs.pular != '1'
         run: |
-          if curl -sf --retry 3 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/news/data/news.json" -o /tmp/news.json \
-             && python -c "import json; json.load(open('/tmp/news.json'))"; then
-            mv /tmp/news.json data/news.json
-            echo "partindo do arquivo do branch news"
+          ok=0
+          for f in news.json news_macro.json; do
+            if curl -sf --retry 3 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/news/data/$f" -o "/tmp/$f" \
+               && python -c "import json,sys; d=json.load(open('/tmp/$f')); sys.exit(0 if d.get('updatedAt') else 1)"; then
+              mv "/tmp/$f" "data/$f"; echo "reserva atualizada: $f (do branch news)"
+              [ "$f" = "news.json" ] && ok=1
+            else
+              echo "branch news sem $f válido"
+            fi
+          done
+          if [ "$ok" = "0" ]; then
+            echo "branch news indisponível — coletando aqui como reserva"
+            python collect_news.py || echo "notícias falharam — painel usa o news.json anterior"
+            python collect_news_macro.py || echo "manchetes falharam — painel usa o macro embutido"
           fi
-          python collect_news.py || echo "notícias falharam — painel usa o news.json anterior"
-          python collect_news_macro.py || echo "manchetes falharam — painel usa o macro embutido"
 
       - name: Consolidar indicadores por empresa
         if: steps.guarda.outputs.pular != '1' && steps.coleta.outcome == 'success'
