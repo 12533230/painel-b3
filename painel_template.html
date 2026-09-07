@@ -350,17 +350,41 @@ function mainTicker(c){ let best=null, bl=-1; for(const t of c.tickers){ const l
 // indicadores que dependem do lucro somado não são publicados.
 function niSuspeito(c){
   if(c._niSusp !== undefined) return c._niSusp;
-  let susp = false;
+  c._niSusp = false; c._niSuspQ = null;
   const q = (c.q||[]).filter(x => x.ni != null);
   if(q.length >= 4){
-    const abs = q.slice(-4).map(x => Math.abs(x.ni));
-    const soma = abs.reduce((a,b)=>a+b,0);
-    const maior = Math.max(...abs);
-    const pl = (c.bal||{}).pl;
-    susp = !!(soma && maior/soma > 0.8 && pl != null && maior > Math.abs(pl));
+    const ult = q.slice(-4);
+    const soma = ult.reduce((a,x)=>a+Math.abs(x.ni),0);
+    let pior = null;
+    for(const x of ult) if(!pior || Math.abs(x.ni) > Math.abs(pior.ni)) pior = x;
+    if(soma && pior && Math.abs(pior.ni)/soma > 0.8){
+      // O teste que decide: resultado dessa ordem tem de aparecer no patrimônio
+      // líquido do trimestre. Prejuízo de R$ 620 mi com o PL caindo exatamente
+      // R$ 620 mi é dado consistente, ainda que concentrado num trimestre (era o
+      // caso de AZEVEDO, B100, HAGA e ALLIAR, que esta regra deixa em paz). O que
+      // não fecha é a EQTL PARA: +R$ 18,1 bi com o PL subindo R$ 105 mi.
+      // Só marca quando o resultado é GRANDE demais para o que o patrimônio
+      // confirma — patrimônio que cai mais que o prejuízo (dividendo, redução de
+      // capital) não é sinal de dado errado, e valor pequeno não vale o aviso.
+      const dpl = deltaPl(c, pior.p);
+      const ni = Math.abs(pior.ni);
+      if(dpl != null && ni >= 50 && ni > 2*Math.abs(dpl) + 50){
+        c._niSusp = true; c._niSuspQ = {p: pior.p, ni: pior.ni, dpl};
+      }
+    }
   }
-  c._niSusp = susp;
-  return susp;
+  return c._niSusp;
+}
+// variação do PL no trimestre p, lida do histórico de balanço (bh)
+function deltaPl(c, p){
+  const bh = c.bh || [];
+  if(!bh.length || !p) return null;
+  const alvo = p.slice(0,4)+'-'+QE_MAP[p.slice(5)];
+  const i = bh.findIndex(b => b.dt === alvo);
+  if(i <= 0) return null;
+  const a = bh[i-1], b = bh[i];
+  if(!a || !b || a.pl == null || b.pl == null) return null;
+  return +(b.pl - a.pl).toFixed(1);
 }
 const ni12De = c => niSuspeito(c) ? null : (c.ind ? c.ind.ni12 : null);
 
@@ -369,9 +393,12 @@ const ni12De = c => niSuspeito(c) ? null : (c.ind ? c.ind.ni12 : null);
 // delas exibiam ROE positivo — a PORTOBELLO aparecia com "ROE 306,6%" tendo
 // perdido R$ 318,6 mi no ano, e ficava no topo do ranking de maior ROE. Sem PL
 // positivo o indicador não existe, então não se exibe número.
+// Patrimônio de R$ 0,2 mi transforma qualquer resultado em percentual absurdo:
+// a SUDESTE S/A publicava ROE de −43.150% e sozinha destruía a média do setor.
+const PISO_PL = 20;   // R$ milhões
 function roeDe(c){
   const pl = (c.bal||{}).pl;
-  if(pl != null && pl <= 0) return null;
+  if(pl != null && pl < PISO_PL) return null;
   if(niSuspeito(c)) return null;
   const t = mainTicker(c);
   return c.ind.roe != null ? c.ind.roe : (t ? t.roe : null);
@@ -381,8 +408,11 @@ function roeDe(c){
 // delas exibindo alavancagem negativa (AERIS: R$ 1,9 bi de dívida, EBITDA −402,
 // aparecia como −4,81).
 function dlEbitdaDe(c){
-  const e = c.ind.ebitda12;
-  if(e != null && e <= 0) return null;
+  const e = c.ind.ebitda12, r = c.ind.rev12;
+  if(e == null || e <= 0) return null;
+  // EBITDA de 0,34% da receita (MELHOR SP: R$ 0,6 mi) produzia "alavancagem
+  // 316,5x". Denominador nessa ordem é ruído, não capacidade de pagamento.
+  if(r != null && r > 0 && e < 0.02*r) return null;
   return c.ind.dlEbitda != null ? c.ind.dlEbitda : null;
 }
 
@@ -581,6 +611,7 @@ function abreConsulta(consulta){
     cmpSel.opind = r.kpi;
     cmpSel.setor = r.escopo || '';
     cmpSel.busca = consulta;
+    cmpSel.filtros = []; cmpSel.setFiltros = [];   // não deixa filtro da busca anterior de pé
     cmpSel.buscaLida = {escopo:r.escopo, n:0, naoEntendi:r.naoEntendi, intencao:'kpi', avisoGrupo:r.avisoGrupo||''};
     lsSet('cmp_sel', cmpSel);
     sugg.style.display='none'; qin.value='';
@@ -609,6 +640,7 @@ function abreConsulta(consulta){
     cmpSel.ind = r.ind;
     cmpSel.dir = r.dir;
     cmpSel.setFiltros = [];
+    cmpSel.filtros = [];      // senão o filtro da busca anterior fica no Screener
   }
   cmpSel.buscaLida = {escopo:r.escopo, n:r.filtros.length, naoEntendi:r.naoEntendi, intencao:r.intencao,
                       avisoGrupo:r.avisoGrupo||''};
@@ -875,7 +907,9 @@ function openDetail(cvm){
   };
   tiles.append(statTile('Valor de mercado', fmtMi(i.mktCap), i.mktCap?'calculado (ações × cotação)':'sem dado'));
   tiles.append(statTile('Valor da firma (EV)', fmtMi(evOf(c)), evOf(c)!=null?'mercado + dívida líquida':'precisa de mktcap e dívida'));
-  tiles.append(statTile('P/L', fmtX(t&&t.pl), 'Fundamentus · '+(t?t.t:'—'), cls(t&&t.pl)));
+  const suspQ = niSuspeito(c);
+  const notaSusp = 'trimestre inconsistente na CVM — 12m não publicado';
+  tiles.append(statTile('P/L', suspQ ? '—' : fmtX(t&&t.pl), suspQ ? notaSusp : 'Fundamentus · '+(t?t.t:'—'), suspQ ? null : cls(t&&t.pl)));
   tiles.append(statTile('P/VP', fmtX(t&&t.pvp), 'Fundamentus'));
   if(!c.fin){
     tiles.append(statTile('EV/EBITDA', fmtX(t&&t.evebitda), 'Fundamentus · 12m', cls(t&&t.evebitda)));
@@ -883,17 +917,17 @@ function openDetail(cvm){
   }
   tiles.append(statTile('Div. Yield', fmtPct(t&&t.dy), 'Fundamentus', 'pos'));
   const roeC = roeDe(c);
-  tiles.append(hz('roe', statTile('ROE', fmtPct(roeC), roeC==null ? ((c.bal&&c.bal.pl!=null&&c.bal.pl<=0)?'patrimônio líquido negativo — ROE não se aplica': niSuspeito(c)?'trimestre inconsistente na CVM — 12m não publicado':'sem dado') : (i.roe!=null?'CVM · lucro 12m / PL':'Fundamentus'), cls(roeC))));
+  tiles.append(hz('roe', statTile('ROE', fmtPct(roeC), roeC==null ? ((c.bal&&c.bal.pl!=null&&c.bal.pl<=0)?'patrimônio líquido negativo — ROE não se aplica': (c.bal&&c.bal.pl!=null&&c.bal.pl<PISO_PL)?'patrimônio líquido abaixo de R$ '+PISO_PL+' mi — o percentual não teria significado': niSuspeito(c)?notaSusp:'sem dado') : (i.roe!=null?'CVM · lucro 12m / PL':'Fundamentus'), cls(roeC))));
   if(!c.fin){
     tiles.append(hz('roic', statTile('ROIC', fmtPct(t&&t.roic!=null?t.roic:i.roic), t&&t.roic!=null?'Fundamentus':'CVM (aprox.)', cls(t&&t.roic!=null?t.roic:i.roic))));
     const dlC = dlEbitdaDe(c);
-    tiles.append(hz('dlEbitda', statTile('Dív. líq./EBITDA', fmtX(dlC), dlC==null && i.ebitda12!=null && i.ebitda12<=0 ? 'EBITDA negativo — a razão não se aplica' : 'CVM · 12m', dlC!=null&&dlC>3?'neg':null)));
+    tiles.append(hz('dlEbitda', statTile('Dív. líq./EBITDA', fmtX(dlC), dlC==null && i.ebitda12!=null && i.ebitda12<=0 ? 'EBITDA negativo — a razão não se aplica' : (dlC==null && i.ebitda12!=null && i.rev12 ? 'EBITDA abaixo de 2% da receita — a razão não se sustenta' : 'CVM · 12m'), dlC!=null&&dlC>3?'neg':null)));
     tiles.append(statTile('Dív. líq./Patrimônio', i.dlPl==null?'—':nbr2.format(i.dlPl), 'CVM'));
     tiles.append(hz('mgE', statTile('Margem EBITDA 12m', fmtPct(i.mgE12), 'CVM')));
   }
-  tiles.append(hz('mgL', statTile('Margem líquida 12m', fmtPct(i.mgL12), 'CVM', cls(i.mgL12))));
+  tiles.append(hz('mgL', statTile('Margem líquida 12m', suspQ ? '—' : fmtPct(i.mgL12), suspQ ? notaSusp : 'CVM', suspQ ? null : cls(i.mgL12))));
   tiles.append(hz('rev12', statTile('Receita 12m', fmtMi(i.rev12), 'CVM')));
-  tiles.append(hz('ni12', statTile('Lucro líquido 12m', fmtMi(i.ni12), 'CVM', cls(i.ni12))));
+  tiles.append(hz('ni12', statTile('Lucro líquido 12m', suspQ ? '—' : fmtMi(i.ni12), suspQ ? notaSusp : 'CVM', suspQ ? null : cls(i.ni12))));
   pb.append(tiles);
 
   // ---- candles diários do ticker principal (troca de ticker quando houver mais de um)
@@ -922,14 +956,16 @@ function openDetail(cvm){
   // trimestre inconsistente contamina tudo que é acumulado de 12 meses: em vez de
   // publicar o número, o painel diz qual trimestre está fora de escala
   if(niSuspeito(c)){
-    const ult4 = (c.q||[]).slice(-4);
-    const pior = ult4.reduce((a,b)=> Math.abs((b.ni||0)) > Math.abs((a&&a.ni)||0) ? b : a, null);
+    // o texto cita exatamente o que a regra mediu: o resultado do trimestre e a
+    // variação do patrimônio líquido no MESMO trimestre
+    const q0 = c._niSuspQ || {};
     const av = el('div','notice');
     av.append(el('b',null,'⚠ Trimestre fora de escala nos dados da CVM. '),
-      document.createTextNode('O trimestre '+(pior?pior.p:'—')+' traz lucro/prejuízo de '
-        +fmtNum(pior?pior.ni:null)+', o que responde por quase todo o resultado dos 12 meses e supera o patrimônio líquido da empresa ('
-        +fmtNum((c.bal||{}).pl)+') — resultado dessa ordem não deixaria o patrimônio no lugar. '
-        +'Por isso ROE, margem líquida e P/L de 12 meses NÃO são publicados para esta empresa. Os trimestres abaixo são os valores como vieram da CVM; confira no documento oficial pelo link do trimestre.'));
+      document.createTextNode('O trimestre '+(q0.p||'—')+' traz lucro/prejuízo de '
+        +fmtNum(q0.ni)+', que responde por quase todo o resultado dos 12 meses, mas o patrimônio líquido variou '
+        +fmtNum(q0.dpl)+' no mesmo trimestre — resultado dessa ordem tem de aparecer no patrimônio. '
+        +'Por isso ROE, margem líquida, lucro de 12 meses e P/L NÃO são publicados para esta empresa, aqui nem nas comparações. '
+        +'Os trimestres abaixo são os valores como vieram da CVM; confira no documento oficial pelo link do trimestre.'));
     pb.append(av);
   }
   const ch = el('div','charts');
@@ -1001,9 +1037,11 @@ function openDetail(cvm){
       tr.append(el('td',cls(k.pvp),fmtX(k.pvp)));
       tr.append(el('td',null,fmtX(k.psr)));
       tr.append(el('td','pos',fmtPct(k.dy)));
-      tr.append(el('td',cls(k.evebit),fmtX(k.evebit)));
-      tr.append(el('td',cls(k.evebitda),fmtX(k.evebitda)));
-      tr.append(el('td',cls(k.roic),fmtPct(k.roic)));
+      // banco/seguradora: o Fundamentus devolve 0 ou número sem sentido para
+      // ROIC e EV/EBITDA, e o painel diz em outros lugares que não se aplica
+      tr.append(el('td', c.fin?'dim':cls(k.evebit), c.fin?'—':fmtX(k.evebit)));
+      tr.append(el('td', c.fin?'dim':cls(k.evebitda), c.fin?'—':fmtX(k.evebitda)));
+      tr.append(el('td', c.fin?'dim':cls(k.roic), c.fin?'—':fmtPct(k.roic)));
       tr.append(el('td',cls(k.roe),fmtPct(k.roe)));
       tr.append(el('td',null,k.liq2m==null?'—':fmtNum(k.liq2m/1e6)));
       tr.append(el('td',null,k.dlpl==null?'—':nbr2.format(k.dlpl)));
@@ -1038,9 +1076,15 @@ function openDetail(cvm){
       const meta = el('div','newsmeta'); meta.append(el('span',null,(nn.src||'')+(quando?' · '+quando:''))); it.append(meta);
       nwBox.append(it);
     }
-    if(!itens.length)
-      nwBox.append(el('div','dim','Nenhuma notícia'+(janela?' nos últimos '+janela+' dias':' coletada')
-        +' para esta empresa. O robô consulta o Google News a cada 2 horas; empresa pequena costuma passar semanas sem notícia.'));
+    if(!itens.length){
+      // "não consegui consultar" é diferente de "não houve notícia": o robô marca
+      // quem não respondeu, e o painel não afirma ausência que não mediu
+      const naoRespondeu = NEWSD && Array.isArray(NEWSD.semResposta) && NEWSD.semResposta.includes(c.cvm);
+      nwBox.append(el('div','dim', naoRespondeu
+        ? 'A consulta de notícias desta empresa falhou na última coleta — não é que não haja notícia, é que o robô não conseguiu perguntar. A próxima tentativa é em até 2 horas.'
+        : 'Nenhuma notícia'+(janela?' nos últimos '+janela+' dias':' coletada')
+          +' para esta empresa. O robô consulta o Google News a cada 2 horas; empresa pequena costuma passar semanas sem notícia.'));
+    }
     const more = el('a',null,'ver mais no Google News ↗');
     more.href = 'https://news.google.com/search?q='+encodeURIComponent('"'+c.name+'" B3')+'&hl=pt-BR&gl=BR&ceid=BR:pt-419';
     more.target = '_blank'; more.rel = 'noopener'; more.style.cssText = 'font-weight:700;color:var(--link);text-decoration:none';
@@ -1095,7 +1139,7 @@ function openDetail(cvm){
     }
   });
 
-  pb.append(el('div','foot','Insignia Partners · painel interno. Fontes: demonstrações ITR/DFP nos Dados Abertos da CVM (valores em R$; consolidado quando disponível) · classificação setorial oficial da B3 · cotações e múltiplos Fundamentus. EBITDA = EBIT + depreciação/amortização (DFC). ROIC CVM = EBIT 12m × (1−34%) ÷ (PL + dívida líquida). Indicadores de bancos/seguradoras seguem lógica própria — EBITDA e dívida não se aplicam. Atualizado em '+DB.updatedAt+'. Uso informativo; não é recomendação de investimento.'));
+  pb.append(el('div','foot','Insignia Partners · painel interno. Fontes: demonstrações ITR/DFP nos Dados Abertos da CVM (valores em R$; consolidado quando disponível) · classificação setorial oficial da B3 · cotações e múltiplos Fundamentus. EBITDA = EBIT + depreciação/amortização (DFC). ROIC CVM = EBIT 12m × (1−34%) ÷ (PL + máx(dívida líquida, 0)) — usado como reserva, porque o ROIC exibido vem do Fundamentus quando existe. Indicadores de bancos/seguradoras seguem lógica própria — EBITDA, dívida e ROIC não se aplicam e não são exibidos. Atualizado em '+DB.updatedAt+'. Uso informativo; não é recomendação de investimento.'));
   panel.append(pb);
   ovl.classList.add('on'); panel.classList.add('on');
   panel.scrollTop = 0;
@@ -1496,7 +1540,7 @@ function indSeries(c, key){
         if(!b||b.pl==null||r[i]==null) return {p:x.p,v:null};
         const inv=b.pl+Math.max(b.divL||0,0);
         return {p:x.p, v:inv>0? p1(100*(r[i]*0.66)/inv):null}; }),
-              fmt:fmtPct, titulo:'ROIC — EBIT 12m × (1−34%) ÷ capital investido', nota:'CVM · aproximação'}; }
+              fmt:fmtPct, titulo:'ROIC — EBIT 12m × (1−34%) ÷ (PL + máx(dívida líq., 0))', nota:'CVM · aproximação; o tile usa o ROIC do Fundamentus quando existe'}; }
     case 'dlEbitda': { const r=roll('ebitda');
       return {rows:q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.divL!=null&&r[i]>0)? +(b.divL/r[i]).toFixed(2):null}; }),
               fmt:fmtX, titulo:'Dívida líquida ÷ EBITDA 12m', nota:'CVM'}; }
@@ -1733,7 +1777,13 @@ function hbarChart(container, rows, fmt, onclickRow){
     const t = document.createElementNS(svg.namespaceURI,'text');
     t.setAttribute('x',labelW-6); t.setAttribute('y',y+17); t.setAttribute('text-anchor','end');
     if(r.hl) t.setAttribute('class','val');
-    t.textContent = r.label.length>34 ? r.label.slice(0,33)+'…' : r.label; svg.append(t);
+    // o sufixo entre parênteses é a contagem de empresas, que a nota manda ler:
+    // corta o nome, nunca o sufixo ("Bens Industriais (10)" não pode virar "(1")
+    const suf = r.suf || '';
+    const base = r.label.length + suf.length > 34
+      ? r.label.slice(0, Math.max(4, 33 - suf.length)) + '…'
+      : r.label;
+    t.textContent = base + suf; svg.append(t);
     const bw = Math.max(2, iw*Math.abs(r.v)/maxV);
     const bar = document.createElementNS(svg.namespaceURI,'rect');
     bar.setAttribute('x',labelW); bar.setAttribute('y',y+4);
@@ -1775,7 +1825,7 @@ const CMP_INDS = [
   // líquida de banco não é dívida no sentido do múltiplo — não exibir para fin
   ['evebitda','EV/EBITDA', c=>{if(c.fin) return null; const t=mainTicker(c);
     return (t&&t.evebitda>0)?t.evebitda:(c.ind.evEbitda>0?c.ind.evEbitda:null);}, fmtX],
-  ['pl','P/L', c=>{const t=mainTicker(c); return (t&&t.pl>0)?t.pl:null;}, fmtX],
+  ['pl','P/L', c=>{if(niSuspeito(c)) return null; const t=mainTicker(c); return (t&&t.pl>0)?t.pl:null;}, fmtX],
   ['pvp','P/VP', c=>{const t=mainTicker(c); return (t&&t.pvp>0)?t.pvp:null;}, fmtX],
   ['dy','Div. Yield (%)', c=>{const t=mainTicker(c); return t?t.dy:null;}, fmtPct],
   ['mgE12','Margem EBITDA 12m (%)', c=>c.ind.mgE12, fmtPct],
@@ -1911,12 +1961,12 @@ function escopoRotulo(valor){
 // estão, a opção simplesmente não aparece em vez de virar uma média de razões
 // disfarçada de agregado.
 const SET_AGG = {
-  mgE12:    {num: c=>c.ind.ebitda12,          den: c=>c.ind.rev12,     k:100, rot:'soma(EBITDA 12m) ÷ soma(receita 12m)'},
-  mgL12:    {num: c=>ni12De(c),               den: c=>c.ind.rev12,     k:100, rot:'soma(lucro líquido 12m) ÷ soma(receita 12m)'},
-  roe:      {num: c=>ni12De(c),               den: c=>(c.bal||{}).pl,  k:100, rot:'soma(lucro líquido 12m) ÷ soma(patrimônio líquido)'},
-  dlEbitda: {num: c=>(c.bal||{}).divL,        den: c=>c.ind.ebitda12,  k:1,   rot:'soma(dívida líquida) ÷ soma(EBITDA 12m)'},
-  evebitda: {num: c=>evOf(c),                 den: c=>c.ind.ebitda12,  k:1,   rot:'soma(valor da firma) ÷ soma(EBITDA 12m)'},
-  pl:       {num: c=>c.ind.mktCap,            den: c=>ni12De(c),       k:1,   rot:'soma(valor de mercado) ÷ soma(lucro líquido 12m)'},
+  mgE12:    {num: c=>c.ind.ebitda12,          den: c=>c.ind.rev12,     k:100, den2:'receita de 12 meses', rot:'soma(EBITDA 12m) ÷ soma(receita 12m)'},
+  mgL12:    {num: c=>ni12De(c),               den: c=>c.ind.rev12,     k:100, den2:'receita de 12 meses', rot:'soma(lucro líquido 12m) ÷ soma(receita 12m)'},
+  roe:      {num: c=>ni12De(c),               den: c=>(c.bal||{}).pl,  k:100, den2:'patrimônio líquido', rot:'soma(lucro líquido 12m) ÷ soma(patrimônio líquido)'},
+  dlEbitda: {num: c=>(c.bal||{}).divL,        den: c=>c.ind.ebitda12,  k:1,   den2:'EBITDA de 12 meses', rot:'soma(dívida líquida) ÷ soma(EBITDA 12m)'},
+  evebitda: {num: c=>evOf(c),                 den: c=>c.ind.ebitda12,  k:1,   den2:'EBITDA de 12 meses', rot:'soma(valor da firma) ÷ soma(EBITDA 12m)'},
+  pl:       {num: c=>c.ind.mktCap,            den: c=>ni12De(c),       k:1,   den2:'lucro líquido de 12 meses', rot:'soma(valor de mercado) ÷ soma(lucro líquido 12m)'},
 };
 // piso do denominador somado, em R$ milhões: abaixo disso o grupo não sustenta
 // indicador agregado (é bolso de holding, não setor)
@@ -1971,7 +2021,8 @@ function setEstat(grupo, indKey){
     agg: null, nAgg: 0, somaNum: null, somaDen: null};
   const A = SET_AGG[indKey];
   if(A){
-    let sn = 0, sd = 0, k = 0, maiorDen = 0;
+    let sn = 0, sd = 0, k = 0, maiorDen = 0, maiorNome = null;
+    const dentro = [];
     // Empresa com denominador negativo fica FORA da soma, e sai também do
     // numerador: somar patrimônio negativo com positivo produz número sem
     // significado. Foi o caso de Eletrodomésticos, onde a CASAS BAHIA (PL
@@ -1981,14 +2032,15 @@ function setEstat(grupo, indKey){
       const nu = A.num(c), de = A.den(c);
       if(nu==null || de==null || !isFinite(nu) || !isFinite(de)) continue;
       if(de <= 0){ fora.push(c.name); continue; }
-      sn += nu; sd += de; k++;
-      if(Math.abs(de) > Math.abs(maiorDen)) maiorDen = de;
+      sn += nu; sd += de; k++; dentro.push(c);
+      if(Math.abs(de) > Math.abs(maiorDen)){ maiorDen = de; maiorNome = c.name; }
     }
     out.foraNeg = fora;
     out.nAgg = k; out.somaNum = k ? sn : null; out.somaDen = k ? sd : null;
     // concentração: quanto a maior empresa pesa no denominador somado. Petrobras
     // dominar o setor de petróleo é legítimo, mas o leitor precisa saber.
     out.conc = (k && sd) ? Math.abs(maiorDen / sd) : null;
+    out.concNome = maiorNome; out.dentro = dentro;
     // Guardas do agregado, nesta ordem:
     //  · denominador somado não positivo → múltiplo sem significado;
     //  · denominador somado minúsculo → o setor "Outros" (8 holdings) somava R$ 39,7 mi
@@ -2618,7 +2670,7 @@ function renderCmp(){
   if(cmpSel.modo==='hist')
     bar.append(mkSel(HIST_INDS.map(x=>[x[0],x[1]]), cmpSel.hind, v=>cmpSel.hind=v, 'Indicador'));
   else if(cmpSel.modo==='op'){
-    if(!opNomes.some(n=>n===cmpSel.opind)) cmpSel.opind = opNomes[0] || '';
+    if(OPD && !opNomes.some(n=>n===cmpSel.opind)) cmpSel.opind = opNomes[0] || '';
     bar.append(mkSel(opNomes.length? opNomes.map(n=>[n, n+' ('+OPIDX[n].length+')']) : [['','(nenhuma empresa curada ainda)']],
       cmpSel.opind, v=>cmpSel.opind=v, 'Indicador operacional'));
   } else if(cmpSel.modo!=='scr' && cmpSel.modo!=='peer')
@@ -3129,7 +3181,7 @@ function renderCmp(){
     titulo.textContent = cmpSel.opind ? ('KPI operacional — '+cmpSel.opind) : 'KPIs operacionais';
     if(!lista.length){
       box.append(el('div','dim', OPD ? 'nenhuma empresa curada tem este KPI neste filtro' : 'carregando KPIs…'));
-      noteEl2.textContent = 'Aparecem aqui os KPIs divulgados por 2 ou mais empresas curadas. Peça "cura o setor X" para ampliar a cobertura.';
+      noteEl2.textContent = 'Nenhuma empresa curada divulga este KPI dentro do filtro atual — limpe o filtro de setor, ou peça "cura o setor X" para ampliar a cobertura.';
     } else {
       const un = lista[0].unidade || '';
       const unsDiferentes = new Set(lista.map(x=>x.unidade||'')).size > 1;
@@ -3265,7 +3317,8 @@ function renderCmp(){
         for(const k of indsNec) es[k] = setEstat(g, k);
         return {g, es, e: es[cmpSel.ind]};
       });
-      const semDado = gs.filter(x => setValor(x.e, st) == null);
+      const semDado = gs.filter(x => x.e.n === 0);
+      const semStat = gs.filter(x => x.e.n > 0 && setValor(x.e, st) == null);
       const poucos  = gs.filter(x => setValor(x.e, st) != null && setN(x.e, st) < minEmp);
       let vis      = gs.filter(x => setValor(x.e, st) != null && setN(x.e, st) >= minEmp);
       const passaFiltro = (f, es) => {
@@ -3308,9 +3361,9 @@ function renderCmp(){
       // tem o dado, para o gráfico sozinho (num slide, por exemplo) não sugerir
       // que a barra descreve o grupo inteiro
       const rows = vis.map(x => {
-        const n = setN(x.e, st);
-        const parcial = n*2 < x.e.nGrupo;
-        return {label: x.g.nome+' ('+(parcial ? n+'/'+x.e.nGrupo : n)+')', v: setValor(x.e, st), key: x.g.chave};
+        const parcial = x.e.n*2 < x.e.nGrupo;
+        return {label: x.g.nome, suf: ' ('+(parcial ? x.e.n+'/'+x.e.nGrupo : x.e.n)+')',
+                v: setValor(x.e, st), key: x.g.chave};
       });
       const grafico = el('div'); box.append(grafico);
       // clicar num grupo desce para o ranking das empresas dele
@@ -3321,20 +3374,25 @@ function renderCmp(){
       });
       const temAgg = !!SET_AGG[cmpSel.ind], temSum = SET_SOMA.has(cmpSel.ind);
       const capNiv = nivelNome(niv).charAt(0).toUpperCase()+nivelNome(niv).slice(1);
+      // 'Com o dado' conta quem tem o indicador (base da mediana, média, mín e
+      // máx). No agregado entra menos gente — só quem tem os DOIS componentes com
+      // denominador positivo —, e isso vai em coluna própria para as duas contagens
+      // não se passarem uma pela outra.
       const heads = [capNiv,'Empresas no grupo','Com o dado','Mediana','Média',
-        ...(temAgg?['Agregado','Peso da maior no agregado']:[]), ...(temSum?['Soma do grupo']:[]),'Mínimo','Máximo'];
-      const lnNum = vis.map(x => [x.g.nome, x.e.nGrupo, setN(x.e, st),
+        ...(temAgg?['Agregado','Entraram no agregado','Maior parcela do denominador']:[]),
+        ...(temSum?['Soma do grupo']:[]),'Mínimo','Máximo'];
+      const lnNum = vis.map(x => [x.g.nome, x.e.nGrupo, x.e.n,
         x.e.med, x.e.avg==null?null:+x.e.avg.toFixed(2),
-        ...(temAgg?[x.e.agg==null?null:+x.e.agg.toFixed(2), x.e.conc==null?null:+(100*x.e.conc).toFixed(0)]:[]),
+        ...(temAgg?[x.e.agg==null?null:+x.e.agg.toFixed(2), x.e.nAgg,
+                    x.e.conc==null?null:((x.e.concNome?x.e.concNome+' · ':'')+(100*x.e.conc).toFixed(0)+'%')]:[]),
         ...(temSum?[x.e.sum]:[]), x.e.min, x.e.max]);
       if(vis.length){
         card.append(el('div','ct','Estatísticas de cada grupo'));
-        // a coluna de concentração é percentual, não usa o formato do indicador
-        const iConc = temAgg ? 6 : -1;
+        // colunas que NÃO usam o formato do indicador: contagens e a concentração
+        const cru = new Set(temAgg ? [0,1,2,6,7] : [0,1,2]);
         card.append(tabelaValores(heads, lnNum.map(l => l.map((v,i) => {
-          if(i <= 2) return v;
-          if(v == null) return '—';
-          return i === iConc ? v+'%' : fmt(v);
+          if(cru.has(i)) return v == null ? '—' : v;
+          return v == null ? '—' : fmt(v);
         }))));
         card.append(chartTools(() => grafico.querySelector('svg'),
           () => ({headers: heads, linhas: lnNum}),
@@ -3346,8 +3404,19 @@ function renderCmp(){
         + poucos.map(x=>x.g.nome+' ('+setN(x.e, st)+')').join(', '));
       if(semDado.length) fora.push('sem nenhuma empresa com '+label+': '
         + semDado.slice(0,12).map(x=>x.g.nome).join(', ') + (semDado.length>12 ? ' e outros '+(semDado.length-12) : ''));
+      if(semStat.length) fora.push('têm '+label+', mas sem '+setStatRotulo(st)
+        + (st==='agg' ? ' (nenhuma empresa com denominador positivo, ou soma do denominador abaixo de R$ '+SET_AGG_PISO+' mi)' : '')
+        + ': ' + semStat.slice(0,12).map(x=>x.g.nome+' ('+x.e.n+')').join(', ')
+        + (semStat.length>12 ? ' e outros '+(semStat.length-12) : ''));
       if(cortouFiltro.length) fora.push('reprovados no filtro do grupo: '
-        + cortouFiltro.map(x=>x.g.nome+' ('+fmt(setValor(x.e, st))+')').join(', '));
+        + cortouFiltro.map(x => {
+            const quais = fls.filter(f => !passaFiltro(f, x.es)).map(f => {
+              const gi = CMP_INDS.find(y=>y[0]===f.ind) || [];
+              const v = x.es[f.ind] ? setValor(x.es[f.ind], stDe(f.ind)) : null;
+              return (gi[1]||f.ind)+' '+(v==null ? 'sem dado' : (gi[3]||String)(v));
+            });
+            return x.g.nome+' ('+quais.join('; ')+')';
+          }).join(' · '));
       if(fora.length){
         const d = el('div','note'); d.style.marginTop='10px';
         d.append(el('b',null,'Grupos fora do gráfico — '), document.createTextNode(fora.join(' · ')+'.'));
@@ -3355,12 +3424,12 @@ function renderCmp(){
       }
       // grupo em que menos da metade das empresas tem o dado: o número existe, mas
       // representa só uma parte do grupo — isso precisa estar escrito, não implícito
-      const parciais = vis.filter(x => setN(x.e, st) * 2 < x.e.nGrupo);
+      const parciais = vis.filter(x => x.e.n * 2 < x.e.nGrupo);
       if(parciais.length){
         const d2 = el('div','note'); d2.style.marginTop='6px';
         d2.append(el('b',null,'⚠ Cobertura parcial — '), document.createTextNode(
           'nestes grupos menos da metade das empresas tem '+label+', então a barra descreve só essa parte: '
-          + parciais.map(x=>x.g.nome+' ('+setN(x.e, st)+' de '+x.e.nGrupo+')').join(', ')
+          + parciais.map(x=>x.g.nome+' ('+x.e.n+' de '+x.e.nGrupo+')').join(', ')
           + '. Costuma ser indicador que não se aplica ao tipo de empresa (EBITDA de banco, múltiplo de empresa sem lucro).'));
         card.append(d2);
       }
@@ -3374,33 +3443,37 @@ function renderCmp(){
       // a soma junta os 12 meses de cada empresa, e cada uma fecha o próprio
       // trimestre: aqui vai o tamanho real dessa mistura
       const ultimoP = c => { let m=''; for(const q of (c.q||[])) if(q.p > m) m = q.p; return m || null; };
-      const incluidas = vis.flatMap(x => x.g.empresas);
-      const pers = {};
-      for(const c of incluidas){ const p = ultimoP(c); if(p) pers[p] = (pers[p]||0)+1; }
+      // conta as empresas que entraram na SOMA (não as dos grupos exibidos):
+      // eram coisas diferentes e o texto dizia 346 para uma soma de 195
+      const incluidas = vis.flatMap(x => (x.e.dentro || []));
+      const pers = {}; let semTri = 0;
+      for(const c of incluidas){ const p = ultimoP(c); if(p) pers[p] = (pers[p]||0)+1; else semTri++; }
       const perOrd = Object.entries(pers).sort((a,b)=>b[1]-a[1]);
+      const outros = incluidas.length - (perOrd.length ? perOrd[0][1] : 0) - semTri;
       const perTxt = perOrd.length
-        ? perOrd[0][1]+' das '+incluidas.length+' empresas dos grupos exibidos fecham em '+perOrd[0][0]
-          + (incluidas.length > perOrd[0][1] ? ' e '+(incluidas.length - perOrd[0][1])+' em trimestre anterior' : '')+'. '
+        ? perOrd[0][1]+' das '+incluidas.length+' empresas que entraram na soma fecham em '+perOrd[0][0]
+          + (outros > 0 ? ', '+outros+' em trimestre anterior' : '')
+          + (semTri > 0 ? ' e '+semTri+' sem trimestre entregue' : '')+'. '
         : '';
-      const nPrejuizo = incluidas.filter(c => c.ind && c.ind.ni12 != null && c.ind.ni12 < 0).length;
+      // (quem tem prejuízo é justamente quem o agregado excluiu — está em foraNeg)
       const foraNeg = [...new Set(vis.flatMap(x => x.e.foraNeg || []))];
       const NAO_APLICA_FIN2 = new Set(['roic','evebitda','mgE12','dlEbitda','ev']);
       noteEl2.textContent = 'Cada barra é ' + (st==='sum' ? 'a soma de ' : st==='agg' ? 'o agregado de ' : 'a '+setStatRotulo(st)+' de ')
-        + label + ' das empresas do ' + nivelNome(niv) + '; o número entre parênteses é quantas empresas entraram no cálculo. '
+        + label + ' das empresas do ' + nivelNome(niv) + '; o número entre parênteses é quantas empresas do grupo têm o indicador, e quando aparecem dois — (23/53) — o segundo é o tamanho do grupo. '
         + 'Empresa sem o dado não entra e não conta como zero. '
-        + (st==='agg' && A
+        + (st==='agg' && A && vis.length
             ? 'Agregado = ' + A.rot + ' — soma dos componentes de cada empresa, não média de razões: é o indicador do grupo somado, '
               + 'e é o que costuma responder "qual a margem do setor". Como cada empresa fecha o próprio trimestre, a soma junta '
               + 'os 12 meses acumulados de datas de fechamento diferentes: ' + perTxt
-              + 'A coluna "peso da maior" mostra quanto a maior empresa representa do denominador somado — quando passa de uns 50%, o número é praticamente o dela. '
+              + 'A coluna "maior parcela do denominador" nomeia a empresa com a maior parcela do denominador somado e o peso dela — quando passa de uns 50%, o número do grupo é praticamente o dela. '
               + 'Grupo com denominador somado negativo, ou abaixo de R$ ' + SET_AGG_PISO + ' mi, fica sem número em vez de receber um múltiplo sem sentido '
               + '(foi assim que "ROE do setor Outros" chegava a −208%: 8 holdings com R$ 40 mi de patrimônio somado). '
               + (foraNeg.length
-                  ? '⚠ Fora do agregado por ter o próprio denominador negativo (somar patrimônio negativo com positivo não produz indicador): '
-                    + foraNeg.join(', ') + '. '
+                  ? '⚠ Fora do agregado por ter ' + (A.den2 || 'o denominador') + ' não positivo (somar valor negativo com positivo não produz indicador): '
+                    + (foraNeg.length > 14 ? foraNeg.slice(0,14).join(', ')+' e outras '+(foraNeg.length-14) : foraNeg.join(', ')) + '. '
                   : '')
-              + (cmpSel.ind === 'pl' && nPrejuizo
-                  ? '⚠ No P/L agregado entram as ' + nPrejuizo + ' empresas com prejuízo nos 12 meses, que reduzem o lucro somado do grupo — é o P/L do grupo somado, não a média dos P/L (a mediana ignora quem tem prejuízo, porque o painel só usa P/L positivo por empresa). '
+              + (cmpSel.ind === 'pl' && foraNeg.length
+                  ? '⚠ As ' + foraNeg.length + ' empresas com prejuízo nos 12 meses NÃO entram no P/L agregado: lucro somado negativo não produz múltiplo, então elas saem da conta junto com o valor de mercado delas. O número é o P/L do grupo lucrativo, não do grupo inteiro. '
                   : '')
             : st==='sum'
             ? 'A soma faz sentido aqui porque o indicador é valor em R$, não razão. '
@@ -3412,11 +3485,13 @@ function renderCmp(){
         + 'Clique numa barra para ver o ranking das empresas do grupo. '
         + (fls.length ? 'Os filtros do grupo cortam pela estatística do grupo, não pela empresa: um '+nivelNome(niv)
             +' passa quando o próprio número dele passa no limite. '
-            + (trocouSt.length ? '⚠ Não existe agregado para '+trocouSt.join(' nem para ')
-                +' (a base não tem os componentes), então nesse(s) filtro(s) o corte usou a mediana do grupo. ' : '')
+            + (trocouSt.length ? '⚠ A estatística "'+setStatRotulo(st)+'" não existe para '+trocouSt.join(' nem para ')
+                +', então nesse(s) filtro(s) o corte usou a mediana do grupo. ' : '')
           : '')
         + (NAO_APLICA_FIN2.has(cmpSel.ind) && nFinEsc > 0
-            ? '⚠ ' + label + ' não se aplica a banco e seguradora (a CVM não estrutura EBITDA/capital investido para instituição financeira): '
+            ? '⚠ ' + label + ' não se aplica a banco e seguradora ('
+              + (cmpSel.ind === 'ev' ? 'dívida líquida de instituição financeira não é dívida no sentido do múltiplo, e o painel não a estrutura'
+                                     : 'a CVM não estrutura EBITDA/capital investido para instituição financeira') + '): '
               + nFinEsc + ' empresa' + (nFinEsc===1?'':'s') + ' do escopo ' + (nFinEsc===1?'fica':'ficam') + ' fora, e grupos financeiros aparecem com menos empresas ou nem aparecem. '
             : '')
         + 'Fontes: CVM (12 meses acumulados) para margens, retornos e alavancagem; Fundamentus (último fechamento) para P/L, P/VP, DY e EV/EBITDA.';
@@ -3546,7 +3621,7 @@ function euaChip(){
   const anyLive = Object.values(LIVEUS).some(freshQ);
   return el('span','livechip', anyLive
     ? '● Finnhub ao vivo às '+FINN.at+' (chave sua, direto no navegador)'
-    : (QSNAP.updatedAt ? '◷ robô a cada 15 min em pregão — arquivo de '+relayLocal()+' · página relê a cada 60 s'
+    : (QSNAP.updatedAt ? '◷ ciclo de 10 min no pregão — arquivo de '+relayLocal()+' · página relê a cada 60 s'
                        : '◷ sem dados dos EUA ainda — rode o workflow "Cotações quase ao vivo" no GitHub'));
 }
 function usTable(m, titulo, arr, custom){
@@ -3620,7 +3695,7 @@ function openConfig(){
   const x = el('button','btn x2','✕ fechar'); x.onclick = closeInfo; ibox.append(x);
   ibox.append(el('h2',null,'Cotações ao vivo — como funciona e chaves opcionais'));
   const ps = [
-   ['Sem configurar nada','B3 (ações e ETFs) vem da API pública da própria bolsa, ao vivo no navegador com ~15 min de defasagem. EUA e a lista completa da B3 vêm de um robô que roda a cada 15 min em pregão (Yahoo Finance) — a página relê o arquivo a cada 60 s. Câmbio, cripto, Selic/CDI e Focus já são ao vivo (BCB, AwesomeAPI, CoinGecko).'],
+   ['Sem configurar nada','B3 (ações e ETFs) vem da API pública da própria bolsa, ao vivo no navegador com ~15 min de defasagem. EUA e a lista completa da B3 vêm de um robô em ciclo de 10 min no pregão (Yahoo Finance) — a página relê o arquivo a cada 60 s. Câmbio, cripto, Selic/CDI e Focus já são ao vivo (BCB, AwesomeAPI, CoinGecko).'],
    ['Finnhub (grátis, opcional)','crie uma conta em finnhub.io e cole a chave abaixo: ações e ETFs dos EUA passam a atualizar em tempo real direto no navegador (índices continuam vindo do robô).'],
    ['brapi (grátis, opcional)','crie um token em brapi.dev e cole abaixo: as cotações da B3 passam a vir em uma única chamada em lote (mais rápido quando a lista de ETFs é grande).'],
    ['Privacidade','as chaves ficam gravadas só neste navegador (localStorage) — não vão para o repositório nem para outro servidor.'],
@@ -3783,7 +3858,7 @@ function renderMacro(){
     + (rdIdade!=null ? ' — posts até '+redditMaisNovoTxt() : '')));
   if(rdIdade!=null && rdIdade > 10)
     nw.append(el('div','notice','⚠ Estes posts são de '+redditMaisNovoTxt()+' ('+idadeTxt(rdIdade)
-      +'), não da última semana: o Reddit recusa as consultas do robô (HTTP 403 para servidor). '
+      +'), não da última semana: o robô não está conseguindo coletar dos fóruns (o Reddit recusa consulta de servidor). '
       +'Enquanto isso não mudar, este bloco fica parado nessa data — as notícias por empresa e as manchetes por veículo continuam atualizando a cada 2 horas.'));
   for(const n of (MACRO.reddit&&MACRO.reddit.news)||[]){
     const it=el('div','newsit');
@@ -3933,9 +4008,9 @@ function freshRows(){
   const liveTxt='● ao vivo · '+(LIVE.at||'');
   const snap=dmy(MACRO.snapshotEm);
   return [
-   ['Resultados trimestrais e balanços','CVM (ITR/DFP)','dados até '+(META.dadosAte||'—')+' · lidos em '+dmy(DB.updatedAt),'robô · dias úteis'],
-   ['Múltiplos (P/L, ROE etc.)','Fundamentus','último fechamento disponível · coletado em '+dmy(DB.updatedAt),'robô · dias úteis'],
-   ['Valor de mercado calculado','CVM × cotações','último fechamento disponível · coletado em '+dmy(DB.updatedAt),'robô · dias úteis'],
+   ['Resultados trimestrais e balanços','CVM (ITR/DFP)','dados até '+(META.dadosAte||'—')+' · lidos em '+dmy(DB.updatedAt),'robô · 3 tentativas/dia, todos os dias'],
+   ['Múltiplos (P/L, ROE etc.)','Fundamentus','último fechamento disponível · coletado em '+dmy(DB.updatedAt),'robô · 3 tentativas/dia, todos os dias'],
+   ['Valor de mercado calculado','CVM × cotações','último fechamento disponível · coletado em '+dmy(DB.updatedAt),'robô · 3 tentativas/dia, todos os dias'],
    ['Classificação setorial','B3',dmy(DB.b3FetchedAt),'automática · ~45 dias'],
    ['Ibovespa e IFIX','B3',LIVEIDX.IBOV? '● ao vivo · '+(B3LIVE.at||'') : (MACRO.ibov? dmy(MACRO.ibov.date)+' às '+(MACRO.ibov.hora||'').slice(0,5):'—'),'no navegador · a cada 60 s'],
    ['Cotações B3 — ações e ETFs (ao vivo)','B3 (feed público, ~15 min de defasagem)',B3LIVE.ok? '● ao vivo · '+(B3LIVE.at||'') : 'aguardando primeira consulta','no navegador · a cada 60 s'],
@@ -3949,7 +4024,7 @@ function freshRows(){
    ['Boletim Focus','Banco Central','relatório de '+((c.focus&&c.focus[0])? dmy(c.focus[0].d):'—'),'BCB publica às segundas · busca ao abrir'],
    ['Notícias e discussões','Reddit (fóruns de investimento)',
      (redditIdadeDias()!=null ? 'post mais novo de '+redditMaisNovoTxt()+' ('+idadeTxt(redditIdadeDias())+')' : 'sem posts carregados'),
-     redditIdadeDias()!=null && redditIdadeDias()>10 ? '⚠ parado: o Reddit responde 403 ao robô (IP de servidor)' : 'tenta a cada 2 horas'],
+     redditIdadeDias()!=null && redditIdadeDias()>10 ? '⚠ parado: o robô não consegue coletar dos fóruns' : 'tenta a cada 2 horas'],
    ['Manchetes por veículo','RSS dos jornais (G1, Valor, NYT…)',MACRO.noticiasAoVivoEm? 'coletado em '+hhmmDe(MACRO.noticiasAoVivoEm) : 'snapshot de '+snap,'a cada 2 horas, todos os dias'],
    ['Agenda de eventos','BCB · Fed · BCE · IBGE','calendários oficiais de 2026','manual quando saírem os de 2027'],
    ['Geração do painel','GitHub Actions (github.com/12533230/painel-b3)',buildLocal(),'3 tentativas/dia (06:12, 10:12 e 14:12 BRT): a 1ª que rodar publica'],
@@ -3982,7 +4057,7 @@ function openInfo(){
    ['Uso','painel interno da Insignia Partners, informativo e educacional — não é recomendação de investimento nem oferta. Os números vêm de fontes públicas e podem conter erros ou defasagens; confira sempre os documentos oficiais (cada empresa tem link direto para a CVM).'],
    ['Como atualiza','três robôs independentes, para a falha de um não parar os outros. (1) Balanços, múltiplos e valor de mercado: 3 tentativas por dia, todos os dias — a primeira que conseguir rodar publica. (2) Notícias por empresa e manchetes gerais: a cada 2 horas, todos os dias, em arquivo próprio que a página relê sozinha (não depende de o painel ser regerado). (3) Cotações dos EUA e da lista completa da B3: ciclo de 10 minutos dentro do pregão. Um quarto robô (vigia) checa de hora em hora a idade do que está publicado e redispara quem passou do prazo; se ainda assim algo atrasar, aparece uma faixa vermelha no topo desta página com a idade real do dado. IMPORTANTE: o agendamento do GitHub é "melhor esforço" e já atrasou de 35 minutos a 11h39 nas medições de agosto/setembro de 2026 — por isso o que vale é a data de cada conjunto na tabela acima, não um horário prometido. Com a página aberta e internet: cotações da B3 (ações, ETFs, Ibovespa, IFIX) a cada 60 s direto na API pública da bolsa (defasagem ~15 min do pregão); câmbio e cripto a cada 60 s; Selic/CDI/IPCA e Focus a cada 5 min; notícias releem a cada 15 min. Chaves gratuitas opcionais (botão "⚙ Ao vivo") deixam os EUA em tempo real (Finnhub) e a B3 em lote (brapi). A classificação setorial da B3 se renova a cada ~45 dias.'],
    ['Defasagens naturais','resultados trimestrais seguem o calendário de entrega da CVM (até ~45 dias após o fim do trimestre); múltiplos e cotações de ações usam o último fechamento coletado; a agenda usa os calendários oficiais de 2026 (os de 2027 entram quando os bancos centrais publicarem).'],
-   ['Convenções de cálculo','demonstrações consolidadas quando disponíveis; lucro atribuído aos sócios da controladora; EBITDA = EBIT + depreciação/amortização (DFC); dívida bruta = empréstimos e financiamentos; ROIC = EBIT 12m × (1−34%) ÷ (PL + dívida líquida); EBITDA e dívida não se aplicam a bancos e seguradoras.'],
+   ['Convenções de cálculo','demonstrações consolidadas quando disponíveis; lucro atribuído aos sócios da controladora; EBITDA = EBIT + depreciação/amortização (DFC); dívida bruta = empréstimos e financiamentos; ROIC = EBIT 12m × (1−34%) ÷ (PL + máx(dívida líquida, 0)), e caixa líquido não reduz o capital investido nesta aproximação — mas o ROIC exibido vem do Fundamentus quando existe, e essa conta entra só como reserva; ROE exige patrimônio líquido de pelo menos R$ 20 mi (abaixo disso o percentual não tem significado) e dív.líq./EBITDA exige EBITDA acima de 2% da receita; EBITDA, dívida e ROIC não se aplicam a bancos e seguradoras.'],
    ['Saúde da automação','se as datas acima ficarem defasadas por vários dias, a automação precisa de atenção — o histórico de execuções fica em github.com/12533230/painel-b3/actions.'],
   ];
   for(const [b2,t2] of ps){ const p=el('p'); p.append(el('b',null,b2+' — '), document.createTextNode(t2)); ibox.append(p); }
@@ -4013,7 +4088,7 @@ function redditIdadeDias(){
 function redditMaisNovoTxt(){
   const u = redditMaisNovoUtc();
   if(u==null) return '—';
-  try{ return new Date(u*1000).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit'}); }
+  try{ return new Date(u*1000).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',year:'numeric'}); }
   catch(e){ return '—'; }
 }
 

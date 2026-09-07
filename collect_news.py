@@ -26,9 +26,9 @@ tratamento aqui:
      publicado tinham dia/mês POSTERIOR ao próprio updatedAt — matéria de um ano
      atrás parecendo da semana. O pubDate traz ano em 100% dos itens; agora vai
      a data completa.
-  4. Página automática de cotação não é notícia. Os oito filtros de título abaixo
-     pegaram 130 de 1.415 itens (9,2%) com 1 falso positivo (99,2% de precisão).
-     Eles valem sobre o título CRU, antes de cortar o sufixo do veículo.
+  4. Página automática de cotação não é notícia. Os 12 filtros de título abaixo,
+     mais a regra da fonte "B3", pegaram 278 de 3.840 títulos distintos na medição
+     de 07/09/2026, com 1 falso positivo conhecido. Valem sobre o título CRU.
   5. Nada expirava: item herdado do arquivo anterior ficava para sempre. Agora
      item com data velha (ou sem data) sai do arquivo.
   6. ~40% das empresas não têm notícia na janela (24 de 40 na amostra tinham).
@@ -72,9 +72,12 @@ def semacento(s):
                    if unicodedata.category(c) != "Mn")
 
 # ---- páginas automáticas de cotação/ticker que o Google indexa como notícia ----
-# Derivados de 1.415 itens reais: 130 capturados, 1 falso positivo.
+# Derivados de corpus real (3.840 títulos distintos em 07/09/2026): 278 capturados.
 LIXO_TITULO = [
-    re.compile(r"^[A-Z]{4}\d{1,2}\b[^.!?]{0,90}\b(cota[çc][ãa]o|resultados|indicadores)\b", re.I),
+    # [^!?\n] em vez de [^.!?]: "ROMI3 - Romi S.a. - Resultados, Dividendos, Cotação"
+    # escapava por causa do ponto. O (?!…) evita o único falso positivo medido:
+    # "AALR3, AMBP3 e JHSF3 na agenda de resultados da semana" (lista de tickers).
+    re.compile(r"^[A-Z]{4}\d{1,2}\b(?![^!?\n]{0,40}[A-Z]{4}\d{1,2})[^!?\n]{0,90}\b(cota[çc][ãa]o|resultados|indicadores)\b", re.I),
     re.compile(r"\b(cota[çc][ãa]o|cota[çc][õo]es)\s*,\s*(dividendos|indicadores|balan[çc]os|gr[áa]ficos?)", re.I),
     re.compile(r"BMFBOVESPA\s*:\s*[A-Z]{4}\d{1,2}", re.I),
     re.compile(r"^(A[çc][ãa]o\s+[A-Z]{4}\d{1,2}\s*:|[A-Z]{4}\d{1,2}\s+ETF\s+Hoje|Previs[ãa]o\s+[A-Z]{4}\d{1,2}\b|Gr[áa]ficos\s+Sazonais\b)", re.I),
@@ -90,11 +93,13 @@ LIXO_TITULO = [
     re.compile(r"[A-Z]{4}\d{1,2}\s*\|\s*[A-Z]{4}\d{1,2}"),
     re.compile(r"A[çc][õo]es\s+na\s+bolsa\s*$", re.I),
 ]
-def eh_lixo(titulo_cru, fonte):
+def eh_lixo(titulo_cru, fonte, titulo_limpo=None):
     if any(r.search(titulo_cru) for r in LIXO_TITULO):
         return True
-    # a própria B3 publica página institucional sem notícia ("IPO", "Novo Mercado")
-    if (fonte or "").strip() == "B3" and len(titulo_cru.split()) <= 3:
+    # A própria B3 publica página institucional sem notícia ("IPO", "Novo Mercado").
+    # Conta as palavras do título já sem o sufixo " - B3", senão o limite de 3
+    # nunca era alcançado.
+    if (fonte or "").strip() == "B3" and len((titulo_limpo or titulo_cru).split()) <= 3:
         return True
     return False
 
@@ -118,9 +123,16 @@ def termos_empresa(c):
                 t.add(w)
     return t
 
+# Sem fronteira de palavra, "elet" casava dentro de "eletricidade" e manchete
+# alheia subia como notícia da empresa. Medido: 11 itens em 9 empresas.
 def menciona(titulo, termos):
     tl = semacento(titulo).lower()
-    return any(t in tl for t in termos)
+    for t in termos:
+        if not t:
+            continue
+        if re.search(r"(?<![0-9a-z])" + re.escape(t) + r"(?![0-9a-z])", tl):
+            return True
+    return False
 
 def data_iso(s):
     """'Wed, 02 Sep 2026 17:33:14 GMT' -> (date, 'AAAA-MM-DD', 'dd/mm'); None se ilegível."""
@@ -205,13 +217,13 @@ def coleta(session, consulta, empresa, hoje):
         cru = (it.findtext("title") or "").strip()
         u = (it.findtext("link") or "").strip()
         src = (it.findtext("source") or "").strip()
-        if not cru or not u or eh_lixo(cru, src):
+        if not cru or not u:
             continue
         # o Google News anexa " - <source>" ao título; cortar pelo próprio campo
         # acerta 100% dos casos (a regex antiga errava quando o veículo tem hífen)
         t = cru[:-(len(src) + 3)].strip() if src and cru.endswith(" - " + src) else cru
         t = t[:140]
-        if not t:
+        if not t or eh_lixo(cru, src, t):
             continue
         d = data_iso(it.findtext("pubDate"))
         if not d:
@@ -224,7 +236,7 @@ def coleta(session, consulta, empresa, hoje):
         if k in vistos:
             continue
         vistos.add(k)
-        itens.append({"t": t, "src": src[:40], "d": ddmm, "iso": iso, "u": u,
+        itens.append({"t": t, "src": src[:60], "d": ddmm, "iso": iso, "u": u,
                       "_men": menciona(t, termos)})
     return itens
 
@@ -248,7 +260,7 @@ def main():
     # é como o autoteste.yml confere a coleta de verdade sem 4 minutos de fila.
     amostra = 0
     if "--amostra" in sys.argv:
-        try: amostra = int(sys.argv[sys.argv.index("--amostra") + 1])
+        try: amostra = max(1, int(sys.argv[sys.argv.index("--amostra") + 1]))
         except Exception: amostra = 12
     hoje = dt.datetime.utcnow().date()
     b3 = load_json(DATA / "b3_companies.json", {})
@@ -277,6 +289,7 @@ def main():
     prev_n = dict(prev.get("n") or {})
     prev_com_item = sum(1 for v in prev_n.values() if v)
     n = {}
+    sem_resposta = []
     falhas_seguidas = 0
     com_item = 0
     s = requests.Session(); s.headers.update(UA)
@@ -284,9 +297,10 @@ def main():
         itens = fetch_news(s, emp, hoje)
         if itens is None:                        # falha real (HTTP/parse)
             falhas_seguidas += 1
-            herdado = limpa_antigos(prev_n.get(cvm), hoje)
-            if herdado:
-                n[cvm] = herdado                 # mantém o que ainda está no prazo
+            sem_resposta.append(cvm)
+            # grava a chave mesmo vazia: sem isso a página não distingue
+            # "sem notícia na janela" de "não consegui consultar"
+            n[cvm] = limpa_antigos(prev_n.get(cvm), hoje)
             if falhas_seguidas >= 30:
                 log("30 falhas de rede em sequência — abortando a coleta")
                 break
@@ -329,8 +343,12 @@ def main():
             it.pop("_men", None)
 
     com_item = sum(1 for v in n.values() if v)
-    log(f"{com_item} empresas com notícia na janela de {JANELA_DIAS}d "
-        f"(antes: {prev_com_item}) · {len(n)} no arquivo · {genericas} manchetes de mercado removidas")
+    if amostra:
+        log(f"{com_item} das {len(empresas)} empresas da AMOSTRA têm notícia na janela de {JANELA_DIAS}d")
+    else:
+        log(f"{com_item} empresas com notícia na janela de {JANELA_DIAS}d "
+            f"(antes: {prev_com_item}) · {len(n)} no arquivo · {genericas} manchetes de mercado removidas"
+            + (f" · {len(sem_resposta)} sem resposta da fonte" if sem_resposta else ""))
     if amostra:
         # mostra o que sairia na tela, para dar para conferir a olho no log do CI
         for cvm, itens in list(n.items())[:amostra]:
@@ -352,7 +370,8 @@ def main():
         sys.exit(1)
 
     snap = {"updatedAt": dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "janelaDias": JANELA_DIAS, "comNoticia": com_item, "n": n}
+            "janelaDias": MAX_IDADE_DIAS, "comNoticia": com_item,
+            "semResposta": sem_resposta, "n": n}
     OUT_FILE.write_text(json.dumps(snap, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     log(f"OK {OUT_FILE} ({OUT_FILE.stat().st_size/1024:.0f} KB)")
 

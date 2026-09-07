@@ -114,6 +114,18 @@ def main():
         # o run fica vermelho no Actions e o snapshot publicado mantém o carimbo honesto
         log("nada coletado — abortando sem gravar")
         sys.exit(1)
+    # Mesmo motivo, um passo além: em feriado de dia útil (e de madrugada) o Yahoo
+    # devolve o MESMO fechamento da última sessão. Regravar com updatedAt novo faria
+    # o painel dizer "cotação de agora" para o preço de sexta — e anularia o aviso
+    # de dado atrasado da própria página. O carimbo de hora do próprio dado
+    # (regularMarketTime) é o juiz: se ele não avançou, o arquivo fica como está.
+    def maior_t(d):
+        ts = [v.get("t") for v in (d or {}).values() if isinstance(v, dict) and v.get("t")]
+        return max(ts) if ts else 0
+    if maior_t(q) and maior_t(q) <= maior_t(prev.get("q") if isinstance(prev, dict) else None):
+        log(f"o mercado não gerou preço novo (carimbo mais recente segue {maior_t(q)}) — "
+            f"mantendo o arquivo anterior para não recarimbar dado velho")
+        return
     snap = {"updatedAt": dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"), "q": q}
     OUT_FILE.write_text(json.dumps(snap, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     log(f"OK {OUT_FILE} ({OUT_FILE.stat().st_size/1024:.0f} KB)")
