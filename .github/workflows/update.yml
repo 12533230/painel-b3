@@ -1,8 +1,16 @@
 name: Atualiza Painel B3
 
+# O agendamento do GitHub é "best effort": em setembro/2026 este workflow rodou
+# com 3h a 6h de atraso e o de cotações teve dias com 1 execução no lugar de 33.
+# Por isso três horários por dia — o primeiro que conseguir rodar publica, e os
+# outros dois viram no-op pelo passo "Já publicou hoje?". Roda todos os dias:
+# fonte que não muda no fim de semana custa pouco, e uma falha de sexta seria
+# corrigida no sábado em vez de ficar até segunda.
 on:
   schedule:
-    - cron: "10 9 * * 1-5"   # dias úteis, 09:10 UTC = 06:10 Brasília
+    - cron: "12 9 * * *"    # 06:12 Brasília
+    - cron: "12 13 * * *"   # 10:12 Brasília — 2ª chance
+    - cron: "12 17 * * *"   # 14:12 Brasília — 3ª chance
   workflow_dispatch: {}
 
 permissions:
@@ -15,7 +23,7 @@ concurrency:
 jobs:
   atualizar:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       # actions fixadas por SHA (supply chain); os comentários indicam a tag equivalente
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -24,13 +32,48 @@ jobs:
         with:
           python-version: "3.12"
 
+      # Com três agendamentos por dia, o 2º e o 3º só têm trabalho se o 1º não
+      # publicou. Execução manual (workflow_dispatch) sempre roda.
+      - name: Já publicou hoje?
+        id: guarda
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ult=$(curl -sf -H "Authorization: Bearer $GH_TOKEN" \
+                 "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/commits?path=docs/index.html&per_page=1" \
+                 | python -c "import json,sys; d=json.load(sys.stdin); print(d[0]['commit']['committer']['date'] if d else '')" || echo "")
+          hoje=$(date -u +%F)
+          echo "último commit de docs/index.html: ${ult:-desconhecido} · hoje: $hoje"
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ] && [ "${ult:0:10}" = "$hoje" ]; then
+            echo "pular=1" >> "$GITHUB_OUTPUT"
+            echo "::notice::painel já foi publicado hoje — esta execução não tem trabalho"
+          else
+            echo "pular=0" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Dependências
+        if: steps.guarda.outputs.pular != '1'
         run: pip install --quiet pandas==3.0.5 lxml==6.1.2 requests==2.34.2
 
-      - name: Coletar dados (CVM, Fundamentus, B3, BCB, moedas, cripto, notícias)
-        run: python collect.py
+      # Fonte essencial (CVM/Fundamentus) já derrubou o dia inteiro por falha
+      # passageira: 3 tentativas com intervalo, e o resultado não interrompe o
+      # workflow — os dados voláteis (cotação, candles, notícia) são publicados
+      # mesmo assim, e o passo final marca a execução como falha.
+      - name: Coletar dados (CVM, Fundamentus, B3, BCB, moedas, cripto) — 3 tentativas
+        id: coleta
+        if: steps.guarda.outputs.pular != '1'
+        continue-on-error: true
+        run: |
+          for i in 1 2 3; do
+            echo "--- tentativa $i de 3"
+            python collect.py && exit 0
+            echo "--- falhou; esperando 90s"
+            sleep 90
+          done
+          exit 1
 
       - name: Coletar cotações (snapshot diário embutido no HTML)
+        if: steps.guarda.outputs.pular != '1'
         run: |
           # base de merge = snapshot mais fresco (branch quotes), não o de main de ontem
           if curl -sf --retry 3 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/quotes/data/quotes.json" -o /tmp/quotes_prev.json \
@@ -40,15 +83,28 @@ jobs:
           python collect_quotes.py || echo "cotações falharam — painel usa o quotes.json anterior"
 
       - name: Coletar candles diários (6 meses, todos os ativos)
+        if: steps.guarda.outputs.pular != '1'
         run: python collect_candles.py || echo "candles falharam — painel usa o candles.json anterior"
 
-      - name: Coletar notícias por empresa (Google News)
-        run: python collect_news.py || echo "notícias falharam — painel usa o news.json anterior"
+      # Redundância deliberada com o noticias.yml (que roda a cada 2h no branch
+      # "news"): esta cópia em main é a reserva que a página usa se o branch falhar.
+      - name: Coletar notícias por empresa (reserva em main)
+        if: steps.guarda.outputs.pular != '1'
+        run: |
+          if curl -sf --retry 3 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/news/data/news.json" -o /tmp/news.json \
+             && python -c "import json; json.load(open('/tmp/news.json'))"; then
+            mv /tmp/news.json data/news.json
+            echo "partindo do arquivo do branch news"
+          fi
+          python collect_news.py || echo "notícias falharam — painel usa o news.json anterior"
+          python collect_news_macro.py || echo "manchetes falharam — painel usa o macro embutido"
 
       - name: Consolidar indicadores por empresa
+        if: steps.guarda.outputs.pular != '1' && steps.coleta.outcome == 'success'
         run: python process.py
 
       - name: Gerar painel (interno + versão pública sem marca)
+        if: steps.guarda.outputs.pular != '1' && steps.coleta.outcome == 'success'
         run: |
           python build_html.py
           python build_public.py
@@ -56,11 +112,20 @@ jobs:
           cp out/Painel_B3.html docs/index.html
           cp out/public_index.html docs/p/index.html
 
+      # Publica o que deu certo: se a CVM caiu, o HTML fica o de ontem, mas
+      # cotação, candles e notícia do dia entram.
       - name: Publicar (commit)
+        if: steps.guarda.outputs.pular != '1'
         run: |
           git config user.name "painel-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add docs/index.html docs/p/index.html data/macro_snapshot_prev.json data/b3_companies.json data/quotes.json
-          git add data/candles.json data/news.json 2>/dev/null || true
+          git add docs/index.html docs/p/index.html data/macro_snapshot_prev.json data/b3_companies.json data/quotes.json 2>/dev/null || true
+          git add data/candles.json data/news.json data/news_macro.json 2>/dev/null || true
           git diff --cached --quiet && echo "sem mudanças" || git commit -m "Atualização automática $(date -u +%F)"
           git push
+
+      - name: Marcar falha se a fonte essencial não respondeu
+        if: steps.guarda.outputs.pular != '1' && steps.coleta.outcome != 'success'
+        run: |
+          echo "::error::collect.py falhou nas 3 tentativas (CVM ou Fundamentus). O painel mantém o HTML anterior; cotações, candles e notícias do dia foram publicados. O vigia.yml tentará de novo."
+          exit 1

@@ -1,0 +1,66 @@
+name: Notícias (empresas e manchetes)
+
+# Notícia envelhece em horas, não em dias — e antes ela dependia do build diário:
+# se a CVM ou o Fundamentus falhassem, o painel abortava e a notícia ficava do dia
+# anterior (ou de sexta, no fim de semana). Aqui a coleta é independente do resto
+# do pipeline: roda a cada 2 horas, TODOS os dias, e publica no branch "news"
+# (sempre 1 commit, por force-push, para não inflar o histórico nem disparar
+# rebuild do Pages/Vercel a cada 2 horas).
+#
+# O minuto 25 é de propósito: o GitHub atrasa/descarta agendamento na virada da
+# hora, quando a fila da plataforma está cheia.
+on:
+  schedule:
+    - cron: "25 */2 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: noticias
+  cancel-in-progress: false
+
+jobs:
+  noticias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # actions fixadas por SHA (supply chain); os comentários indicam a tag equivalente
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Dependências
+        run: pip install --quiet requests==2.34.2 lxml==6.1.2
+
+      - name: Partir do último arquivo publicado (mantém a empresa que falhar agora)
+        run: |
+          for f in news.json news_macro.json; do
+            if curl -sf --retry 3 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/news/data/$f" -o "/tmp/$f" \
+               && python -c "import json,sys; json.load(open('/tmp/$f'))"; then
+              mv "/tmp/$f" "data/$f"
+              echo "base: branch news/data/$f"
+            else
+              echo "sem $f válido no branch news — usando o de main, se houver"
+            fi
+          done
+
+      - name: Coletar notícias por empresa (Google News, janela de 30 dias)
+        run: python collect_news.py
+
+      - name: Coletar manchetes gerais (Google News, RSS dos veículos, fóruns)
+        run: python collect_news_macro.py || echo "manchetes falharam — mantém o arquivo anterior"
+
+      - name: Publicar no branch news (force-push, 1 commit)
+        run: |
+          git config user.name "painel-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan news-tmp
+          git reset
+          git add -f data/news.json
+          git add -f data/news_macro.json 2>/dev/null || true
+          git commit -m "notícias $(date -u +%FT%TZ)"
+          git push -f origin news-tmp:news

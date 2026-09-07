@@ -1,0 +1,73 @@
+name: Autoteste (compila os .py e roda uma amostra)
+
+# A máquina de quem edita o pipeline não tem Python. Sem isto, erro de sintaxe só
+# apareceria na coleta seguinte, e o log de execução do Actions não é legível sem
+# login. Este workflow compila tudo, roda uma amostra de verdade e publica o
+# resultado em texto no branch "autoteste", que dá para ler por raw.githubusercontent:
+#   https://raw.githubusercontent.com/12533230/painel-b3/autoteste/autoteste.log
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: autoteste
+  cancel-in-progress: true
+
+jobs:
+  teste:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      # actions fixadas por SHA (supply chain); os comentários indicam a tag equivalente
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Dependências (as do runtime das notícias)
+        run: pip install --quiet requests==2.34.2 lxml==6.1.2
+
+      - name: Compilar tudo e rodar a amostra
+        run: |
+          exec > autoteste.log 2>&1
+          echo "=== autoteste $(date -u +%FT%TZ) · commit ${GITHUB_SHA:0:8}"
+          echo
+          echo "--- sintaxe (py_compile de todos os .py do repo)"
+          if python -m py_compile collect.py collect_news.py collect_news_macro.py collect_quotes.py collect_candles.py process.py build_html.py build_public.py refresh_b3.py; then
+            echo "OK: todos compilam"
+          else
+            echo "ERRO DE SINTAXE (acima)"
+          fi
+          echo
+          echo "--- collect_news.py --amostra 10 (não grava arquivo)"
+          python collect_news.py --amostra 10 || echo "ERRO ao rodar collect_news.py"
+          echo
+          echo "--- collect_news_macro.py (grava data/news_macro.json)"
+          python collect_news_macro.py || echo "ERRO ao rodar collect_news_macro.py"
+          echo
+          echo "--- conteúdo de data/news_macro.json"
+          python -c "import json,os;p='data/news_macro.json';d=json.load(open(p,encoding='utf-8')) if os.path.exists(p) else None;print('NAO GEROU') if d is None else print('updatedAt',d.get('updatedAt'),'| manchetes',len(d.get('manchetes') or []),'| reddit',len((d.get('reddit') or {}).get('news') or []),'| veiculos',[(v.get('n'),len(v.get('itens') or [])) for lista in (d.get('veiculos') or {}).values() for v in lista])" || echo "ERRO ao ler news_macro.json"
+          echo
+          echo "=== fim do autoteste"
+
+      - name: Mostrar o log no resumo da execução
+        if: always()
+        run: |
+          cat autoteste.log
+          { echo '```'; cat autoteste.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publicar o log no branch autoteste (legível por raw, sem login)
+        if: always()
+        run: |
+          git config user.name "painel-bot"
+          git config user.email "actions@users.noreply.github.com"
+          tmpidx=$(mktemp)
+          GIT_INDEX_FILE="$tmpidx" git read-tree --empty
+          GIT_INDEX_FILE="$tmpidx" git add -f autoteste.log
+          tree=$(GIT_INDEX_FILE="$tmpidx" git write-tree)
+          rm -f "$tmpidx"
+          commit=$(git commit-tree "$tree" -m "autoteste $(date -u +%FT%TZ)")
+          git push -f origin "$commit:refs/heads/autoteste"

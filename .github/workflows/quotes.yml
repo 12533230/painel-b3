@@ -1,11 +1,18 @@
 name: Cotações quase ao vivo
 
-# Roda a cada 15 min durante o pregão (13h–21h45 UTC = 10h–18h45 Brasília,
-# cobre B3 e NYSE/Nasdaq o ano todo). Publica data/quotes.json no branch
-# "quotes" (sempre 1 commit, via force-push, para não inflar o histórico).
+# ANTES: cron "*/15 13-21 * * 1-5" (33 gatilhos/dia). O GitHub entrega
+# agendamento por "best effort" e descarta o excedente quando a fila está cheia:
+# medido em 07/09/2026, este workflow caiu de 33 execuções/dia (20-25/ago) para
+# 13, depois 6, depois 1 por dia, e no dia 07 nenhuma — o branch "quotes" ficou
+# 3 dias parado sem ninguém perceber.
+#
+# AGORA: 2 gatilhos por dia e o ciclo de 10 minutos roda DENTRO do job. Um único
+# agendamento entregue cobre a janela inteira; o segundo gatilho também serve de
+# recuperação se o primeiro for descartado.
 on:
   schedule:
-    - cron: "*/15 13-21 * * 1-5"
+    - cron: "8 13 * * 1-5"    # 10:08 Brasília — cobre até 17h UTC
+    - cron: "8 17 * * 1-5"    # 14:08 Brasília — cobre até o fim do pregão
   workflow_dispatch: {}
 
 permissions:
@@ -13,12 +20,12 @@ permissions:
 
 concurrency:
   group: cotacoes
-  cancel-in-progress: true
+  cancel-in-progress: true    # o gatilho da tarde substitui o ciclo da manhã
 
 jobs:
   cotacoes:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 300
     steps:
       # actions fixadas por SHA (supply chain); os comentários indicam a tag equivalente
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -39,15 +46,39 @@ jobs:
             echo "sem snapshot anterior válido no branch quotes"
           fi
 
-      - name: Coletar cotações (Yahoo Finance, lotes)
-        run: python collect_quotes.py
-
-      - name: Publicar no branch quotes (force-push, 1 commit)
+      - name: Coletar e publicar a cada 10 min até o fim da janela
         run: |
+          set -u
           git config user.name "painel-bot"
           git config user.email "actions@users.noreply.github.com"
-          git checkout --orphan quotes-tmp
-          git reset
-          git add -f data/quotes.json
-          git commit -m "cotações $(date -u +%FT%TZ)"
-          git push -f origin quotes-tmp:quotes
+
+          # Publica no branch "quotes" um commit órfão único (sem histórico, sem
+          # mexer no branch de trabalho) — dá para repetir dentro do laço.
+          publica() {
+            tmpidx=$(mktemp)
+            GIT_INDEX_FILE="$tmpidx" git read-tree --empty
+            GIT_INDEX_FILE="$tmpidx" git add -f data/quotes.json
+            tree=$(GIT_INDEX_FILE="$tmpidx" git write-tree)
+            rm -f "$tmpidx"
+            commit=$(git commit-tree "$tree" -m "cotações $(date -u +%FT%TZ)")
+            git push -f origin "$commit:refs/heads/quotes"
+          }
+
+          h=$(date -u +%H)
+          if [ "$h" -lt 16 ]; then FIM=17; else FIM=22; fi   # hora UTC em que o ciclo para
+          echo "ciclo até ${FIM}:00 UTC"
+          i=0
+          while true; do
+            i=$((i+1))
+            echo "=== coleta $i · $(date -u +%T) UTC"
+            if python collect_quotes.py; then
+              publica && echo "publicado no branch quotes"
+            else
+              echo "coleta falhou — mantém o último publicado e segue no ciclo"
+            fi
+            agora=$(date -u +%H)
+            if [ "$agora" -ge "$FIM" ]; then
+              echo "fim da janela"; break
+            fi
+            sleep 600
+          done

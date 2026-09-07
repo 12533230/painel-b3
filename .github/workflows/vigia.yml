@@ -1,0 +1,76 @@
+name: Vigia (checa se o painel está atualizando)
+
+# Um agendamento descartado pelo GitHub não avisa ninguém: em setembro/2026 o
+# branch "quotes" ficou 3 dias parado e o painel continuou no ar mostrando dado
+# velho. Este vigia checa a idade do que está PUBLICADO (não a do agendamento) e
+# redispara o workflow correspondente. Roda de hora em hora, em minuto ímpar.
+on:
+  schedule:
+    - cron: "47 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: vigia
+  cancel-in-progress: true
+
+jobs:
+  vigia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checar idade do publicado e redisparar o que está parado
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -u
+          agora=$(date -u +%s)
+          dow=$(date -u +%u)     # 1=segunda … 7=domingo
+          hora=$(date -u +%H)
+          problemas=0
+
+          # idade, em minutos, do último commit de um caminho num branch
+          idade() {   # $1=branch  $2=caminho
+            d=$(gh api "repos/$REPO/commits?sha=$1&path=$2&per_page=1" \
+                  --jq '.[0].commit.committer.date' 2>/dev/null || echo "")
+            if [ -z "$d" ] || [ "$d" = "null" ]; then echo "-1"; return; fi
+            t=$(date -u -d "$d" +%s)
+            echo $(( (agora - t) / 60 ))
+          }
+
+          checa() {   # $1=rótulo  $2=branch  $3=caminho  $4=limite(min)  $5=workflow
+            m=$(idade "$2" "$3")
+            if [ "$m" -lt 0 ]; then
+              echo "::warning::$1: não consegui ler a data de $2:$3"
+              return
+            fi
+            printf '%-28s %5s min (limite %s)\n' "$1" "$m" "$4"
+            if [ "$m" -gt "$4" ]; then
+              problemas=$((problemas+1))
+              echo "::warning::$1 está com $m min de idade (limite $4) — redisparando $5"
+              gh workflow run "$5" --repo "$REPO" || echo "::error::não consegui redisparar $5"
+            fi
+          }
+
+          # Painel (HTML gerado): 3 agendamentos/dia, então 30h é folga suficiente
+          checa "painel (docs/index.html)" main docs/index.html 1800 update.yml
+
+          # Notícias: coleta a cada 2h no branch news
+          checa "notícias (branch news)" news data/news.json 300 noticias.yml
+
+          # Cotações: só faz sentido cobrar durante o pregão (13h–21h UTC, dia útil)
+          if [ "$dow" -le 5 ] && [ "$hora" -ge 13 ] && [ "$hora" -le 21 ]; then
+            checa "cotações (branch quotes)" quotes data/quotes.json 45 quotes.yml
+          else
+            echo "fora do pregão — cotações não são cobradas agora"
+          fi
+
+          if [ "$problemas" -gt 0 ]; then
+            echo "::error::$problemas conjunto(s) de dados fora do prazo — redisparo acionado. Se repetir, a fonte está caindo."
+            exit 1
+          fi
+          echo "tudo dentro do prazo"
