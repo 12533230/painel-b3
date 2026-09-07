@@ -127,7 +127,19 @@ jobs:
             [ -f "$f" ] && git add "$f" || echo "sem $f nesta execução"
           done
           git diff --cached --quiet && echo "sem mudanças" || git commit -m "Atualização automática $(date -u +%F)"
-          git push
+          # main pode ter andado durante a execução (o job leva ~8 min): sem isto o
+          # push é rejeitado e o painel do dia não é publicado, com todos os passos
+          # anteriores verdes — foi o que aconteceu em 07/09/2026.
+          for i in 1 2 3; do
+            if git push; then
+              echo "publicado"; exit 0
+            fi
+            echo "push rejeitado (main andou) — rebase e nova tentativa $i"
+            git pull --rebase --autostash origin main || break
+            sleep 5
+          done
+          echo "::error::não consegui publicar em main depois de 3 tentativas"
+          exit 1
 
       - name: Marcar falha se a fonte essencial não respondeu
         if: steps.guarda.outputs.pular != '1' && steps.coleta.outcome != 'success'
