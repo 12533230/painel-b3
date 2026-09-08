@@ -78,14 +78,18 @@ jobs:
           # agendamento do GitHub atrasa horas) criava janela maior que o timeout.
           LIMITE=$(( $(date -u +%s) + 255*60 ))
           FIMPREGAO=$(date -u -d 'today 21:50' +%s)
-          [ "$(date -u +%s)" -ge "$FIMPREGAO" ] && FIMPREGAO=$(( $(date -u +%s) + 20*60 ))
+          # atenção: o shell do Actions roda com -e, então "[ cond ] && cmd" solto
+          # DERRUBA o passo quando a condição é falsa. Sempre if/fi aqui.
+          if [ "$(date -u +%s)" -ge "$FIMPREGAO" ]; then
+            FIMPREGAO=$(( $(date -u +%s) + 20*60 ))
+          fi
           echo "ciclo até $(date -u -d "@$(( LIMITE < FIMPREGAO ? LIMITE : FIMPREGAO ))" +%T) UTC"
           i=0; pub=0; semnovo=0; erros=0
           while true; do
             i=$((i+1))
             echo "=== coleta $i · $(date -u +%T) UTC"
             if python collect_quotes.py; then
-              publica; rc=$?
+              rc=0; publica || rc=$?     # o "||" protege do set -e
               case "$rc" in
                 0) pub=$((pub+1)); echo "publicado no branch quotes" ;;
                 2) semnovo=$((semnovo+1)); echo "sem preço novo (mercado fechado/feriado) — nada a publicar" ;;

@@ -97,7 +97,7 @@ jobs:
             if curl -sf --retry 3 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/news/data/$f" -o "/tmp/$f" \
                && python -c "import json,sys; d=json.load(open('/tmp/$f')); sys.exit(0 if d.get('updatedAt') else 1)"; then
               mv "/tmp/$f" "data/$f"; echo "reserva atualizada: $f (do branch news)"
-              [ "$f" = "news.json" ] && ok=1
+              if [ "$f" = "news.json" ]; then ok=1; fi
             else
               echo "branch news sem $f válido"
             fi

@@ -52,7 +52,9 @@ jobs:
               return
             fi
             printf '%-28s %5s min (limite %s)\n' "$1" "$m" "$4"
-            [ "$m" -gt "$4" ] || return
+            # return sem código herda o status do teste: com -e isso derrubava o
+            # passo justamente quando o conjunto estava no prazo
+            if [ "$m" -le "$4" ]; then return 0; fi
             problemas=$((problemas+1))
             # se o robô JÁ está rodando, redisparar só cancelaria/enfileiraria o
             # que está em curso (no quotes.yml o ciclo em andamento seria morto)
@@ -80,8 +82,8 @@ jobs:
           fi
 
           if [ "$problemas" -gt 0 ] || [ "$naoverificados" -gt 0 ]; then
-            [ "$problemas" -gt 0 ] && echo "::error::$problemas conjunto(s) de dados fora do prazo. Se repetir, a fonte está caindo."
-            [ "$naoverificados" -gt 0 ] && echo "::error::$naoverificados conjunto(s) NÃO verificados (não consegui ler a data) — o vigia ficou cego nesses."
+            if [ "$problemas" -gt 0 ]; then echo "::error::$problemas conjunto(s) de dados fora do prazo. Se repetir, a fonte está caindo."; fi
+            if [ "$naoverificados" -gt 0 ]; then echo "::error::$naoverificados conjunto(s) NÃO verificados (não consegui ler a data) — o vigia ficou cego nesses."; fi
             exit 1
           fi
           echo "os três conjuntos verificados estão dentro do prazo"
