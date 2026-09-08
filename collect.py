@@ -163,15 +163,23 @@ def reddit_news():
     é o caminho usado aqui. O que se perde: o Atom não traz número de comentários
     nem score, então a ordem passa a ser a do próprio Reddit ("top da semana") e o
     painel não exibe mais contagem de comentários — em vez de exibir um número que
-    não temos. Chamadas seguidas levam 429: 6 s entre os subreddits.
+    não temos. Chamadas seguidas levam 429: 15 s entre os subreddits, e uma
+    segunda tentativa depois de 45 s quando o primeiro pedido é recusado (medido:
+    com 6 s o terceiro subreddit levava 429).
     """
     all_posts = []
     ATOM = "{http://www.w3.org/2005/Atom}"
     for i, sub in enumerate(("investimentos", "economia", "farialimabets")):
         if i:
-            time.sleep(6)
+            time.sleep(15)
         try:
-            r = get(f"https://www.reddit.com/r/{sub}/top/.rss?t=week", timeout=25)
+            url = f"https://www.reddit.com/r/{sub}/top/.rss?t=week"
+            try:
+                r = get(url, timeout=25)
+            except Exception as e1:
+                log("Reddit", sub, "1ª tentativa falhou:", repr(e1), "— espera 45 s")
+                time.sleep(45)
+                r = get(url, timeout=25)
             root = etree.fromstring(r.content)
             for e in root.iter(ATOM + "entry"):
                 t = (e.findtext(ATOM + "title") or "").strip()
