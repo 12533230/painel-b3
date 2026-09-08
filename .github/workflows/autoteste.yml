@@ -54,6 +54,26 @@ jobs:
           echo "--- conteúdo de data/news_macro.json"
           python -c "import json,os;p='data/news_macro.json';d=json.load(open(p,encoding='utf-8')) if os.path.exists(p) else None;print('NAO GEROU') if d is None else print('updatedAt',d.get('updatedAt'),'| manchetes',len(d.get('manchetes') or []),'| reddit',len((d.get('reddit') or {}).get('news') or []),'| veiculos',[(v.get('n'),len(v.get('itens') or [])) for lista in (d.get('veiculos') or {}).values() for v in lista])" || { echo "ERRO ao ler news_macro.json"; falhou; }
           echo
+          echo "--- diagnóstico: o que o Reddit aceita DESTE servidor"
+          # o bloco de fóruns está parado porque a coleta leva 403. Aqui mede,
+          # do IP do runner, qual combinação de endpoint e User-Agent passa.
+          UA_ROBO="Mozilla/5.0 (painel-b3; uso educacional/interno; contato via repo)"
+          UA_NAV="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+          for alvo in \
+            "https://www.reddit.com/r/investimentos/top.json?t=week&limit=5&raw_json=1" \
+            "https://old.reddit.com/r/investimentos/top.json?t=week&limit=5&raw_json=1" \
+            "https://api.reddit.com/r/investimentos/top?t=week&limit=5" \
+            "https://www.reddit.com/r/investimentos/top/.rss?t=week" \
+            "https://www.reddit.com/r/investimentos.rss" ; do
+            for rot in robo nav; do
+              if [ "$rot" = "robo" ]; then ua="$UA_ROBO"; else ua="$UA_NAV"; fi
+              cod=$(curl -s -o /tmp/rd.out -w '%{http_code}' -A "$ua" --max-time 20 "$alvo" || echo "erro")
+              tam=$(wc -c < /tmp/rd.out 2>/dev/null || echo 0)
+              printf '  %-4s %-66s HTTP %s · %s bytes · %s\n' "$rot" "$(echo "$alvo" | cut -c9-74)" "$cod" "$tam" "$(head -c 60 /tmp/rd.out | tr -d '\n')"
+              sleep 2
+            done
+          done
+          echo
           echo "=== fim do autoteste · falhas: $(cat autoteste.falhas)"
 
       - name: Mostrar o log no resumo da execução
