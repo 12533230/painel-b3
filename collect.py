@@ -7,7 +7,7 @@ moedas (AwesomeAPI), cripto (CoinGecko), notícias (Reddit + Google News RSS).
 Toda fonte é tolerante a falha: se cair, mantém o último valor comitado.
 """
 import datetime as dt
-import json, re, sys, io, zipfile, unicodedata
+import json, re, sys, io, zipfile, unicodedata, time
 from pathlib import Path
 import requests
 from lxml import html as lxml_html, etree
@@ -152,29 +152,65 @@ NEWSDOM = re.compile(r"globo\.com|infomoney|valor|exame\.|estadao|folha\.|uol\.c
                      r"braziljournal|neofeed|reuters|bloomberg|investing\.com|seudinheiro|gazetadopovo|"
                      r"poder360|metropoles|oglobo|bbc\.com|suno\.|einvestidor", re.I)
 def reddit_news():
+    """Top da semana dos fóruns, pelo feed Atom.
+
+    O endpoint JSON (top.json, api.reddit.com, old.reddit.com) responde **403
+    Blocked** para IP de servidor — medido no runner do GitHub em 07/09/2026, com
+    o UA do robô e com UA de navegador, nos três endereços. O bloco de fóruns
+    ficou 20 dias parado por isso, caindo sempre no último valor bom.
+
+    O feed **`/top/.rss?t=week` responde 200** (59.995 bytes na mesma medição), e
+    é o caminho usado aqui. O que se perde: o Atom não traz número de comentários
+    nem score, então a ordem passa a ser a do próprio Reddit ("top da semana") e o
+    painel não exibe mais contagem de comentários — em vez de exibir um número que
+    não temos. Chamadas seguidas levam 429: 6 s entre os subreddits.
+    """
     all_posts = []
-    for sub in ("investimentos", "economia", "farialimabets"):
+    ATOM = "{http://www.w3.org/2005/Atom}"
+    for i, sub in enumerate(("investimentos", "economia", "farialimabets")):
+        if i:
+            time.sleep(6)
         try:
-            r = j(f"https://www.reddit.com/r/{sub}/top.json?t=week&limit=25&raw_json=1")
-            for c in r["data"]["children"]:
-                d = c["data"]
-                all_posts.append({
-                    "t": (d.get("title") or "")[:160], "sub": sub, "sc": d.get("score", 0),
-                    "nc": d.get("num_comments", 0),
-                    "u": d.get("url_overridden_by_dest") if (d.get("url_overridden_by_dest") and not d.get("is_self"))
-                         else "https://www.reddit.com" + d.get("permalink", ""),
-                    "dom": d.get("domain", ""), "self": bool(d.get("is_self")), "utc": d.get("created_utc"),
-                })
+            r = get(f"https://www.reddit.com/r/{sub}/top/.rss?t=week", timeout=25)
+            root = etree.fromstring(r.content)
+            for e in root.iter(ATOM + "entry"):
+                t = (e.findtext(ATOM + "title") or "").strip()
+                perma = ""
+                ln = e.find(ATOM + "link")
+                if ln is not None:
+                    perma = ln.get("href") or ""
+                quando = (e.findtext(ATOM + "updated") or e.findtext(ATOM + "published") or "").strip()
+                conteudo = e.findtext(ATOM + "content") or ""
+                # o Atom do Reddit embute o link externo do post como <a href=…>[link]</a>
+                m = re.search(r'href="([^"]+)"[^<]*>\s*\[link\]', conteudo)
+                externo = (m.group(1) if m else "") or perma
+                ehself = (not m) or externo.startswith("https://www.reddit.com")
+                dom = ""
+                md = re.match(r"https?://([^/]+)/?", externo or "")
+                if md:
+                    dom = md.group(1)
+                try:
+                    utc = int(dt.datetime.fromisoformat(quando.replace("Z", "+00:00")).timestamp()) if quando else None
+                except Exception:
+                    utc = None
+                if t and perma:
+                    all_posts.append({"t": t[:160], "sub": sub, "u": externo or perma,
+                                      "dom": dom, "self": ehself, "utc": utc})
+            log("Reddit ok:", sub, len(all_posts))
         except Exception as e:
             log("Reddit", sub, "falhou:", repr(e))
     if not all_posts:
-        return PREV.get("reddit") or {"news": [], "disc": []}
-    news = sorted([p for p in all_posts if NEWSDOM.search(p["dom"] or "")], key=lambda x: -x["nc"])[:12]
-    disc = sorted([p for p in all_posts if not NEWSDOM.search(p["dom"] or "")
-                   and (p["self"] or p["sub"] != "farialimabets")], key=lambda x: -x["nc"])[:8]
-    for p in disc:
-        p["u"] = p["u"] if p["u"].startswith("https://www.reddit.com") else p["u"]
-    return {"news": news, "disc": disc}
+        # devolve o último valor bom, mas marcado: sem isso o painel não sabia
+        # distinguir "coletei agora" de "isto é de 20 dias atrás"
+        ant = PREV.get("reddit") or {"news": [], "disc": []}
+        ant = dict(ant); ant["stale"] = True
+        return ant
+    # a ordem do feed já é a do "top da semana" do Reddit; não há contagem de
+    # comentários no Atom, então não se inventa ranking
+    news = [p for p in all_posts if NEWSDOM.search(p["dom"] or "")][:12]
+    disc = [p for p in all_posts if not NEWSDOM.search(p["dom"] or "")
+            and (p["self"] or p["sub"] != "farialimabets")][:8]
+    return {"news": news, "disc": disc, "stale": False}
 
 # manchetes por veículo (RSS) — sugestão da equipe Insignia
 FEEDS_BR = [

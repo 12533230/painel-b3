@@ -3854,9 +3854,10 @@ function renderMacro(){
   // enquanto o painel dizia "na semana". Agora o cartão mostra a data real dos
   // posts, e avisa quando eles não são da semana.
   const rdIdade = redditIdadeDias();
+  const rdParado = ((MACRO.reddit||{}).stale === true) || (rdIdade != null && rdIdade > 10);
   nw.append(el('div','ct','Notícias com mais repercussão nos fóruns de investimento'
     + (rdIdade!=null ? ' — posts até '+redditMaisNovoTxt() : '')));
-  if(rdIdade!=null && rdIdade > 10)
+  if(rdParado)
     nw.append(el('div','notice','⚠ Estes posts são de '+redditMaisNovoTxt()+' ('+idadeTxt(rdIdade)
       +'), não da última semana: o robô não está conseguindo coletar dos fóruns (o Reddit recusa consulta de servidor). '
       +'Enquanto isso não mudar, este bloco fica parado nessa data — as notícias por empresa e as manchetes por veículo continuam atualizando a cada 2 horas.'));
@@ -3864,11 +3865,11 @@ function renderMacro(){
     const it=el('div','newsit');
     const a=el('a',null,n.t); a.href=n.u; a.target='_blank'; a.rel='noopener'; it.append(a);
     const meta=el('div','newsmeta');
-    meta.append(el('span','ncchip','💬 '+n.nc+' coment.'));
+    if(n.nc != null) meta.append(el('span','ncchip','💬 '+n.nc+' coment.'));
     meta.append(el('span',null,(n.dom||'').replace('www.','')+' · r/'+n.sub));
     it.append(meta); nw.append(it);
   }
-  nw.append(el('div','note','Ranqueadas por nº de comentários em r/investimentos, r/economia e r/farialimabets'
+  nw.append(el('div','note','Top da semana de r/investimentos, r/economia e r/farialimabets, na ordem do próprio Reddit'
     + (rdIdade!=null ? ' · post mais novo de '+redditMaisNovoTxt()+' ('+idadeTxt(rdIdade)+')' : '')
     + '. '+noticiaTxt()));
   grid.append(nw);
@@ -3895,12 +3896,13 @@ function renderMacro(){
   grid2.append(mc);
   const dc=el('div','card');
   dc.append(el('div','ct','Discussões em alta nos fóruns'+(rdIdade!=null ? ' — até '+redditMaisNovoTxt() : '')));
-  if(rdIdade!=null && rdIdade > 10)
-    dc.append(el('div','note','⚠ Mesma limitação do bloco acima: o Reddit recusa as consultas do robô, então este conteúdo está parado em '+redditMaisNovoTxt()+'.'));
+  if(rdParado)
+    dc.append(el('div','note','⚠ Mesma limitação do bloco acima: este conteúdo está parado em '+redditMaisNovoTxt()+'.'));
   for(const n of (MACRO.reddit&&MACRO.reddit.disc)||[]){
     const it=el('div','newsit');
     const a=el('a',null,n.t); a.href=n.u; a.target='_blank'; a.rel='noopener'; it.append(a);
-    const meta=el('div','newsmeta'); meta.append(el('span','ncchip','💬 '+n.nc)); meta.append(el('span',null,'r/'+n.sub)); it.append(meta); dc.append(it);
+    const meta=el('div','newsmeta'); if(n.nc != null) meta.append(el('span','ncchip','💬 '+n.nc));
+    meta.append(el('span',null,'r/'+n.sub)); it.append(meta); dc.append(it);
   }
   grid2.append(dc);
   m.append(grid2);
@@ -4024,7 +4026,7 @@ function freshRows(){
    ['Boletim Focus','Banco Central','relatório de '+((c.focus&&c.focus[0])? dmy(c.focus[0].d):'—'),'BCB publica às segundas · busca ao abrir'],
    ['Notícias e discussões','Reddit (fóruns de investimento)',
      (redditIdadeDias()!=null ? 'post mais novo de '+redditMaisNovoTxt()+' ('+idadeTxt(redditIdadeDias())+')' : 'sem posts carregados'),
-     redditIdadeDias()!=null && redditIdadeDias()>10 ? '⚠ parado: o robô não consegue coletar dos fóruns' : 'tenta a cada 2 horas'],
+     ((MACRO.reddit||{}).stale===true || (redditIdadeDias()!=null && redditIdadeDias()>10)) ? '⚠ parado: o robô não consegue coletar dos fóruns' : 'a cada 2 horas (feed Atom do Reddit)'],
    ['Manchetes por veículo','RSS dos jornais (G1, Valor, NYT…)',MACRO.noticiasAoVivoEm? 'coletado em '+hhmmDe(MACRO.noticiasAoVivoEm) : 'snapshot de '+snap,'a cada 2 horas, todos os dias'],
    ['Agenda de eventos','BCB · Fed · BCE · IBGE','calendários oficiais de 2026','manual quando saírem os de 2027'],
    ['Geração do painel','GitHub Actions (github.com/12533230/painel-b3)',buildLocal(),'3 tentativas/dia (06:12, 10:12 e 14:12 BRT): a 1ª que rodar publica'],
