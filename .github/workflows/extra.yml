@@ -1,0 +1,136 @@
+name: Dados extra (índices, proventos, preço longo, série anual)
+
+# Os quatro coletores novos publicam num branch próprio, "extra", por commit órfão
+# — o mesmo padrão de quotes/news. Motivos de não ir para main:
+#  · cada commit em main dispara rebuild do GitHub Pages e deploy do Vercel;
+#  · hist.json e precos_longo.json juntos passam de 2 MB, e o histórico do repo
+#    não precisa carregar uma cópia por dia disso.
+#
+# Cadência por fonte, não uma só para todos:
+#  · índices e proventos mudam em qualquer dia útil (peso do índice muda todo dia,
+#    provento é anunciado quando a empresa decide) → diariamente;
+#  · preço mensal muda de verdade uma vez por mês, mas o fechamento do mês
+#    corrente muda todo dia → diariamente, depois do fim do pregão;
+#  · série anual da DFP só muda quando uma empresa entrega ou reapresenta um
+#    exercício → uma vez por semana, e ainda assim baixa ~150 MB da CVM.
+#
+# Cada coletor é independente: um que falhe não impede os outros de publicar. O
+# passo final marca a execução como falha se NENHUM arquivo foi gerado, e também
+# se um coletor que já vinha funcionando parou de entregar (o arquivo do branch
+# existe e não foi regravado).
+on:
+  schedule:
+    - cron: "40 22 * * 1-5"   # 19:40 Brasília, depois do fechamento
+    - cron: "40 2 * * 2-6"    # 23:40 Brasília — 2ª chance (o cron é descartado com frequência)
+  workflow_dispatch:
+    inputs:
+      hist:
+        description: "Rodar também a série anual da DFP (2010+, ~150 MB, ~10 min)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: extra
+  cancel-in-progress: false
+
+jobs:
+  extra:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      # actions fixadas por SHA (supply chain); os comentários indicam a tag equivalente
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Dependências
+        run: pip install --quiet requests==2.34.2 pandas==3.0.5
+
+      # Partir do que já está publicado: coletor que falhar hoje mantém o arquivo
+      # de ontem no branch, em vez de desaparecer da árvore órfã.
+      - name: Baixar o que já está no branch extra
+        run: |
+          mkdir -p data
+          for f in indices.json proventos.json precos_longo.json hist.json; do
+            if curl -sf --retry 3 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/extra/data/$f" -o "/tmp/$f" \
+               && python -c "import json,sys; d=json.load(open('/tmp/$f')); sys.exit(0 if d.get('updatedAt') else 1)"; then
+              cp "/tmp/$f" "data/$f"
+              cp "/tmp/$f" "/tmp/base_$f"
+              echo "base: $f ($(stat -c%s "data/$f") bytes)"
+            else
+              echo "sem $f no branch extra (primeira execução ou arquivo inválido)"
+            fi
+          done
+
+      # É preciso decidir se a semana já rodou a série anual. Domingo (dow 7) é o
+      # dia escolhido; execução manual decide pelo input.
+      - name: Rodar a série anual hoje?
+        id: q
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "hist=${{ inputs.hist }}" >> "$GITHUB_OUTPUT"
+          elif [ "$(date -u +%u)" = "1" ]; then
+            echo "hist=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "hist=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "série anual nesta execução: $(cat "$GITHUB_OUTPUT" | tail -1)"
+
+      # Cada coletor com "|| echo ::warning": um bloqueio de fonte (a B3 está atrás
+      # de Cloudflare e é estreia para o pipeline) não pode derrubar os outros.
+      - name: Índices da B3 (1 requisição, mapa ticker × índices + pesos)
+        run: python collect_indices.py || echo "::warning::índices falharam — mantém o arquivo anterior do branch"
+
+      - name: Proventos por papel (histórico da B3 + data de pagamento)
+        run: python collect_proventos.py || echo "::warning::proventos falharam — mantém o arquivo anterior do branch"
+
+      - name: Preço mensal de 10 anos (retornos, múltiplo histórico)
+        run: python collect_precos.py || echo "::warning::preço longo falhou — mantém o arquivo anterior do branch"
+
+      - name: Série anual da CVM desde 2010
+        if: steps.q.outputs.hist == 'true'
+        run: python collect_hist.py || echo "::warning::série anual falhou — mantém o arquivo anterior do branch"
+
+      - name: Publicar no branch extra (force-push, 1 commit órfão)
+        run: |
+          git config user.name "painel-bot"
+          git config user.email "actions@users.noreply.github.com"
+          # Sem nenhum arquivo não há o que publicar — e publicar árvore vazia
+          # APAGARIA o que está no branch (o commit é órfão).
+          presentes=""
+          for f in indices.json proventos.json precos_longo.json hist.json; do
+            if [ -f "data/$f" ]; then presentes="$presentes data/$f"; fi
+          done
+          if [ -z "$presentes" ]; then
+            echo "::error::nenhum arquivo para publicar — não vou apagar o branch com uma árvore vazia"
+            exit 1
+          fi
+          echo "publicando:$presentes"
+          tmpidx=$(mktemp)
+          GIT_INDEX_FILE="$tmpidx" git read-tree --empty
+          GIT_INDEX_FILE="$tmpidx" git add -f $presentes
+          tree=$(GIT_INDEX_FILE="$tmpidx" git write-tree)
+          rm -f "$tmpidx"
+          commit=$(git commit-tree "$tree" -m "dados extra $(date -u +%FT%TZ)")
+          git push -f origin "$commit:refs/heads/extra"
+
+      # Regressão silenciosa: o arquivo existia no branch e não foi regravado
+      # nesta execução. Isso é diferente de "primeira execução" e diferente de
+      # "fonte nova bloqueada" — é uma fonte que FUNCIONAVA e parou.
+      - name: Falhar se um coletor que funcionava parou de entregar
+        if: always()
+        run: |
+          parou=0
+          for f in indices.json proventos.json precos_longo.json; do
+            if [ -f "/tmp/base_$f" ] && [ -f "data/$f" ] && cmp -s "/tmp/base_$f" "data/$f"; then
+              echo "::error::$f não foi regravado nesta execução — o coletor que já funcionava parou de entregar"
+              parou=$((parou+1))
+            fi
+          done
+          if [ "$parou" -gt 0 ]; then exit 1; fi
+          echo "todos os coletores que já funcionavam entregaram nesta execução"

@@ -108,12 +108,21 @@ jobs:
             python collect_news_macro.py || echo "manchetes falharam — painel usa o macro embutido"
           fi
 
+      # continue-on-error nos dois: o passo "Publicar (commit)" promete publicar o
+      # que deu certo ("se a CVM caiu, o HTML fica o de ontem, mas cotação, candles
+      # e notícia do dia entram"). Sem isto a promessa era falsa — uma exceção no
+      # process.py ou no build abortava o job antes do commit e o dia inteiro
+      # ficava sem publicar NADA. O passo final marca a execução como falha.
       - name: Consolidar indicadores por empresa
+        id: consolida
         if: steps.guarda.outputs.pular != '1' && steps.coleta.outcome == 'success'
+        continue-on-error: true
         run: python process.py
 
       - name: Gerar painel (interno + versão pública sem marca)
-        if: steps.guarda.outputs.pular != '1' && steps.coleta.outcome == 'success'
+        id: build
+        if: steps.guarda.outputs.pular != '1' && steps.coleta.outcome == 'success' && steps.consolida.outcome == 'success'
+        continue-on-error: true
         run: |
           python build_html.py
           python build_public.py
@@ -154,8 +163,21 @@ jobs:
           echo "::error::não consegui publicar em main depois de 3 tentativas"
           exit 1
 
-      - name: Marcar falha se a fonte essencial não respondeu
-        if: steps.guarda.outputs.pular != '1' && steps.coleta.outcome != 'success'
+      - name: Marcar falha se alguma etapa essencial não entregou
+        if: always() && steps.guarda.outputs.pular != '1'
         run: |
-          echo "::error::collect.py falhou nas 3 tentativas (CVM ou Fundamentus). O painel mantém o HTML anterior; cotações, candles e notícias do dia foram publicados. O vigia.yml tentará de novo."
-          exit 1
+          falhou=0
+          if [ "${{ steps.coleta.outcome }}" != "success" ]; then
+            echo "::error::collect.py falhou nas 3 tentativas (CVM ou Fundamentus)."; falhou=1
+          fi
+          if [ "${{ steps.consolida.outcome }}" = "failure" ]; then
+            echo "::error::process.py falhou — o HTML não foi regerado."; falhou=1
+          fi
+          if [ "${{ steps.build.outcome }}" = "failure" ]; then
+            echo "::error::build_html/build_public falhou — o HTML não foi regerado."; falhou=1
+          fi
+          if [ "$falhou" = "1" ]; then
+            echo "::notice::o painel mantém o HTML anterior; cotações, candles e notícias do dia foram publicados. O vigia.yml tentará de novo."
+            exit 1
+          fi
+          echo "todas as etapas entregaram"

@@ -39,8 +39,12 @@ jobs:
           echo "=== autoteste $(date -u +%FT%TZ) · commit ${GITHUB_SHA:0:8}"
           echo
           echo "--- sintaxe (py_compile de todos os .py do repo)"
-          if python -m py_compile collect.py collect_news.py collect_news_macro.py collect_quotes.py collect_candles.py process.py build_html.py build_public.py refresh_b3.py; then
-            echo "OK: todos compilam"
+          # Lista fixa envelhece: o rótulo dizia "todos os .py do repo" e compilava
+          # 9 de 14 — os coletores novos (hist, indices, precos, proventos) e a
+          # sonda ficavam fora do portão que existe justamente para pegá-los.
+          echo "arquivos: $(ls *.py | tr '\n' ' ')"
+          if python -m py_compile $(ls *.py); then
+            echo "OK: todos os $(ls *.py | wc -l) arquivos compilam"
           else
             echo "ERRO DE SINTAXE (acima)"; falhou
           fi

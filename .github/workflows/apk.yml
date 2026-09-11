@@ -187,11 +187,51 @@ jobs:
           set -euo pipefail
           if [ -f saida/assetlinks.json ]; then
             mkdir -p docs/.well-known
-            cp saida/assetlinks.json docs/.well-known/assetlinks.json
+            # MERGE, não cópia. O arquivo publicado registra 2 pacotes (interno e
+          # público) × 2 fingerprints; o Bubblewrap gera o statement só do pacote
+          # que acabou de ser buildado. Copiar por cima apagava o vínculo do OUTRO
+          # app e a barra do Chrome voltava a aparecer nele.
+          node -e '
+            const fs = require("fs");
+            const novo = JSON.parse(fs.readFileSync("saida/assetlinks.json","utf8"));
+            const alvo = "docs/.well-known/assetlinks.json";
+            let atual = [];
+            try { atual = JSON.parse(fs.readFileSync(alvo,"utf8")); } catch(e) {}
+            if (!Array.isArray(atual)) atual = [];
+            const chave = s => (s.target||{}).package_name || "";
+            for (const st of (Array.isArray(novo) ? novo : [novo])) {
+              const pk = chave(st);
+              const ja = atual.find(x => chave(x) === pk);
+              if (!ja) { atual.push(st); continue; }
+              const fps = new Set([...(ja.target.sha256_cert_fingerprints||[]),
+                                   ...((st.target||{}).sha256_cert_fingerprints||[])]);
+              ja.target.sha256_cert_fingerprints = [...fps];
+            }
+            fs.writeFileSync(alvo, JSON.stringify(atual, null, 2) + "\n");
+            console.log("assetlinks: " + atual.length + " pacote(s), fingerprints " +
+              atual.map(x => (x.target.sha256_cert_fingerprints||[]).length).join("+"));
+          '
             git config user.name "painel-bot"
             git config user.email "actions@users.noreply.github.com"
             git add docs/.well-known/assetlinks.json
-            git diff --cached --quiet || { git commit -m "assetlinks do app Android"; git push; }
+            # push com rebase e nova tentativa: main pode ter andado durante o build
+          # (o job leva ~10 min) e um push rejeitado derrubava o run INTEIRO, com o
+          # APK já pronto e ainda não publicado.
+          if git diff --cached --quiet; then
+            echo "assetlinks sem mudança"
+          else
+            git commit -m "assetlinks do app Android"
+            ok=0
+            for i in 1 2 3; do
+              if git push; then ok=1; break; fi
+              echo "push rejeitado — rebase e nova tentativa $i"
+              git pull --rebase --autostash origin main || { git rebase --abort 2>/dev/null || true; break; }
+              sleep 5
+            done
+            if [ "$ok" != "1" ]; then
+              echo "::warning::não consegui publicar o assetlinks agora; o APK segue normalmente e o arquivo pode ser publicado depois"
+            fi
+          fi
           else
             echo "sem assetlinks.json (o app abrirá com a barra do Chrome)"
           fi

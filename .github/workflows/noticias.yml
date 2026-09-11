@@ -42,6 +42,9 @@ jobs:
             if curl -sf --retry 3 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/news/data/$f" -o "/tmp/$f" \
                && python -c "import json,sys; json.load(open('/tmp/$f'))"; then
               mv "/tmp/$f" "data/$f"
+              # guarda a base para comparar depois: se nada mudou, a coleta não
+              # entregou e NÃO se deve avançar a data do commit
+              cp "data/$f" "/tmp/base_$f"
               echo "base: branch news/data/$f"
             else
               echo "sem $f válido no branch news — usando o de main, se houver"
@@ -66,6 +69,19 @@ jobs:
           for f in news.json news_macro.json; do
             [ -f "data/$f" ] || { echo "::error::data/$f ausente — não vou publicar árvore incompleta e apagar o que está no branch"; exit 1; }
           done
+          # O collect_news.py aborta DE PROPÓSITO sem gravar em três casos (nada
+          # coletado, cobertura despencando, universo vazio) e o passo anterior
+          # mascara isso com "|| echo ::warning". Sem a comparação abaixo, o commit
+          # saía com o arquivo ANTIGO e data nova — e o vigia, que mede a data do
+          # commit, ficava estruturalmente incapaz de acusar notícia parada.
+          igual=1
+          for f in news.json news_macro.json; do
+            if [ ! -f "/tmp/base_$f" ] || ! cmp -s "/tmp/base_$f" "data/$f"; then igual=0; fi
+          done
+          if [ "$igual" = "1" ]; then
+            echo "::error::nem news.json nem news_macro.json mudaram nesta execução — a coleta não entregou. Não vou recarimbar o branch com dado velho."
+            exit 1
+          fi
           git config user.name "painel-bot"
           git config user.email "actions@users.noreply.github.com"
           git checkout --orphan news-tmp

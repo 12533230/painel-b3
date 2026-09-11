@@ -1,0 +1,82 @@
+name: Sonda de fontes (testa fonte nova antes de acoplar)
+
+# Toda fonte nova do painel foi medida de um IP residencial brasileiro. Os
+# endpoints sistemaswebb3-listados.b3.com.br e bvmf.bmfbovespa.com.br estão atrás
+# de Cloudflare e são estreia para o pipeline — e foi exatamente aí que o Reddit
+# devolveu 403 para IP de datacenter e o bloco de fóruns ficou 20 dias parado sem
+# ninguém perceber. Esta sonda roda no runner, registra status/tamanho/tempo e um
+# registro de exemplo de cada fonte, e publica em texto legível SEM LOGIN:
+#   https://raw.githubusercontent.com/12533230/painel-b3/sonda/sonda.log
+# Não publica nada no painel.
+on:
+  workflow_dispatch: {}
+  schedule:
+    # 1x por semana, segunda 11:33 UTC (08:33 BRT): pega bloqueio novo de fonte
+    # que já está em uso antes de ele derrubar a coleta de verdade.
+    - cron: "33 11 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sonda
+  cancel-in-progress: true
+
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # actions fixadas por SHA (supply chain); os comentários indicam a tag equivalente
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Dependências
+        run: pip install --quiet requests==2.34.2
+
+      # continue-on-error: a sonda SEMPRE tem de gerar o relatório, mesmo quando
+      # uma fonte obrigatória cai (é justamente aí que o relatório importa). O
+      # passo final é que decide a cor da execução.
+      - name: Sondar as fontes
+        id: rodar
+        continue-on-error: true
+        run: python sonda_fontes.py
+
+      - name: Mostrar no resumo da execução
+        if: always()
+        run: |
+          if [ ! -f sonda.log ]; then
+            echo "::error::sonda_fontes.py não gerou sonda.log — a sonda quebrou antes de medir nada"
+            exit 1
+          fi
+          cat sonda.log
+          { echo '```'; cat sonda.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publicar no branch sonda (legível por raw, sem login)
+        if: always()
+        run: |
+          [ -f sonda.log ] || { echo "sem sonda.log — nada a publicar"; exit 0; }
+          git config user.name "painel-bot"
+          git config user.email "actions@users.noreply.github.com"
+          tmpidx=$(mktemp)
+          GIT_INDEX_FILE="$tmpidx" git read-tree --empty
+          GIT_INDEX_FILE="$tmpidx" git add -f sonda.log
+          tree=$(GIT_INDEX_FILE="$tmpidx" git write-tree)
+          rm -f "$tmpidx"
+          commit=$(git commit-tree "$tree" -m "sonda $(date -u +%FT%TZ)")
+          git push -f origin "$commit:refs/heads/sonda"
+
+      # Vermelho só quando uma fonte QUE JÁ ESTÁ EM PRODUÇÃO cai. Fonte de estreia
+      # bloqueada é informação, não regressão — quem lê o log decide.
+      - name: Falhar se caiu fonte já em uso
+        if: always()
+        run: |
+          if [ "${{ steps.rodar.outcome }}" = "success" ]; then
+            echo "todas as fontes em produção responderam"
+            exit 0
+          fi
+          echo "::error::alguma fonte JÁ EM USO não respondeu do runner — veja sonda.log no branch sonda"
+          exit 1

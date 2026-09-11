@@ -4,9 +4,16 @@ name: Vigia (checa se o painel está atualizando)
 # branch "quotes" ficou 3 dias parado e o painel continuou no ar mostrando dado
 # velho. Este vigia checa a idade do que está PUBLICADO (não a do agendamento) e
 # redispara o workflow correspondente. Roda de hora em hora, em minuto ímpar.
+# O cron de hora em hora NÃO é entregue de hora em hora: medido em 10/09/2026 pela
+# API dos runs, foram ~5 execuções por dia contra as 24 agendadas. Dois slots por
+# hora aumentam a chance de cair numa janela em que o GitHub esteja entregando.
+# Enquanto o vigia depende do agendador, o limite de 45 min das cotações não é
+# exequível — por isso o limite de cotações passou para 90 min, coerente com a
+# frequência real de checagem, e a faixa vermelha da própria página (que roda no
+# navegador, a cada 5 min) continua sendo o aviso rápido para quem está olhando.
 on:
   schedule:
-    - cron: "47 * * * *"
+    - cron: "7,37 * * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -76,7 +83,7 @@ jobs:
 
           # Cotações: só faz sentido cobrar durante o pregão (13h–21h UTC, dia útil)
           if [ "$dow" -le 5 ] && [ "$hora" -ge 13 ] && [ "$hora" -le 21 ]; then
-            checa "cotações (branch quotes)" quotes data/quotes.json 45 quotes.yml
+            checa "cotações (branch quotes)" quotes data/quotes.json 90 quotes.yml
           else
             echo "fora do pregão — cotações não são cobradas agora"
           fi

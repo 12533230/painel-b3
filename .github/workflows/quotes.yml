@@ -1,18 +1,31 @@
 name: Cotações quase ao vivo
 
 # ANTES: cron "*/15 13-21 * * 1-5" (33 gatilhos/dia). O GitHub entrega
-# agendamento por "best effort" e descarta o excedente quando a fila está cheia:
-# medido em 07/09/2026, este workflow caiu de 33 execuções/dia (20-25/ago) para
-# 13, depois 6, depois 1 por dia, e no dia 07 nenhuma — o branch "quotes" ficou
-# 3 dias parado sem ninguém perceber.
+# agendamento por "best effort" e descarta o excedente: medido em 07/09/2026 este
+# workflow caiu de 33 execuções/dia para 13, depois 6, depois 1, e no dia 07
+# nenhuma — o branch "quotes" ficou 3 dias parado sem ninguém perceber.
 #
-# AGORA: 2 gatilhos por dia e o ciclo de 10 minutos roda DENTRO do job. Um único
-# agendamento entregue cobre a janela inteira; o segundo gatilho também serve de
-# recuperação se o primeiro for descartado.
+# DEPOIS veio o ciclo interno com 2 gatilhos/dia. Melhorou, mas medido em
+# 10/09/2026 pela API dos runs: o gatilho das 13:08 UTC (abertura do pregão) NÃO
+# É ENTREGUE — em 08/09 e 09/09 a primeira execução agendada só saiu às 17:08,
+# e o que salvou a manhã foi o vigia redisparando por volta das 14:48. Ou seja:
+# os primeiros ~100 minutos de todo pregão ficavam com o preço do fechamento
+# anterior. E o comentário antigo afirmava que "um único agendamento entregue
+# cobre a janela inteira", o que era falso: LIMITE é de 255 min e o pregão tem
+# 522.
+#
+# AGORA: quatro gatilhos, o primeiro ANTES da abertura, cada um cobrindo ~2 horas
+# de ciclo. Qualquer um que seja entregue cobre o próprio bloco, e o vigia segue
+# como rede de segurança. O ciclo termina antes do gatilho seguinte nascer, para
+# o balanço final do job sempre rodar (com cancel-in-progress, um ciclo longo era
+# morto antes de chegar ao passo que marca a falha — e a execução saía cinza,
+# sem e-mail).
 on:
   schedule:
-    - cron: "8 13 * * 1-5"    # 10:08 Brasília — cobre até 17h UTC
-    - cron: "8 17 * * 1-5"    # 14:08 Brasília — cobre até o fim do pregão
+    - cron: "55 12 * * 1-5"   # 09:55 Brasília — 5 min ANTES da abertura
+    - cron: "3 15 * * 1-5"    # 12:03 Brasília
+    - cron: "3 17 * * 1-5"    # 14:03 Brasília
+    - cron: "3 19 * * 1-5"    # 16:03 Brasília — cobre até o fim do after-market
   workflow_dispatch: {}
 
 permissions:
@@ -20,12 +33,15 @@ permissions:
 
 concurrency:
   group: cotacoes
-  cancel-in-progress: true    # o gatilho da tarde substitui o ciclo da manhã
+  # O gatilho seguinte substitui o ciclo em andamento. Com o ciclo de 105 min e
+  # gatilhos de 2 em 2 horas, o normal é o ciclo terminar sozinho antes — o
+  # cancelamento passa a ser exceção (gatilho atrasado), não regra.
+  cancel-in-progress: true
 
 jobs:
   cotacoes:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 130
     steps:
       # actions fixadas por SHA (supply chain); os comentários indicam a tag equivalente
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -46,7 +62,7 @@ jobs:
             echo "sem snapshot anterior válido no branch quotes"
           fi
 
-      - name: Coletar e publicar a cada 10 min até o fim da janela
+      - name: Coletar e publicar a cada 5 min até o fim da janela
         run: |
           set -u
           git config user.name "painel-bot"
@@ -76,7 +92,9 @@ jobs:
           # timeout do job (300 min). Usar hora-do-dia deixava o ciclo da tarde
           # com folga zero — e qualquer início fora do horário previsto (o
           # agendamento do GitHub atrasa horas) criava janela maior que o timeout.
-          LIMITE=$(( $(date -u +%s) + 255*60 ))
+          # 105 min: menos que o intervalo entre gatilhos (120), para o ciclo
+          # acabar sozinho e o balanço final do job rodar de verdade.
+          LIMITE=$(( $(date -u +%s) + 105*60 ))
           FIMPREGAO=$(date -u -d 'today 21:50' +%s)
           # atenção: o shell do Actions roda com -e, então "[ cond ] && cmd" solto
           # DERRUBA o passo quando a condição é falsa. Sempre if/fi aqui.
@@ -102,7 +120,7 @@ jobs:
             if [ "$agora" -ge "$LIMITE" ] || [ "$agora" -ge "$FIMPREGAO" ]; then
               echo "fim da janela"; break
             fi
-            sleep 600
+            sleep 300
           done
           echo "voltas: $i · publicações: $pub · sem preço novo: $semnovo · erros: $erros"
           # Falha só quando NADA saiu e houve erro de verdade. Feriado (tudo
