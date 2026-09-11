@@ -2910,6 +2910,83 @@ function copiaLinkDaTela(btn){
              btn.textContent = '✓ link copiado'; setTimeout(()=>btn.textContent = btn.dataset.lbl, 1800); }
   }).catch(() => { if(btn) btn.textContent = 'falhou — permita a área de transferência'; });
 }
+let telaAtual = '';           // nome da tela salva aberta agora
+function barraTelas(){
+  const g = el('span');
+  const todas = telasAll();
+  const nomes = Object.keys(todas).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const sel = document.createElement('select');
+  sel.setAttribute('aria-label','Telas salvas');
+  const o0 = el('option',null, nomes.length ? '📁 abrir tela salva… (' + nomes.length + ')' : '📁 nenhuma tela salva ainda');
+  o0.value = ''; sel.append(o0);
+  for(const n of nomes){
+    const o = el('option',null, n + ' — ' + telaResumo(todas[n]));
+    o.value = n; if(n === telaAtual) o.selected = true; sel.append(o);
+  }
+  sel.onchange = () => { if(sel.value) telaAbre(sel.value); };
+  g.append(sel);
+  const bSalva = el('button','btn','💾 salvar tela');
+  bSalva.title = 'guarda ESTA configuração (modo, indicador, recorte, porte e filtros) com um nome, '
+    + 'neste navegador. A tela reavalia sozinha quando o dado do trimestre seguinte entra.';
+  bSalva.onclick = () => {
+    const n = prompt('Nome da tela (ex.: "Small caps de consumo pouco alavancadas"):', telaAtual || '');
+    if(n == null) return;
+    const r = telasSave(n);
+    if(r === 'cheio'){ alert('Limite de ' + TELA_MAX + ' telas salvas. Exclua uma antes de salvar outra.'); return; }
+    if(r){ telaAtual = String(n).trim().slice(0,48); renderCmp(); }
+  };
+  g.append(bSalva);
+  if(telaAtual && todas[telaAtual]){
+    const bDel = el('button','btn','🗑 excluir "' + telaAtual + '"');
+    bDel.onclick = () => { if(confirm('Excluir a tela salva "' + telaAtual + '"?')){ telasDel(telaAtual); telaAtual = ''; renderCmp(); } };
+    g.append(bDel);
+  }
+  return g;
+}
+
+// ---- TELAS SALVAS ----------------------------------------------------------
+// O peer set salva uma LISTA DE EMPRESAS; a tela salva a RECEITA. São coisas
+// diferentes e as duas fazem falta: "as 8 empresas do projeto ADCOS" é um peer
+// set, e "small cap de consumo com dív.líq./EBITDA abaixo de 2 e FCO acima do
+// lucro" é uma tela — e a tela reavalia sozinha quando o dado do trimestre
+// seguinte entra, enquanto o peer set continua com as mesmas oito.
+// O que é guardado é exatamente a string que já viaja no link, então abrir uma
+// tela salva e abrir um link recebido passam pelo mesmo caminho (aplicaHash).
+const TELA_MAX = 30;
+function telasAll(){ const x = lsGet('telas'); return (x && typeof x === 'object' && !Array.isArray(x)) ? x : {}; }
+function telasSave(nome){
+  const n = String(nome||'').trim().slice(0,48); if(!n) return false;
+  const all = telasAll();
+  if(!(n in all) && Object.keys(all).length >= TELA_MAX) return 'cheio';
+  all[n] = estadoParaHash(); lsSet('telas', all); return true;
+}
+function telasDel(nome){ const all = telasAll(); delete all[nome]; lsSet('telas', all); }
+function telaAbre(nome){
+  const h = telasAll()[nome]; if(!h) return false;
+  // aplicaHash lê de location.hash e limpa o endereço no fim
+  try{ history.replaceState(null, '', location.pathname + location.search + '#' + h); }catch(e){ location.hash = h; }
+  telaAtual = nome;
+  return aplicaHash();
+}
+// rótulo curto do que a tela guarda, para o usuário saber o que vai abrir
+function telaResumo(h){
+  try{
+    const p = new URLSearchParams(h);
+    const partes = [];
+    const modos = {rank:'ranking', mapa:'mapa de calor', set:'setores', emp:'empresa × setor',
+                   hist:'histórico', op:'KPIs operacionais', scr:'screener', peer:'peer set'};
+    if(p.get('v') !== 'cmp') return p.get('emp') ? 'ficha de empresa' : 'lista de empresas';
+    partes.push(modos[p.get('m')] || p.get('m') || 'ranking');
+    const par = CMP_INDS.find(x => x[0] === p.get('i'));
+    if(par && p.get('m') !== 'scr') partes.push(par[1]);
+    if(p.get('e')) partes.push(escopoRotulo(p.get('e')));
+    if(p.get('p')){ const po = PORTES.find(x => x[0] === p.get('p')); if(po) partes.push(po[1]); }
+    const nf = (p.get('f') || '').split(',').filter(Boolean).length;
+    if(nf) partes.push(nf + (nf === 1 ? ' filtro' : ' filtros'));
+    return partes.join(' · ');
+  }catch(e){ return 'tela salva'; }
+}
+
 // ---- modo apresentação: fontes maiores, sem filtros na tela, fundo limpo.
 // Serve para projetar numa reunião sem ter de exportar imagem antes.
 function modoApresentacao(liga){
@@ -4691,6 +4768,7 @@ function renderCmp(){
   bApr.title = 'fontes maiores e sem filtros na tela, para projetar (tecla P)';
   bApr.onclick = () => modoApresentacao(!document.body.classList.contains('apres'));
   bar.append(bApr);
+  bar.append(barraTelas());
   bar.append(mkSel([['rank','Ranking de empresas'],['mapa','Mapa de calor'],['set','Setores entre si'],['emp','Empresa × setor'],
                     ['hist','Histórico (linhas)'],
                     ['op','KPIs operacionais'],['scr','Screener (filtros)'],['peer','Peer set (tabela)']],
