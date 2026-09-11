@@ -93,7 +93,10 @@ def log(*a):
 
 
 def so_dig(s):
-    return "".join(ch for ch in str(s or "") if ch.isdigit())
+    # NaN do pandas é truthy: `s or ""` devolveria o proprio NaN
+    if s is None or (isinstance(s, float) and s != s):
+        return ""
+    return "".join(ch for ch in str(s) if ch.isdigit())
 
 
 def baixa(ano):
@@ -140,6 +143,24 @@ def num(v):
 def inteiro(v):
     x = num(v)
     return None if x is None else int(round(x))
+
+
+def txt(v):
+    """Texto de uma célula da CVM, tolerando o NaN do pandas.
+
+    Armadilha que derrubou a primeira execução: mesmo com `dtype=str`, o pandas
+    devolve **float('nan')** para célula vazia — e NaN é TRUTHY em Python, então
+    `(r.get("Tipo_Pessoa_Acionista") or "").strip()` não cai no vazio e estoura
+    com `'float' object has no attribute 'strip'`. Pior: se o NaN escapasse para
+    o JSON, `json.dumps` escreveria `NaN`, que não é JSON válido e quebraria a
+    página inteira em silêncio.
+    """
+    if v is None:
+        return ""
+    if isinstance(v, float) and v != v:          # NaN não é igual a si mesmo
+        return ""
+    s = str(v).strip()
+    return "" if s.lower() in ("nan", "none") else s
 
 
 def mais_recente(df):
@@ -189,10 +210,10 @@ def coleta_ano(ano):
         reg = {"ano": ano}
         d = dist_r.get(cnpj)
         if d is not None:
-            reg["ref"] = d.get("Data_Referencia")
+            reg["ref"] = txt(d.get("Data_Referencia")) or None
             reg["versao"] = inteiro(d.get("Versao"))
-            reg["assembleia"] = d.get("Data_Ultima_Assembleia") or None
-            reg["nome"] = d.get("Nome_Companhia")
+            reg["assembleia"] = txt(d.get("Data_Ultima_Assembleia")) or None
+            reg["nome"] = txt(d.get("Nome_Companhia")) or None
             flt = {
                 "on": num(d.get("Percentual_Acoes_Ordinarias_Circulacao")),
                 "pn": num(d.get("Percentual_Acoes_Preferenciais_Circulacao")),
@@ -219,17 +240,17 @@ def coleta_ano(ano):
         if g is not None and len(g):
             linhas = []
             for _, r in g.iterrows():
-                nome = (r.get("Acionista") or "").strip()
+                nome = txt(r.get("Acionista"))
                 on = inteiro(r.get("Quantidade_Acao_Ordinaria_Circulacao")) or 0
                 pn = inteiro(r.get("Quantidade_Acao_Preferencial_Circulacao")) or 0
                 tot = inteiro(r.get("Quantidade_Total_Acoes_Circulacao")) or (on + pn)
                 linhas.append({
                     "n": nome,
-                    "t": (r.get("Tipo_Pessoa_Acionista") or "").strip() or None,
+                    "t": txt(r.get("Tipo_Pessoa_Acionista")) or None,
                     "on": on, "pn": pn, "tot": tot,
-                    "ctrl": (r.get("Acionista_Controlador") or "").strip().upper() == "S",
-                    "acordo": (r.get("Participante_Acordo_Acionistas") or "").strip().upper() == "S",
-                    "pais": (r.get("Nacionalidade") or "").strip() or None,
+                    "ctrl": txt(r.get("Acionista_Controlador")).upper() == "S",
+                    "acordo": txt(r.get("Participante_Acordo_Acionistas")).upper() == "S",
+                    "pais": txt(r.get("Nacionalidade")) or None,
                 })
             som_on = sum(x["on"] for x in linhas)
             som_pn = sum(x["pn"] for x in linhas)
@@ -360,7 +381,10 @@ def main():
                    "floatContraditorio": contradiz},
         "porCnpj": por_cnpj,
     }
-    OUT_FILE.write_text(json.dumps(saida, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    # rede de segurança: json.dumps escreve NaN/Infinity sem reclamar, e o
+    # resultado NÃO é JSON válido — a página inteira quebraria no JSON.parse.
+    texto = json.dumps(saida, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
+    OUT_FILE.write_text(texto, encoding="utf-8")
     log(f"OK {OUT_FILE} ({OUT_FILE.stat().st_size/1024:.0f} KB) · {len(por_cnpj)} empresas · "
         f"{com_float} com free float · {com_comp} com composição · {com_pct} com percentual · "
         f"{contradiz} com free float suprimido por contradizer a própria composição acionária")
