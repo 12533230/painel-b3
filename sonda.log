@@ -1,0 +1,104 @@
+=== sonda de fontes · 2026-09-11T13:21:21Z · runner do GitHub Actions (IP de datacenter)
+
+Objetivo: dizer se cada fonte responde DAQUI. Medições anteriores saíram de IP
+residencial no Brasil; B3 e bvmf estão atrás de Cloudflare e são estreia para o
+pipeline. Nada aqui é publicado no painel.
+
+--- 1. fontes JÁ EM USO (se alguma cair aqui, é regressão) ---
+  [OK ] CVM ITR 2026 (zip, HEAD)
+        HTTP 200 · 19597776 bytes · 746 ms · server=nginx/1.31.4
+        content-length=19597776 · accept-ranges=bytes · last-modified=Sun, 06 Sep 2026 10:43:34 GMT
+  [OK ] Fundamentus — tabela de múltiplos
+        HTTP 200 · 761742 bytes · 1122 ms · server=LiteSpeed
+        linhas <tr>=995 · encoding=iso-8859-1
+  [OK ] Yahoo spark (cotações do robô)
+        HTTP 200 · 772 bytes · 74 ms · server=ATS
+        resultados=2
+  [OK ] B3 empresas listadas (refresh_b3)
+        HTTP 200 · 1000 bytes · 264 ms · server=cloudflare · cf-ray=a396f9a94de1787f-SJC
+        tradingName=PETROBRAS · issuer=PETR
+
+--- 2. ESTREIA: índices da B3 ---
+  [OK ] GetStockIndex (1 chamada → ticker × índices)
+        HTTP 200 · 47389 bytes · 467 ms · server=cloudflare · cf-ray=a396f9aacbbc9881-SJC
+        totalRecords=469 · tickers=469 · índices distintos=40
+        header={"update": "2026-09-11", "startMonth": 9, "endMonth": 12, "year": 2026}
+        exemplo={"company": "3M", "spotlight": "DRN", "code": "MMMC34", "indexes": "BDRX"}
+        papéis com IBOV nesta resposta: 76 (ex.: ABEV3, ALOS3, ASAI3, AURE3, AXIA3, AZZA3)
+  [OK ] GetPortfolioDay IBOV (peso por papel)
+        HTTP 200 · 10195 bytes · 244 ms · server=cloudflare · cf-ray=a396f9adba6bdb3b-SJC
+        data da carteira=11/09/26 · papéis=76
+        exemplo={"segment": null, "cod": "ALOS3", "asset": "ALLOS", "type": "ON      NM", "part": "0,527", "partAcum": null, "theoricalQty": "478.975.645"}
+  [OK ] GetPortfolioDay SMLL (a sigla é SMLL, não SMAL)
+        HTTP 200 · 13756 bytes · 274 ms · server=cloudflare · cf-ray=a396f9af4aa8dac8-SJC
+        data da carteira=11/09/26 · papéis=104
+        exemplo={"segment": null, "cod": "TTEN3", "asset": "3TENTOS", "type": "ON      NM", "part": "0,393", "partAcum": null, "theoricalQty": "112.950.686"}
+
+--- 3. ESTREIA: proventos da B3 ---
+  [OK ] GetListedCashDividends PETROBRAS (pageSize=100, o máximo)
+        HTTP 200 · 32371 bytes · 290 ms · server=cloudflare · cf-ray=a396f9b0fecb49fc-SJC
+        totalRecords=343 totalPages=4 nesta página=100
+        exemplo={"typeStock": "ON", "dateApproval": "06/08/2026", "valueCash": "0,67407131", "ratio": "1", "corporateAction": "JRS CAP PROPRIO", "lastDatePriorEx": "21/08/2026", "dateClosingPricePriorExDate": "21/08/2026", "closingPricePriorExDate": "49,34", "quotedPerShares"
+  [OK ] GetListedCashDividends AMBEV S.A. (o '/' tem de ser removido)
+        HTTP 200 · 12556 bytes · 785 ms · server=cloudflare · cf-ray=a396f9b2cf5c34a1-SJC
+        totalRecords=39 totalPages=1 nesta página=39
+        exemplo={"typeStock": "ON", "dateApproval": "04/05/2026", "valueCash": "0,0449", "ratio": "1", "corporateAction": "JRS CAP PROPRIO", "lastDatePriorEx": "22/06/2026", "dateClosingPricePriorExDate": "22/06/2026", "closingPricePriorExDate": "16,17", "quotedPerShares": "1
+  [OK ] GetListedCashDividends pageSize=500 (deve falhar em silêncio)
+        HTTP 200 · 91 bytes · 240 ms · server=cloudflare · cf-ray=a396f9b7bc51ebe4-SJC
+        corpo=91 bytes · totalRecords=None · results=0
+        CONFIRMA a armadilha do pageSize>100 (200 com corpo curto e totalRecords nulo)
+  [OK ] GetListedSupplementCompany PETR (paymentDate + desdobramentos + nº de ações)
+        HTTP 200 · 7148 bytes · 426 ms · server=cloudflare · cf-ray=a396f9b94e9aa724-SJC
+        tradingName=PETROBRAS    codeCVM=9512 ON=7.442.231.382 PN=5.446.501.379 total=12.888.732.761
+        cashDividends=24 · stockDividends=6
+        exemplo provento={"assetIssued": "BRPETRACNOR9", "paymentDate": "21/12/2026", "rate": "0,47156696000", "relatedTo": "Anual/2026", "approvedOn": "06/08/2026", "isinCode": "BRPETRACNOR9", "label": "DIVIDENDO", "lastDatePrior": "21/08/2026"
+        exemplo desdobramento={"assetIssued": "BRPETRACNOR9", "factor": "100,00000000000", "approvedOn": "25/04/2008", "isinCode": "BRPETRACNOR9", "label": "DESDOBRAMENTO", "lastDatePrior": "25/04/2008", "remarks": ""}
+
+--- 4. ESTREIA: histórico longo de preço ---
+  [OK ] Yahoo chart 10 anos mensal (UA de navegador)
+        HTTP 200 · 16420 bytes · 86 ms · server=ATS
+        pontos=121 · moeda=BRL · 1º negócio=2000-01-03
+        close: 17.690000534057617 (2016-10) → 48.43000030517578 (2026-09)
+        adjclose: 4.431540489196777 → 48.43000030517578  (usar ESTE para retorno, o close para P/L histórico)
+        eventos de dividendo na janela=34
+  [OK ] Yahoo chart 10 anos mensal (UA do robô — pode dar 429)
+        HTTP 200 · 14109 bytes · 86 ms · server=ATS
+        pontos=121 · moeda=BRL · 1º negócio=2000-01-03
+        close: 22.079999923706055 (2016-10) → 78.48999786376953 (2026-09)
+        adjclose: 10.618672370910645 → 78.48999786376953  (usar ESTE para retorno, o close para P/L histórico)
+        eventos de dividendo na janela=0
+  [OK ] Yahoo chart ^BVSP (referência do índice)
+        HTTP 200 · 8961 bytes · 69 ms · server=ATS
+        pontos=121 · moeda=BRL · 1º negócio=1993-04-27
+        close: 64925.0 (2016-10) → 188409.265625 (2026-09)
+        adjclose: 64925.0 → 188409.265625  (usar ESTE para retorno, o close para P/L histórico)
+        eventos de dividendo na janela=0
+  [OK ] COTAHIST anual 2025 (HEAD — só o tamanho)
+        HTTP 200 · 89056788 bytes · 399 ms · server=cloudflare · cf-ray=a396f9be7c39fca9-SJC
+        content-length=89056788 · accept-ranges=bytes · last-modified=Wed, 31 Dec 2025 03:26:37 GMT
+
+--- 5. ESTREIA: FRE da CVM (free float e acionistas) ---
+  [OK ] FRE 2026 (zip completo)
+        HTTP 200 · 8102234 bytes · 15278 ms · server=nginx/1.31.4
+        zip com 34 arquivos
+          fre_cia_aberta_distribuicao_capital_2026.csv: 88243 bytes · 653 linhas
+            colunas: CNPJ_Companhia;Data_Referencia;Versao;ID_Documento;Nome_Companhia;Quantidade_Acionistas_PF;Quantidade_Acionistas_PJ;Quantidade_Acionistas_Investidores_Institucionais;Quantidade_Acoes_Ordinarias_Circulacao;Percentual_Acoes_Ordinarias_Circulacao;Quantidade_Acoes_Preferenciais_Circulacao;Percentual_Aco
+            1ª linha: 00.000.000/0001-91;2026-12-31;6;160993;BCO BRASIL S.A.;1537290;13124;840;2842760965;49.605000;0;0.000000;2842760965;49.605000;2026-04-29
+          fre_cia_aberta_posicao_acionaria_2026.csv: 7210283 bytes · 31657 linhas
+            colunas: CNPJ_Companhia;Data_Referencia;Versao;ID_Documento;Nome_Companhia;ID_Acionista;Acionista;Tipo_Pessoa_Acionista;CPF_CNPJ_Acionista;ID_Acionista_Relacionado;Acionista_Relacionado;Tipo_Pessoa_Acionista_Relacionado;CPF_CNPJ_Acionista_Relacionado;Quantidade_Acao_Ordinaria_Circulacao;Percentual_Acao_Ordin
+            1ª linha: 00.000.000/0001-91;2026-12-31;6;160993;BCO BRASIL S.A.;8199618;Ministério da Economia / Secretaria do Tesouro Nacional;PJ;00.394.460/0001-41;;;;;2865417084;50.000000;0;0.000000;2865417084;50.000000;Brasil;;N;;;;;2026-04-29;S;N
+
+--- 6. ESTREIA: DFP antiga (série longa) ---
+  [OK ] DFP 2010 (HEAD)
+        HTTP 200 · 8900829 bytes · 556 ms · server=nginx/1.31.4
+        content-length=8900829 · accept-ranges=bytes · last-modified=Mon, 05 Aug 2024 20:54:19 GMT
+  [OK ] DFP 2015 (HEAD)
+        HTTP 200 · 8987623 bytes · 542 ms · server=nginx/1.31.4
+        content-length=8987623 · accept-ranges=bytes · last-modified=Mon, 05 Aug 2024 20:39:26 GMT
+
+--- 7. fonte descartada como VALOR (só sanity check) ---
+  Yahoo events=div não serve para exibir dividendo: medido em 10/09/2026,
+  ITUB4 soma 2,6458 em 12 meses contra 3,1653 na B3 e no Fundamentus (16% a
+  menos, perde JCP mensais pequenos). Fica como conferência, não como número.
+
+=== fim da sonda · falhas em fonte obrigatória: 0
