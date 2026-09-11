@@ -1187,6 +1187,11 @@ function openDetail(cvm){
   r1.append(bd); ph.append(r1);
   ph.append(el('div','path', c.setor+' › '+c.subsetor+' › '+c.segmento+'  ·  '+c.fullName+'  ·  CNPJ '+c.cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,'$1.$2.$3/$4-$5')));
   const lk = el('div','links');
+  const bXls = el('button','btn','⬇ ficha em Excel (todas as tabelas)');
+  bXls.title = 'baixa uma planilha com uma aba por seção desta ficha — indicadores, trimestres, '
+    + 'demonstrações, balanço, composição acionária, proventos e o que mais estiver carregado';
+  bXls.onclick = () => baixaFichaExcel(c, bXls);
+  lk.append(bXls);
   const mklink=(href,txt)=>{const a=el('a',null,txt); a.href=href; a.target='_blank'; a.rel='noopener'; return a;};
   lk.append(mklink(c.links.cvm,'Documentos CVM (ITR/DFP/release) ↗'));
   lk.append(mklink('https://www.google.com/search?q='+encodeURIComponent(c.name+' relações com investidores central de resultados'),'Central de resultados / RI ↗'));
@@ -2076,6 +2081,110 @@ function chartTools(getSvg, getTabela, nome){ // barra com "copiar p/ Excel" e "
   bar.append(b1, b2);
   return bar;
 }
+// ---- FICHA INTEIRA EM EXCEL ------------------------------------------------
+// O "copiar dados (Excel)" de cada bloco resolve uma tabela por vez. Quem monta
+// um material para cliente quer a ficha inteira de uma vez, com uma aba por
+// seção — e não existe nenhuma biblioteca embutida aqui para escrever .xlsx.
+// A saída é SpreadsheetML 2003 (XML), que o Excel abre nativamente e aceita
+// várias planilhas, e que é só texto: nenhuma dependência externa.
+//
+// As abas são lidas da PRÓPRIA TELA, não de um registro paralelo. Assim a
+// exportação nunca fica dessincronizada do que o usuário está vendo: se um
+// bloco não carregou (proventos, composição acionária), ele simplesmente não
+// vira aba, em vez de virar aba vazia.
+const XML_ESC = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'');
+// "1.234,5" → 1234.5 · "61,2%" → 61.2 · "R$ 3,80" → 3.8 · "2,4x" → 2.4
+// Devolve null quando NÃO é número: aí a célula sai como texto, que é o certo
+// para "—", "sem dado" e nome de empresa.
+// A tela abrevia dinheiro ("61,8 bi", "1,3 tri") e o painel guarda tudo em R$
+// MILHÕES. Sem tratar o sufixo, três abas inteiras saíam como texto e a planilha
+// não somava nada. O fator devolve o valor NA UNIDADE DO PAINEL (R$ milhões), e
+// a aba "Leia-me" diz isso — preço de ação continua em reais por ação, que é a
+// unidade que a própria linha usa.
+const MULT_BR = [[/\s*tri$/i, 1e6], [/\s*bi$/i, 1e3], [/\s*mi$/i, 1], [/\s*mil$/i, 1e-3]];
+function numeroBR(s){
+  let t = String(s == null ? '' : s).trim();
+  if(!t || t === '—' || t === '-') return null;
+  t = t.replace(/^R\$\s*/, '').replace(/\s*(%|x)$/i, '');
+  let fator = 1;
+  for(const [re, f] of MULT_BR){ if(re.test(t)){ t = t.replace(re, ''); fator = f; break; } }
+  const limpo = t.replace(/\s/g, '');
+  if(!/^-?\d{1,3}(\.\d{3})*(,\d+)?$|^-?\d+(,\d+)?$/.test(limpo)) return null;
+  const n = Number(limpo.replace(/\./g, '').replace(',', '.')) * fator;
+  return Number.isFinite(n) ? n : null;
+}
+function abaNome(s, usados){
+  // Excel: até 31 caracteres e sem : \ / ? * [ ]
+  let n = String(s || 'Aba').replace(/[:\\\/?*\[\]]/g, ' ').trim().slice(0, 31) || 'Aba';
+  let base = n, i = 2;
+  while(usados.has(n)){ const suf = ' (' + i + ')'; n = base.slice(0, 31 - suf.length) + suf; i++; }
+  usados.add(n); return n;
+}
+function planilhaXML(abas){
+  const linhaXML = cels => '<Row>' + cels.map(c => {
+    const num = typeof c === 'number';
+    return '<Cell><Data ss:Type="' + (num ? 'Number' : 'String') + '">'
+      + XML_ESC(num ? c : (c == null ? '' : c)) + '</Data></Cell>';
+  }).join('') + '</Row>';
+  const usados = new Set();
+  const corpo = abas.map(a => '<Worksheet ss:Name="' + XML_ESC(abaNome(a.nome, usados)) + '"><Table>'
+    + a.linhas.map(linhaXML).join('') + '</Table></Worksheet>').join('');
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'
+    + '<?mso-application progid="Excel.Sheet"?>\n'
+    + '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" '
+    + 'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">' + corpo + '</Workbook>';
+}
+function abasDaFicha(c){
+  const p = document.getElementById('panel');
+  const abas = [];
+  // aba 1: os indicadores dos tiles, que não são tabela
+  const tiles = [...p.querySelectorAll('.tile')].map(t => {
+    const l = t.querySelector('.l'), v = t.querySelector('.v'), d = t.querySelector('.d');
+    return [ (l ? l.textContent : '').replace(/\s*\?\s*$/, '').trim(),
+             v ? v.textContent.trim() : '', d ? d.textContent.trim() : '' ];
+  }).filter(x => x[0]);
+  if(tiles.length) abas.push({nome:'Indicadores', linhas:[['Indicador','Valor','Observação'],
+    ...tiles.map(x => [x[0], numeroBR(x[1]) != null ? numeroBR(x[1]) : x[1], x[2]])]});
+  // uma aba por tabela renderizada, com o título da seção mais próxima acima
+  let secao = 'Tabela';
+  for(const e of p.querySelectorAll('h3, .ct, table.qtbl')){
+    if(e.tagName !== 'TABLE'){ secao = e.textContent.trim(); continue; }
+    const linhas = [...e.querySelectorAll('tr')].map(tr =>
+      [...tr.children].map(td => { const s = td.textContent.trim();
+        const n = td.tagName === 'TH' ? null : numeroBR(s); return n == null ? s : n; }));
+    if(linhas.length > 1) abas.push({nome: secao, linhas});
+  }
+  abas.push({nome:'Leia-me', linhas:[
+    ['Empresa', c.name], ['Nome completo', c.fullName], ['CNPJ', c.cnpj], ['Código CVM', c.cvm],
+    ['Setor', c.setor], ['Subsetor', c.subsetor], ['Segmento', c.segmento], ['Listagem', c.listagem],
+    ['Dados de', DB.updatedAt], ['Gerado em', new Date().toISOString().slice(0,19).replace('T',' ')],
+    [], ['Sobre os números'],
+    ['Os valores foram convertidos do formato brasileiro para número, para a planilha somar e ordenar.'],
+    ['Percentual está em PONTOS PERCENTUAIS (61,2 e não 0,612).'],
+    ['Valor em dinheiro está em R$ MILHÕES: a tela abrevia ("61,8 bi") e aqui vira 61800.'],
+    ['A exceção é preço de ação, que continua em reais por ação — é a unidade da própria linha.'],
+    ['Múltiplo está em VEZES. Célula com "—" virou texto, não zero: é ausência de dado, não valor nulo.'],
+    [], ['Fontes'],
+    ['Demonstrações: CVM (ITR/DFP), consolidado quando existe.'],
+    ['Composição acionária e free float: CVM (Formulário de Referência).'],
+    ['Documentos: CVM (IPE). Cotações e múltiplos: B3 e Fundamentus.'],
+    ['Uso informativo; não é recomendação de investimento.'],
+  ]});
+  return abas;
+}
+function baixaFichaExcel(c, btn){
+  const abas = abasDaFicha(c);
+  const xml = planilhaXML(abas);
+  const nome = (c.root || c.name || 'empresa').replace(/[^A-Za-z0-9_-]/g,'_') + '_ficha.xls';
+  const url = URL.createObjectURL(new Blob(['\ufeff' + xml], {type:'application/vnd.ms-excel'}));
+  const a = document.createElement('a'); a.href = url; a.download = nome;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  if(btn){ const lbl = btn.textContent; btn.textContent = '✓ ' + (abas.length) + ' abas';
+           setTimeout(() => btn.textContent = lbl, 2200); }
+}
+
 function tabelaValores(headers, linhas){ // tabela de números junto do gráfico
   const w = el('div','qtblwrap'); w.style.marginTop = '10px';
   const t = el('table','qtbl');
