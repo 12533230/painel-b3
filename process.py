@@ -409,8 +409,8 @@ CAPEX_RE = re.compile(
     re.I)
 FLUXO_CONTAS = {"6.01": "fco", "6.02": "fci", "6.03": "fcf"}
 
-def fluxo_values(sub):
-    """Trimestres de FCO/FCI/FCF/capex, derivados do acumulado do ano."""
+def fluxo_ytd(sub, so_anual=False):
+    """Acumulados do ano de FCO/FCI/FCF/capex por (ano, trimestre)."""
     ytd = {}
     for _, r in sub.iterrows():
         cd = r["CD_CONTA"]
@@ -427,6 +427,8 @@ def fluxo_values(sub):
         q = {3: 1, 6: 2, 9: 3, 12: 4}.get(m)
         if q is None or not ini or ini[5:] != "01-01" or pd.isna(r["VL"]):
             continue
+        if so_anual and q != 4:
+            continue
         d = ytd.setdefault((y, q), {})
         if campo == "capex":
             # só saída de caixa conta como capex
@@ -434,6 +436,19 @@ def fluxo_values(sub):
                 d["capex"] = d.get("capex", 0.0) + abs(r["VL"])
         else:
             d[campo] = r["VL"]
+    return ytd
+
+def fluxo_values(sub_itr, sub_dfp=None):
+    """Trimestres de FCO/FCI/FCF/capex.
+
+    Os três primeiros trimestres saem da diferença entre acumulados do ITR. O T4
+    NÃO existe em ITR nenhum — o quarto trimestre só aparece na DFP, e lá vem
+    como o ANO INTEIRO. Sem derivar T4 = anual − acumulado de 9 meses (o mesmo que
+    já se fazia para a depreciação), qualquer janela de 12 meses que contenha um
+    T4 ficava sem fluxo de caixa — ou seja, praticamente todas: medido no build
+    de 11/09/2026, fco12 saiu em ZERO das 354 empresas por causa disso.
+    """
+    ytd = fluxo_ytd(sub_itr)
     quarters = {}
     for (y, q), d in ytd.items():
         alvo = quarters.setdefault((y, q), {})
@@ -443,6 +458,14 @@ def fluxo_values(sub):
                 alvo[campo] = v
             elif campo in ant:
                 alvo[campo] = v - ant[campo]
+    if sub_dfp is not None and not sub_dfp.empty:
+        anual = fluxo_ytd(sub_dfp, so_anual=True)
+        for (y, q), d in anual.items():
+            nove = ytd.get((y, 3), {})
+            alvo = quarters.setdefault((y, 4), {})
+            for campo, v in d.items():
+                if campo in nove:
+                    alvo[campo] = v - nove[campo]
     return quarters
 
 # ------------------------------------------------------------- balanço
@@ -538,7 +561,8 @@ def build_company(cnpj, meta):
     dfc = pick(dfc_con, dfc_ind, cnpj)
     subd = dfc[dfc["CNPJ"] == cnpj]
     da_q = da_values(subd[subd["SRC"].str.startswith("ITR")])
-    fl_q = fluxo_values(subd[subd["SRC"].str.startswith("ITR")])
+    fl_q = fluxo_values(subd[subd["SRC"].str.startswith("ITR")],
+                        subd[subd["SRC"].str.startswith("DFP")])
 
     # D&A anual (DFP) para derivar T4
     da_year = {}

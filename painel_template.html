@@ -445,6 +445,8 @@ const $ = s => document.querySelector(s);
 const el = (tag, cls, txt) => { const e = document.createElement(tag); if(cls) e.className = cls; if(txt != null) e.textContent = txt; return e; };
 const norm = s => (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 const nbr = new Intl.NumberFormat('pt-BR', {maximumFractionDigits:1});
+// provento por ação precisa de 4 casas: JCP mensal de R$ 0,0182 vira "0,02" com 2
+const nbr4 = new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:4});
 const nbr2 = new Intl.NumberFormat('pt-BR', {maximumFractionDigits:2});
 function fmtMi(v){ // v em R$ milhões
   if(v==null) return '—';
@@ -1187,6 +1189,8 @@ function openDetail(cvm){
   lk.append(mklink('https://www.google.com/search?q='+encodeURIComponent(c.name+' relações com investidores central de resultados'),'Central de resultados / RI ↗'));
   if(c.links.fund) lk.append(mklink(c.links.fund,'Fundamentus ↗'));
   if(c.links.ri) lk.append(mklink(c.links.ri,'Site ↗'));
+  const boxIdx = el('div'); boxIdx.style.marginTop = '6px';
+  ph.append(boxIdx); blocoIndices(c, boxIdx);
   ph.append(lk);
   panel.append(ph);
 
@@ -1474,6 +1478,14 @@ function openDetail(cvm){
         op.fonte);
     }
   });
+
+  pb.append(el('h3','sect','Proventos'));
+  const boxProv = el('div'); boxProv.append(el('div','dim','carregando o histórico de proventos…'));
+  pb.append(boxProv); blocoProventos(c, boxProv);
+
+  pb.append(el('h3','sect','Longo prazo — retorno e série anual'));
+  const boxLP = el('div'); boxLP.append(el('div','dim','carregando o histórico longo…'));
+  pb.append(boxLP); blocoLongoPrazo(c, boxLP);
 
   pb.append(el('h3','sect','Anotações'));
   pb.append(blocoNotas(c));
@@ -2356,6 +2368,8 @@ const MAPA_CORES = [
   ['dlEbitda', 'Dív. líq./EBITDA (x)', c => { const v = dlEbitdaDe(c); return v == null ? null : -v; }, v => fmtX(v == null ? null : -v), 3],
   ['pl', 'P/L', c => { const v = plDe(c); return v == null ? null : -v; }, v => fmtX(v == null ? null : -v), 15],
   ['dy', 'Div. Yield (%)', c => { const t = mainTicker(c); return t ? t.dy : null; }, fmtPct, 8],
+  ['ret1a', 'Retorno 12 meses (%)', c => retDe(c,'1a'), fmtPct, 40],
+  ['ret5a', 'Retorno 5 anos (% a.a.)', c => retDe(c,'5a'), fmtPct, 25],
 ];
 function renderMapa(box){
   const met = MAPA_CORES.find(m => m[0] === (cmpSel.mapaCor||'var')) || MAPA_CORES[0];
@@ -2921,6 +2935,241 @@ function abreAtalhos(){
   iovl.classList.add('on');
 }
 
+
+// ================= dados do branch "extra" ==================================
+// Três arquivos que os robôs novos publicam e que o HTML não embute (somados
+// passam de 3 MB): proventos por papel, preço mensal de 10 anos e série anual da
+// CVM desde 2010. São lidos SOB DEMANDA — na primeira vez que a tela precisa —
+// e memorizados com validade, do mesmo jeito que as notícias.
+let EXTRA = {indices:null, proventos:null, precos:null, hist:null};
+const EXTRA_TTL = 6*60*60*1000;
+const extraEm = {};
+const extraErro = {};
+async function carregaExtra(nome){
+  if(EXTRA[nome] && (Date.now() - (extraEm[nome]||0)) < EXTRA_TTL) return EXTRA[nome];
+  if(extraErro[nome] && (Date.now() - extraErro[nome]) < 60000) return EXTRA[nome];
+  const arq = nome === 'precos' ? 'precos_longo.json' : nome + '.json';
+  try{
+    const d = await jj(rawData('extra', arq), 30000);
+    if(!d || !d.updatedAt) throw new Error('formato');
+    EXTRA[nome] = d; extraEm[nome] = Date.now(); delete extraErro[nome];
+  }catch(e){ extraErro[nome] = Date.now(); }
+  return EXTRA[nome];
+}
+// os índices são pequenos (41 KB) e valem no primeiro carregamento: alimentam os
+// selos da ficha e o filtro "só IBOV"
+carregaExtra('indices');
+
+// ---- selos de índice na ficha da empresa ----
+// "esta ação está no Ibovespa?" é a primeira pergunta de quem monta carteira, e o
+// painel não respondia. Uma requisição de 41 KB resolve para as 469 listadas.
+function blocoIndices(c, destino){
+  carregaExtra('indices').then(d => {
+    if(!d || openCvm !== c.cvm) return;
+    const tks = (c.tickers||[]).map(x=>x.t);
+    const achados = [];
+    for(const tk of tks) for(const ix of (d.porTicker[tk] || [])) achados.push([tk, ix]);
+    if(!achados.length) return;
+    destino.textContent = '';
+    const wrap = el('div','badges');
+    const vistos = new Set();
+    // com dois papéis (PETR3 e PETR4) os dois aparecem nos mesmos índices com
+    // pesos diferentes; sem o ticker no selo a lista fica ambígua
+    const varios = new Set(achados.map(a=>a[0])).size > 1;
+    for(const [tk, ix] of achados){
+      const k = tk+'|'+ix; if(vistos.has(k)) continue; vistos.add(k);
+      const info = d.indices[ix] || {};
+      const peso = (info.pesos || {})[tk];
+      const b = el('span','badge', (varios ? tk+' ' : '') + ix + (peso != null ? ' ' + nbr2.format(peso) + '%' : ''));
+      b.title = (info.nome && info.nome !== ix ? info.nome + ' — ' : '') + tk
+        + (peso != null ? ' pesa ' + nbr2.format(peso) + '% do índice' : ' compõe o índice')
+        + (info.data ? ' (carteira de ' + info.data + ')' : '');
+      wrap.append(b);
+    }
+    destino.append(wrap);
+    destino.append(el('div','note','Composição do dia da coleta ('
+      + (d.vigencia && d.vigencia.atualizadoEm ? d.vigencia.atualizadoEm : d.updatedAt.slice(0,10))
+      + '), vigência ' + ((d.vigencia||{}).mesInicio||'?') + '–' + ((d.vigencia||{}).mesFim||'?')
+      + '/' + ((d.vigencia||{}).ano||'?') + '. A API da B3 não fornece carteira histórica, '
+      + 'então o painel não diz em que índices a ação ESTAVA. Peso exibido só nos índices que o painel coleta com peso.'));
+  });
+}
+
+// ---- proventos por papel ----
+function blocoProventos(c, destino){
+  carregaExtra('proventos').then(d => {
+    if(!d || openCvm !== c.cvm) return;
+    const tks = (c.tickers||[]).map(x=>x.t).filter(tk => d.porTicker[tk]);
+    if(!tks.length){ destino.append(el('div','dim','a B3 não devolve histórico de provento para os papéis desta empresa')); return; }
+    destino.textContent = '';
+    for(const tk of tks){
+      const p = d.porTicker[tk];
+      const card = el('div','card');
+      const q = getQ(tk);
+      const px = q && q.p != null ? q.p : ((c.tickers.find(x=>x.t===tk)||{}).cot);
+      const dy = (p.d12 != null && px > 0) ? 100*p.d12/px : null;
+      card.append(el('div','ct', tk + ' — proventos'));
+      const tiles = el('div','tiles');
+      tiles.append(statTile('Proventos em 12 meses', p.d12 == null ? '—' : 'R$ ' + nbr4.format(p.d12) + '/ação',
+        p.d12 == null ? (p.aviso12 ? 'não publicado' : 'sem provento na janela')
+                      : p.n12 + ' pagamento' + (p.n12===1?'':'s') + ' com data-com nos últimos 12 meses'));
+      tiles.append(statTile('Yield sobre a cotação de hoje', dy == null ? '—' : fmtPct(+dy.toFixed(2)),
+        dy == null ? 'precisa da soma de 12 meses e da cotação' : 'calculado: proventos 12m ÷ ' + fmtPrice(px), 'pos'));
+      const tkObj = c.tickers.find(x=>x.t===tk);
+      tiles.append(statTile('Div. Yield do Fundamentus', fmtPct(tkObj && tkObj.dy),
+        'segunda fonte, para conferência'));
+      tiles.append(statTile('Histórico disponível', p.n ? p.n + ' pagamentos' : '—',
+        p.de ? 'de ' + p.de.split('-').reverse().join('/') + ' a ' + p.ate.split('-').reverse().join('/') : ''));
+      card.append(tiles);
+      if(p.aviso12) card.append(el('div','notice', '⚠ ' + p.aviso12));
+      // divergência entre as duas fontes é informação, não erro: as duas aparecem
+      if(dy != null && tkObj && tkObj.dy > 0 && Math.abs(dy - tkObj.dy)/tkObj.dy > 0.15)
+        card.append(el('div','notice','As duas fontes discordam em mais de 15% ('
+          + fmtPct(+dy.toFixed(2)) + ' calculado da B3 contra ' + fmtPct(tkObj.dy) + ' do Fundamentus). '
+          + 'As janelas são diferentes: o painel soma o que tem DATA-COM nos últimos 12 meses; '
+          + 'o Fundamentus usa o critério dele. Confira os pagamentos na tabela abaixo antes de usar qualquer um dos dois.'));
+      // tabela dos últimos 16 pagamentos
+      const evs = (p.eventos||[]).slice().reverse().slice(0,16);
+      if(evs.length){
+        const w = el('div','qtblwrap'); const tb = el('table','qtbl');
+        const hr = el('tr'); for(const h of ['Data-com','Valor por ação','Tipo','Pagamento','Aprovado em'])
+          hr.append(el('th',null,h));
+        const th = el('thead'); th.append(hr); tb.append(th);
+        const body = el('tbody');
+        const brd = s => s ? s.split('-').reverse().join('/') : '—';
+        for(const [dcom, v, tipo, dpag, aprov, lote] of evs){
+          const tr = el('tr');
+          tr.append(el('td',null,brd(dcom)));
+          const tdv = el('td',null,'R$ ' + nbr4.format(v));
+          if(lote) tdv.title = 'registro por lote de ' + lote + ' ações; o valor já está dividido';
+          tr.append(tdv);
+          tr.append(el('td',null,tipo==='DIV'?'Dividendo':tipo==='JCP'?'JCP':tipo));
+          tr.append(el('td', dpag?'':'dim', brd(dpag)));
+          tr.append(el('td',null,brd(aprov)));
+          body.append(tr);
+        }
+        tb.append(body); w.append(tb); card.append(w);
+        card.append(chartTools(() => null,
+          () => ({headers:['Data-com','Valor por ação','Tipo','Pagamento','Aprovado em'],
+                  linhas:(p.eventos||[]).slice().reverse().map(e=>[e[0],e[1],e[2],e[3],e[4]])}),
+          () => c.name + ' — proventos ' + tk));
+      }
+      if((p.eventosSocietarios||[]).length){
+        card.append(el('div','note','Eventos societários registrados pela B3: '
+          + p.eventosSocietarios.map(s=>s.tipo.toLowerCase()+' em '+(s.data?s.data.split('-').reverse().join('/'):'?')
+            +' (fator '+s.fator+')').join(' · ')
+          + '. O painel NÃO ajusta os valores antigos por esses eventos — a API não documenta se o fator é '
+          + 'percentual ou multiplicador, e a diferença entre as duas leituras muda o número por dezenas de vezes.'));
+      }
+      card.append(el('div','note','Fonte: B3 (GetListedCashDividends e GetListedSupplementCompany). '
+        + 'Valor POR AÇÃO, já dividido pelo lote cotado da época. A soma de 12 meses usa a DATA-COM, '
+        + 'que é a data que determina quem recebe.'));
+      destino.append(card);
+    }
+  });
+}
+
+// ---- retorno e histórico longo ----
+function blocoLongoPrazo(c, destino){
+  Promise.all([carregaExtra('precos'), carregaExtra('hist')]).then(([pr, hi]) => {
+    if(openCvm !== c.cvm) return;
+    destino.textContent = '';
+    const tk = (mainTicker(c)||{}).t;
+    const r = retObj(c);
+    if(!r && tk && pr){
+      const av = el('div','notice');
+      av.append(el('b',null,'Retorno não publicado. '), document.createTextNode(motivoSemRetorno(c)+'.'));
+      destino.append(av);
+    }
+    if(r){
+      const card = el('div','card');
+      card.append(el('div','ct','Retorno de ' + tk + ' — ' + (r.n||0) + ' meses desde ' + (r.desde||'?')));
+      const tiles = el('div','tiles');
+      const par = [['1a','1 ano'],['3a','3 anos'],['5a','5 anos'],['10a','10 anos']];
+      for(const [k, rot] of par){
+        const p = r['p'+k], tt = r['t'+k];
+        if(p == null && tt == null) continue;
+        tiles.append(statTile(rot, tt != null ? fmtPct(tt) : fmtPct(p),
+          (tt != null ? 'retorno total (com provento)' : 'retorno de preço')
+          + (k === '1a' ? '' : ' · ao ano')
+          + (tt != null && p != null ? ' · só preço: ' + fmtPct(p) : ''),
+          cls(tt != null ? tt : p)));
+      }
+      if(r.volAno != null) tiles.append(statTile('Volatilidade', fmtPct(r.volAno), 'anualizada, 3 anos de retornos mensais'));
+      if(r.quedaMax != null) tiles.append(statTile('Maior queda', fmtPct(r.quedaMax), 'do topo ao fundo na série inteira', 'neg'));
+      const ib = pr.ret['^BVSP'];
+      if(ib) tiles.append(statTile('Ibovespa no mesmo período', fmtPct(ib.p10a) , '10 anos ao ano · retorno de preço'));
+      card.append(tiles);
+      card.append(el('div','note','Fonte: Yahoo Finance, fechamento mensal. "Retorno total" inclui provento '
+        + 'reinvestido; "retorno de preço" é só a variação da cotação. O Ibovespa é índice de PREÇO, então '
+        + 'a comparação honesta é contra o retorno de preço da ação — os dois números estão acima para isso. '
+        + 'Janelas de 3, 5 e 10 anos são anualizadas.'));
+      destino.append(card);
+    }
+    // série anual da CVM
+    const h = hi && hi.h ? hi.h[String(parseInt(c.cvm,10))] : null;
+    if(h){
+      const anos = hi.anos;
+      const card = el('div','card');
+      card.append(el('div','ct','Série anual desde ' + anos[0] + ' — R$ (CVM, exercício fechado)'));
+      const linhas = [
+        ['Receita líquida','rev'], ['Lucro bruto','lucroBruto'], ['EBITDA','ebitda'],
+        ['Lucro líquido','ni'], ['Caixa das operações','fco'], ['Fluxo de caixa livre','fcl'],
+        ['Ativo total','ativo'], ['Patrimônio líquido','pl'], ['Dívida líquida','divL'],
+        ['Dividendos + JCP declarados','__prov'],
+      ];
+      const w = el('div','qtblwrap'); const tb = el('table','qtbl');
+      const hr = el('tr'); hr.append(el('th',null,'Conta'));
+      for(const a of anos) hr.append(el('th',null,String(a)));
+      const th = el('thead'); th.append(hr); tb.append(th);
+      const body = el('tbody'); const tsv = [];
+      for(const [rot, campo] of linhas){
+        const vals = campo === '__prov'
+          ? anos.map((_,i) => { const d=(h.div||[])[i], j=(h.jcp||[])[i];
+                                return (d==null&&j==null) ? null : (d||0)+(j||0); })
+          : anos.map((_,i) => (h[campo]||[])[i]);
+        if(!vals.some(v => v != null)) continue;
+        const tr = el('tr'); tr.append(el('td',null,rot));
+        for(const v of vals) tr.append(el('td', v==null?'dim':(v<0?'neg':''), v==null?'—':fmtNum(v)));
+        body.append(tr); tsv.push([rot, ...vals]);
+      }
+      tb.append(body); w.append(tb); card.append(w);
+      card.append(chartTools(() => null, () => ({headers:['Conta',...anos], linhas:tsv}),
+        () => c.name + ' — série anual'));
+      // fatos que só a série longa responde
+      const ni = h.ni || [];
+      const comNi = ni.filter(v => v != null);
+      const negativos = comNi.filter(v => v < 0).length;
+      const fatos = [];
+      if(comNi.length >= 8) fatos.push(negativos === 0
+        ? 'Lucro em TODOS os ' + comNi.length + ' exercícios com dado desde ' + anos[0] + '.'
+        : 'Prejuízo em ' + negativos + ' dos ' + comNi.length + ' exercícios com dado desde ' + anos[0] + '.');
+      const cagr = (arr, n) => {
+        const v = arr.map((x,i)=>[anos[i],x]).filter(x=>x[1]!=null && x[1]>0);
+        if(v.length < 2) return null;
+        const fim = v[v.length-1], ini = v.find(x => x[0] >= fim[0]-n);
+        if(!ini || ini[0] === fim[0]) return null;
+        return {v: 100*(Math.pow(fim[1]/ini[1], 1/(fim[0]-ini[0])) - 1), de: ini[0], ate: fim[0]};
+      };
+      for(const [rot, campo] of [['receita','rev'], ['lucro','ni'], ['EBITDA','ebitda']]){
+        for(const n of [5, 10]){
+          const g = cagr(h[campo]||[], n);
+          if(g) fatos.push('CAGR de ' + rot + ' ' + (g.ate-g.de) + ' anos (' + g.de + '–' + g.ate + '): '
+            + fmtPct(+g.v.toFixed(1)) + ' ao ano.');
+        }
+      }
+      if(fatos.length) card.append(el('div','note', fatos.join(' ')));
+      card.append(el('div','note','Fonte: DFP da CVM, coluna "ÚLTIMO" de cada exercício — o número COMO FOI '
+        + 'REPORTADO naquele ano, sem reapresentação. Dividendos e JCP são os DECLARADOS no exercício '
+        + '(demonstração das mutações do patrimônio líquido), não o que o mercado chama de dividend yield. '
+        + 'CAGR só é calculado entre pontas positivas.'));
+      destino.append(card);
+    }
+    if(!destino.childNodes.length)
+      destino.append(el('div','dim','sem histórico longo para esta empresa nos arquivos publicados'));
+  });
+}
+
 // ---- view Comparar ----
 const CMP_INDS = [
   // O Fundamentus devolve ROIC 0 para banco/seguradora porque não calcula o
@@ -2967,7 +3216,96 @@ const CMP_INDS = [
   ['capexRev','Capex ÷ receita (%)', c=>c.fin ? null : (c.ind.capexRev ?? null), fmtPct],
   ['ativoPl','Alavancagem (ativo ÷ PL)', c=>c.ind.ativoPl ?? null, fmtX],
   ['aliq','Alíquota efetiva (%)', c=>c.ind.aliq ?? null, fmtPct],
+  // ---- vindos dos arquivos do branch "extra" (carregados sob demanda) ----
+  // Enquanto o arquivo não chegou, o getter devolve null e a tela diz "nenhuma
+  // empresa do escopo tem este dado" — em vez de fingir zero.
+  ['ret1a','Retorno 12 meses (%)', c=>retDe(c,'1a'), fmtPct],
+  ['ret5a','Retorno 5 anos (% ao ano)', c=>retDe(c,'5a'), fmtPct],
+  ['ret10a','Retorno 10 anos (% ao ano)', c=>retDe(c,'10a'), fmtPct],
+  ['vol','Volatilidade anual (%)', c=>{const r=retObj(c); return r? (r.volAno ?? null):null;}, fmtPct],
+  ['quedaMax','Maior queda histórica (%)', c=>{const r=retObj(c); return r? (r.quedaMax ?? null):null;}, fmtPct],
+  ['prov12','Proventos 12m por ação (R$)', c=>provDe(c), v=>v==null?'—':'R$ '+nbr4.format(v)],
+  ['dyB3','Yield 12m calculado (%)', c=>dyB3De(c), fmtPct],
+  ['prov12n','Pagamentos em 12 meses', c=>{ if(!EXTRA.proventos){pedeExtra('proventos');return null;}
+    const tk=(mainTicker(c)||{}).t; const p=tk?EXTRA.proventos.porTicker[tk]:null;
+    return p && p.d12 != null ? (p.n12 ?? null) : null; }, v=>v==null?'—':String(v)],
 ];
+// ---- leitores dos arquivos extra, com a mesma disciplina do resto: sem dado,
+// null; nunca zero. O carregamento é disparado aqui e a tela se redesenha quando
+// o arquivo chega.
+let extraPedido = {};
+function pedeExtra(nome){
+  if(extraPedido[nome]) return;
+  extraPedido[nome] = true;
+  carregaExtra(nome).then(d => { if(d && document.body.dataset.view === 'cmp') renderCmp(); });
+}
+// SÉRIE COM SALTO IMPOSSÍVEL = evento societário que a fonte não ajustou.
+// Medido em 11/09/2026 sobre as 479 séries publicadas: a MMAQ3 tem um salto de
+// +84.903% de novembro para dezembro de 2024 (de R$ 3 para R$ 2.550) — é um
+// grupamento, não uma valorização. O Yahoo devolve o 'adjclose' ajustado para
+// provento e desdobramento, mas nem sempre para grupamento. Sobre uma série
+// assim, "volatilidade" deu 49.019% ao ano e "maior queda" deu -100%, e os dois
+// iam para o topo do ranking. 20 papéis têm salto acima de 400% em um mês.
+// O limite é 400% (e não 100%) de propósito: micro-cap ilíquida sobe 300% num
+// mês de verdade — AZEV3 fez isso em 2026 — e isso é dado, não defeito.
+const LIMITE_SALTO = 4.0;
+const _serieOk = {};
+function serieConfiavel(tk){
+  if(_serieOk[tk] !== undefined) return _serieOk[tk];
+  const s = EXTRA.precos && EXTRA.precos.s[tk];
+  if(!s){ _serieOk[tk] = null; return null; }
+  const serie = (s.a && s.a.some(v => v != null)) ? s.a : s.c;
+  let ant = null, mx = 0;
+  for(const v of serie){
+    if(v == null) continue;
+    if(ant != null && ant > 0){ const r = v/ant - 1; if(Math.abs(r) > Math.abs(mx)) mx = r; }
+    ant = v;
+  }
+  _serieOk[tk] = Math.abs(mx) > LIMITE_SALTO ? {salto: mx} : true;
+  return _serieOk[tk];
+}
+function retObj(c){
+  if(!EXTRA.precos){ pedeExtra('precos'); return null; }
+  const tk = (mainTicker(c)||{}).t;
+  if(!tk) return null;
+  const ok = serieConfiavel(tk);
+  if(ok !== true) return null;
+  return EXTRA.precos.ret[tk] || null;
+}
+// motivo em uma frase, para a tela nunca mostrar "—" sem explicação
+function motivoSemRetorno(c){
+  const tk = (mainTicker(c)||{}).t;
+  if(!tk) return 'empresa sem papel negociado';
+  if(!EXTRA.precos) return 'histórico de preço ainda carregando';
+  const ok = serieConfiavel(tk);
+  if(ok && ok.salto) return 'a série de preço de ' + tk + ' tem um salto de '
+    + nbr.format(Math.round(100*ok.salto)) + '% em um único mês — é evento societário '
+    + '(grupamento ou desdobramento) que a fonte não ajustou, e retorno calculado sobre isso seria falso';
+  if(!EXTRA.precos.s[tk]) return 'o histórico de preço não cobre ' + tk
+    + (EXTRA.precos.falhas && EXTRA.precos.falhas[tk] ? ' (' + EXTRA.precos.falhas[tk] + ')' : '');
+  return 'sem retorno calculável para ' + tk;
+}
+function retDe(c, janela){
+  const r = retObj(c);
+  if(!r) return null;
+  // retorno TOTAL quando existe (com provento reinvestido); senão o de preço.
+  // Os dois nunca se misturam num mesmo ranking: a preferência é fixa e está na nota.
+  return r['t'+janela] ?? r['p'+janela] ?? null;
+}
+function provDe(c){
+  if(!EXTRA.proventos){ pedeExtra('proventos'); return null; }
+  const tk = (mainTicker(c)||{}).t;
+  const p = tk ? EXTRA.proventos.porTicker[tk] : null;
+  return p ? (p.d12 ?? null) : null;
+}
+function dyB3De(c){
+  const d12 = provDe(c);
+  if(d12 == null) return null;
+  const tk = (mainTicker(c)||{}).t;
+  const q = getQ(tk);
+  const px = (q && q.p != null) ? q.p : ((mainTicker(c)||{}).cot);
+  return px > 0 ? +(100*d12/px).toFixed(2) : null;
+}
 const HIST_INDS = [
   ['roe','ROE (%)',fmtPct], ['roic','ROIC (%)',fmtPct],
   ['mgE','Margem EBITDA (%)',fmtPct], ['mgL','Margem líquida (%)',fmtPct],

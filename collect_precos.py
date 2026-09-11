@@ -135,10 +135,35 @@ def busca(ses, ysym):
     return None, "esgotou as tentativas"
 
 
+# Salto mensal acima disto é evento societário que a fonte não ajustou, não
+# retorno. Medido em 11/09/2026 sobre 479 séries: MMAQ3 salta +84.903% de
+# nov/2024 para dez/2024 (R$ 3 → R$ 2.550, um grupamento), e a volatilidade
+# calculada sobre essa série dá 49.019% ao ano. São 20 papéis acima de 400%.
+# O limite não é menor de propósito: micro-cap ilíquida sobe 300% num mês de
+# verdade, e isso é dado.
+LIMITE_SALTO = 4.0
+
+def salto_max(serie):
+    ant, mx = None, 0.0
+    for v in serie:
+        if v is None:
+            continue
+        if ant is not None and ant > 0:
+            r = v / ant - 1
+            if abs(r) > abs(mx):
+                mx = r
+        ant = v
+    return mx
+
 def retornos(meses, cs, as_):
     """Retorno de preço e total por janela, volatilidade e queda máxima."""
     if len(cs) < 13:
         return None
+    base_salto = [v for v in as_ if v] or cs
+    s = salto_max(base_salto)
+    if abs(s) > LIMITE_SALTO:
+        # não devolve número nenhum: a série inteira está em duas escalas
+        return {"saltoNaoAjustado": round(100 * s, 1), "desde": meses[0], "n": len(cs)}
     out = {}
     fim_c, fim_a = cs[-1], next((v for v in reversed(as_) if v), None)
 
@@ -244,8 +269,12 @@ def main():
     }
     OUT_FILE.write_text(json.dumps(snap, ensure_ascii=False, separators=(",", ":")),
                         encoding="utf-8")
+    quebradas = [k for k, v in rets.items() if "saltoNaoAjustado" in v]
     log(f"OK {OUT_FILE} ({OUT_FILE.stat().st_size/1024:.0f} KB) · {len(s)} séries · "
-        f"{len(rets)} com retorno · {len(falhas)} sem série · eixo {eixo[0]}→{eixo[-1]}")
+        f"{len(rets) - len(quebradas)} com retorno · {len(quebradas)} com evento societário "
+        f"não ajustado · {len(falhas)} sem série · eixo {eixo[0]}→{eixo[-1]}")
+    if quebradas:
+        log(f"  sem retorno por salto não ajustado: {', '.join(sorted(quebradas)[:12])}")
     for k in REFS:
         r = rets.get(k)
         if r:
