@@ -34,6 +34,9 @@
   html,body{margin:0;padding:0}
   body{background:var(--page);color:var(--ink);font:13.5px/1.45 Tahoma,Verdana,"Segoe UI",system-ui,sans-serif}
   a{color:inherit}
+  .agenda{font-size:12px;opacity:.9;line-height:1.5}
+  .agenda a{text-decoration:underline;text-underline-offset:2px}
+  .qtbl a{text-decoration:underline;text-underline-offset:2px;cursor:pointer}
   .hdr{position:sticky;top:0;z-index:30}
   .top{background:var(--brandbar);border-bottom:1px solid rgba(245,252,248,.12);padding:10px 18px;display:flex;gap:14px;align-items:center;flex-wrap:nowrap;min-width:0}
   /* ---- faixa de cotações (ticker) ---- */
@@ -1191,6 +1194,8 @@ function openDetail(cvm){
   if(c.links.ri) lk.append(mklink(c.links.ri,'Site ↗'));
   const boxIdx = el('div'); boxIdx.style.marginTop = '6px';
   ph.append(boxIdx); blocoIndices(c, boxIdx);
+  const boxAg = el('div'); boxAg.style.marginTop = '6px';
+  ph.append(boxAg); linhaAgenda(c, boxAg);
   ph.append(lk);
   panel.append(ph);
 
@@ -1478,6 +1483,14 @@ function openDetail(cvm){
         op.fonte);
     }
   });
+
+  pb.append(el('h3','sect','Documentos entregues à CVM'));
+  const boxIpe = el('div'); boxIpe.append(el('div','dim','carregando os documentos da CVM…'));
+  pb.append(boxIpe); ipeCat = null; blocoDocumentos(c, boxIpe);
+
+  pb.append(el('h3','sect','Composição acionária e free float'));
+  const boxAc = el('div'); boxAc.append(el('div','dim','carregando o formulário de referência…'));
+  pb.append(boxAc); blocoAcionistas(c, boxAc);
 
   pb.append(el('h3','sect','Proventos'));
   const boxProv = el('div'); boxProv.append(el('div','dim','carregando o histórico de proventos…'));
@@ -2506,6 +2519,14 @@ const GLOSSARIO = {
   roic:     {n:'ROIC', f:'EBIT de 12 meses × (1 − alíquota efetiva) ÷ (patrimônio líquido + dívida líquida quando positiva)',
              o:'Fundamentus quando existe; senão calculado da CVM',
              g:'Não se aplica a banco e seguradora: "capital investido" não se separa do funding. A alíquota efetiva sai das contas 3.07 e 3.08 da própria empresa, limitada a 0–45%.'},
+  floatPct: {n:'Free float', f:'ações em circulação ÷ total de ações, como a própria companhia declara no Formulário de Referência',
+             o:'CVM · FRE, arquivo distribuicao_capital',
+             g:'É o número declarado, não derivado. A quantidade teórica do índice da B3 NÃO serve de substituto: erra −27 pontos percentuais em PETR4 e −53 em KLBN11, porque conta só a classe que está no índice.'},
+  controlePct:{n:'Participação do controlador', f:'soma das ações ORDINÁRIAS de todos os acionistas declarados como controladores ÷ total de ordinárias',
+             o:'CVM · FRE, arquivo posicao_acionaria',
+             g:'Medido em VOTO, não em capital: a União detém 29,0% do capital da Petrobras e 50,3% das ordinárias, e é o segundo número que decide quem manda. Recalculado sobre o capital social — os percentuais do arquivo da CVM são relativos ao agrupamento do acionista, não à companhia, e ali a União aparece com 100%. Só sai quando a soma dos acionistas de topo bate com o capital social dentro de 2%.'},
+  acPF:     {n:'Acionistas pessoa física', f:'quantidade de acionistas pessoa física declarada no Formulário de Referência',
+             o:'CVM · FRE, arquivo distribuicao_capital', g:'É a base acionária declarada na data de referência do formulário, não a de hoje.'},
   roa:      {n:'ROA', f:'lucro líquido de 12 meses ÷ ativo total', o:'CVM (ITR/DFP)', g:'Exige ativo total positivo.'},
   pl:       {n:'P/L', f:'preço da ação ÷ lucro por ação dos últimos 12 meses', o:'Fundamentus (fechamento do dia)',
              g:'Não é publicado quando a série de lucro tem trimestre fora de escala na CVM. Empresa com prejuízo tem P/L negativo, que não é "barato" — é ausência de lucro.'},
@@ -2941,7 +2962,7 @@ function abreAtalhos(){
 // passam de 3 MB): proventos por papel, preço mensal de 10 anos e série anual da
 // CVM desde 2010. São lidos SOB DEMANDA — na primeira vez que a tela precisa —
 // e memorizados com validade, do mesmo jeito que as notícias.
-let EXTRA = {indices:null, proventos:null, precos:null, hist:null};
+let EXTRA = {indices:null, proventos:null, precos:null, hist:null, fre:null, ipe:null};
 const EXTRA_TTL = 6*60*60*1000;
 const extraEm = {};
 const extraErro = {};
@@ -2992,6 +3013,244 @@ function blocoIndices(c, destino){
       + '), vigência ' + ((d.vigencia||{}).mesInicio||'?') + '–' + ((d.vigencia||{}).mesFim||'?')
       + '/' + ((d.vigencia||{}).ano||'?') + '. A API da B3 não fornece carteira histórica, '
       + 'então o painel não diz em que índices a ação ESTAVA. Peso exibido só nos índices que o painel coleta com peso.'));
+  });
+}
+
+// ---- agenda de resultados ----
+// Não existe calendário de resultados como dado aberto: a B3 não tem rota de
+// agenda (a lista completa de rotas do proxy foi extraída do JavaScript da
+// própria página e não há nenhuma), e os Dados Abertos da CVM não têm o
+// conjunto. O que existe é a data em que a companhia ENTREGOU cada demonstração
+// passada, e a estimativa é a data da mesma referência um ano antes. Medido em
+// 625 empresas pareadas: erro mediano de 1 dia, 77% dentro de ±3 dias, 93%
+// dentro de ±7. Serve para agendar a leitura; não serve como data oficial, e por
+// isso aparece escrito "estimativa" e com a data-base ao lado.
+const MES_PT = ['janeiro','fevereiro','março','abril','maio','junho','julho',
+                'agosto','setembro','outubro','novembro','dezembro'];
+function porExtenso(iso){
+  const [a,m,d] = iso.split('-').map(Number);
+  return d + ' de ' + MES_PT[m-1] + ' de ' + a;
+}
+function trimestreDe(refer){
+  const m = +refer.slice(5,7);
+  return m === 12 ? '4º trimestre / exercício de ' + refer.slice(0,4)
+                  : (m/3) + 'º trimestre de ' + refer.slice(0,4);
+}
+function linhaAgenda(c, destino){
+  const ag = c.ag;
+  if(!ag || !ag.prox) return;
+  const p = ag.prox;
+  const hoje = new Date().toISOString().slice(0,10);
+  const dias = Math.round((new Date(p.est) - new Date(hoje)) / 86400000);
+  const w = el('div','agenda');
+  const quando = dias < -21
+    ? 'era esperado em ' + porExtenso(p.est) + ' e ainda não foi entregue'
+    : dias < 0 ? 'esperado desde ' + porExtenso(p.est)
+    : dias === 0 ? 'esperado para hoje'
+    : 'esperado por volta de ' + porExtenso(p.est) + ' (em ' + dias + ' dia' + (dias===1?'':'s') + ')';
+  const b = el('b', null, 'Próximo resultado — ' + trimestreDe(p.refer) + ': ');
+  w.append(b, document.createTextNode(quando + '. '));
+  const est = el('span','badge','estimativa ±7 dias');
+  est.title = 'Não existe agenda oficial como dado aberto. Esta data é a da entrega do mesmo '
+    + 'trimestre um ano antes (' + porExtenso(p.base) + ') mais um ano. Medido em 625 empresas: '
+    + 'erro mediano de 1 dia, 77% dentro de 3 dias, 93% dentro de 7.';
+  w.append(est);
+  destino.append(w);
+  // se a companhia publicou o calendário oficial no IPE, ele vale mais que a estimativa
+  carregaExtra('ipe').then(d => {
+    if(!d || openCvm !== c.cvm) return;
+    const docs = (d.porCvm && d.porCvm[String(parseInt(c.cvm,10))]) || [];
+    const cal = docs.filter(x => x[0] === 3).sort((a,b) => a[1] < b[1] ? 1 : -1)[0];
+    if(!cal) return;
+    const a = el('a', null, 'calendário oficial da companhia, entregue em '
+      + cal[1].split('-').reverse().join('/') + ' ↗');
+    a.href = IPE_URL(cal[3], cal[4], cal[5]); a.target = '_blank'; a.rel = 'noopener';
+    a.title = 'documento protocolado na CVM com as datas que a própria companhia se comprometeu a cumprir';
+    w.append(document.createTextNode(' '), a);
+  });
+}
+
+// ---- documentos entregues à CVM (IPE) ----
+// Diferença deliberada para a seção de notícias logo acima: aquilo é imprensa,
+// isto é o REGISTRO. Cada linha aqui é um documento que a companhia protocolou
+// na CVM, com data de entrega, categoria e o PDF original. Para quem assessora
+// cliente, é a diferença entre "saiu no jornal" e "consta".
+const IPE_URL = (prot, seq, ver) =>
+  'https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE'
+  + '&CodigoInstituicao=1&numProtocolo=' + prot + '&numSequencia=' + seq + '&numVersao=' + ver;
+const IPE_CLASSE = ['fr','cm','aa','cal'];
+let ipeCat = null;                 // filtro de categoria, por ficha aberta
+function blocoDocumentos(c, destino){
+  carregaExtra('ipe').then(d => {
+    if(!d || openCvm !== c.cvm) return;
+    destino.textContent = '';
+    // o IPE traz o código da CVM SEM zero à esquerda; o painel guarda com seis
+    const chave = String(parseInt(c.cvm, 10));
+    const docs = (d.porCvm && d.porCvm[chave]) || [];
+    if(!docs.length){
+      destino.append(el('div','dim','nenhum fato relevante, comunicado, aviso aos acionistas ou '
+        + 'calendário de eventos desta companhia nos arquivos de ' + (d.anos||[]).join(' e ')
+        + ' da CVM'));
+      return;
+    }
+    const card = el('div','card');
+    // contagem por categoria vira o filtro
+    const cont = {};
+    for(const x of docs) cont[x[0]] = (cont[x[0]] || 0) + 1;
+    const chips = el('div','cmpbar'); chips.style.margin = '0 0 8px';
+    const mkChip = (ci, rot, n) => {
+      const b = el('button','btn', rot + ' (' + n + ')');
+      if(ipeCat === ci) b.classList.add('on');
+      b.onclick = () => { ipeCat = (ipeCat === ci ? null : ci); blocoDocumentos(c, destino); };
+      return b;
+    };
+    chips.append(mkChip(null, 'todos', docs.length));
+    for(let i = 0; i < (d.cats||[]).length; i++)
+      if(cont[i]) chips.append(mkChip(i, d.cats[i], cont[i]));
+    card.append(chips);
+
+    const lista = ipeCat == null ? docs : docs.filter(x => x[0] === ipeCat);
+    const w = el('div','qtblwrap'); const tb = el('table','qtbl');
+    const hr = el('tr'); for(const h of ['Entregue em','Categoria','Assunto','Documento']) hr.append(el('th',null,h));
+    const th = el('thead'); th.append(hr); tb.append(th);
+    const body = el('tbody');
+    const brd = s => s ? s.split('-').reverse().join('/') : '—';
+    let mostrando = 0;
+    const LOTE = 25;
+    const desenha = () => {
+      for(const x of lista.slice(mostrando, mostrando + LOTE)){
+        const [ci, dent, assunto, prot, seq, ver, dref] = x;
+        const tr = el('tr');
+        tr.append(el('td', null, brd(dent)));
+        const tdc = el('td','dim', (d.cats[ci] || '—'));
+        tr.append(tdc);
+        const tda = el('td');
+        tda.append(document.createTextNode(assunto || (ci === 3
+          ? 'Calendário de eventos corporativos' + (dref ? ' de ' + dref.slice(0,4) : '')
+          : '(a companhia não preencheu o assunto)')));
+        if(ver > 1){ const b = el('span','badge','versão ' + ver);
+          b.title = 'documento reapresentado; esta é a versão mais recente'; tda.append(' ', b); }
+        tr.append(tda);
+        const tdl = el('td');
+        const a = el('a',null,'abrir PDF ↗');
+        a.href = IPE_URL(prot, seq, ver); a.target = '_blank'; a.rel = 'noopener';
+        a.title = 'PDF original no sistema da CVM';
+        tdl.append(a); tr.append(tdl);
+        body.append(tr);
+      }
+      mostrando = Math.min(mostrando + LOTE, lista.length);
+      mais.textContent = 'mostrar mais (' + (lista.length - mostrando) + ' restantes)';
+      mais.style.display = mostrando >= lista.length ? 'none' : '';
+    };
+    const mais = el('button','btn','mostrar mais');
+    mais.onclick = desenha;
+    tb.append(body); w.append(tb); card.append(w);
+    desenha();
+    card.append(mais);
+    card.append(chartTools(() => null,
+      () => ({headers:['Entregue em','Categoria','Assunto','Versão','Endereço do PDF'],
+              linhas: lista.map(x => [x[1], d.cats[x[0]], x[2], x[5], IPE_URL(x[3], x[4], x[5])])}),
+      () => c.name + ' — documentos entregues à CVM'));
+    card.append(el('div','note','Fonte: IPE (Informações Periódicas e Eventuais) da CVM. '
+      + d.nota + ' O endereço do PDF é do próprio sistema da CVM e às vezes responde uma página '
+      + 'de erro em vez do arquivo — quando isso acontece, abrir de novo costuma resolver. '
+      + 'Ficam de fora as categorias de rito e alto volume (movimentação de administradores, atas '
+      + 'de assembleia e de reunião da administração).'));
+    destino.append(card);
+  });
+}
+
+// ---- composição acionária e free float ----
+function blocoAcionistas(c, destino){
+  carregaExtra('fre').then(d => {
+    if(!d || openCvm !== c.cvm) return;
+    destino.textContent = '';
+    const f = d.porCnpj[soDig(c.cnpj)];
+    if(!f){
+      destino.append(el('div','notice','Composição acionária não publicada. ' + motivoSemFloat(c) + '.'));
+      return;
+    }
+    const tot = capTotal(f);
+    const card = el('div','card');
+    card.append(el('div','ct','Capital e free float'));
+    const tiles = el('div','tiles');
+    tiles.append(statTile('Free float (total)', f.float ? fmtPct(f.float.tot) : '—',
+      f.float ? nbr.format(f.float.qtot) + ' ações em circulação' : motivoSemFloat(c), null, 'floatPct'));
+    tiles.append(statTile('Free float das ordinárias', f.float && f.float.on != null ? fmtPct(f.float.on) : '—',
+      f.float && f.float.qon ? nbr.format(f.float.qon) + ' ON' : 'a companhia não declarou por classe'));
+    tiles.append(statTile('Free float das preferenciais', f.float && f.float.pn ? fmtPct(f.float.pn) : '—',
+      f.float && f.float.qpn ? nbr.format(f.float.qpn) + ' PN' : 'sem preferenciais em circulação'));
+    const ctrlOn = f.controle ? pctDasOn(f, f.controle.on) : null;
+    const ctrlTot = f.controle ? pctDoCapital(f, f.controle.tot) : null;
+    tiles.append(statTile('Grupo de controle — voto',
+      f.controle ? (ctrlOn != null ? fmtPct(+ctrlOn.toFixed(2)) + ' das ON'
+                                   : nbr.format(f.controle.on || f.controle.tot) + ' ações') : 'nenhum declarado',
+      f.controle ? (f.controle.n === 1 ? '1 acionista declarado como controlador'
+                                       : f.controle.n + ' acionistas declarados como controladores')
+                   + (ctrlTot != null ? ' · ' + fmtPct(+ctrlTot.toFixed(2)) + ' do capital total' : '')
+                 : 'a companhia não declara acionista controlador', null, 'controlePct'));
+    if(f.acionistas && (f.acionistas.pf || f.acionistas.pj || f.acionistas.inst)){
+      tiles.append(statTile('Base acionária', nbr.format(f.acionistas.pf || 0) + ' pessoas físicas',
+        nbr.format(f.acionistas.pj || 0) + ' PJ · ' + nbr.format(f.acionistas.inst || 0) + ' institucionais', null, 'acPF'));
+    }
+    if(f.capital){
+      tiles.append(statTile('Capital social', nbr.format(tot) + ' ações',
+        nbr.format(f.capital.on || 0) + ' ON · ' + nbr.format(f.capital.pn || 0) + ' PN ('
+        + f.capital.tipo.toLowerCase() + ')'));
+    }
+    card.append(tiles);
+    if(f.top && f.top.length && !f.fecha){
+      card.append(el('div','notice','Percentual por acionista não publicado nesta empresa. A soma das ações dos '
+        + 'acionistas declarados ' + (f.erroFecha != null
+            ? 'diverge do capital social em ' + nbr.format(Math.round(f.erroFecha)) + '%'
+            : 'não pôde ser conferida contra o capital social')
+        + ' — dividir por um capital que não fecha daria percentual errado. A tabela abaixo traz as QUANTIDADES, '
+        + 'que são o dado primário do formulário.'));
+    }
+    if(f.top && f.top.length){
+      const w = el('div','qtblwrap'); const tb = el('table','qtbl');
+      const cols = ['Acionista','Tipo','ON','% das ON','PN','Total','% do capital'];
+      const hr = el('tr'); for(const h of cols) hr.append(el('th',null,h));
+      const th = el('thead'); th.append(hr); tb.append(th);
+      const body = el('tbody');
+      const pctOn = q => pctDasOn(f, q);
+      const linha = (x, cls) => {
+        const tr = el('tr'); if(cls) tr.className = cls;
+        const td0 = el('td');
+        td0.append(document.createTextNode(x.n));
+        if(x.ctrl){ const b = el('span','badge','controlador');
+          b.title = 'declarado como acionista controlador no formulário'; td0.append(' ', b); }
+        if(x.acordo){ const b = el('span','badge','acordo');
+          b.title = 'participante de acordo de acionistas'; td0.append(' ', b); }
+        tr.append(td0);
+        tr.append(el('td','dim', x.t === 'PF' ? 'pessoa física' : x.t === 'PJ' ? 'pessoa jurídica' : (x.pais || '—')));
+        tr.append(el('td', null, x.on ? nbr.format(x.on) : '—'));
+        tr.append(el('td', null, pctOn(x.on) != null ? fmtPct(+pctOn(x.on).toFixed(2)) : '—'));
+        tr.append(el('td', null, x.pn ? nbr.format(x.pn) : '—'));
+        tr.append(el('td', null, nbr.format(x.tot)));
+        tr.append(el('td', null, pctDoCapital(f, x.tot) != null ? fmtPct(+pctDoCapital(f, x.tot).toFixed(2)) : '—'));
+        return tr;
+      };
+      for(const x of f.top) body.append(linha(x));
+      if(f.demais) body.append(linha({n:'demais ' + f.demais.n + ' acionistas declarados',
+        on:f.demais.on, pn:f.demais.pn, tot:f.demais.tot}, 'dim'));
+      if(f.outros) body.append(linha({n:'Outros (linha do próprio formulário)', on:null, pn:null, tot:f.outros}, 'dim'));
+      if(f.tesouraria) body.append(linha({n:'Ações em tesouraria', on:null, pn:null, tot:f.tesouraria}, 'dim'));
+      tb.append(body); w.append(tb); card.append(w);
+      card.append(chartTools(() => null,
+        () => ({headers:cols, linhas:[...f.top, ...(f.demais ? [Object.assign({n:'demais declarados'}, f.demais)] : [])]
+          .map(x => [x.n, x.t || '', x.on, pctOn(x.on), x.pn, x.tot, pctDoCapital(f, x.tot)])}),
+        () => c.name + ' — composição acionária'));
+    }
+    const quando = f.ref ? f.ref.split('-').reverse().join('/') : ('exercício de ' + f.ano);
+    card.append(el('div','note','Fonte: Formulário de Referência da CVM, versão ' + (f.versao || '?')
+      + ' com data de referência ' + quando
+      + (f.assembleia ? ' · última assembleia em ' + f.assembleia.split('-').reverse().join('/') : '')
+      + '. O free float é o número DECLARADO pela companhia. O percentual de cada acionista é recalculado '
+      + 'como quantidade ÷ capital social: os percentuais do próprio arquivo são relativos ao agrupamento do '
+      + 'acionista e não à companhia. Só constam acionistas com 5% ou mais de uma classe, que é o que o '
+      + 'formulário exige declarar.'));
+    destino.append(card);
   });
 }
 
@@ -3226,6 +3485,10 @@ const CMP_INDS = [
   ['quedaMax','Maior queda histórica (%)', c=>{const r=retObj(c); return r? (r.quedaMax ?? null):null;}, fmtPct],
   ['prov12','Proventos 12m por ação (R$)', c=>provDe(c), v=>v==null?'—':'R$ '+nbr4.format(v)],
   ['dyB3','Yield 12m calculado (%)', c=>dyB3De(c), fmtPct],
+  ['floatPct','Free float (%)', c=>floatDe(c), fmtPct],
+  ['controlePct','Participação do controlador (%)', c=>controleDe(c), fmtPct],
+  ['acPF','Acionistas pessoa física', c=>{const f=freDe(c); return f&&f.acionistas?(f.acionistas.pf??null):null;},
+    v=>v==null?'—':nbr.format(v)],
   ['prov12n','Pagamentos em 12 meses', c=>{ if(!EXTRA.proventos){pedeExtra('proventos');return null;}
     const tk=(mainTicker(c)||{}).t; const p=tk?EXTRA.proventos.porTicker[tk]:null;
     return p && p.d12 != null ? (p.n12 ?? null) : null; }, v=>v==null?'—':String(v)],
@@ -3237,8 +3500,61 @@ let extraPedido = {};
 function pedeExtra(nome){
   if(extraPedido[nome]) return;
   extraPedido[nome] = true;
-  carregaExtra(nome).then(d => { if(d && document.body.dataset.view === 'cmp') renderCmp(); });
+  carregaExtra(nome).then(d => {
+    // Falhou? libera o pedido. Antes a trava era definitiva: se a primeira
+    // tentativa caísse (rede oscilando, arquivo ainda não publicado), a coluna
+    // ficava vazia para sempre naquela aba, sem nenhum sinal de que era falha de
+    // carga e não ausência de dado.
+    if(!d){ extraPedido[nome] = false; return; }
+    if(document.body.dataset.view === 'cmp') renderCmp();
+  });
 }
+// ---- composição acionária e free float (Formulário de Referência da CVM) ----
+// A chave é o CNPJ só com dígitos: o FRE não traz o código CVM da companhia.
+const soDig = s => String(s||'').replace(/\D/g,'');
+function freDe(c){
+  if(!EXTRA.fre){ pedeExtra('fre'); return null; }
+  return EXTRA.fre.porCnpj[soDig(c.cnpj)] || null;
+}
+// O percentual de cada acionista é SEMPRE recalculado sobre o capital social.
+// Os percentuais do próprio arquivo da CVM são relativos ao agrupamento do
+// acionista e não à companhia: a União Federal aparece com 100% das ordinárias
+// da Petrobras quando detém 50,3%. E só sai percentual quando a soma dos
+// acionistas de topo bate com o capital social — o coletor marca isso em 'fecha'.
+function capTotal(f){ return f && f.capital ? (f.capital.on||0) + (f.capital.pn||0) : 0; }
+function pctDoCapital(f, qtd){
+  const tot = capTotal(f);
+  return (f && f.fecha && tot > 0 && qtd != null) ? 100*qtd/tot : null;
+}
+function floatDe(c){ const f = freDe(c); return f && f.float ? f.float.tot : null; }
+function pctDasOn(f, qtd){
+  return (f && f.fecha && f.capital && f.capital.on > 0 && qtd) ? 100*qtd/f.capital.on : null;
+}
+// Controle se mede em VOTO. A União Federal detém 29,0% do capital da Petrobras
+// e 50,3% das ordinárias — é o segundo número que decide quem manda na
+// companhia. Em empresa com preferenciais, exibir só o percentual do capital
+// total faz o controlador parecer minoritário.
+function controleDe(c){ const f = freDe(c); return f && f.controle ? pctDasOn(f, f.controle.on) : null; }
+function motivoSemFloat(c){
+  if(!EXTRA.fre) return 'o formulário de referência ainda está carregando';
+  const f = freDe(c);
+  if(!f) return 'a companhia não consta nos formulários de referência de '
+    + (EXTRA.fre.anos ? Object.keys(EXTRA.fre.anos).join(' nem ') : 'CVM');
+  if(f.floatContradiz){
+    const x = f.floatContradiz;
+    const base = 'a companhia declara ' + fmtPct(x['float']) + ' de ações em circulação e, no MESMO formulário, ';
+    const fim = ' — os dois números não podem ser verdade ao mesmo tempo, e o padrão é o campo de '
+      + 'circulação ter sido preenchido com o total de ações';
+    if(x.tipo === 'acordo') return base + 'acionistas participantes de acordo de acionistas com '
+      + fmtPct(x.acordo) + ' do capital, que por definição não são ações em circulação' + fim;
+    if(x.tipo === 'bloco') return base + 'um único acionista identificado, ' + x.quem + ', com '
+      + fmtPct(x.maior) + ' do capital' + fim;
+    return base + 'acionistas controladores com ' + fmtPct(x.ctrl) + ' do capital' + fim;
+  }
+  if(!f.float) return 'a companhia entregou o formulário com as ações em circulação zeradas';
+  return 'sem ações em circulação declaradas';
+}
+
 // SÉRIE COM SALTO IMPOSSÍVEL = evento societário que a fonte não ajustou.
 // Medido em 11/09/2026 sobre as 479 séries publicadas: a MMAQ3 tem um salto de
 // +84.903% de novembro para dezembro de 2024 (de R$ 3 para R$ 2.550) — é um
@@ -3616,6 +3932,8 @@ const BUSCA_INDS = [
   [/d[íi]vida l[íi]quida\s*\/?\s*ebitda|alavancagem|endividamento/, 'dlEbitda'],
   [/liquidez corrente/, 'liqCorr'],
   [/cobertura de juros/, 'cobJuros'],
+  [/free\s*float|a[çc][õo]es em circula[çc][ãa]o|capital em circula[çc][ãa]o/, 'floatPct'],
+  [/participa[çc][ãa]o do controlador|controlador|controle acion/, 'controlePct'],
   [/valor de mercado|market\s*cap|mktcap/, 'mktCap'],
   [/valor da firma|\bev\b(?!\s*[\/ ]*ebitda)/, 'ev'],
   [/receita/, 'rev12'],
