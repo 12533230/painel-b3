@@ -1,4 +1,4 @@
-name: Dados extra (índices, proventos, preço longo, série anual)
+name: Dados extra (índices, proventos, preço longo, série anual, composição acionária, documentos CVM)
 
 # Os quatro coletores novos publicam num branch próprio, "extra", por commit órfão
 # — o mesmo padrão de quotes/news. Motivos de não ir para main:
@@ -12,7 +12,14 @@ name: Dados extra (índices, proventos, preço longo, série anual)
 #  · preço mensal muda de verdade uma vez por mês, mas o fechamento do mês
 #    corrente muda todo dia → diariamente, depois do fim do pregão;
 #  · série anual da DFP só muda quando uma empresa entrega ou reapresenta um
-#    exercício → uma vez por semana, e ainda assim baixa ~150 MB da CVM.
+#    exercício → uma vez por semana, e ainda assim baixa ~150 MB da CVM;
+#  · o Formulário de Referência é anual, mas cada companhia reapresenta versões
+#    ao longo do ano (a Petrobras está na versão 10 de 2026) → diariamente, são
+#    16 MB entre os dois anos;
+#  · o IPE (fatos relevantes, comunicados, avisos e o calendário oficial de
+#    eventos) é reescrito pela CVM UMA VEZ POR SEMANA, aos domingos — rodar de
+#    hora em hora não adiantaria nada. Roda diariamente porque é barato (3,8 MB)
+#    e porque assim o dia em que a CVM reescreve não precisa ser adivinhado.
 #
 # Cada coletor é independente: um que falhe não impede os outros de publicar. O
 # passo final marca a execução como falha se NENHUM arquivo foi gerado, e também
@@ -56,7 +63,7 @@ jobs:
       - name: Baixar o que já está no branch extra
         run: |
           mkdir -p data
-          for f in indices.json proventos.json precos_longo.json hist.json; do
+          for f in indices.json proventos.json precos_longo.json hist.json fre.json ipe.json; do
             if curl -sf --retry 3 "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/extra/data/$f" -o "/tmp/$f" \
                && python -c "import json,sys; d=json.load(open('/tmp/$f')); sys.exit(0 if d.get('updatedAt') else 1)"; then
               cp "/tmp/$f" "data/$f"
@@ -92,6 +99,12 @@ jobs:
       - name: Preço mensal de 10 anos (retornos, múltiplo histórico)
         run: python collect_precos.py || echo "::warning::preço longo falhou — mantém o arquivo anterior do branch"
 
+      - name: Composição acionária e free float (FRE da CVM)
+        run: python collect_fre.py || echo "::warning::FRE falhou — mantém o arquivo anterior do branch"
+
+      - name: Fatos relevantes, comunicados e calendário oficial (IPE da CVM)
+        run: python collect_ipe.py || echo "::warning::IPE falhou — mantém o arquivo anterior do branch"
+
       - name: Série anual da CVM desde 2010
         if: steps.q.outputs.hist == 'true'
         run: python collect_hist.py || echo "::warning::série anual falhou — mantém o arquivo anterior do branch"
@@ -103,7 +116,7 @@ jobs:
           # Sem nenhum arquivo não há o que publicar — e publicar árvore vazia
           # APAGARIA o que está no branch (o commit é órfão).
           presentes=""
-          for f in indices.json proventos.json precos_longo.json hist.json; do
+          for f in indices.json proventos.json precos_longo.json hist.json fre.json ipe.json; do
             if [ -f "data/$f" ]; then presentes="$presentes data/$f"; fi
           done
           if [ -z "$presentes" ]; then
@@ -126,7 +139,7 @@ jobs:
         if: always()
         run: |
           parou=0
-          for f in indices.json proventos.json precos_longo.json; do
+          for f in indices.json proventos.json precos_longo.json fre.json ipe.json; do
             if [ -f "/tmp/base_$f" ] && [ -f "data/$f" ] && cmp -s "/tmp/base_$f" "data/$f"; then
               echo "::error::$f não foi regravado nesta execução — o coletor que já funcionava parou de entregar"
               parou=$((parou+1))
