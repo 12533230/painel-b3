@@ -160,12 +160,80 @@ if doc_frames:
     docs = pd.concat(doc_frames, ignore_index=True)
     docs["CNPJ"] = docs["CNPJ_CIA"].map(norm_cnpj)
     docs["V"] = pd.to_numeric(docs["VERSAO"], errors="coerce").fillna(1)
+    docs_all = docs.copy()
     docs = docs.sort_values("V").groupby(["CNPJ", "DT_REFER"]).tail(1)
     for _, r in docs.iterrows():
         did = str(r.get("ID_DOC") or "").strip()
         if did:
             DOCID[(r["CNPJ"], r["DT_REFER"])] = did
 print(f"documentos com link: {len(DOCID)}", file=sys.stderr)
+
+# ------------------------------------------------- agenda de resultados
+# Não existe calendário de resultados como dado aberto. Foi procurado: a B3 não
+# tem rota de agenda (a lista completa de rotas do listedCompaniesProxy foi
+# extraída do próprio JavaScript da página — GetDetail, GetListedCashDividends,
+# GetListFreeFloat, GetMaterialFacts e mais sete; nenhuma de calendário, e ~20
+# nomes plausíveis deram 404), e os Dados Abertos da CVM têm CGVN, DFP, FCA, FRE,
+# IPE, ITR e VLMO — nada de calendário.
+#
+# O que existe é a data de ENTREGA de cada demonstração passada (DT_RECEB, no
+# mesmo CSV master que já é lido acima para o link do documento). A estimativa é
+# a data em que a empresa entregou o MESMO trimestre um ano antes. Medido em
+# 11/09/2026 sobre 625 empresas pareadas (2T2025 → 2T2026): erro mediano de 1
+# dia, 77% dentro de ±3 dias, 93% dentro de ±7, máximo de 216. É bom o bastante
+# para "prepare a reunião para a segunda semana de novembro" e não é bom o
+# bastante para ser apresentado como data oficial — por isso sai rotulado como
+# estimativa, com a data-base que a gerou, e a tela mostra o calendário oficial
+# da companhia (IPE) ao lado quando ela publicou um.
+ENTREGAS = {}
+if doc_frames:
+    # a data que interessa e a da entrega ORIGINAL: reapresentacao espontanea
+    # chega meses depois e jogaria a estimativa do ano seguinte para longe
+    ent = docs_all[["CNPJ", "DT_REFER", "DT_RECEB", "CATEG_DOC"]].dropna(subset=["DT_REFER", "DT_RECEB"])
+    ent = ent.sort_values("DT_RECEB").groupby(["CNPJ", "DT_REFER"]).head(1)
+    for cnpj, g in ent.groupby("CNPJ"):
+        linhas = sorted({(str(r["DT_REFER"])[:10], str(r["DT_RECEB"])[:10], str(r["CATEG_DOC"] or "").strip())
+                         for _, r in g.iterrows()}, reverse=True)
+        # só datas plausíveis: o master já trouxe DT_REFER de 3026 em outros conjuntos
+        linhas = [x for x in linhas if x[0][:2] == "20" and x[1][:2] == "20"]
+        if linhas:
+            ENTREGAS[cnpj] = linhas
+
+
+def _prox_trimestre(refer):
+    """Data de referência do trimestre seguinte a 'refer' (AAAA-MM-DD)."""
+    y, m = int(refer[:4]), int(refer[5:7])
+    fins = {3: "03-31", 6: "06-30", 9: "09-30", 12: "12-31"}
+    if m not in fins:
+        m = min(fins, key=lambda x: abs(x - m))
+    m += 3
+    if m > 12:
+        m, y = 3, y + 1
+    return f"{y}-{fins[m]}"
+
+
+def agenda_de(cnpj):
+    linhas = ENTREGAS.get(cnpj)
+    if not linhas:
+        return None
+    out = {"ult": [[a, b, c] for a, b, c in linhas[:6]]}
+    ultimo = linhas[0][0]
+    alvo = _prox_trimestre(ultimo)
+    # a mesma referência um ano antes; a entrega dela + 1 ano é a estimativa
+    ano_antes = f"{int(alvo[:4]) - 1}{alvo[4:]}"
+    base = next((x for x in linhas if x[0] == ano_antes), None)
+    if base:
+        try:
+            b = _dt.date.fromisoformat(base[1])
+            d = b.replace(year=b.year + 1)
+        except ValueError:              # 29 de fevereiro
+            d = _dt.date.fromisoformat(base[1]) + _dt.timedelta(days=365)
+        # companhia entrega em dia útil; fim de semana vira a segunda seguinte
+        if d.weekday() >= 5:
+            d += _dt.timedelta(days=7 - d.weekday())
+        out["prox"] = {"refer": alvo, "est": d.isoformat(), "base": base[1],
+                       "tipo": "DFP" if alvo.endswith("12-31") else "ITR"}
+    return out
 
 print("carregando DRE...", file=sys.stderr)
 dre_con, dre_ind = load_all("DRE", flow=True)
@@ -849,6 +917,7 @@ def build_company(cnpj, meta):
         **{k: meta[k] for k in ("root", "name", "fullName", "cnpj", "cvm", "setor", "subsetor", "segmento", "listagem")},
         "fin": isfin, "con": cnpj in HAS_CON,
         "tickers": tk, "q": qlist, "bal": lastbal, "bh": bhist, "ind": ind, "links": links,
+        **({"ag": _ag} if (_ag := agenda_de(cnpj)) else {}),
         # trimestres dos últimos 12 meses cuja aritmética não fecha; quando esta
         # lista não está vazia, NENHUM acumulado de 12 meses foi publicado
         **({"susQ": contaminados} if contaminados else {}),
