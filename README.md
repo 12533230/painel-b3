@@ -1,62 +1,87 @@
 # Painel B3 · Insignia Partners
 
 Painel interativo das empresas listadas na B3 (classificação setorial oficial) com
-resultados trimestrais, indicadores fundamentalistas, ETFs da B3, bolsa americana
-(índices, ETFs e ações), visão macro do Brasil (Boletim Focus, moedas, cripto,
-agenda de juros) e notícias da semana — com cotações quase ao vivo.
+resultados trimestrais, demonstrações conta a conta, indicadores fundamentalistas,
+comparação setorial, mapa de calor, ETFs da B3, bolsa americana, visão macro do
+Brasil (Boletim Focus, moedas, cripto, agenda de juros) e notícias — com cotações
+quase ao vivo. Um único HTML autocontido, que abre offline e roda como aplicativo.
 
-**Painel ao vivo:** https://SEU_USUARIO.github.io/painel-b3/ *(GitHub Pages, atualizado
-automaticamente em dias úteis ~6h10 de Brasília)*
+**Endereços:** `12533230.github.io/painel-b3/` (GitHub Pages, o que o APK carrega) ·
+`painel-b3-delta.vercel.app` · versão pública sem marca em `/p/`.
+
+## A regra que rege o projeto
+
+**Denominador que não sustenta a conta não gera número — gera ausência explicada.**
+Um número errado num deck custa mais que um dado faltando. Por isso o painel
+não publica:
+
+- ROE com patrimônio líquido abaixo de R$ 20 mi, ou que virou de negativo para
+  positivo dentro da janela (o resultado criou o patrimônio em vez de render sobre ele);
+- dív. líq./EBITDA com EBITDA negativo ou abaixo de 2% da receita;
+- margem com receita negativa ou abaixo de R$ 10 mi;
+- acumulado de 12 meses sem quatro trimestres **consecutivos**;
+- trimestre em que a aritmética da própria entrega da empresa não fecha
+  (acumulado ≠ acumulado anterior + trimestre), nem T4 derivado por subtração que
+  saia negativo ou acima de 1,5× os nove meses anteriores;
+- indicador de banco e seguradora que não se aplica (EBITDA, dívida, ROIC).
+
+Cada indicador tem fórmula, fonte e regra de ausência no botão **?** ao lado do
+rótulo — o mesmo texto no tile, na tabela e no modal ⓘ.
 
 ## Como funciona
 
-Dois workflows do GitHub Actions:
+Sete robôs no GitHub Actions, cada um com sua cadência e seu próprio critério de
+falha. Nenhum deles pode ficar verde sem entregar.
 
-**`update.yml` (diário, dias úteis ~6h10 Brasília)** — o painel completo:
+| workflow | quando | o que faz |
+|---|---|---|
+| `update.yml` | 3 horários/dia, todos os dias | painel completo: CVM → `process.py` → HTML interno e público |
+| `quotes.yml` | 4 gatilhos em pregão, ciclo de 5 min | cotações da B3 e dos EUA no branch `quotes` |
+| `noticias.yml` | a cada 2 h, todos os dias | notícias por empresa e manchetes no branch `news` |
+| `extra.yml` | diário após o fechamento | índices, proventos, preço longo e série anual no branch `extra` |
+| `vigia.yml` | 2×/hora | mede a idade do que está **publicado** e redispara o robô parado |
+| `sonda.yml` | semanal + manual | testa cada fonte a partir do runner e publica o log no branch `sonda` |
+| `autoteste.yml` | manual | compila todos os `.py` e roda uma amostra real; log no branch `autoteste` |
 
-1. `collect.py` — baixa demonstrações da CVM (ITR/DFP), a tabela do Fundamentus,
-   Ibovespa (B3), indicadores e Boletim Focus (APIs do Banco Central), moedas
-   (AwesomeAPI), cripto (CoinGecko) e notícias (Reddit + Google News). Toda fonte tem
-   fallback: se falhar, mantém o último dado publicado. A classificação setorial da B3
-   se renova sozinha a cada ~45 dias (`refresh_b3.py`).
-2. `collect_quotes.py` — snapshot de cotações (Yahoo Finance) embutido no HTML.
-3. `process.py` — consolida os balanços por empresa e calcula os indicadores
-   (EBITDA, margens, ROE, ROIC, dívida líquida/EBITDA, valor de mercado etc.).
-4. `build_html.py` — injeta os dados no template e publica `docs/index.html`.
+O agendamento do GitHub é *best effort* e descarta execuções — medido neste repo:
+o cron horário do vigia entregou ~5 das 24 execuções/dia, e o gatilho de abertura
+do pregão não saiu em dois dias seguidos. Por isso **todo robô tem mais de um
+gatilho, ciclo interno em vez de muitos gatilhos, e um vigia que mede o dado
+publicado em vez do agendamento**.
 
-**`quotes.yml` (a cada 15 min em horário de pregão)** — roda `collect_quotes.py`
-(cotações da B3 completa, ETFs e EUA via Yahoo Finance) e publica `data/quotes.json`
-no branch `quotes` (force-push de 1 commit, para não inflar o histórico). O painel
-relê esse arquivo a cada 60 s via raw.githubusercontent.com.
+### Pipeline
 
-## Camadas de "ao vivo" no navegador
+1. `collect.py` — CVM (ITR/DFP), Fundamentus, Ibovespa, BCB (SGS e Focus), moedas,
+   cripto, fóruns e manchetes. Exige os cinco ZIPs da CVM; o carimbo de hora só
+   avança quando alguma fonte respondeu.
+2. `collect_quotes.py` · `collect_candles.py` — cotações e candles (Yahoo).
+3. `collect_indices.py` — índices da B3 por papel (1 requisição, 469 tickers).
+4. `collect_proventos.py` — histórico de proventos por papel (B3).
+5. `collect_precos.py` — fechamento mensal de 10 anos (retornos e múltiplo histórico).
+6. `collect_hist.py` — série anual da DFP desde 2010.
+7. `process.py` — consolida tudo por empresa, aplica as guardas e emite `painel_data.json`.
+8. `build_html.py` / `build_public.py` — injetam os dados no template.
 
-Com a página aberta e internet (nada disso exige chave):
+## Camadas ao vivo no navegador (sem chave)
 
-- **B3 — ações, ETFs, Ibovespa e IFIX**: consultadas a cada 60 s direto na API
-  pública da própria B3 (CORS aberto; feed com ~15 min de defasagem do pregão).
-- **EUA + lista completa da B3**: `quotes.json` do robô, relido a cada 60 s.
-- **Câmbio e cripto**: AwesomeAPI e CoinGecko a cada 60 s.
-- **Selic/CDI/IPCA e Focus**: BCB a cada 5 min.
+B3 (ações, ETFs, Ibovespa, IFIX) a cada 60 s direto na API pública da bolsa
+(~15 min de defasagem) · arquivo do robô relido a cada 60 s · câmbio e cripto a
+cada 60 s · Selic, CDI, IPCA e Focus a cada 5 min. Chaves opcionais do usuário
+(Finnhub, brapi) ficam só no navegador.
 
-Chaves gratuitas **opcionais** (botão "⚙ Ao vivo" no painel; ficam no localStorage
-do navegador): **Finnhub** deixa ações/ETFs dos EUA em tempo real no navegador;
-**brapi** busca as cotações da B3 em lote (1 chamada).
-
-As listas padrão de ETFs da B3 e de índices/ETFs/ações dos EUA ficam em
-`data/watchlists.json` — edite e faça commit para mudar o que o robô coleta.
-No navegador, "➕ acompanhar outro" adiciona tickers só para você (localStorage).
+Nenhuma das fontes novas (B3 listada, B3 índices, Yahoo chart, FRE da CVM) tem
+CORS — todas passam obrigatoriamente pelo pipeline. A tela nunca sugere consulta
+ao vivo onde não há.
 
 ## Fontes
 
-CVM Dados Abertos (ITR/DFP) · B3 (classificação setorial, Ibovespa/IFIX e cotações
-quase ao vivo) · Yahoo Finance (cotações EUA e B3 via robô) · Banco Central
-(SGS e Expectativas/Focus) · Fundamentus (múltiplos de mercado) · AwesomeAPI (câmbio) ·
-CoinGecko (cripto) · IBGE, BCB, Fed e BCE (calendários) · Reddit e Google News
-(repercussão) · opcionais: Finnhub e brapi (chaves gratuitas do usuário).
+CVM Dados Abertos (ITR/DFP/DFC/DMPL) · B3 (classificação setorial, índices,
+proventos, cotações) · Yahoo Finance · Banco Central (SGS e Focus) · Fundamentus ·
+AwesomeAPI · CoinGecko · Google News e Reddit · opcionais Finnhub e brapi.
 
 ## Aviso
 
-Uso informativo e educacional; não é recomendação de investimento. Os dados vêm de
-fontes públicas citadas acima e podem conter atrasos ou erros; confira sempre os
-documentos oficiais (links por empresa dentro do painel).
+Uso informativo e educacional; não é recomendação de investimento. Os dados vêm
+das fontes públicas citadas e podem conter atrasos ou erros; confira sempre os
+documentos oficiais — cada empresa tem link direto para a CVM, e cada trimestre
+tem link para o ITR/DFP daquele período.

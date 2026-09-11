@@ -121,6 +121,14 @@
   .cfgrow input{flex:1;min-width:220px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
   .m-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
   @media(max-width:980px){.m-grid{grid-template-columns:1fr}}
+  .agrow>b,.agrow>span:not(.agdate):not(.agtag):not(.agsuper):not(.agdays){min-width:0;flex:1 1 auto;overflow-wrap:anywhere}
+  @media(max-width:640px){
+    /* sem isto a linha da agenda empurrava a aba Brasil & Macro para rolar na
+       horizontal, e o "em N dias" saía da tela */
+    .agrow{flex-wrap:wrap}
+    .agdate{min-width:auto}
+    .agdays{flex-basis:100%;margin-left:0}
+  }
   .agrow{display:flex;gap:12px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--grid)}
   .agrow:last-child{border-bottom:none}
   .agdate{min-width:96px;font-weight:700;color:var(--ink2);font-variant-numeric:tabular-nums;font-size:12.5px}
@@ -255,6 +263,86 @@
     #boot .cd i{animation:none;transform:none;opacity:.9}
     #boot .bl{animation:none;opacity:1}
   }
+
+  /* ================= ficha A4 (impressão / PDF) =================
+     O consultor precisa levar a empresa para dentro de um deck ou de um memo. As
+     plataformas pagas chamam isso de tearsheet; nenhuma das gratuitas entrega.
+     Em vez de montar uma segunda tela (que envelheceria em paralelo com a
+     primeira e acabaria contradizendo-a), a ficha é o PRÓPRIO painel de detalhe
+     reformatado para papel: mesmo dado, mesmas guardas, mesma data.
+     O navegador gera o PDF; não há dependência externa. */
+  /* "?" do glossário: discreto ao lado do rótulo, sem competir com o número */
+  .glo{border:1px solid var(--border);background:transparent;color:var(--muted);
+       border-radius:50%;width:15px;height:15px;line-height:1;font-size:10px;
+       cursor:pointer;padding:0;margin-left:5px;vertical-align:middle;flex-shrink:0}
+  .glo:hover{border-color:var(--muted);color:var(--ink)}
+  .globox{position:fixed;z-index:120;max-width:min(420px,92vw);background:var(--surface);
+          border:1px solid var(--border);border-radius:10px;padding:12px 14px;
+          box-shadow:0 10px 34px rgba(0,0,0,.22);font-size:12.5px;line-height:1.5}
+  .globox b{display:block;margin-bottom:6px;font-size:13.5px}
+  .globox .gl{color:var(--ink2);margin-bottom:5px}
+  .globox .btn{margin-top:6px}
+  .sinais{display:grid;grid-template-columns:1fr;gap:2px;margin-top:6px}
+  .sinal{display:flex;align-items:baseline;gap:8px;padding:5px 8px;border-radius:6px;font-size:12.5px}
+  .sinal.ok{background:rgba(62,107,82,.10)} .sinal.nao{background:rgba(146,68,47,.10)}
+  .sinal .ic{width:14px;flex-shrink:0;font-weight:700}
+  .sinal.ok .ic{color:var(--good)} .sinal.nao .ic{color:var(--bad)}
+  .sinal .tx{flex:1 1 auto;min-width:0}
+  .sinal .vl{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+  textarea.notas{width:100%;box-sizing:border-box;margin-top:6px;padding:8px 10px;border:1px solid var(--border);
+    border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;font-size:13px;resize:vertical}
+  textarea.notas:focus{outline:none;border-color:var(--muted)}
+  @media(max-width:640px){ textarea.notas{font-size:16px} }
+  .cconta{color:var(--muted);font-size:10.5px;font-variant-numeric:tabular-nums}
+  .kbd{display:inline-block;border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;
+       padding:1px 7px;font:600 12px/1.5 ui-monospace,Menlo,Consolas,monospace;background:var(--wash)}
+  /* modo apresentação: o que é ferramenta sai, o que é resultado cresce */
+  body.apres .cmpbar,body.apres .side,body.apres .search,body.apres #idadeaviso,
+  body.apres .charttools,body.apres .note,body.apres .foot{display:none !important}
+  body.apres{font-size:15.5px}
+  body.apres .tile .v{font-size:26px}
+  body.apres .ct{font-size:16px}
+  body.apres .qtbl th,body.apres .qtbl td{padding:7px 10px;font-size:14px}
+  body.apres .wrap{grid-template-columns:1fr}
+  .printonly{display:none}
+  @media print{
+    @page{size:A4 portrait;margin:12mm 10mm 14mm}
+    /* cores de verdade no papel: sem isto o navegador imprime tudo em cinza e as
+       barras dos gráficos perdem o significado */
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    html,body{background:#fff !important}
+    :root{--page:#fff;--surface:#fff}
+    /* fora do papel: navegação, faixas, overlays e tudo que é interação */
+    .hdr,.ticker,#idadeaviso,.wrap,#macroview,#etfview,#euaview,#cmpview,
+    .ovl,.iovl,#boot,.tip,.sugg,.cmpbar,.charttools,.btn,button,select,input{display:none !important}
+    /* o painel de detalhe vira o documento */
+    .panel{position:static !important;transform:none !important;width:100% !important;
+           max-width:none !important;box-shadow:none !important;border:0 !important;
+           overflow:visible !important;background:#fff !important}
+    .ph{position:static !important;padding:0 0 8px !important;border-bottom:2px solid #0c2a2d !important}
+    .pb{padding:0 !important}
+    .printonly{display:block}
+    .printhdr{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding:0 0 8px;
+              border-bottom:1px solid #999}
+    .printhdr img{height:16px}
+    .printhdr .t{font-weight:700;font-size:13px}
+    .printhdr .d{margin-left:auto;font-size:10.5px;color:#555}
+    .printfoot{margin-top:10px;padding-top:6px;border-top:1px solid #ccc;
+               font-size:9.5px;color:#444;line-height:1.45}
+    /* quebras: uma seção não começa no fim da página nem racha ao meio */
+    h3.sect{break-before:auto;break-after:avoid;page-break-after:avoid;margin-top:12px}
+    .card,.tile,.qtblwrap,table{break-inside:avoid;page-break-inside:avoid}
+    .charts{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important}
+    .tiles{display:grid !important;grid-template-columns:repeat(4,1fr) !important;gap:6px !important}
+    .tile{border:1px solid #ddd !important;padding:6px !important}
+    .tile .v{font-size:14px !important}
+    body{font-size:10.5px}
+    .qtbl th,.qtbl td{padding:3px 5px !important;font-size:9.5px !important}
+    a{text-decoration:none;color:#000 !important}
+    /* o endereço do link vira texto: no papel, "↗" sem destino não serve de nada */
+    .links a::after{content:" (" attr(href) ")";font-size:8.5px;color:#666;word-break:break-all}
+    .notice{border:1px solid #999 !important;background:#f4f4f4 !important}
+  }
 </style>
 </head>
 <body>
@@ -314,10 +402,43 @@
 "use strict";
 const DB = JSON.parse(document.getElementById('dados').textContent);
 const COS = DB.companies;
-let themeDark = matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
-function applyTheme(){ document.documentElement.setAttribute('data-theme', themeDark ? 'dark' : 'light'); }
+// Preferências do usuário no navegador. Ficam aqui, antes de tudo, porque o tema
+// é lido já na primeira linha de render — declarados mais abaixo com `const`,
+// cairiam na zona morta temporal e o painel abriria com erro.
+const lsGet = k => { try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } };
+const lsSet = (k,v) => { try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
+// Chave de API é gravada como texto puro (não JSON). Em navegador com
+// armazenamento bloqueado, localStorage.getItem LANÇA — e a exceção acontecia
+// dentro de refreshB3, DEPOIS de já ter preenchido os índices e ANTES de
+// afterQuotes(), matando o ciclo de 60 s inteiro.
+const lsStr = k => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
+const lsStrSet = (k,v) => { try{ if(v) localStorage.setItem(k,v); else localStorage.removeItem(k); }catch(e){} };
+// O painel guarda toda preferência do usuário (chaves ao vivo, período do gráfico,
+// peer sets, estado do Comparar) — menos o tema, que voltava ao do sistema a cada
+// visita. Agora persiste, e enquanto NÃO houver escolha salva o painel continua
+// seguindo o sistema, inclusive quando ele muda com a página aberta.
+let themeDark = (() => {
+  const salvo = lsGet('tema');
+  if(salvo === true || salvo === false) return salvo;
+  return !!(matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+})();
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', themeDark ? 'dark' : 'light');
+  const b = document.getElementById('theme');
+  if(b){ b.setAttribute('aria-pressed', themeDark ? 'true' : 'false');
+         b.title = themeDark ? 'Tema escuro — clique para o claro' : 'Tema claro — clique para o escuro'; }
+}
 applyTheme();
-document.getElementById('theme').onclick = () => { themeDark = !themeDark; applyTheme(); renderAll(); if(openCvm) openDetail(openCvm); };
+document.getElementById('theme').onclick = () => {
+  themeDark = !themeDark; lsSet('tema', themeDark);
+  applyTheme(); renderAll(); if(openCvm) openDetail(openCvm);
+};
+if(matchMedia && matchMedia('(prefers-color-scheme: dark)').addEventListener){
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ev => {
+    if(lsGet('tema') !== null && lsGet('tema') !== undefined) return;  // escolha do usuário manda
+    themeDark = ev.matches; applyTheme(); renderAll(); if(openCvm) openDetail(openCvm);
+  });
+}
 
 // ---------- helpers ----------
 const $ = s => document.querySelector(s);
@@ -338,6 +459,15 @@ const fmtPct = v => v==null ? '—' : nbr.format(v) + '%';
 const nbrP = new Intl.NumberFormat('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 const fmtPrice = v => v==null ? '—' : 'R$ ' + nbrP.format(v);
 function cls(v){ return v==null ? 'dim' : (v<0 ? 'neg' : ''); }
+// Endereço vindo de arquivo externo (news.json, news_macro.json) só entra na página
+// se for http/https. Estava definido dentro de openDetail e por isso valia apenas
+// para as notícias por empresa: as manchetes, os fóruns e os cards de veículo da
+// aba Brasil & Macro montavam o link sem filtro nenhum. Agora é um só, no escopo
+// do módulo, usado em todos os pontos que consomem link de fora.
+function safeU(u){
+  try{ const x = new URL(u); return ['https:','http:'].includes(x.protocol) ? x.href : null; }
+  catch(e){ return null; }
+}
 function med(arr){ const a = arr.filter(x=>x!=null).sort((x,y)=>x-y); if(!a.length) return null; const m = a.length>>1; return a.length%2 ? a[m] : (a[m-1]+a[m])/2; }
 function mainTicker(c){ let best=null, bl=-1; for(const t of c.tickers){ const l=t.liq2m||0; if(l>bl){bl=l;best=t;} } return best; }
 // Um trimestre pode chegar da CVM inconsistente e contaminar os 12 meses. Caso
@@ -397,6 +527,9 @@ const ni12De = c => niSuspeito(c) ? null : (c.ind ? c.ind.ni12 : null);
 // a SUDESTE S/A publicava ROE de −43.150% e sozinha destruía a média do setor.
 const PISO_PL = 20;   // R$ milhões
 function roeDe(c){
+  // patrimônio que virou de negativo para positivo dentro da janela: o
+  // denominador não existiu durante o período do numerador
+  if(plVirou(c)) return null;
   const pl = (c.bal||{}).pl;
   if(pl != null && pl < PISO_PL) return null;
   if(niSuspeito(c)) return null;
@@ -414,6 +547,54 @@ function dlEbitdaDe(c){
   // 316,5x". Denominador nessa ordem é ruído, não capacidade de pagamento.
   if(r != null && r > 0 && e < 0.02*r) return null;
   return c.ind.dlEbitda != null ? c.ind.dlEbitda : null;
+}
+// PATRIMÔNIO QUE VIROU DE SINAL DENTRO DA JANELA.
+// A HAGA S/A fechou 2026T2 com lucro de R$ 83,7 mi (os outros nove trimestres
+// ficam entre −1,1 e +1,1) e o patrimônio líquido saiu de −48,2 para +35,5 no
+// MESMO trimestre — variação de exatamente 83,7. Ou seja: o resultado não foi
+// retorno sobre um patrimônio, foi o evento que CRIOU o patrimônio (renegociação
+// de dívida ou reavaliação). Dividir um pelo outro dá "ROE 238%", que encabeçava
+// o ranking. A guarda do niSuspeito não pega este caso — e não deve: ela existe
+// para achar dado INCOERENTE, e aqui o dado é coerente. O problema é outro: não
+// havia patrimônio durante o período que o numerador cobre.
+// Medido na base de 10/09/2026: 2 empresas (HAGA 238% e INFRACOMM −237,7%).
+function plVirou(c){
+  if(c._plVirou !== undefined) return c._plVirou;
+  const bh = (c.bh || []).filter(b => b.pl != null);
+  let r = null;
+  if(bh.length >= 5){
+    const ini = bh[bh.length - 5], fim = bh[bh.length - 1];
+    if(ini.pl <= 0 && fim.pl > 0) r = {de: ini.pl, para: fim.pl, dt: ini.dt};
+  }
+  c._plVirou = r;
+  return r;
+}
+// P/L com a mesma guarda do tile: trimestre inconsistente contamina o lucro de 12
+// meses, e P/L calculado sobre lucro contaminado é número errado.
+function plDe(c){
+  if(niSuspeito(c)) return null;
+  const t = mainTicker(c);
+  return t && t.pl != null ? t.pl : null;
+}
+// Motivo em UMA frase, reutilizado em tile, célula da tabela e title — para o "—"
+// nunca aparecer sem explicação, e a explicação ser a mesma em toda a tela.
+function motivoSemRoe(c){
+  const pl = (c.bal || {}).pl;
+  const vir = plVirou(c);
+  if(vir) return 'o patrimônio líquido saiu de ' + fmtMi(vir.de) + ' para ' + fmtMi(vir.para)
+    + ' dentro dos 12 meses — o resultado do período criou o patrimônio em vez de render sobre ele';
+  if(niSuspeito(c)) return 'trimestre inconsistente na CVM — lucro de 12 meses não publicado';
+  if(pl != null && pl <= 0) return 'patrimônio líquido negativo — ROE não se aplica';
+  if(pl != null && pl < PISO_PL) return 'patrimônio líquido abaixo de R$ '+PISO_PL+' mi — o percentual não teria significado';
+  return 'sem lucro de 12 meses ou sem patrimônio líquido na base';
+}
+function motivoSemAlavancagem(c){
+  const e = c.ind.ebitda12, r = c.ind.rev12;
+  if(c.fin) return 'banco/seguradora — dívida líquida e EBITDA não se aplicam';
+  if(e == null) return 'sem EBITDA de 12 meses na base';
+  if(e <= 0) return 'EBITDA negativo — a razão não se aplica';
+  if(r != null && r > 0 && e < 0.02*r) return 'EBITDA abaixo de 2% da receita — a razão não se sustenta';
+  return 'sem dívida líquida na base';
 }
 
 // ---------- estado ----------
@@ -474,16 +655,25 @@ function filtered(){
 function renderTiles(list){
   const t = $('#tiles'); t.textContent='';
   const mk = list.map(c=>c.ind.mktCap).filter(Boolean);
-  const tri26 = list.filter(c=>c.q.some(q=>q.p.startsWith('2026'))).length;
-  const tk = list.flatMap(c=>c.tickers);
+  // O ano era fixo ("2026") no código e no rótulo: em janeiro/2027 o tile passaria
+  // a contar zero e a dizer "Com resultado 2026" para sempre. Agora o ano vem do
+  // trimestre mais recente que EXISTE na base.
+  const anoBase = String(Math.max(...list.flatMap(c => (c.q||[]).map(q => +String(q.p).slice(0,4)))
+                                       .filter(n => n > 2000), 0)) || '';
+  const triAno = anoBase ? list.filter(c=>c.q.some(q=>String(q.p).startsWith(anoBase))).length : 0;
+  // Um tile por EMPRESA, não por ticker: com todos os tickers, ON e PN da mesma
+  // empresa entravam duas vezes na mediana. E EV/EBITDA de banco/seguradora sai
+  // fora, como já sai na lista e no detalhe.
+  const um = list.map(mainTicker).filter(Boolean);
+  const umNaoFin = list.filter(c=>!c.fin).map(mainTicker).filter(Boolean);
   const tiles = [
     ['Empresas', String(list.length), selSetor? 'no filtro atual' : 'listadas na B3'],
-    ['Com resultado 2026', String(tri26), 'ITR entregue à CVM'],
+    ['Com resultado '+anoBase, String(triAno), 'ITR/DFP entregue à CVM'],
     ['Valor de mercado', fmtMi(mk.reduce((a,b)=>a+b,0)||null), 'soma das calculáveis'],
-    ['P/L mediano', fmtX(med(tk.map(x=>x.pl>0?x.pl:null))), 'tickers com lucro'],
-    ['EV/EBITDA mediano', fmtX(med(tk.map(x=>x.evebitda>0?x.evebitda:null))), 'Fundamentus'],
-    ['ROE mediano', fmtPct(med(list.map(roeDe))), 'CVM (lucro 12m ÷ PL); exclui PL negativo'],
-    ['Div. Yield mediano', fmtPct(med(tk.map(x=>x.dy))), 'Fundamentus'],
+    ['P/L mediano', fmtX(med(um.map(x=>x.pl>0?x.pl:null))), 'ticker principal, com lucro'],
+    ['EV/EBITDA mediano', fmtX(med(umNaoFin.map(x=>x.evebitda>0?x.evebitda:null))), 'Fundamentus · sem financeiras'],
+    ['ROE mediano', fmtPct(med(list.map(roeDe))), 'CVM (lucro 12m ÷ PL); exige PL ≥ R$ '+PISO_PL+' mi'],
+    ['Div. Yield mediano', fmtPct(med(um.map(x=>x.dy))), 'Fundamentus · ticker principal'],
   ];
   for(const [l,v,d] of tiles){
     const c = el('div','tile'); c.append(el('div','l',l), el('div','v',v), el('div','d',d)); t.append(c);
@@ -497,13 +687,13 @@ const COLS = [
   ['var','Var. dia', c=>{const t=mainTicker(c); if(!t) return null; const q=getQ(t.t); return q?q.pct:null;}],
   ['mktCap','Valor mercado', c=>c.ind.mktCap],
   ['ev','Valor firma (EV)', c=>evOf(c)],
-  ['pl','P/L', c=>{const t=mainTicker(c); return t?t.pl:null;}],
+  ['pl','P/L', c=>plDe(c)],
   ['pvp','P/VP', c=>{const t=mainTicker(c); return t?t.pvp:null;}],
-  ['evebitda','EV/EBITDA', c=>{const t=mainTicker(c); return t?t.evebitda:null;}],
+  ['evebitda','EV/EBITDA', c=>c.fin ? null : (mainTicker(c)||{}).evebitda ?? null],
   ['dy','Div.Yield', c=>{const t=mainTicker(c); return t?t.dy:null;}],
-  ['roe','ROE', c=>{const t=mainTicker(c); return t?t.roe:null;}],
-  ['roic','ROIC', c=>{const t=mainTicker(c); return t?t.roic:null;}],
-  ['dlEbitda','DívLíq/EBITDA', c=>c.ind.dlEbitda],
+  ['roe','ROE', c=>roeDe(c)],
+  ['roic','ROIC', c=>(c.fin || plVirou(c)) ? null : ((mainTicker(c)||{}).roic ?? (c.ind||{}).roic ?? null)],
+  ['dlEbitda','DívLíq/EBITDA', c=>dlEbitdaDe(c)],
 ];
 function renderList(list){
   const tbl = $('#list'); tbl.textContent='';
@@ -539,13 +729,24 @@ function renderList(list){
     if(t) LISTROWS.push({tk:t.t, tdc, tdv});
     tr.append(el('td', c.ind.mktCap?'':'dim', fmtMi(c.ind.mktCap)));
     tr.append(el('td', evOf(c)!=null?'':'dim', fmtMi(evOf(c))));
-    tr.append(el('td', cls(t&&t.pl), fmtX(t&&t.pl)));
+    // A tabela principal publicava ROE, P/L e dív.líq./EBITDA CRUS enquanto os
+    // tiles e o Comparar aplicavam as guardas — a mesma empresa aparecia com ROE de
+    // 306,6% na lista e "—" no detalhe. As guardas passam a valer aqui também, e a
+    // célula ganha o motivo no title, para o número ausente ser explicado.
+    const plL = plDe(c), roeL = roeDe(c), dlL = dlEbitdaDe(c);
+    const tdPl = el('td', cls(plL), fmtX(plL));
+    if(plL == null && niSuspeito(c)) tdPl.title = 'trimestre inconsistente na CVM — 12 meses não publicado';
+    tr.append(tdPl);
     tr.append(el('td', cls(t&&t.pvp), fmtX(t&&t.pvp)));
-    tr.append(el('td', cls(t&&t.evebitda), c.fin?'—':fmtX(t&&t.evebitda)));
+    tr.append(el('td', cls(c.fin?null:(t&&t.evebitda)), c.fin?'—':fmtX(t&&t.evebitda)));
     tr.append(el('td', 'pos', fmtPct(t&&t.dy)));
-    tr.append(el('td', cls(t&&t.roe), fmtPct(t&&t.roe)));
-    tr.append(el('td', cls(t&&t.roic), c.fin?'—':fmtPct(t&&t.roic)));
-    tr.append(el('td', (c.ind.dlEbitda!=null&&c.ind.dlEbitda<0)?'pos':'', c.fin?'—':fmtX(c.ind.dlEbitda)));
+    const tdRoe = el('td', cls(roeL), fmtPct(roeL));
+    if(roeL == null) tdRoe.title = motivoSemRoe(c);
+    tr.append(tdRoe);
+    tr.append(el('td', cls(c.fin?null:(t&&t.roic)), c.fin?'—':fmtPct(t&&t.roic)));
+    const tdDl = el('td', (dlL!=null&&dlL<0)?'pos':'', c.fin?'—':fmtX(dlL));
+    if(!c.fin && dlL == null) tdDl.title = motivoSemAlavancagem(c);
+    tr.append(tdDl);
     tr.onclick = () => openDetail(c.cvm);
     tb.append(tr);
   }
@@ -677,10 +878,14 @@ function resumoConsulta(r){
   }
   return p.join(' · ');
 }
+// Ação da primeira linha do dropdown. O Enter executa ESTA ação, e não uma
+// reinterpretação do texto — era por isso que "ver o ranking · Enter" não
+// respondia ao Enter em nenhuma das quatro linhas de atalho.
+let suggAcao = null;
 qin.addEventListener('input', () => {
   const bruto = qin.value.trim();
   const v = norm(bruto);
-  sugg.textContent=''; if(v.length<2){ sugg.style.display='none'; return; }
+  sugg.textContent=''; suggAcao = null; if(v.length<2){ sugg.style.display='none'; return; }
 
   // pergunta com critério? só oferece quando há indicador com valor, para não
   // atrapalhar quem está só digitando o nome de uma empresa
@@ -694,13 +899,16 @@ qin.addEventListener('input', () => {
     d.append(el('span','nm','🔍 '+resumoConsulta(q)+ignora),
              el('span','tk', (q.intencao==='rank' ? 'ver o ranking' : q.intencao==='setores' ? 'comparar os setores entre si' : q.intencao==='kpiEmpresa' ? 'abrir a empresa nos indicadores operacionais' : q.intencao==='kpi' ? 'comparar esse KPI entre empresas' : 'buscar empresas com esses critérios')+' · Enter'));
     d.onclick = () => abreConsulta(bruto);
+    if(!suggAcao) suggAcao = d.onclick;
     sugg.append(d);
   }
 
   let hits = COS.filter(c => norm(c.name).includes(v) || norm(c.fullName).includes(v) ||
     c.root.toLowerCase().includes(v) || c.tickers.some(t=>t.t.toLowerCase().includes(v))).slice(0,12);
-  // Nada pelo nome literal: tenta apelido ("magalu") e nome aproximado.
-  if(!hits.length){
+  // Nada pelo nome literal: tenta apelido ("magalu") e nome aproximado. NÃO tenta
+  // quando a frase já produziu critério — aí a busca aproximada só produzia ruído
+  // ("margem EBITDA entre 20 e 30" sugeria TIME FOR FUN por causa de "entre").
+  if(!hits.length && !temCriterio){
     const alt = achaEmpresaNaFrase(bruto);
     if(alt && alt.ambiguo) hits = alt.ambiguo.map(a=>COS.find(x=>x.cvm===a.cvm)).filter(Boolean);
     else if(alt){ const c = COS.find(x=>x.cvm===alt.cvm); if(c) hits = [c]; }
@@ -708,6 +916,7 @@ qin.addEventListener('input', () => {
   for(const c of hits){
     const d = el('div'); d.append(el('span','nm',c.name), el('span','tk', c.tickers.map(t=>t.t).join(' ')+' · '+c.setor));
     d.onclick = () => { sugg.style.display='none'; qin.value=''; openDetail(c.cvm); };
+    if(!suggAcao) suggAcao = d.onclick;
     sugg.append(d);
   }
 
@@ -736,6 +945,7 @@ qin.addEventListener('input', () => {
           sugg.style.display='none'; qin.value='';
           setView('cmp'); $('#cmpview').scrollIntoView({block:'start'});
         };
+        if(!suggAcao) suggAcao = d.onclick;
         sugg.append(d);
       }
     }
@@ -761,7 +971,13 @@ function abreAjudaBusca(consulta){
   cmpSel.busca = consulta || '';
   cmpSel.filtros = [];
   const r = consulta ? buscaInterpreta(consulta) : null;
-  cmpSel.buscaLida = {escopo:(r&&r.escopo)||'', n:0, naoEntendi:(r&&r.naoEntendi)||[], intencao:null, falhou:true};
+  // Quando o escopo foi reconhecido, ele é APLICADO e a mensagem passa a ser
+  // parcial ("reconheci o subsetor X, falta o indicador"). Antes o painel dizia
+  // "Não consegui interpretar" para uma consulta cujo setor havia sido entendido,
+  // e ainda descartava o escopo — o usuário perdia a metade que deu certo.
+  if(r && r.escopo) cmpSel.setor = r.escopo;
+  cmpSel.buscaLida = {escopo:(r&&r.escopo)||'', n:0, naoEntendi:(r&&r.naoEntendi)||[],
+                      intencao:null, falhou: !(r && r.escopo), parcial: !!(r && r.escopo)};
   lsSet('cmp_sel', cmpSel);
   setView('cmp');
   $('#cmpview').scrollIntoView({block:'start'});
@@ -774,11 +990,18 @@ qin.addEventListener('keydown', e => {
   e.preventDefault();
   const q = buscaInterpreta(bruto);
   if(q && q.intencao){ abreConsulta(bruto); return; }
+  // O dropdown pode ter montado um atalho pronto (ex.: "→ maiores ROE em subsetor
+  // Comércio · ver o ranking · Enter"). O rótulo prometia o Enter e o Enter não
+  // fazia nada, porque reinterpretava o texto — que é exatamente o que não tem
+  // indicador. Executa a primeira linha oferecida.
+  if(suggAcao && sugg.style.display !== 'none'){ suggAcao(); return; }
   // nem empresa nem critério: leva ao painel de ajuda em vez de não fazer nada
   const vv = norm(bruto);
   const achouEmpresa = COS.some(c => norm(c.name).includes(vv) || norm(c.fullName).includes(vv) ||
     c.root.toLowerCase().includes(vv) || c.tickers.some(t=>t.t.toLowerCase().includes(vv)));
-  if(!achouEmpresa && bruto.split(/s+/).length >= 2){ abreAjudaBusca(bruto); return; }
+  // /\s+/ e não /s+/: com a letra "s" literal, uma frase sem "s" nunca chegava ao
+  // painel de ajuda e o Enter simplesmente não fazia nada ("compare petr4 e vale3").
+  if(!achouEmpresa && bruto.split(/\s+/).length >= 2){ abreAjudaBusca(bruto); return; }
   const v = norm(bruto);
   const c = COS.find(c => norm(c.name).includes(v) || norm(c.fullName).includes(v) ||
     c.root.toLowerCase().includes(v) || c.tickers.some(t=>t.t.toLowerCase().includes(v)));
@@ -860,25 +1083,101 @@ function colChart(container, data, color, fmt){
 // ---------- detalhe ----------
 const ovl = $('#ovl'), panel = $('#panel');
 ovl.onclick = closeDetail;
-function closeDetail(){ ovl.classList.remove('on'); panel.classList.remove('on'); openCvm=null; }
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDetail(); if(typeof closeInfo==='function') closeInfo(); } });
+function closeDetail(){
+  ovl.classList.remove('on'); panel.classList.remove('on'); openCvm=null;
+  // se a camada foi aberta empilhando estado, desempilha para o histórico não
+  // acumular entradas mortas
+  if(history.state && history.state.pb3 === 'detalhe'){ try{ history.back(); }catch(e){} }
+}
+// O app Android é um TWA: sem histórico próprio, o botão Voltar do sistema fecha o
+// APLICATIVO em vez de fechar o painel aberto — que é o que qualquer um espera.
+// Cada camada (detalhe da empresa, modal) empilha uma entrada; o Voltar a remove.
+function empilha(tipo){
+  try{ history.pushState({pb3: tipo}, ''); }catch(e){}
+}
+addEventListener('popstate', () => {
+  const modal = document.getElementById('iovl');
+  if(modal && modal.classList.contains('on')){ if(typeof closeInfo==='function') closeInfo(); return; }
+  if(openCvm){ ovl.classList.remove('on'); panel.classList.remove('on'); openCvm=null; }
+});
+// Esc fecha só o TOPO da pilha. Antes fechava os dois níveis de uma vez: abrir o
+// histórico de um indicador por cima do detalhe da empresa e apertar Esc jogava o
+// usuário para a lista, perdendo a empresa que ele estava lendo.
+document.addEventListener('keydown', e=>{
+  if(e.key !== 'Escape') return;
+  const modal = document.getElementById('iovl');
+  if(modal && modal.classList.contains('on')){
+    if(typeof closeInfo === 'function') closeInfo();
+    return;
+  }
+  closeDetail();
+});
 
-function statTile(label, value, extra, valueCls){
-  const c = el('div','tile'); c.append(el('div','l',label));
+// glosKey liga o tile ao glossário: o '?' aparece só onde há explicação escrita,
+// e a explicação é a MESMA que a tabela e o modal ⓘ mostram — uma fonte só.
+function statTile(label, value, extra, valueCls, glosKey){
+  const c = el('div','tile');
+  const lab = el('div','l', label);
+  const aj = glosKey && ajudaInd(glosKey);
+  if(aj){ lab.style.display='flex'; lab.style.alignItems='center'; lab.append(aj); }
+  c.append(lab);
   const v = el('div','v',value); if(valueCls) v.classList.add(valueCls); c.append(v);
   if(extra) c.append(el('div','d',extra)); return c;
 }
 
 function openDetail(cvm){
   const c = COS.find(x=>x.cvm===cvm); if(!c) return;
+  // openDetail é reexecutado com a MESMA empresa em dois casos: ao trocar o tema e
+  // a cada releitura de notícia (15 min). Zerar o scroll nesses casos jogava o
+  // usuário de volta ao topo no meio da leitura da tabela trimestral. A posição só
+  // volta a zero quando a empresa muda de verdade.
+  const mesmaEmpresa = (openCvm === cvm);
+  const scrollAntes = mesmaEmpresa ? panel.scrollTop : 0;
   openCvm = cvm;
   panel.textContent='';
   // header
   const ph = el('div','ph');
   const x = el('button','btn x','✕ fechar'); x.onclick=closeDetail; ph.append(x);
+  // Ficha A4: imprime ESTE painel como documento. Não é uma segunda tela com os
+  // mesmos números (que envelheceria em paralelo e acabaria contradizendo esta) —
+  // é a mesma tela, com folha de estilo de impressão. O PDF sai pelo navegador.
+  const pr = el('button','btn x','🖨 Ficha A4');
+  pr.title = 'Gerar a ficha de uma página desta empresa (o navegador salva em PDF)';
+  pr.style.right = '96px';
+  pr.onclick = () => {
+    // cabeçalho e rodapé só existem no papel: identificam a firma, a empresa, a
+    // data do dado e a origem de cada número — uma folha solta dentro de um deck
+    // tem de se explicar sozinha
+    const velho = panel.querySelector('.printonly');
+    if(velho) velho.remove();
+    const cab = el('div','printonly printhdr');
+    const lg = document.querySelector('.top img.logo');
+    if(lg && lg.src){ const im = document.createElement('img'); im.src = lg.src; im.alt=''; cab.append(im); }
+    cab.append(el('span','t', c.name + (c.tickers.length ? ' · ' + c.tickers.map(t=>t.t).join(' · ') : '')));
+    cab.append(el('span','d', 'Painel B3 · dados de ' + DB.updatedAt.split('-').reverse().join('/')
+      + ' · impresso em ' + new Date().toLocaleDateString('pt-BR')));
+    panel.insertBefore(cab, panel.firstChild);
+    const rod = el('div','printonly printfoot');
+    rod.textContent = 'Fontes: demonstrações ITR/DFP dos Dados Abertos da CVM (consolidado quando disponível, '
+      + 'valores em R$) · classificação setorial da B3 · múltiplos e cotação do Fundamentus'
+      + (c.links && c.links.cvm ? ' · documentos oficiais: ' + c.links.cvm : '')
+      + '. Indicador sem valor aparece como "—" com o motivo ao lado: o painel não publica número '
+      + 'cujo denominador não sustenta o cálculo. Uso informativo; não é recomendação de investimento.';
+    panel.append(rod);
+    setTimeout(() => window.print(), 60);
+  };
+  ph.append(pr);
   const r1 = el('div','row1'); r1.append(el('h2',null,c.name));
   const bd = el('div','badges');
-  for(const t of c.tickers){ const bq = el('span','badge', t.t + (t.cot!=null? ' · '+fmtPrice(t.cot):'')); bq.id = 'bq-'+t.t; bd.append(bq); }
+  // getQ e não t.cot: a lista já mostrava o preço do robô e o cabeçalho do detalhe
+  // ficava no fechamento embutido no build — dois preços diferentes para o mesmo
+  // papel, na mesma tela, com horas de diferença.
+  for(const t of c.tickers){
+    const q0 = getQ(t.t);
+    const p0 = (q0 && q0.p != null) ? q0.p : t.cot;
+    const bq = el('span','badge', t.t + (p0!=null? ' · '+fmtPrice(p0):''));
+    bq.id = 'bq-'+t.t; bd.append(bq);
+  }
   bd.append(el('span','badge', c.listagem));
   r1.append(bd); ph.append(r1);
   ph.append(el('div','path', c.setor+' › '+c.subsetor+' › '+c.segmento+'  ·  '+c.fullName+'  ·  CNPJ '+c.cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,'$1.$2.$3/$4-$5')));
@@ -905,30 +1204,46 @@ function openDetail(cvm){
     }
     return tile;
   };
-  tiles.append(statTile('Valor de mercado', fmtMi(i.mktCap), i.mktCap?'calculado (ações × cotação)':'sem dado'));
-  tiles.append(statTile('Valor da firma (EV)', fmtMi(evOf(c)), evOf(c)!=null?'mercado + dívida líquida':'precisa de mktcap e dívida'));
+  tiles.append(statTile('Valor de mercado', fmtMi(i.mktCap), i.mktCap?'calculado (ações × cotação)':'sem dado', null, 'mktCap'));
+  tiles.append(statTile('Valor da firma (EV)', fmtMi(evOf(c)), evOf(c)!=null?'mercado + dívida líquida':'precisa de mktcap e dívida', null, 'ev'));
   const suspQ = niSuspeito(c);
   const notaSusp = 'trimestre inconsistente na CVM — 12m não publicado';
-  tiles.append(statTile('P/L', suspQ ? '—' : fmtX(t&&t.pl), suspQ ? notaSusp : 'Fundamentus · '+(t?t.t:'—'), suspQ ? null : cls(t&&t.pl)));
-  tiles.append(statTile('P/VP', fmtX(t&&t.pvp), 'Fundamentus'));
+  tiles.append(statTile('P/L', suspQ ? '—' : fmtX(t&&t.pl), suspQ ? notaSusp : 'Fundamentus · '+(t?t.t:'—'), suspQ ? null : cls(t&&t.pl), 'pl'));
+  tiles.append(statTile('P/VP', fmtX(t&&t.pvp), 'Fundamentus', null, 'pvp'));
   if(!c.fin){
-    tiles.append(statTile('EV/EBITDA', fmtX(t&&t.evebitda), 'Fundamentus · 12m', cls(t&&t.evebitda)));
+    tiles.append(statTile('EV/EBITDA', fmtX(t&&t.evebitda), 'Fundamentus · 12m', cls(t&&t.evebitda), 'evebitda'));
     tiles.append(statTile('EV/EBIT', fmtX(t&&t.evebit), 'Fundamentus'));
   }
-  tiles.append(statTile('Div. Yield', fmtPct(t&&t.dy), 'Fundamentus', 'pos'));
+  tiles.append(statTile('Div. Yield', fmtPct(t&&t.dy), 'Fundamentus', 'pos', 'dy'));
   const roeC = roeDe(c);
-  tiles.append(hz('roe', statTile('ROE', fmtPct(roeC), roeC==null ? ((c.bal&&c.bal.pl!=null&&c.bal.pl<=0)?'patrimônio líquido negativo — ROE não se aplica': (c.bal&&c.bal.pl!=null&&c.bal.pl<PISO_PL)?'patrimônio líquido abaixo de R$ '+PISO_PL+' mi — o percentual não teria significado': niSuspeito(c)?notaSusp:'sem dado') : (i.roe!=null?'CVM · lucro 12m / PL':'Fundamentus'), cls(roeC))));
+  tiles.append(hz('roe', statTile('ROE', fmtPct(roeC), roeC==null ? ((c.bal&&c.bal.pl!=null&&c.bal.pl<=0)?'patrimônio líquido negativo — ROE não se aplica': (c.bal&&c.bal.pl!=null&&c.bal.pl<PISO_PL)?'patrimônio líquido abaixo de R$ '+PISO_PL+' mi — o percentual não teria significado': niSuspeito(c)?notaSusp:'sem dado') : (i.roe!=null?'CVM · lucro 12m / PL':'Fundamentus'), cls(roeC), 'roe')));
   if(!c.fin){
-    tiles.append(hz('roic', statTile('ROIC', fmtPct(t&&t.roic!=null?t.roic:i.roic), t&&t.roic!=null?'Fundamentus':'CVM (aprox.)', cls(t&&t.roic!=null?t.roic:i.roic))));
+    const roicC = plVirou(c) ? null : (t&&t.roic!=null?t.roic:i.roic);
+    tiles.append(hz('roic', statTile('ROIC', fmtPct(roicC), roicC==null?motivoSemRoe(c):(t&&t.roic!=null?'Fundamentus':'CVM (aprox.)'+(i.roicT!=null?' · alíquota '+nbr.format(i.roicT)+'%':'')), cls(roicC), 'roic')));
     const dlC = dlEbitdaDe(c);
-    tiles.append(hz('dlEbitda', statTile('Dív. líq./EBITDA', fmtX(dlC), dlC==null && i.ebitda12!=null && i.ebitda12<=0 ? 'EBITDA negativo — a razão não se aplica' : (dlC==null && i.ebitda12!=null && i.rev12 ? 'EBITDA abaixo de 2% da receita — a razão não se sustenta' : 'CVM · 12m'), dlC!=null&&dlC>3?'neg':null)));
-    tiles.append(statTile('Dív. líq./Patrimônio', i.dlPl==null?'—':nbr2.format(i.dlPl), 'CVM'));
-    tiles.append(hz('mgE', statTile('Margem EBITDA 12m', fmtPct(i.mgE12), 'CVM')));
+    tiles.append(hz('dlEbitda', statTile('Dív. líq./EBITDA', fmtX(dlC), dlC==null && i.ebitda12!=null && i.ebitda12<=0 ? 'EBITDA negativo — a razão não se aplica' : (dlC==null && i.ebitda12!=null && i.rev12 ? 'EBITDA abaixo de 2% da receita — a razão não se sustenta' : 'CVM · 12m'), dlC!=null&&dlC>3?'neg':null, 'dlEbitda')));
+    tiles.append(statTile('Dív. líq./Patrimônio', i.dlPl==null?'—':nbr2.format(i.dlPl), 'CVM', null, 'dlPl'));
+    tiles.append(hz('mgE', statTile('Margem EBITDA 12m', fmtPct(i.mgE12), 'CVM', null, 'mgE12')));
   }
-  tiles.append(hz('mgL', statTile('Margem líquida 12m', suspQ ? '—' : fmtPct(i.mgL12), suspQ ? notaSusp : 'CVM', suspQ ? null : cls(i.mgL12))));
-  tiles.append(hz('rev12', statTile('Receita 12m', fmtMi(i.rev12), 'CVM')));
-  tiles.append(hz('ni12', statTile('Lucro líquido 12m', suspQ ? '—' : fmtMi(i.ni12), suspQ ? notaSusp : 'CVM', suspQ ? null : cls(i.ni12))));
+  tiles.append(hz('mgL', statTile('Margem líquida 12m', suspQ ? '—' : fmtPct(i.mgL12), suspQ ? notaSusp : 'CVM', suspQ ? null : cls(i.mgL12), 'mgL12')));
+  tiles.append(hz('rev12', statTile('Receita 12m', fmtMi(i.rev12), 'CVM', null, 'rev12')));
+  tiles.append(hz('ni12', statTile('Lucro líquido 12m', suspQ ? '—' : fmtMi(i.ni12), suspQ ? notaSusp : 'CVM', suspQ ? null : cls(i.ni12), 'ni12')));
+  // ---- indicadores novos: só aparecem quando o pipeline já publicou o campo,
+  // para a ficha não encher de "—" enquanto o build antigo estiver no ar ----
+  if(i.mgB12 != null) tiles.append(statTile('Margem bruta 12m', fmtPct(i.mgB12), 'CVM · conta 3.03', cls(i.mgB12), 'mgB12'));
+  if(i.roa != null) tiles.append(statTile('ROA', fmtPct(i.roa), 'CVM · lucro 12m ÷ ativo', cls(i.roa), 'roa'));
+  if(i.liqCorr != null) tiles.append(statTile('Liquidez corrente', fmtX(i.liqCorr), 'CVM · circulante', null, 'liqCorr'));
+  if(i.liqSeca != null) tiles.append(statTile('Liquidez seca', fmtX(i.liqSeca), 'CVM · sem estoques', null, 'liqSeca'));
+  if(i.cobJuros != null) tiles.append(statTile('Cobertura de juros', fmtX(i.cobJuros), 'CVM · EBIT ÷ despesa financeira', i.cobJuros<1.5?'neg':null, 'cobJuros'));
+  if(i.fcoNi != null) tiles.append(statTile('Caixa operacional ÷ lucro', fmtX(i.fcoNi), 'CVM · qualidade do lucro', i.fcoNi<0.8?'neg':null, 'fcoNi'));
+  if(i.fcl12 != null) tiles.append(statTile('Fluxo de caixa livre 12m', fmtMi(i.fcl12), 'CVM · operações − capex', cls(i.fcl12), 'fcl12'));
+  if(i.capexRev != null) tiles.append(statTile('Capex ÷ receita', fmtPct(i.capexRev), 'CVM · DFC', null, 'capexRev'));
+  if(i.aliq != null) tiles.append(statTile('Alíquota efetiva', fmtPct(i.aliq), 'CVM · contas 3.07 e 3.08', null, 'aliq'));
   pb.append(tiles);
+  // checagens objetivas e anotações: vêm antes dos gráficos porque é o que um
+  // consultor lê primeiro ao abrir uma empresa que não conhece
+  const bs = blocoSinais(c);
+  if(bs){ pb.append(el('h3','sect','Leitura rápida')); pb.append(bs); }
 
   // ---- candles diários do ticker principal (troca de ticker quando houver mais de um)
   pb.append(el('h3','sect','Cotação — gráfico diário'));
@@ -941,11 +1256,20 @@ function openDetail(cvm){
   });
   if(c.tickers.length > 1){
     const selrow = el('div','badges'); selrow.style.marginBottom = '8px';
+    // marca qual ticker está no gráfico: a classe .badge.on já existe e é usada
+    // em outros seletores do painel, mas aqui nada era marcado — com PETR3 e PETR4
+    // lado a lado não havia como saber de qual papel era a linha desenhada
+    const marcaTk = () => { for(const b2 of selrow.children){
+      const on = b2.textContent === curTk;
+      b2.classList.toggle('on', on); b2.setAttribute('aria-pressed', on ? 'true' : 'false');
+    } };
     for(const k of c.tickers){
       const b = el('span','badge cndl', k.t);
-      b.onclick = () => { curTk = k.t; drawCnd(); };
+      b.setAttribute('role','button');
+      b.onclick = () => { curTk = k.t; marcaTk(); drawCnd(); };
       selrow.append(b);
     }
+    marcaTk();
     cndCard.append(selrow);
   }
   cndCard.append(cndBox); pb.append(cndCard);
@@ -1008,6 +1332,13 @@ function openDetail(cvm){
   qt.append(tb); qw.append(qt);
   pb.append(el('h3','sect','Tabela trimestral')); pb.append(qw);
 
+  // ---- demonstrações completas (DRE, fluxo de caixa e balanço, conta a conta)
+  const dem = blocoDemonstracoes(c);
+  if(dem.length){
+    pb.append(el('h3','sect','Demonstrações — conta a conta (CVM)'));
+    for(const d of dem) pb.append(d);
+  }
+
   // ---- balanço
   if(c.bal){
     pb.append(el('h3','sect','Balanço em '+c.bal.dt.split('-').reverse().join('/')));
@@ -1042,7 +1373,13 @@ function openDetail(cvm){
       tr.append(el('td', c.fin?'dim':cls(k.evebit), c.fin?'—':fmtX(k.evebit)));
       tr.append(el('td', c.fin?'dim':cls(k.evebitda), c.fin?'—':fmtX(k.evebitda)));
       tr.append(el('td', c.fin?'dim':cls(k.roic), c.fin?'—':fmtPct(k.roic)));
-      tr.append(el('td',cls(k.roe),fmtPct(k.roe)));
+      // mesmo critério do tile ROE que está logo acima nesta tela: sem isso a
+    // PORTOBELLO mostrava "—  patrimônio líquido negativo" no tile e "306,6%" nesta
+    // tabela, na mesma janela
+    const roeTk = ((c.bal||{}).pl != null && (c.bal||{}).pl < PISO_PL) || niSuspeito(c) ? null : k.roe;
+    const tdRoeTk = el('td', roeTk==null?'dim':cls(roeTk), roeTk==null?'—':fmtPct(roeTk));
+    if(roeTk == null) tdRoeTk.title = motivoSemRoe(c);
+    tr.append(tdRoeTk);
       tr.append(el('td',null,k.liq2m==null?'—':fmtNum(k.liq2m/1e6)));
       tr.append(el('td',null,k.dlpl==null?'—':nbr2.format(k.dlpl)));
       tbb.append(tr);
@@ -1050,7 +1387,7 @@ function openDetail(cvm){
     tt.append(tbb); tw.append(tt); pb.append(tw);
   }
 
-  // ---- notícias da empresa (robô diário · Google News)
+  // ---- notícias da empresa (robô de 2 em 2 horas · Google News · noticias.yml)
   pb.append(el('h3','sect','Notícias recentes'));
   const nwCard = el('div','card');
   const nwBox = el('div','dim','carregando notícias…');
@@ -1062,7 +1399,6 @@ function openDetail(cvm){
     // o robô já grava em ordem, mas arquivo antigo pode vir fora de ordem
     const itens = ((NEWSD && NEWSD.n && NEWSD.n[c.cvm]) || []).slice()
       .sort((a,b) => String(b.iso||'').localeCompare(String(a.iso||'')));
-    const safeU = u => { try{ const x = new URL(u); return ['https:','http:'].includes(x.protocol) ? x.href : null; }catch(e){ return null; } };
     for(const nn of itens){
       const hu = safeU(nn.u);
       if(!hu) continue; // só http/https — news.json é dado externo
@@ -1139,10 +1475,15 @@ function openDetail(cvm){
     }
   });
 
+  pb.append(el('h3','sect','Anotações'));
+  pb.append(blocoNotas(c));
   pb.append(el('div','foot','Insignia Partners · painel interno. Fontes: demonstrações ITR/DFP nos Dados Abertos da CVM (valores em R$; consolidado quando disponível) · classificação setorial oficial da B3 · cotações e múltiplos Fundamentus. EBITDA = EBIT + depreciação/amortização (DFC). ROIC CVM = EBIT 12m × (1−34%) ÷ (PL + máx(dívida líquida, 0)) — usado como reserva, porque o ROIC exibido vem do Fundamentus quando existe. Indicadores de bancos/seguradoras seguem lógica própria — EBITDA, dívida e ROIC não se aplicam e não são exibidos. Atualizado em '+DB.updatedAt+'. Uso informativo; não é recomendação de investimento.'));
   panel.append(pb);
   ovl.classList.add('on'); panel.classList.add('on');
-  panel.scrollTop = 0;
+  // entrada de histórico só quando é navegação de verdade (empresa nova): assim o
+  // botão Voltar do Android fecha o painel em vez de fechar o aplicativo
+  if(!mesmaEmpresa) empilha('detalhe');
+  panel.scrollTop = scrollAntes;
   updateDetailQuotes();   // usa o que já chegou
   refreshB3();            // e busca ao vivo os tickers desta empresa
 }
@@ -1167,16 +1508,15 @@ try{ WL = JSON.parse(document.getElementById('watchlists').textContent) || {}; }
 const LIVEB3 = {};                    // ticker -> cotação da API pública da B3 (defasagem ~15 min)
 const LIVEUS = {};                    // ticker -> cotação Finnhub (chave opcional)
 const LIVEIDX = {};                   // IBOV / IFIX ao vivo (B3)
-let RELAY = {ok:false, at:null};      // último quotes.json lido do branch "quotes"
+// okEm/erroEm guardam QUANDO a última leitura deu certo e quando falhou. Sem isso,
+// um erro de rede no cliente ficava invisível e a faixa de aviso culpava o robô.
+let RELAY = {ok:false, at:null, okEm:0, erroEm:0};   // último quotes.json lido do branch "quotes"
 let B3LIVE = {ok:false, at:null};
 let FINN = {ok:false, at:null};
 const fmtSign = v => v==null ? '—' : ((v>0?'+':'')+fmtc2.format(v)+'%');
 const hhmm = () => new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 const jj = (u,ms,opts) => Promise.race([fetch(u,opts).then(r=>{ if(!r.ok) throw new Error('http '+r.status); return r.json(); }),
                                         new Promise((_,rj)=>setTimeout(()=>rj(new Error('timeout')), ms||9000))]);
-const lsGet = k => { try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } };
-const lsSet = (k,v) => { try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
-
 const FRESH_MS = 5*60*1000; // entrada "ao vivo" mais velha que isso volta a cair no snapshot do robô
 const freshQ = e => !!(e && e.p!=null && e.ts && (Date.now()-e.ts) < FRESH_MS);
 function getQ(k){ // melhor cotação disponível para um símbolo (prioridade: B3 ao vivo > Finnhub > robô)
@@ -1185,14 +1525,39 @@ function getQ(k){ // melhor cotação disponível para um símbolo (prioridade: 
   const f = LIVEUS[k];
   if(freshQ(f)) return {p:f.p, pct:f.pct, cur:'USD', live:'finnhub', at:f.at};
   const s = QSNAP.q && QSNAP.q[k];
-  if(s && s.p!=null){
+  // p > 0 e não p != null: o quotes.json guarda o último valor bom de cada papel,
+  // e entradas legadas ficaram com p = 0 (papel suspenso). Zero passava por "tenho
+  // cotação" e sobrepunha o preço do Fundamentus: a ALIPERTI aparecia como R$ 0,00
+  // na lista e R$ 3.500,00 no detalhe, na mesma tela. O collect_quotes.py já aplica
+  // esta mesma regra na coleta.
+  if(s && s.p > 0){
     const pct = (s.pv!=null && s.pv!==0) ? (s.p/s.pv-1)*100 : null;
     return {p:s.p, pct, cur:s.cur, live:null, t:s.t, n:s.n};
   }
   return null;
 }
 const qName = k => { const s=QSNAP.q && QSNAP.q[k]; return (s && s.n) || ''; };
-const qHora = q => { if(!q) return ''; if(q.at) return q.at; if(q.t) try{ return new Date(q.t*1000).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }catch(e){} return ''; };
+// Mostra a DATA quando o carimbo do dado não é de hoje. Só com HH:MM, um
+// fechamento de dias atrás (ou de 2024, no caso de papel suspenso) aparecia com
+// uma hora que o leitor entende como sendo de hoje.
+const hojeSP = () => new Date().toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'});
+const qHora = q => {
+  if(!q) return '';
+  if(q.at) return q.at;
+  if(q.t) try{
+    const d = new Date(q.t*1000);
+    const dia = d.toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'});
+    const hm = d.toLocaleTimeString('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'});
+    return dia === hojeSP() ? hm : (dia.slice(0,5)+' '+hm);
+  }catch(e){}
+  return '';
+};
+// true quando o carimbo do próprio dado é de hoje (fuso de São Paulo)
+const qDeHoje = q => {
+  if(!q || !q.t) return false;
+  try{ return new Date(q.t*1000).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'}) === hojeSP(); }
+  catch(e){ return false; }
+};
 const relayLocal = () => { if(!QSNAP.updatedAt) return '—';
   try{ return new Date(QSNAP.updatedAt).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); }catch(e){ return QSNAP.updatedAt; } };
 
@@ -1241,7 +1606,7 @@ async function refreshB3(){
   if(ifx){ LIVEIDX.IFIX = ifx; any = true; }
   const need = b3Needed();
   if(need.length){
-    const tok = localStorage.getItem('tok_brapi');
+    const tok = lsStr('tok_brapi');
     if(tok){
       try{
         const d = await jj('https://brapi.dev/api/quote/'+need.join(',')+'?token='+encodeURIComponent(tok), 12000);
@@ -1260,21 +1625,24 @@ async function refreshB3(){
   if(any){ B3LIVE.ok = true; B3LIVE.at = hhmm(); afterQuotes(); }
 }
 
-// ---- robô (branch "quotes"): B3 completa + EUA, atualizado a cada ~15 min em pregão
+// ---- robô (branch "quotes"): B3 completa + EUA, ciclo de 10 min dentro do job em pregão
 async function refreshRelay(){
   if(document.hidden) return;
   try{
     const d = await jj(QUOTES_RAW_URL+'?v='+Math.floor(Date.now()/6e4), 12000);
     if(d && d.q && (!QSNAP.updatedAt || String(d.updatedAt) >= String(QSNAP.updatedAt))){
-      QSNAP = d; RELAY.ok = true; RELAY.at = hhmm(); afterQuotes();
+      QSNAP = d; RELAY.ok = true; RELAY.at = hhmm(); RELAY.okEm = Date.now(); RELAY.erroEm = 0;
+      afterQuotes();
+    } else if(d && d.q){
+      RELAY.okEm = Date.now(); RELAY.erroEm = 0;   // leu, mas não é mais novo que o embutido
     }
-  }catch(e){}
+  }catch(e){ RELAY.erroEm = Date.now(); renderAvisoIdade(); }
 }
 
 // ---- Finnhub (chave opcional): EUA em tempo real direto no navegador
 async function refreshFinnhub(){
   if(document.hidden) return;
-  const tok = localStorage.getItem('tok_finnhub');
+  const tok = lsStr('tok_finnhub');
   if(!tok || document.body.dataset.view !== 'eua') return;
   const syms = [...(WL.us_etfs||[]), ...(WL.us_stocks||[])].map(x=>x.t)
     .concat(meusUS()).filter(t => !t.startsWith('^')).slice(0, 50);
@@ -1290,7 +1658,15 @@ async function refreshFinnhub(){
 }
 
 function afterQuotes(){
-  renderTicker(); updateListQuotes(); updateDetailQuotes(); redrawChart();
+  renderTicker();
+  // Quando a lista está ORDENADA por uma coluna viva (cotação ou variação do dia),
+  // atualizar as células no lugar deixava a seta ↓ na coluna e a ordem errada: o
+  // papel que passou a subir mais continuava no meio da tabela. Nesse caso a
+  // tabela é redesenhada; nas outras ordenações segue a atualização no lugar,
+  // que é mais barata e não faz a linha "pular" sob o cursor.
+  if(sortKey === 'cot' || sortKey === 'var') renderList(filtered());
+  else updateListQuotes();
+  updateDetailQuotes(); redrawChart();
   const v = document.body.dataset.view;
   if(v==='etf') renderETF();
   if(v==='eua') renderEUA();
@@ -1313,10 +1689,14 @@ function updateDetailQuotes(){
   if(!openCvm) return;
   const c = COS.find(x=>x.cvm===openCvm); if(!c) return;
   for(const t of c.tickers){
-    const q = freshQ(LIVEB3[t.t]) ? LIVEB3[t.t] : null, b = document.getElementById('bq-'+t.t);
-    if(q && b){
+    // getQ e não só LIVEB3: a lista já usa a cadeia completa (B3 ao vivo →
+    // snapshot do robô → fechamento do build). Aceitando só a B3 direta, o
+    // cabeçalho do detalhe ficava no preço do build enquanto a linha da mesma
+    // empresa na lista mostrava o do robô.
+    const q = getQ(t.t), b = document.getElementById('bq-'+t.t);
+    if(q && q.p!=null && b){
       b.textContent = t.t+' · '+fmtPrice(q.p)+' ';
-      b.append(el('span', (q.pct||0)<0?'neg':'pos', fmtSign(q.pct)));
+      if(q.pct != null) b.append(el('span', q.pct<0?'neg':'pos', fmtSign(q.pct)));
     }
   }
 }
@@ -1326,12 +1706,25 @@ let CANDLES = null, CANDLES_ERR = false, chartSym = null, chartBox = null, chart
 const PERIODS = [['1M',31],['3M',93],['6M',186]];
 let chartPrefs = lsGet('chart_prefs') || {p:93, tipo:'candle'};
 if(!PERIODS.some(x=>x[1]===chartPrefs.p)) chartPrefs.p = 93;
+// TTL de 3 horas. Sem ele, o arquivo lido no primeiro gráfico ficava na memória
+// para sempre: em aba (ou app) aberta por dias o gráfico perdia os dias novos e a
+// faixa vermelha passava a acusar o robô de não ter publicado — quando o robô
+// havia publicado e era a página que não relia. Mesmo padrão do NEWS_TTL_MS.
+const CANDLES_TTL_MS = 3*60*60*1000;
+let CANDLES_EM = 0;
 async function loadCandles(){
-  if(CANDLES) return CANDLES;
+  if(CANDLES && (Date.now() - CANDLES_EM) < CANDLES_TTL_MS) return CANDLES;
   try{
-    CANDLES = await jj('https://raw.githubusercontent.com/'+REPO+'/main/data/candles.json?v='+Math.floor(Date.now()/36e5), 25000);
-    if(!CANDLES || !CANDLES.c) throw new Error('formato');
-  }catch(e){ CANDLES = null; CANDLES_ERR = true; }
+    const d = await jj('https://raw.githubusercontent.com/'+REPO+'/main/data/candles.json?v='+Math.floor(Date.now()/36e5), 25000);
+    if(!d || !d.c) throw new Error('formato');
+    CANDLES = d; CANDLES_EM = Date.now();
+    CANDLES_ERR = false;   // sucesso posterior tem de apagar o erro anterior, senão
+                           // "histórico indisponível" ficava na tela para sempre
+  }catch(e){
+    // falha NÃO apaga o que já havia: melhor o gráfico de 3 horas atrás do que nenhum
+    if(!CANDLES) CANDLES = null;
+    CANDLES_ERR = true;
+  }
   return CANDLES;
 }
 function todayCandle(sym){
@@ -1416,10 +1809,15 @@ function candleChart(container, rows, tipo){
     hit.setAttribute('x',padL+slot*i); hit.setAttribute('y',0);
     hit.setAttribute('width',slot); hit.setAttribute('height',H);
     hit.setAttribute('fill','transparent');
-    hit.addEventListener('pointermove', e => showTip(e.clientX, e.clientY, [
+    // pointerdown junto de pointermove: no celular e no app não existe hover, e
+    // abertura, máxima e mínima do dia só existiam no tooltip — a informação era
+    // inalcançável por toque.
+    const mostra = e => showTip(e.clientX, e.clientY, [
       [dtBR(r.t)+(r.parcial ? (r.aprox?' · hoje (aprox.)':' · hoje ao vivo') : ''), fmtP(r.c)],
       ['abre '+fmtP(r.o)+' · máx '+fmtP(r.h)+' · mín '+fmtP(r.l), (r.c>=r.o?'▲ ':'▼ ')+fmtc2.format(Math.abs(r.c/r.o-1)*100)+'%'],
-    ]));
+    ]);
+    hit.addEventListener('pointermove', mostra);
+    hit.addEventListener('pointerdown', mostra);
     hit.addEventListener('pointerleave', hideTip);
     svg.append(hit);
   }
@@ -1440,7 +1838,7 @@ function chartUI(sym, mount, noteEl){ // controles de visão (período + candles
   mount.textContent = '';
   if(!candleSeries(sym).length){
     const msg = CANDLES_ERR ? 'histórico indisponível no momento — tente de novo em instantes'
-                            : 'sem histórico para '+sym+' — o robô diário ainda não coletou este ativo';
+                            : 'sem histórico para '+sym+' — o robô de candles (1x/dia) ainda não coletou este ativo';
     if(noteEl) noteEl.textContent = msg; else mount.append(el('div','dim',msg));
     return null;
   }
@@ -1482,7 +1880,10 @@ async function openChart(sym, titulo){
   chartDraw = chartUI(sym, chartBox, chartNote); // desenho direto: rAF não dispara com a aba em 2º plano
 }
 async function refreshB3charts(sym){ // candle de hoje mais rico p/ ativos B3 abertos no gráfico
-  if(/^[A-Z]{4}[0-9]{1,2}$/.test(sym) && !LIVEB3[sym]){
+  // freshQ e não !LIVEB3[sym]: com entrada de 6 minutos atrás (fora da janela de
+  // 5 min) o resto do painel já a considera velha, mas aqui ela bloqueava a busca
+  // de cotação nova e o candle de hoje ficava preso na aproximação.
+  if(/^[A-Z]{4}[0-9]{1,2}$/.test(sym) && !freshQ(LIVEB3[sym])){
     try{ const q = await b3quote(sym); if(q){ LIVEB3[sym] = {...q, ts:Date.now()}; redrawChart(); } }catch(e){}
   }
 }
@@ -1526,24 +1927,43 @@ function indSeries(c, key){
   const mk = f => q.map(x=>({p:x.p, v:x[f]!=null?x[f]:null}));
   const rows12 = arr => q.map((x,i)=>({p:x.p, v:arr[i]}));
   const p1 = v => v==null?null:+v.toFixed(1);
+  // indSeries é o ponto ÚNICO por onde passam o tile clicável, o modal de
+  // histórico, o modo Histórico do Comparar e o "copiar dados (Excel)". As guardas
+  // tinham de estar aqui: sem elas o modal publicava o ROE de 366,8% (EQTL PARA) e
+  // de −43.150% (SUDESTE, PL de R$ 0,2 mi) que o tile ao lado dizia não publicar,
+  // e o Excel exportava esses mesmos números.
+  const susp = niSuspeito(c);
+  // trimestre marcado pelo process.py (aritmética da entrega não fecha) sai da série
+  const marcado = new Set((q||[]).filter(x=>x.sus).map(x=>x.p));
+  const semSus = rows => rows.map(r => marcado.has(r.p) ? {p:r.p, v:null} : r);
   switch(key){
-    case 'mgE':  return {rows:mk('mgE'),  fmt:fmtPct, titulo:'Margem EBITDA por trimestre', nota:'CVM (ITR/DFP)'};
-    case 'mgL':  return {rows:mk('mgL'),  fmt:fmtPct, titulo:'Margem líquida por trimestre', nota:'CVM (ITR/DFP)'};
-    case 'rev12':{ return {rows:rows12(roll('rev')), fmt:fmtNum, titulo:'Receita acumulada 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
-    case 'ebitda12':{ return {rows:rows12(roll('ebitda')), fmt:fmtNum, titulo:'EBITDA acumulado 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
-    case 'ni12': { return {rows:rows12(roll('ni')),  fmt:fmtNum, titulo:'Lucro líquido acumulado 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
-    case 'roe':  { const r=roll('ni');
-      return {rows:q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.pl>0&&r[i]!=null)? p1(100*r[i]/b.pl):null}; }),
-              fmt:fmtPct, titulo:'ROE — lucro 12m ÷ PL do trimestre', nota:'CVM · precisa do histórico de balanço'}; }
-    case 'roic': { const r=roll('ebit');
-      return {rows:q.map((x,i)=>{ const b=balAt(x.p);
+    case 'mgE':  return {rows:semSus(mk('mgE')),  fmt:fmtPct, titulo:'Margem EBITDA por trimestre', nota:'CVM (ITR/DFP)'};
+    case 'mgL':  return susp ? null : {rows:semSus(mk('mgL')), fmt:fmtPct, titulo:'Margem líquida por trimestre', nota:'CVM (ITR/DFP)'};
+    case 'rev12':{ return {rows:semSus(rows12(roll('rev'))), fmt:fmtNum, titulo:'Receita acumulada 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
+    case 'ebitda12':{ return {rows:semSus(rows12(roll('ebitda'))), fmt:fmtNum, titulo:'EBITDA acumulado 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
+    case 'ni12': { return susp ? null : {rows:semSus(rows12(roll('ni'))),  fmt:fmtNum, titulo:'Lucro líquido acumulado 12 meses (R$)', nota:'CVM · soma móvel de 4 trimestres'}; }
+    case 'roe':  { if(susp || plVirou(c)) return null; const r=roll('ni');
+      // PISO_PL e não pl>0: com PL de R$ 0,2 mi o percentual chega a −43.150%
+      return {rows:semSus(q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.pl>=PISO_PL&&r[i]!=null)? p1(100*r[i]/b.pl):null}; })),
+              fmt:fmtPct, titulo:'ROE — lucro 12m ÷ PL do trimestre',
+              nota:'CVM · precisa do histórico de balanço · exige PL ≥ R$ '+PISO_PL+' mi'}; }
+    case 'roic': { if(plVirou(c)) return null; const r=roll('ebit');
+      // usa a alíquota efetiva da empresa quando o process.py conseguiu calculá-la
+      const tx = (c.ind && c.ind.roicT != null) ? c.ind.roicT/100 : 0.34;
+      return {rows:semSus(q.map((x,i)=>{ const b=balAt(x.p);
         if(!b||b.pl==null||r[i]==null) return {p:x.p,v:null};
         const inv=b.pl+Math.max(b.divL||0,0);
-        return {p:x.p, v:inv>0? p1(100*(r[i]*0.66)/inv):null}; }),
-              fmt:fmtPct, titulo:'ROIC — EBIT 12m × (1−34%) ÷ (PL + máx(dívida líq., 0))', nota:'CVM · aproximação; o tile usa o ROIC do Fundamentus quando existe'}; }
-    case 'dlEbitda': { const r=roll('ebitda');
-      return {rows:q.map((x,i)=>{ const b=balAt(x.p); return {p:x.p, v:(b&&b.divL!=null&&r[i]>0)? +(b.divL/r[i]).toFixed(2):null}; }),
-              fmt:fmtX, titulo:'Dívida líquida ÷ EBITDA 12m', nota:'CVM'}; }
+        return {p:x.p, v:inv>0? p1(100*(r[i]*(1-tx))/inv):null}; })),
+              fmt:fmtPct, titulo:'ROIC — EBIT 12m × (1−'+nbr.format(+(100*tx).toFixed(1))+'%) ÷ (PL + máx(dívida líq., 0))',
+              nota:'CVM · aproximação'+(c.ind && c.ind.roicT!=null ? ' com a alíquota efetiva da própria empresa' : ' com alíquota de 34%')+'; o tile usa o ROIC do Fundamentus quando existe'}; }
+    case 'dlEbitda': { const r=roll('ebitda'), rv=roll('rev');
+      // mesma regra do dlEbitdaDe: EBITDA abaixo de 2% da receita é ruído, e a
+      // razão viraria alavancagem de centenas de vezes
+      return {rows:semSus(q.map((x,i)=>{ const b=balAt(x.p);
+        const ok = b && b.divL!=null && r[i]>0 && !(rv[i]>0 && r[i] < 0.02*rv[i]);
+        return {p:x.p, v: ok ? +(b.divL/r[i]).toFixed(2) : null}; })),
+              fmt:fmtX, titulo:'Dívida líquida ÷ EBITDA 12m',
+              nota:'CVM · exige EBITDA positivo e de pelo menos 2% da receita'}; }
   }
   return null;
 }
@@ -1567,11 +1987,27 @@ function openIndChart(c, key){
 }
 
 // ---- ferramentas de consultor: copiar dados (Excel) e baixar gráfico em PNG ----
-const numBR = v => v==null ? '' : String(v).replace('.', ','); // decimal pt-BR p/ colar no Excel
+// Só NÚMERO recebe vírgula decimal. Aplicado a todas as células, o conversor
+// corrompia nome de empresa com ponto: "SUZANO S.A." saía "SUZANO S,A." e
+// "Petróleo. Gás e Biocombustíveis" virava "Petróleo, Gás e Biocombustíveis".
+const numBR = v => v==null ? '' : (typeof v === 'number' ? String(v).replace('.', ',') : String(v));
 async function copiaTSV(headers, linhas, btn){
   const tsv = headers.join('\t')+'\n'+linhas.map(l => l.map(numBR).join('\t')).join('\n');
-  try{ await navigator.clipboard.writeText(tsv); if(btn){ const o = btn.textContent; btn.textContent = '✓ copiado'; setTimeout(()=>btn.textContent = o, 1600); } }
-  catch(e){ if(btn) btn.textContent = 'falhou — permita a área de transferência'; }
+  // O rótulo original é guardado no próprio elemento na PRIMEIRA vez. Lendo-o do
+  // textContent a cada clique, dois cliques em menos de 1,6 s faziam o botão
+  // guardar "✓ copiado" como se fosse o rótulo e ficar preso nele para sempre —
+  // e no caminho de erro o rótulo nunca voltava.
+  if(btn && !btn.dataset.lbl) btn.dataset.lbl = btn.textContent;
+  const volta = () => { if(btn) btn.textContent = btn.dataset.lbl; };
+  if(btn && btn._tmr) clearTimeout(btn._tmr);
+  try{
+    await navigator.clipboard.writeText(tsv);
+    if(btn){ btn.textContent = '✓ copiado'; btn._tmr = setTimeout(volta, 1600); }
+  }
+  catch(e){
+    if(btn){ btn.textContent = 'falhou — permita a área de transferência';
+             btn._tmr = setTimeout(volta, 4000); }
+  }
 }
 function svgToPng(svgEl, nome){
   const clone = svgEl.cloneNode(true);
@@ -1601,7 +2037,7 @@ function svgToPng(svgEl, nome){
     cv.width = vb.width*scale; cv.height = vb.height*scale;
     const ctx = cv.getContext('2d'); ctx.scale(scale,scale); ctx.drawImage(img,0,0);
     cv.toBlob(bl => { const a = document.createElement('a'); a.href = URL.createObjectURL(bl);
-      a.download = nome.replace(/[^\wÀ-ú .-]+/g,'_')+'.png'; a.click();
+      a.download = nome.replace(/[^\wÀ-ú .-]+/g,' ').replace(/\s+/g,' ').trim().replace(/ /g,'_')+'.png'; a.click();
       setTimeout(()=>URL.revokeObjectURL(a.href), 5000); });
   };
   img.src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(clone));
@@ -1684,7 +2120,7 @@ function multiLineChart(container, series, fmt){
   container.append(svg);
 }
 
-// ---- notícias por empresa (data/news.json, robô diário) e curadorias manuais
+// ---- notícias por empresa (data/news.json, robô de 2h em 2h) e curadorias manuais
 let NEWSD = null, SEGD = null, OPD = null, NEWSMAC = null;
 // Bucket de 10 min no cache-buster: o robô publica notícia a cada 2h e o
 // raw.githubusercontent guarda ~5 min. Com o bucket de 1 hora que havia antes, o
@@ -1716,7 +2152,10 @@ async function loadNews(forcar){
       if(d && d.n){ d.origem = br; NEWSD = d; NEWSD_EM = Date.now(); break; }
     }catch(e){}
   }
-  if(!NEWSD) NEWSD = {n:{}, origem:null};
+  // Registra a falha de LEITURA: antes, os dois branches falhando devolviam um
+  // objeto sem updatedAt, e nem a faixa de aviso nem a tabela ⓘ tinham como saber
+  // que a notícia não carregou — a tela dizia "carrega ao abrir uma empresa".
+  if(!NEWSD) NEWSD = {n:{}, origem:null, erroEm:Date.now()};
   renderAvisoIdade();
   return NEWSD;
 }
@@ -1754,10 +2193,24 @@ async function loadNewsMacro(){
   renderAvisoIdade();
   return NEWSMAC;
 }
+// Falha de rede guardava {} em SEGD/OPD e a guarda `if(SEGD && OPD) return`
+// nunca deixava tentar de novo na sessão: {} é truthy, então o aviso
+// "carregando os KPIs operacionais…" ficava para sempre e o modo KPI abria vazio.
+// Agora o erro NÃO é memorizado, e uma nova tentativa espera 30 s para não virar
+// laço de rede quando a origem está fora.
+let extrasErroEm = 0;
 async function loadExtras(){
-  if(SEGD && OPD) return;
-  const g = async f => { try{ return await jj('https://raw.githubusercontent.com/'+REPO+'/main/data/'+f+'?v='+Math.floor(Date.now()/36e5), 15000); }catch(e){ return {}; } };
-  [SEGD, OPD] = await Promise.all([g('segmentos.json'), g('operacionais.json')]);
+  if(SEGD && OPD && Object.keys(SEGD).length && Object.keys(OPD).length) return;
+  if(extrasErroEm && (Date.now() - extrasErroEm) < 30000) return;
+  const g = async f => { try{ return await jj('https://raw.githubusercontent.com/'+REPO+'/main/data/'+f+'?v='+Math.floor(Date.now()/36e5), 15000); }catch(e){ return null; } };
+  const [a, b] = await Promise.all([g('segmentos.json'), g('operacionais.json')]);
+  if(a === null || b === null){
+    extrasErroEm = Date.now();
+    SEGD = SEGD || {}; OPD = OPD || {};   // deixa a tela dizer "sem dado", não travar
+    return;
+  }
+  extrasErroEm = 0;
+  SEGD = a; OPD = b;
 }
 
 // ---- gráfico de barras horizontais (comparações) ----
@@ -1769,7 +2222,18 @@ function hbarChart(container, rows, fmt, onclickRow){
   const labelW = Math.min(230, Math.round(W*0.34)), valW = 90;
   const H = padT + padB + rows.length*rowH;
   const iw = Math.max(40, W - labelW - valW - 14);
+  // Antes o comprimento da barra era |v| e só a cor distinguia o sinal: num
+  // ranking de "Maiores" a empresa com −40% ganhava barra MAIS LONGA que a de +30%.
+  // Com valores dos dois sinais, o eixo passa a ter zero: barra para a direita
+  // quando positivo, para a esquerda quando negativo, e uma linha fina no zero.
+  const vals = rows.map(r => r.v).filter(v => v != null);
+  const temNeg = vals.some(v => v < 0), temPos = vals.some(v => v > 0);
+  const bipolar = temNeg && temPos;
+  const mn = bipolar ? Math.min(0, ...vals) : 0;
+  const mx = bipolar ? Math.max(0, ...vals) : (Math.max(...vals.map(Math.abs)) || 1);
+  const amp = (mx - mn) || 1;
   const maxV = Math.max(...rows.map(r=>Math.abs(r.v))) || 1;
+  const xZero = bipolar ? labelW + iw*(0 - mn)/amp : labelW;
   const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.setAttribute('viewBox','0 0 '+W+' '+H); svg.setAttribute('width','100%'); svg.style.display='block';
   rows.forEach((r,i)=>{
@@ -1779,20 +2243,32 @@ function hbarChart(container, rows, fmt, onclickRow){
     if(r.hl) t.setAttribute('class','val');
     // o sufixo entre parênteses é a contagem de empresas, que a nota manda ler:
     // corta o nome, nunca o sufixo ("Bens Industriais (10)" não pode virar "(1")
+    // Truncar por CONTAGEM de caracteres cortava certo no desktop e errado no
+    // celular: labelW é 34% da largura (77 px num iPhone), onde cabem ~11
+    // caracteres, não 34. O texto usa text-anchor:end, então o excesso invadia a
+    // área do gráfico e a leitura ficava ambígua. Agora o corte é por largura
+    // disponível, estimada em 6,6 px por caractere na fonte de 12,5 px do SVG.
     const suf = r.suf || '';
-    const base = r.label.length + suf.length > 34
-      ? r.label.slice(0, Math.max(4, 33 - suf.length)) + '…'
-      : r.label;
-    t.textContent = base + suf; svg.append(t);
-    const bw = Math.max(2, iw*Math.abs(r.v)/maxV);
+    const cabem = Math.max(4, Math.floor((labelW - 8) / 6.6) - suf.length);
+    const base = r.label.length > cabem ? r.label.slice(0, Math.max(3, cabem - 1)) + '…' : r.label;
+    t.textContent = base + suf;
+    svg.append(t);
+    const bw = Math.max(2, iw*Math.abs(r.v)/(bipolar ? amp : maxV));
+    const bx = bipolar ? (r.v < 0 ? xZero - bw : xZero) : labelW;
     const bar = document.createElementNS(svg.namespaceURI,'rect');
-    bar.setAttribute('x',labelW); bar.setAttribute('y',y+4);
+    bar.setAttribute('x',bx); bar.setAttribute('y',y+4);
     bar.setAttribute('width',bw); bar.setAttribute('height',18); bar.setAttribute('rx',3);
     bar.setAttribute('fill', r.hl ? 'var(--s2)' : (r.v<0 ? 'var(--bad)' : 'var(--s1)'));
+    // nome completo por toque e por mouse. Vai na BARRA e não no <text>: um
+    // <title> dentro de <text> é renderizado pelo Chrome junto do rótulo, e o
+    // nome aparecia duplicado na tela ('COMGASCOMGAS').
+    const ttb = document.createElementNS(svg.namespaceURI, 'title');
+    ttb.textContent = r.label + (r.suf||'') + ' — ' + fmt(r.v);
+    bar.append(ttb);
     if(r.med) bar.setAttribute('opacity','.45');
     svg.append(bar);
     const v = document.createElementNS(svg.namespaceURI,'text');
-    v.setAttribute('x',labelW+bw+6); v.setAttribute('y',y+17); v.setAttribute('class','val');
+    v.setAttribute('x', bipolar ? bx+bw+6 : labelW+bw+6); v.setAttribute('y',y+17); v.setAttribute('class','val');
     v.textContent = fmt(r.v); svg.append(v);
     // r.cvm = empresa (abre o detalhe); r.key = grupo setorial (desce para o ranking)
     const alvo = r.cvm || r.key;
@@ -1804,7 +2280,645 @@ function hbarChart(container, rows, fmt, onclickRow){
       svg.append(hit);
     }
   });
+  if(bipolar){
+    // linha do zero: sem ela o leitor não tem referência de onde as barras viram
+    const z = document.createElementNS(svg.namespaceURI,'line');
+    z.setAttribute('x1',xZero); z.setAttribute('x2',xZero);
+    z.setAttribute('y1',padT); z.setAttribute('y2',H-padB);
+    z.setAttribute('stroke','var(--axis)'); z.setAttribute('stroke-width','1');
+    svg.append(z);
+  }
   container.append(svg);
+}
+
+
+// ================= mapa de calor (treemap) =================
+// A tabela responde "quanto", o mapa responde "onde está o peso". Num universo de
+// 354 empresas e 11 setores, a pergunta "o que aconteceu hoje" é respondida em um
+// olhar: o tamanho do bloco é o valor de mercado (quem realmente move o índice) e
+// a cor é o indicador escolhido.
+//
+// Algoritmo: squarify (Bruls, Huizing e van Wijk). Ele mantém os retângulos perto
+// do quadrado, que é o que torna a comparação de áreas honesta — faixas finas e
+// compridas enganam a leitura. Implementado aqui em SVG puro, sem biblioteca:
+// o painel é um HTML autocontido que roda offline no aplicativo.
+function squarify(itens, x, y, w, h){
+  const out = [];
+  const total = itens.reduce((a,b)=>a+b.v,0);
+  if(!(total > 0) || w <= 0 || h <= 0) return out;
+  let escala = (w*h)/total;
+  const fila = itens.map(i=>({...i, a:i.v*escala}));
+  let px=x, py=y, pw=w, ph=h;
+  const pior = (linha, lado) => {
+    const s = linha.reduce((a,b)=>a+b.a,0);
+    const mx = Math.max(...linha.map(r=>r.a)), mn = Math.min(...linha.map(r=>r.a));
+    return Math.max((lado*lado*mx)/(s*s), (s*s)/(lado*lado*mn));
+  };
+  let i = 0;
+  while(i < fila.length){
+    const vertical = pw >= ph;
+    const lado = vertical ? ph : pw;
+    const linha = [fila[i]];
+    let j = i + 1;
+    while(j < fila.length && pior(linha, lado) >= pior([...linha, fila[j]], lado)){
+      linha.push(fila[j]); j++;
+    }
+    const soma = linha.reduce((a,b)=>a+b.a,0);
+    const esp = soma / lado;            // espessura da faixa
+    let desl = 0;
+    for(const r of linha){
+      const comp = r.a / esp;
+      if(vertical) out.push({...r, x:px, y:py+desl, w:esp, h:comp});
+      else          out.push({...r, x:px+desl, y:py, w:comp, h:esp});
+      desl += comp;
+    }
+    if(vertical){ px += esp; pw -= esp; } else { py += esp; ph -= esp; }
+    i = j;
+  }
+  return out;
+}
+// escala de cor divergente, legível nos dois temas e com o zero sempre no meio.
+// Não usa vermelho/verde puros: além de serem os piores pares para daltonismo
+// (8% dos homens), o painel já usa --good/--bad para sinal em texto.
+function corMapa(v, lim){
+  if(v == null || !isFinite(v)) return 'var(--wash)';
+  const r = Math.max(-1, Math.min(1, v/(lim||1)));
+  const alfa = 0.14 + 0.72*Math.abs(r);
+  return r >= 0 ? 'rgba(45,120,90,'+alfa.toFixed(2)+')' : 'rgba(150,60,45,'+alfa.toFixed(2)+')';
+}
+// métricas de cor do mapa: rótulo, valor por empresa, formato e "quanto é muito"
+const MAPA_CORES = [
+  ['var', 'Variação do dia (%)', c => { const t = mainTicker(c); const q = t && getQ(t.t); return q ? q.pct : null; }, fmtSign, 3],
+  ['roe', 'ROE (%)', c => roeDe(c), fmtPct, 25],
+  ['roic', 'ROIC (%)', c => c.fin ? null : ((mainTicker(c)||{}).roic ?? (c.ind||{}).roic ?? null), fmtPct, 20],
+  ['mgL12', 'Margem líquida 12m (%)', c => niSuspeito(c) ? null : c.ind.mgL12, fmtPct, 20],
+  ['mgE12', 'Margem EBITDA 12m (%)', c => c.ind.mgE12, fmtPct, 30],
+  ['dlEbitda', 'Dív. líq./EBITDA (x)', c => { const v = dlEbitdaDe(c); return v == null ? null : -v; }, v => fmtX(v == null ? null : -v), 3],
+  ['pl', 'P/L', c => { const v = plDe(c); return v == null ? null : -v; }, v => fmtX(v == null ? null : -v), 15],
+  ['dy', 'Div. Yield (%)', c => { const t = mainTicker(c); return t ? t.dy : null; }, fmtPct, 8],
+];
+function renderMapa(box){
+  const met = MAPA_CORES.find(m => m[0] === (cmpSel.mapaCor||'var')) || MAPA_CORES[0];
+  const [, metRot, metVal, metFmt, metLim] = met;
+  const escopo = porteFiltra(escopoFiltra(COS, cmpSel.setor), cmpSel.porte);
+  // O tamanho é sempre o valor de mercado: é o que diz quanto cada empresa pesa.
+  // Empresa sem valor de mercado calculável não entra — e a nota diz quantas são,
+  // para o mapa não parecer o universo inteiro quando não é.
+  const comMk = escopo.filter(c => c.ind.mktCap > 0);
+  const semMk = escopo.length - comMk.length;
+  if(!comMk.length){ box.append(el('div','dim','nenhuma empresa deste recorte tem valor de mercado calculável')); return; }
+  const nivel = cmpSel.mapaNivel || 'setor';
+  const grupos = {};
+  for(const c of comMk) (grupos[c[nivel]] = grupos[c[nivel]] || []).push(c);
+  const W = Math.max(box.clientWidth || 900, 320);
+  const H = Math.max(340, Math.min(720, Math.round(W*0.62)));
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox','0 0 '+W+' '+H); svg.setAttribute('width','100%'); svg.style.display='block';
+  const tot = g => grupos[g].reduce((a,c)=>a+c.ind.mktCap,0);
+  const gs = Object.keys(grupos).sort((a,b)=>tot(b)-tot(a)).map(g=>({k:g, v:tot(g)}));
+  const caixas = squarify(gs, 0, 0, W, H);
+  let nEmp = 0;
+  for(const cx of caixas){
+    const CAB = 17;   // faixa do nome do grupo
+    const g = document.createElementNS(svg.namespaceURI,'g');
+    const fundo = document.createElementNS(svg.namespaceURI,'rect');
+    fundo.setAttribute('x',cx.x); fundo.setAttribute('y',cx.y);
+    fundo.setAttribute('width',Math.max(0,cx.w)); fundo.setAttribute('height',Math.max(0,cx.h));
+    fundo.setAttribute('fill','var(--wash)'); fundo.setAttribute('stroke','var(--page)');
+    fundo.setAttribute('stroke-width','2');
+    g.append(fundo);
+    if(cx.h > CAB + 12 && cx.w > 54){
+      const tt = document.createElementNS(svg.namespaceURI,'text');
+      tt.setAttribute('x',cx.x+5); tt.setAttribute('y',cx.y+12);
+      tt.setAttribute('style','font:700 11px/1 inherit;fill:var(--ink)');
+      const cabem = Math.max(4, Math.floor((cx.w-10)/6.2));
+      tt.textContent = cx.k.length > cabem ? cx.k.slice(0, cabem-1)+'…' : cx.k;
+      const ttl = document.createElementNS(svg.namespaceURI,'title');
+      ttl.textContent = cx.k + ' · ' + grupos[cx.k].length + ' empresas · ' + fmtMi(cx.v);
+      tt.append(ttl);
+      g.append(tt);
+    }
+    // empresas dentro do grupo, pelo mesmo algoritmo
+    const dentro = grupos[cx.k].map(c=>({k:c.name, v:c.ind.mktCap, c}))
+      .sort((a,b)=>b.v-a.v);
+    const sub = squarify(dentro, cx.x+2, cx.y+CAB, Math.max(0,cx.w-4), Math.max(0,cx.h-CAB-2));
+    for(const s of sub){
+      if(s.w < 2 || s.h < 2) continue;
+      nEmp++;
+      const v = metVal(s.c);
+      const r = document.createElementNS(svg.namespaceURI,'rect');
+      r.setAttribute('x',s.x); r.setAttribute('y',s.y);
+      r.setAttribute('width',s.w); r.setAttribute('height',s.h);
+      r.setAttribute('fill', corMapa(v, metLim));
+      r.setAttribute('stroke','var(--page)'); r.setAttribute('stroke-width','1');
+      r.style.cursor = 'pointer';
+      const ttl = document.createElementNS(svg.namespaceURI,'title');
+      ttl.textContent = s.c.name + ' · ' + (s.c.tickers.map(x=>x.t).join(' ') || 'sem ticker')
+        + '\n' + metRot + ': ' + (v==null ? 'sem dado' : metFmt(v))
+        + '\nValor de mercado: ' + fmtMi(s.c.ind.mktCap)
+        + '\n' + s.c.setor + ' › ' + s.c.subsetor;
+      r.append(ttl);
+      r.addEventListener('click', () => openDetail(s.c.cvm));
+      g.append(r);
+      // rótulo só onde cabe de verdade; senão o mapa vira mancha de texto
+      if(s.w > 46 && s.h > 22){
+        const tk = (mainTicker(s.c)||{}).t || s.c.root;
+        const tx = document.createElementNS(svg.namespaceURI,'text');
+        tx.setAttribute('x',s.x+s.w/2); tx.setAttribute('y',s.y+s.h/2-1);
+        tx.setAttribute('text-anchor','middle');
+        tx.setAttribute('style','font:700 10.5px/1 inherit;fill:var(--ink);pointer-events:none');
+        tx.textContent = tk;
+        g.append(tx);
+        if(s.h > 34 && v != null){
+          const tv = document.createElementNS(svg.namespaceURI,'text');
+          tv.setAttribute('x',s.x+s.w/2); tv.setAttribute('y',s.y+s.h/2+11);
+          tv.setAttribute('text-anchor','middle');
+          tv.setAttribute('style','font:600 9.5px/1 inherit;fill:var(--ink2);pointer-events:none');
+          tv.textContent = metFmt(v);
+          g.append(tv);
+        }
+      }
+    }
+    svg.append(g);
+  }
+  box.append(svg);
+  const semDado = comMk.filter(c => metVal(c) == null).length;
+  const nota = el('div','note');
+  nota.textContent = 'Área = valor de mercado · cor = ' + metRot.toLowerCase()
+    + ' (verde acima de zero, vermelho abaixo; a intensidade satura em ' + metLim + ')'
+    + ' · ' + nEmp + ' empresas desenhadas'
+    + (semMk ? ' · ' + semMk + ' fora do mapa por não ter valor de mercado calculável' : '')
+    + (semDado ? ' · ' + semDado + ' sem o indicador da cor (bloco cinza)' : '')
+    + '. Clique numa empresa para abrir a ficha.';
+  box.append(nota);
+}
+
+
+// ---- quartis e percentil: o que uma comps table de consultoria tem e um
+// ranking não tem. "P/L de 12x" não diz nada sozinho; "12x, no 3º quartil do
+// peer set e no percentil 78 do setor" diz onde a empresa está. Método: quantil
+// por interpolação linear (o mesmo do PERCENTIL.INC do Excel), para o número
+// bater com o que o consultor vai recalcular na planilha.
+function quantil(arr, q){
+  const a = arr.filter(x => x != null && isFinite(x)).sort((x,y)=>x-y);
+  if(!a.length) return null;
+  if(a.length === 1) return a[0];
+  const pos = (a.length - 1) * q;
+  const lo = Math.floor(pos), hi = Math.ceil(pos);
+  return lo === hi ? a[lo] : a[lo] + (a[hi] - a[lo]) * (pos - lo);
+}
+// percentil de v dentro de arr, em 0-100. Empates contam meio (definição de
+// rank médio), senão a primeira e a última empresa iguais receberiam percentis
+// diferentes só pela ordem em que aparecem na lista.
+function percentilDe(v, arr){
+  const a = arr.filter(x => x != null && isFinite(x));
+  if(v == null || !isFinite(v) || a.length < 3) return null;
+  let menores = 0, iguais = 0;
+  for(const x of a){ if(x < v) menores++; else if(x === v) iguais++; }
+  return Math.round(100 * (menores + iguais/2) / a.length);
+}
+
+
+// ================= glossário: fórmula, fonte e guarda de cada indicador =======
+// O painel já dizia a fonte numa linha curta embaixo de cada tile ("CVM · 12m").
+// Isso responde "de onde veio" mas não responde "como foi calculado" nem "por que
+// às vezes não aparece" — que é o que o consultor precisa saber antes de levar o
+// número para um deck. O glossário é a fonte única dessa resposta: o mesmo texto
+// aparece no tile, no cabeçalho da tabela e no modal ⓘ.
+const GLOSSARIO = {
+  roe:      {n:'ROE', f:'lucro líquido dos últimos 12 meses ÷ patrimônio líquido do último balanço',
+             o:'CVM (ITR/DFP); Fundamentus quando a CVM não tem o lucro de 12 meses',
+             g:'Exige patrimônio líquido de pelo menos R$ '+20+' mi. Com patrimônio negativo a divisão inverte o sinal (prejuízo ÷ patrimônio negativo = "ROE positivo"), e com patrimônio microscópico o percentual chega a dezenas de milhares.'},
+  roic:     {n:'ROIC', f:'EBIT de 12 meses × (1 − alíquota efetiva) ÷ (patrimônio líquido + dívida líquida quando positiva)',
+             o:'Fundamentus quando existe; senão calculado da CVM',
+             g:'Não se aplica a banco e seguradora: "capital investido" não se separa do funding. A alíquota efetiva sai das contas 3.07 e 3.08 da própria empresa, limitada a 0–45%.'},
+  roa:      {n:'ROA', f:'lucro líquido de 12 meses ÷ ativo total', o:'CVM (ITR/DFP)', g:'Exige ativo total positivo.'},
+  pl:       {n:'P/L', f:'preço da ação ÷ lucro por ação dos últimos 12 meses', o:'Fundamentus (fechamento do dia)',
+             g:'Não é publicado quando a série de lucro tem trimestre fora de escala na CVM. Empresa com prejuízo tem P/L negativo, que não é "barato" — é ausência de lucro.'},
+  pvp:      {n:'P/VP', f:'valor de mercado ÷ patrimônio líquido', o:'Fundamentus', g:''},
+  dy:       {n:'Dividend Yield', f:'proventos dos últimos 12 meses ÷ cotação', o:'Fundamentus',
+             g:'É retrospectivo: diz o que foi pago, não o que será pago.'},
+  evebitda: {n:'EV/EBITDA', f:'(valor de mercado + dívida líquida) ÷ EBITDA de 12 meses', o:'Fundamentus; CVM como reserva',
+             g:'Não se aplica a banco e seguradora — a CVM não estrutura EBITDA de instituição financeira e dívida de banco não é dívida no sentido do múltiplo.'},
+  mgE12:    {n:'Margem EBITDA 12m', f:'EBITDA de 12 meses ÷ receita de 12 meses', o:'CVM (EBITDA = EBIT + depreciação e amortização da DFC)',
+             g:'Exige receita de 12 meses de pelo menos R$ 10 mi e positiva.'},
+  mgL12:    {n:'Margem líquida 12m', f:'lucro líquido de 12 meses ÷ receita de 12 meses', o:'CVM',
+             g:'Mesma exigência de receita da margem EBITDA; não é publicada quando há trimestre fora de escala.'},
+  mgB12:    {n:'Margem bruta 12m', f:'lucro bruto de 12 meses ÷ receita de 12 meses', o:'CVM (conta 3.03)', g:'Exige receita de pelo menos R$ 10 mi.'},
+  dlEbitda: {n:'Dívida líquida / EBITDA', f:'(empréstimos e financiamentos − caixa e aplicações) ÷ EBITDA de 12 meses',
+             o:'CVM', g:'Exige EBITDA positivo E de pelo menos 2% da receita. Com EBITDA negativo a razão fica negativa e passaria num filtro de "baixa alavancagem" — o oposto da realidade.'},
+  dlPl:     {n:'Dívida líquida / Patrimônio', f:'dívida líquida ÷ patrimônio líquido', o:'CVM', g:'Exige patrimônio positivo e acima de R$ 20 mi.'},
+  liqCorr:  {n:'Liquidez corrente', f:'ativo circulante ÷ passivo circulante', o:'CVM (contas 1.01 e 2.01)', g:''},
+  liqSeca:  {n:'Liquidez seca', f:'(ativo circulante − estoques) ÷ passivo circulante', o:'CVM', g:''},
+  cobJuros: {n:'Cobertura de juros', f:'EBIT de 12 meses ÷ despesa financeira de 12 meses', o:'CVM (contas 3.05 e 3.06.02)',
+             g:'Exige despesa financeira de pelo menos R$ 1 mi — abaixo disso a razão explode sem significar nada.'},
+  giro:     {n:'Giro do ativo', f:'receita de 12 meses ÷ ativo total', o:'CVM', g:'Não se aplica a instituição financeira.'},
+  ativoPl:  {n:'Alavancagem (ativo/PL)', f:'ativo total ÷ patrimônio líquido', o:'CVM', g:'É o terceiro fator do DuPont. Exige patrimônio acima de R$ 20 mi.'},
+  fcoNi:    {n:'Caixa operacional ÷ lucro', f:'caixa gerado pelas operações em 12 meses ÷ lucro líquido de 12 meses', o:'CVM (DFC, conta 6.01)',
+             g:'Qualidade do lucro: abaixo de 1 indica lucro que ainda não virou caixa. Exige lucro de pelo menos R$ 10 mi.'},
+  fcl12:    {n:'Fluxo de caixa livre 12m', f:'caixa das operações − investimento em imobilizado e intangível', o:'CVM (DFC)',
+             g:'O capex é identificado pelo texto da conta 6.02 (a CVM não padroniza essa linha), então não existe para todas as empresas.'},
+  fco12:    {n:'Caixa das operações 12m', f:'conta 6.01 da demonstração de fluxo de caixa, acumulada em 12 meses', o:'CVM (DFC)', g:''},
+  capexRev: {n:'Capex ÷ receita', f:'investimento em imobilizado e intangível ÷ receita, em 12 meses', o:'CVM (DFC)', g:'Exige receita de pelo menos R$ 10 mi.'},
+  aliq:     {n:'Alíquota efetiva', f:'(IR + CSLL) ÷ lucro antes dos tributos', o:'CVM (contas 3.07 e 3.08)',
+             g:'Exige lucro antes dos tributos de pelo menos R$ 10 mi. Pode ficar fora da faixa 0–34% por benefício fiscal ou reversão de imposto diferido — é fato, não erro.'},
+  mktCap:   {n:'Valor de mercado', f:'ações em circulação × cotação, por classe', o:'CVM (composição de capital) × Fundamentus (cotação)',
+             g:'A CVM não declara a escala da quantidade de ações; o painel desambigua contra o múltiplo do mercado e só publica quando o resultado é plausível.'},
+  ev:       {n:'Valor da firma (EV)', f:'valor de mercado + dívida líquida', o:'CVM + Fundamentus', g:''},
+  rev12:    {n:'Receita 12m', f:'soma da receita líquida (conta 3.01) dos 4 últimos trimestres CONSECUTIVOS', o:'CVM',
+             g:'Não é publicada quando falta um trimestre no meio da janela nem quando a aritmética da entrega da empresa não fecha.'},
+  ebitda12: {n:'EBITDA 12m', f:'EBIT + depreciação e amortização, somados nos 4 últimos trimestres', o:'CVM (DRE + DFC)', g:'Não se aplica a instituição financeira.'},
+  ni12:     {n:'Lucro líquido 12m', f:'lucro atribuído aos sócios da controladora, somado nos 4 últimos trimestres', o:'CVM', g:''},
+  cresc5a:  {n:'Crescimento da receita em 5 anos', f:'variação da receita em 5 anos', o:'Fundamentus', g:''},
+};
+// botão discreto que abre a explicação. Um "?" ao lado do rótulo, não um texto
+// permanente: quem já sabe não precisa ler de novo a cada visita.
+function ajudaInd(chave){
+  const g = GLOSSARIO[chave];
+  if(!g) return null;
+  const b = el('button','glo','?');
+  b.type = 'button';
+  b.title = 'como este indicador é calculado';
+  b.setAttribute('aria-label','explicação de '+g.n);
+  b.onclick = (ev) => {
+    ev.stopPropagation();
+    showTipFixo(ev.clientX, ev.clientY, g);
+  };
+  return b;
+}
+// caixa de explicação, presa até o próximo clique (o tooltip normal some no
+// pointerleave, o que no celular a torna inútil)
+let gloBox = null;
+function showTipFixo(x, y, g){
+  if(gloBox) gloBox.remove();
+  gloBox = el('div','globox');
+  gloBox.append(el('b',null,g.n));
+  gloBox.append(el('div','gl','Como é calculado: '+g.f));
+  gloBox.append(el('div','gl','Fonte: '+g.o));
+  if(g.g) gloBox.append(el('div','gl','Quando não aparece: '+g.g));
+  const fechar = el('button','btn','fechar');
+  fechar.onclick = () => { gloBox.remove(); gloBox = null; };
+  gloBox.append(fechar);
+  document.body.append(gloBox);
+  const r = gloBox.getBoundingClientRect();
+  gloBox.style.left = Math.max(8, Math.min(innerWidth - r.width - 8, x - r.width/2)) + 'px';
+  gloBox.style.top  = Math.max(8, Math.min(innerHeight - r.height - 8, y + 14)) + 'px';
+}
+document.addEventListener('click', e => {
+  if(gloBox && !e.target.closest('.globox') && !e.target.closest('.glo')){ gloBox.remove(); gloBox = null; }
+});
+
+
+// ================= sinais objetivos e anotações do consultor =================
+// As plataformas concorrentes resumem a empresa num SELO ("viável", "bomba",
+// floco de neve de 0 a 6). O selo é opinião embrulhada em número: some a regra e
+// sobra a nota. Aqui o formato é o contrário — cada linha diz A REGRA, O DADO e
+// o resultado, e quem decide é quem lê. Sem dado, a linha some em vez de virar
+// "reprovado": ausência de informação não é informação negativa.
+function sinaisDe(c){
+  const i = c.ind || {}, b = c.bal || {};
+  const roe = roeDe(c), dl = dlEbitdaDe(c);
+  const regras = [
+    {ok: b.pl != null && b.pl > 0, sim:'Patrimônio líquido positivo', nao:'Patrimônio líquido NEGATIVO',
+     val: b.pl == null ? null : fmtMi(b.pl), grave:true},
+    {ok: i.ni12 != null && i.ni12 > 0, sim:'Lucro nos últimos 12 meses', nao:'Prejuízo nos últimos 12 meses',
+     val: niSuspeito(c) ? null : (i.ni12 == null ? null : fmtMi(i.ni12))},
+    {ok: dl != null && dl < 3, sim:'Dívida líquida abaixo de 3× o EBITDA', nao:'Dívida líquida acima de 3× o EBITDA',
+     val: dl == null ? null : fmtX(dl)},
+    {ok: i.cobJuros != null && i.cobJuros > 2, sim:'EBIT cobre mais de 2× a despesa financeira', nao:'EBIT cobre menos de 2× a despesa financeira',
+     val: i.cobJuros == null ? null : fmtX(i.cobJuros)},
+    {ok: i.liqCorr != null && i.liqCorr > 1, sim:'Ativo circulante maior que o passivo circulante', nao:'Passivo circulante maior que o ativo circulante',
+     val: i.liqCorr == null ? null : fmtX(i.liqCorr)},
+    {ok: roe != null && roe > 10, sim:'ROE acima de 10%', nao:'ROE abaixo de 10%', val: roe == null ? null : fmtPct(roe)},
+    {ok: i.mgL12 != null && i.mgL12 > 0, sim:'Margem líquida positiva', nao:'Margem líquida negativa',
+     val: (niSuspeito(c) || i.mgL12 == null) ? null : fmtPct(i.mgL12)},
+    {ok: i.fcoNi != null && i.fcoNi >= 0.8, sim:'O lucro está virando caixa (operações ≥ 80% do lucro)', nao:'O lucro NÃO está virando caixa (operações abaixo de 80% do lucro)',
+     val: i.fcoNi == null ? null : fmtX(i.fcoNi)},
+    {ok: i.fcl12 != null && i.fcl12 > 0, sim:'Fluxo de caixa livre positivo', nao:'Fluxo de caixa livre negativo',
+     val: i.fcl12 == null ? null : fmtMi(i.fcl12)},
+  ];
+  // receita caindo: comparação dos dois últimos acumulados de 12 meses, só quando
+  // os dois existem e nenhum trimestre da janela está marcado
+  const qs = (c.q || []).filter(x => x.rev != null && !x.sus);
+  if(qs.length >= 8){
+    const soma4 = k => qs.slice(k, k+4).reduce((a,x)=>a+x.rev, 0);
+    const atual = soma4(qs.length-4), antes = soma4(qs.length-8);
+    if(antes > 0) regras.push({ok: atual >= antes, sim:'Receita de 12 meses cresceu contra os 12 meses anteriores',
+      nao:'Receita de 12 meses caiu contra os 12 meses anteriores',
+      val: fmtPct(+(100*(atual/antes-1)).toFixed(1))});
+  }
+  return regras.filter(r => r.val != null);
+}
+function blocoSinais(c){
+  const s = sinaisDe(c);
+  if(!s.length) return null;
+  const wrap = el('div','card');
+  const passa = s.filter(x=>x.ok).length;
+  wrap.append(el('div','ct','Checagens objetivas — '+passa+' de '+s.length+' atendidas'));
+  const ul = el('div','sinais');
+  for(const r of s){
+    const li = el('div','sinal'+(r.ok?' ok':' nao'));
+    li.append(el('span','ic', r.ok ? '✓' : '✕'));
+    li.append(el('span','tx', r.ok ? r.sim : r.nao));
+    li.append(el('span','vl', r.val));
+    ul.append(li);
+  }
+  wrap.append(ul);
+  wrap.append(el('div','note','Cada linha é uma regra fixa aplicada ao dado desta empresa, com o valor ao lado — '
+    + 'não é nota, selo nem recomendação. Regra sem dado disponível não aparece (em vez de contar como reprovada). '
+    + 'Os limites (3× EBITDA, 2× juros, ROE 10%, caixa 80% do lucro) são convenções de mercado, não opinião do painel.'));
+  return wrap;
+}
+// ---- anotações do consultor, por empresa, guardadas só neste navegador ----
+// Fundamentei chama de "notas", Simply Wall St de "narrativas". Aqui é o lugar de
+// registrar a tese e o que foi conferido, junto do número — sem sair da tela e
+// sem mandar nada para servidor nenhum.
+function blocoNotas(c){
+  const chave = 'nota_'+c.cvm;
+  const wrap = el('div','card');
+  wrap.append(el('div','ct','Minhas anotações sobre '+c.name));
+  const ta = document.createElement('textarea');
+  ta.className = 'notas';
+  ta.placeholder = 'Tese, o que conferir no próximo trimestre, o que já foi validado com o RI…';
+  ta.value = lsGet(chave) || '';
+  ta.rows = 4;
+  const st = el('div','dim','');
+  let tmr = null;
+  ta.oninput = () => {
+    clearTimeout(tmr);
+    tmr = setTimeout(() => {
+      lsSet(chave, ta.value);
+      st.textContent = ta.value ? 'salvo neste navegador às ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : '';
+    }, 400);
+  };
+  if(ta.value) st.textContent = 'salvo neste navegador';
+  wrap.append(ta, st);
+  wrap.append(el('div','note','A anotação fica só neste navegador (não vai para o repositório nem para servidor). '
+    + 'Use "⧉ copiar todas as anotações" no modal ⓘ Dados para levar tudo de uma vez.'));
+  return wrap;
+}
+
+
+// ================= demonstrações completas por trimestre =====================
+// O painel mostrava receita, EBIT, EBITDA e lucro. A DRE tem muito mais, e as
+// contas que faltavam são padronizadas na CVM (nível 2 e 3, presentes em 438 das
+// 441 empresas): custo, lucro bruto, despesas de venda e administrativas,
+// resultado financeiro, lucro antes dos tributos e imposto. O mesmo vale para o
+// balanço (circulante, não circulante, estoques, recebíveis, imobilizado) e para
+// a demonstração de fluxo de caixa (operações, investimento, financiamento).
+//
+// Cada linha diz de qual CONTA veio. Isso não é enfeite: quem confere no
+// documento oficial precisa saber onde procurar, e quem vê um número estranho
+// precisa poder rastreá-lo.
+const DEMONSTRACOES = [
+  {titulo:'Demonstração de resultado', fonte:'DRE (ITR/DFP)', linhas:[
+    ['Receita líquida', 'rev', '3.01'],
+    ['Custo dos bens e serviços', 'custo', '3.02'],
+    ['Lucro bruto', 'lucroBruto', '3.03'],
+    ['Margem bruta', 'mgB', null, 'pct'],
+    ['Despesas com vendas', 'despVendas', '3.04.01'],
+    ['Despesas gerais e administrativas', 'despAdm', '3.04.02'],
+    ['EBIT (antes do financeiro e dos tributos)', 'ebit', '3.05'],
+    ['EBITDA', 'ebitda', 'EBIT + depreciação (DFC)'],
+    ['Margem EBITDA', 'mgE', null, 'pct'],
+    ['Receitas financeiras', 'recFin', '3.06.01'],
+    ['Despesas financeiras', 'despFin', '3.06.02'],
+    ['Lucro antes dos tributos', 'ebt', '3.07'],
+    ['Imposto de renda e CSLL', 'ir', '3.08'],
+    ['Lucro líquido', 'ni', '3.11.01 (controladora)'],
+    ['Margem líquida', 'mgL', null, 'pct'],
+  ]},
+  {titulo:'Fluxo de caixa', fonte:'DFC método indireto (ITR/DFP)', linhas:[
+    ['Caixa das operações', 'fco', '6.01'],
+    ['Caixa de investimento', 'fci', '6.02'],
+    ['Caixa de financiamento', 'fcf', '6.03'],
+    ['Investimento em imobilizado e intangível (capex)', 'capex', '6.02.* por descrição'],
+  ]},
+];
+// o balanço vem da outra série (c.bh), que é por data e não por trimestre
+const BALANCO_LINHAS = [
+  ['Ativo total', 'ativo'],
+  ['Ativo circulante', 'atCirc'],
+  ['Contas a receber', 'receb'],
+  ['Estoques', 'estoq'],
+  ['Passivo circulante', 'pasCirc'],
+  ['Patrimônio líquido', 'pl'],
+  ['Dívida líquida', 'divL'],
+];
+function tabelaDemonstracao(c, spec){
+  // últimos 8 trimestres, do mais novo para o mais velho — a ordem que o leitor
+  // espera quando a pergunta é "como está agora"
+  const qs = (c.q || []).slice(-8).reverse();
+  if(!qs.length) return null;
+  const temAlgum = spec.linhas.some(([, campo]) => qs.some(q => q[campo] != null));
+  if(!temAlgum) return null;
+  const w = el('div','qtblwrap'); const tb = el('table','qtbl');
+  const hr = el('tr');
+  hr.append(el('th',null,'Conta'));
+  for(const q of qs){
+    const th = el('th',null, q.p + (q.sus ? ' ⚠' : ''));
+    if(q.sus) th.title = q.susTxt || 'trimestre marcado: a aritmética da entrega da empresa não fecha';
+    hr.append(th);
+  }
+  const th = el('thead'); th.append(hr); tb.append(th);
+  const body = el('tbody');
+  const linhasTsv = [];
+  for(const [rot, campo, conta, tipo] of spec.linhas){
+    if(!qs.some(q => q[campo] != null)) continue;   // linha vazia não entra
+    const tr = el('tr');
+    const td0 = el('td');
+    td0.append(document.createTextNode(rot));
+    if(conta){ const s = el('span','cconta', ' ' + conta); td0.append(s); }
+    tr.append(td0);
+    for(const q of qs){
+      const v = q[campo];
+      const td = el('td', v == null ? 'dim' : (v < 0 ? 'neg' : ''),
+                     v == null ? '—' : (tipo === 'pct' ? fmtPct(v) : fmtNum(v)));
+      if(q.sus) td.style.opacity = '.55';
+      tr.append(td);
+    }
+    body.append(tr);
+    linhasTsv.push([rot + (conta ? ' ('+conta+')' : ''), ...qs.map(q => q[campo])]);
+  }
+  tb.append(body); w.append(tb);
+  return {el: w, headers: ['Conta', ...qs.map(q=>q.p)], linhas: linhasTsv};
+}
+function tabelaBalanco(c){
+  const bs = (c.bh || []).slice(-8).reverse();
+  if(!bs.length) return null;
+  const w = el('div','qtblwrap'); const tb = el('table','qtbl');
+  const hr = el('tr'); hr.append(el('th',null,'Conta'));
+  const rotuloDt = d => d.slice(0,4)+'T'+({'03':'1','06':'2','09':'3','12':'4'}[d.slice(5,7)]||'?');
+  for(const b of bs) hr.append(el('th',null, rotuloDt(b.dt)));
+  const th = el('thead'); th.append(hr); tb.append(th);
+  const body = el('tbody'); const linhasTsv = [];
+  for(const [rot, campo] of BALANCO_LINHAS){
+    if(!bs.some(b => b[campo] != null)) continue;
+    const tr = el('tr'); tr.append(el('td',null,rot));
+    for(const b of bs){
+      const v = b[campo];
+      tr.append(el('td', v == null ? 'dim' : (v < 0 ? 'neg' : ''), v == null ? '—' : fmtNum(v)));
+    }
+    body.append(tr);
+    linhasTsv.push([rot, ...bs.map(b => b[campo])]);
+  }
+  tb.append(body); w.append(tb);
+  return {el: w, headers: ['Conta', ...bs.map(b=>rotuloDt(b.dt))], linhas: linhasTsv};
+}
+function blocoDemonstracoes(c){
+  const partes = [];
+  for(const spec of DEMONSTRACOES){
+    const r = tabelaDemonstracao(c, spec);
+    if(!r) continue;
+    const card = el('div','card');
+    card.append(el('div','ct', spec.titulo + ' — R$, por trimestre'));
+    card.append(r.el);
+    card.append(chartTools(() => null, () => ({headers:r.headers, linhas:r.linhas}), () => c.name+' — '+spec.titulo));
+    card.append(el('div','note','Fonte: '+spec.fonte+'. O código ao lado do nome é a conta na CVM — '
+      + 'é por ele que se confere no documento oficial. Linha sem nenhum valor não é exibida.'));
+    partes.push(card);
+  }
+  const b = tabelaBalanco(c);
+  if(b){
+    const card = el('div','card');
+    card.append(el('div','ct','Balanço patrimonial — R$, por trimestre'));
+    card.append(b.el);
+    card.append(chartTools(() => null, () => ({headers:b.headers, linhas:b.linhas}), () => c.name+' — Balanço'));
+    card.append(el('div','note','Fonte: BPA/BPP (ITR/DFP). Patrimônio líquido já descontada a participação '
+      + 'de não controladores. Dívida líquida = empréstimos e financiamentos menos caixa e aplicações; '
+      + 'não é calculada para banco e seguradora.'));
+    partes.push(card);
+  }
+  return partes;
+}
+
+
+// ================= faixas de porte, atalhos e modo apresentação ==============
+// Faixa de porte é o primeiro corte que qualquer analista faz ("só large cap",
+// "só small cap"), e o painel só tinha o corte setorial. Os limites são os que a
+// B3 e o mercado brasileiro usam, em R$; ficam escritos na tela para ninguém ter
+// de adivinhar o que é "small".
+const PORTES = [
+  ['', 'qualquer porte', null, null],
+  ['mega',  'Mega — acima de R$ 200 bi', 200000, null],
+  ['large', 'Large — R$ 50 bi a 200 bi', 50000, 200000],
+  ['mid',   'Mid — R$ 10 bi a 50 bi', 10000, 50000],
+  ['small', 'Small — R$ 2 bi a 10 bi', 2000, 10000],
+  ['micro', 'Micro — abaixo de R$ 2 bi', null, 2000],
+];
+function porteFiltra(lista, chave){
+  const p = PORTES.find(x => x[0] === chave);
+  if(!p || !p[0]) return lista;
+  const [, , lo, hi] = p;
+  return lista.filter(c => {
+    const v = c.ind.mktCap;
+    if(v == null) return false;   // sem valor de mercado não dá para dizer o porte
+    return (lo == null || v >= lo) && (hi == null || v < hi);
+  });
+}
+// ---- estado da tela no endereço: o consultor manda o link e o colega abre a
+// MESMA tela. Antes só o peer set viajava; agora viaja a aba, o modo, o
+// indicador, o recorte, o porte e os filtros.
+function estadoParaHash(){
+  const v = document.body.dataset.view || 'emp';
+  const p = new URLSearchParams();
+  p.set('v', v);
+  if(v === 'cmp'){
+    p.set('m', cmpSel.modo || 'rank');
+    if(cmpSel.ind) p.set('i', cmpSel.ind);
+    if(cmpSel.setor) p.set('e', cmpSel.setor);
+    if(cmpSel.porte) p.set('p', cmpSel.porte);
+    if(cmpSel.dir && cmpSel.dir !== 'desc') p.set('d', cmpSel.dir);
+    if(cmpSel.modo === 'mapa'){
+      if(cmpSel.mapaCor) p.set('mc', cmpSel.mapaCor);
+      if(cmpSel.mapaNivel) p.set('mn', cmpSel.mapaNivel);
+    }
+    if((cmpSel.filtros || []).length)
+      p.set('f', cmpSel.filtros.map(x => [x.ind, x.op, x.v1, x.v2 == null ? '' : x.v2].join('~')).join(','));
+    if((cmpSel.emps || []).length && (cmpSel.modo === 'peer' || cmpSel.modo === 'hist'))
+      p.set('c', cmpSel.emps.join(','));
+  }
+  if(v === 'emp' && openCvm) p.set('emp', openCvm);
+  return p.toString();
+}
+function aplicaHash(){
+  const h = (location.hash || '').replace(/^#/, '');
+  if(!h) return false;
+  if(h.startsWith('peer=')) return false;     // formato antigo, tratado em abrePeerDaURL
+  const p = new URLSearchParams(h);
+  const v = p.get('v');
+  if(!v) return false;
+  if(p.get('m')) cmpSel.modo = p.get('m');
+  if(p.get('i')) cmpSel.ind = p.get('i');
+  if(p.get('e')) cmpSel.setor = p.get('e');
+  if(p.get('p')) cmpSel.porte = p.get('p');
+  if(p.get('d')) cmpSel.dir = p.get('d');
+  if(p.get('mc')) cmpSel.mapaCor = p.get('mc');
+  if(p.get('mn')) cmpSel.mapaNivel = p.get('mn');
+  if(p.get('f')) cmpSel.filtros = p.get('f').split(',').map(s => {
+    const [ind, op, v1, v2] = s.split('~');
+    return {ind, op, v1: +v1, v2: v2 === '' ? null : +v2};
+  }).filter(x => x.ind && isFinite(x.v1));
+  if(p.get('c')) cmpSel.emps = p.get('c').split(',');
+  lsSet('cmp_sel', cmpSel);
+  setView(v);
+  if(p.get('emp')) openDetail(p.get('emp'));
+  // o endereço é limpo depois de aplicado: senão um F5 desfaz tudo que o usuário
+  // fez desde que abriu o link
+  try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){}
+  return true;
+}
+function copiaLinkDaTela(btn){
+  const url = location.origin + location.pathname + location.search + '#' + estadoParaHash();
+  navigator.clipboard.writeText(url).then(() => {
+    if(btn){ if(!btn.dataset.lbl) btn.dataset.lbl = btn.textContent;
+             btn.textContent = '✓ link copiado'; setTimeout(()=>btn.textContent = btn.dataset.lbl, 1800); }
+  }).catch(() => { if(btn) btn.textContent = 'falhou — permita a área de transferência'; });
+}
+// ---- modo apresentação: fontes maiores, sem filtros na tela, fundo limpo.
+// Serve para projetar numa reunião sem ter de exportar imagem antes.
+function modoApresentacao(liga){
+  document.body.classList.toggle('apres', liga);
+  lsSet('apres', !!liga);
+}
+// ---- atalhos: "/" para buscar é convenção universal; o resto evita tirar a mão
+// do teclado durante uma reunião.
+addEventListener('keydown', e => {
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  const alvo = e.target;
+  const digitando = alvo && (alvo.tagName === 'INPUT' || alvo.tagName === 'TEXTAREA' || alvo.isContentEditable);
+  if(digitando){
+    if(e.key === 'Escape' && alvo.id === 'q'){ alvo.value = ''; alvo.blur(); }
+    return;
+  }
+  const map = {'1':'emp','2':'cmp','3':'etf','4':'eua','5':'macro'};
+  if(e.key === '/'){ e.preventDefault(); const q = document.getElementById('q'); if(q){ q.focus(); q.select(); } return; }
+  if(map[e.key]){ e.preventDefault(); setView(map[e.key]); return; }
+  if(e.key === 'p' || e.key === 'P'){ e.preventDefault(); modoApresentacao(!document.body.classList.contains('apres')); return; }
+  if(e.key === '?'){ e.preventDefault(); abreAtalhos(); return; }
+});
+function abreAtalhos(){
+  modalKind = 'info';
+  ibox.textContent = '';
+  const x = el('button','btn x2','✕ fechar'); x.onclick = closeInfo; ibox.append(x);
+  ibox.append(el('h2',null,'Atalhos de teclado'));
+  const linhas = [
+    ['/', 'ir para a busca'],
+    ['1 a 5', 'trocar de aba (Empresas, Comparar, ETFs, EUA, Brasil & Macro)'],
+    ['P', 'modo apresentação (fontes maiores, sem filtros na tela)'],
+    ['Esc', 'fechar o que estiver aberto por cima'],
+    ['?', 'esta lista'],
+  ];
+  const w = el('div','qtblwrap'); const tb = el('table','qtbl');
+  const hr = el('tr'); hr.append(el('th',null,'Tecla'), el('th',null,'O que faz'));
+  const th = el('thead'); th.append(hr); tb.append(th);
+  const body = el('tbody');
+  for(const [k, d] of linhas){
+    const tr = el('tr'); const td = el('td'); const kb = el('span','kbd', k);
+    td.append(kb); tr.append(td, el('td',null,d)); body.append(tr);
+  }
+  tb.append(body); w.append(tb); ibox.append(w);
+  iovl.classList.add('on');
 }
 
 // ---- view Comparar ----
@@ -1818,6 +2932,8 @@ const CMP_INDS = [
     // em alguns — nos dois casos o painel diz que o indicador não se aplica a
     // financeira, então não pode exibir número para nenhuma delas.
     if(c.fin) return null;
+    // mesmo motivo do ROE: capital investido que não existiu no período
+    if(plVirou(c)) return null;
     const t = mainTicker(c);
     return (t&&t.roic!=null) ? t.roic : (c.ind.roic!=null ? c.ind.roic : null);}, fmtPct],
   ['roe','ROE (%)', c=>roeDe(c), fmtPct],
@@ -1835,6 +2951,22 @@ const CMP_INDS = [
   ['ev','Valor da firma (EV)', c=>evOf(c), fmtMi],
   ['rev12','Receita 12m', c=>c.ind.rev12, fmtMi],
   ['cresc5a','Cresc. receita 5 anos (%)', c=>{const t=mainTicker(c); return t?t.cresc5a:null;}, fmtPct],
+  // ---- indicadores derivados das contas padronizadas da CVM (process.py) ----
+  // Todos saem do mesmo lugar que os demais: contas de nível 2 e 3 da DRE, do
+  // balanço e da DFC, com piso de denominador aplicado no pipeline. Empresa sem o
+  // dado devolve null e simplesmente não entra no ranking.
+  ['mgB12','Margem bruta 12m (%)', c=>c.ind.mgB12 ?? null, fmtPct],
+  ['roa','ROA (%)', c=>c.ind.roa ?? null, fmtPct],
+  ['giro','Giro do ativo (x)', c=>c.fin ? null : (c.ind.giro ?? null), fmtX],
+  ['liqCorr','Liquidez corrente (x)', c=>c.ind.liqCorr ?? null, fmtX],
+  ['liqSeca','Liquidez seca (x)', c=>c.ind.liqSeca ?? null, fmtX],
+  ['cobJuros','Cobertura de juros (x)', c=>c.fin ? null : (c.ind.cobJuros ?? null), fmtX],
+  ['fcoNi','Caixa operacional ÷ lucro (x)', c=>c.ind.fcoNi ?? null, fmtX],
+  ['fcl12','Fluxo de caixa livre 12m', c=>c.ind.fcl12 ?? null, fmtMi],
+  ['fco12','Caixa das operações 12m', c=>c.ind.fco12 ?? null, fmtMi],
+  ['capexRev','Capex ÷ receita (%)', c=>c.fin ? null : (c.ind.capexRev ?? null), fmtPct],
+  ['ativoPl','Alavancagem (ativo ÷ PL)', c=>c.ind.ativoPl ?? null, fmtX],
+  ['aliq','Alíquota efetiva (%)', c=>c.ind.aliq ?? null, fmtPct],
 ];
 const HIST_INDS = [
   ['roe','ROE (%)',fmtPct], ['roic','ROIC (%)',fmtPct],
@@ -1910,7 +3042,11 @@ function estat(rows, permiteCagr){
     media: nums.reduce((a,b)=>a+b,0)/nums.length,
     mediana: med(nums),
     min: Math.min(...nums), max: Math.max(...nums),
-    varTotal: (ini.v !== 0 && ini.v != null) ? (fim.v/ini.v - 1)*100 : null,
+    // Percentual sobre base NEGATIVA inverte o sinal: sair de −959 mi de prejuízo
+    // para +1,2 bi de lucro aparecia como "queda de 227,9%". Com base não positiva
+    // o painel publica a variação ABSOLUTA (em varAbs) e deixa o percentual vazio.
+    varTotal: (ini.v != null && ini.v > 0) ? (fim.v/ini.v - 1)*100 : null,
+    varAbs: (ini.v != null && fim.v != null) ? (fim.v - ini.v) : null,
   };
 }
 const pNum = p => (+String(p).slice(0,4))*4 + (+String(p).slice(5) || 0);
@@ -1932,24 +3068,47 @@ function escopoOpcoes(){
   return {set: conta('setor'), sub: conta('subsetor'), seg: conta('segmento')};
 }
 // migra valor antigo (sem prefixo) para o formato novo
+// O escopo pode conter VÁRIOS grupos separados por '+' (ex.:
+// 'sub:Comércio+sub:Comércio e Distribuição'). Isso existe porque um apelido do
+// dia a dia às vezes cobre mais de um grupo da B3: "varejo" abrange o subsetor
+// Comércio (Magalu, Renner) e o subsetor Comércio e Distribuição (Assaí, GPA,
+// Grupo Mateus) — antes o painel silenciosamente devolvia só o primeiro, e o
+// varejo alimentar inteiro ficava fora do ranking.
+const escopoPartes = v => String(v||'').split('+').map(x=>x.trim()).filter(Boolean);
 function escopoNorm(v){
   if(!v) return '';
-  if(/^(set|sub|seg):/.test(v)) return v;
-  return 'set:' + v;                    // estado salvo antes desta versão
+  return escopoPartes(v).map(p => /^(set|sub|seg):/.test(p) ? p : 'set:'+p).join('+');
 }
+const campoDeNivel = n => n==='set' ? 'setor' : n==='sub' ? 'subsetor' : 'segmento';
 function escopoFiltra(lista, valor){
   const v = escopoNorm(valor);
   if(!v) return lista;
-  const nivel = v.slice(0,3), alvo = v.slice(4);
-  const campo = nivel==='set' ? 'setor' : nivel==='sub' ? 'subsetor' : 'segmento';
-  return lista.filter(c => c[campo] === alvo);
+  const alvos = escopoPartes(v).map(p => [campoDeNivel(p.slice(0,3)), p.slice(4)]);
+  return lista.filter(c => alvos.some(([campo, alvo]) => c[campo] === alvo));
+}
+// acrescenta o porte ao rótulo do recorte: sem isso o título dizia "todos os
+// setores" com metade das empresas fora por causa do filtro de porte
+function rotuloRecorte(){
+  const base = escopoRotulo(cmpSel.setor);
+  const p = PORTES.find(x => x[0] === (cmpSel.porte||''));
+  return (p && p[0]) ? base + ' · ' + p[1].split(' — ')[0].toLowerCase() + ' cap' : base;
 }
 function escopoRotulo(valor){
   const v = escopoNorm(valor);
   if(!v) return 'todos os setores';
-  const nivel = v.slice(0,3), alvo = v.slice(4);
-  const nome = (NIVEIS.find(x=>x[0]===nivel)||[])[1] || 'setor';
-  return nome + ' ' + alvo;
+  const partes = escopoPartes(v);
+  const um = p => {
+    const nome = (NIVEIS.find(x=>x[0]===p.slice(0,3))||[])[1] || 'setor';
+    return nome + ' ' + p.slice(4);
+  };
+  if(partes.length === 1) return um(partes[0]);
+  // "subsetores Comércio e Comércio e Distribuição" — o leitor precisa saber que
+  // o recorte tem mais de um grupo, senão a contagem não fecha com a árvore lateral
+  const mesmoNivel = partes.every(p => p.slice(0,3) === partes[0].slice(0,3));
+  const nome = (NIVEIS.find(x=>x[0]===partes[0].slice(0,3))||[])[1] || 'setor';
+  return mesmoNivel
+    ? nome + 'es ' + partes.map(p=>p.slice(4)).join(' + ')
+    : partes.map(um).join(' + ');
 }
 
 // ================= comparar os SETORES entre si (modo "set") =================
@@ -1967,12 +3126,22 @@ const SET_AGG = {
   dlEbitda: {num: c=>(c.bal||{}).divL,        den: c=>c.ind.ebitda12,  k:1,   den2:'EBITDA de 12 meses', rot:'soma(dívida líquida) ÷ soma(EBITDA 12m)'},
   evebitda: {num: c=>evOf(c),                 den: c=>c.ind.ebitda12,  k:1,   den2:'EBITDA de 12 meses', rot:'soma(valor da firma) ÷ soma(EBITDA 12m)'},
   pl:       {num: c=>c.ind.mktCap,            den: c=>ni12De(c),       k:1,   den2:'lucro líquido de 12 meses', rot:'soma(valor de mercado) ÷ soma(lucro líquido 12m)'},
+  // agregados dos indicadores novos — a razão das somas é a leitura certa de
+  // "a margem bruta do varejo" ou "a alavancagem do setor", e não a média de razões
+  mgB12:    {num: c=>(c.ind||{}).lucroBruto12, den: c=>c.ind.rev12,    k:100, den2:'receita de 12 meses', rot:'soma(lucro bruto 12m) ÷ soma(receita 12m)'},
+  roa:      {num: c=>ni12De(c),               den: c=>(c.bal||{}).ativo, k:100, den2:'ativo total', rot:'soma(lucro líquido 12m) ÷ soma(ativo total)'},
+  giro:     {num: c=>c.ind.rev12,             den: c=>(c.bal||{}).ativo, k:1, den2:'ativo total', rot:'soma(receita 12m) ÷ soma(ativo total)'},
+  liqCorr:  {num: c=>(c.bal||{}).atCirc,      den: c=>(c.bal||{}).pasCirc, k:1, den2:'passivo circulante', rot:'soma(ativo circulante) ÷ soma(passivo circulante)'},
+  ativoPl:  {num: c=>(c.bal||{}).ativo,       den: c=>(c.bal||{}).pl,  k:1,   den2:'patrimônio líquido', rot:'soma(ativo total) ÷ soma(patrimônio líquido)'},
+  capexRev: {num: c=>(c.ind||{}).capex12,     den: c=>c.ind.rev12,     k:100, den2:'receita de 12 meses', rot:'soma(capex 12m) ÷ soma(receita 12m)'},
+  fcoNi:    {num: c=>(c.ind||{}).fco12,       den: c=>ni12De(c),       k:1,   den2:'lucro líquido de 12 meses', rot:'soma(caixa das operações 12m) ÷ soma(lucro líquido 12m)'},
 };
 // piso do denominador somado, em R$ milhões: abaixo disso o grupo não sustenta
 // indicador agregado (é bolso de holding, não setor)
 const SET_AGG_PISO = 100;
 // indicadores de NÍVEL (R$), onde somar o grupo faz sentido
-const SET_SOMA = new Set(['mktCap','ev','rev12']);
+// indicadores que são VALOR em R$ (somam entre empresas) e não razão
+const SET_SOMA = new Set(['mktCap','ev','rev12','fco12','fcl12']);
 const SET_STATS = [['med','Mediana do grupo'],['avg','Média do grupo'],
                    ['agg','Agregado (soma dos componentes)'],['sum','Soma do grupo']];
 function setStatOpcoes(indKey){
@@ -2056,15 +3225,21 @@ const setN     = (e, st) => st==='agg' ? e.nAgg : e.n;
 // Parser determinístico: traduz a frase em filtros do screener e MOSTRA como
 // entendeu, listando também o que não reconheceu — nada é ignorado em silêncio.
 // Apelidos do dia a dia → como a B3 nomeia setor/subsetor/segmento.
+// Apelido pode apontar para MAIS DE UM alvo: "varejo" no vocabulário do dia a dia
+// abrange o subsetor Comércio (Magalu, Renner, Casas Bahia) E o subsetor Comércio e
+// Distribuição (Assaí, GPA, Grupo Mateus, Raia Drogasil) — mandar só para o primeiro
+// deixava o varejo alimentar inteiro fora do ranking sem nenhum aviso na tela.
 const APELIDOS = [
-  [/\bvarejo\b|\bvarejista/, 'sub:Comércio'],
-  [/\bcomercio\b|\bcomércio\b/, 'sub:Comércio'],
+  [/\bvarejo\b|\bvarejista/, ['sub:Comércio', 'sub:Comércio e Distribuição']],
+  [/\bcomercio\b|\bcomércio\b/, ['sub:Comércio', 'sub:Comércio e Distribuição']],
+  [/\bsupermercado|\batacarejo|\batacadista/, 'sub:Comércio e Distribuição'],
   [/\bbanco/, 'sub:Intermediários Financeiros'],
   [/\bseguradora|\bseguro/, 'sub:Previdência e Seguros'],
   [/\benergia|\beletric|\belétric/, 'sub:Energia Elétrica'],
   [/\bsaneamento|\bagua\b|\bágua\b/, 'sub:Água e Saneamento'],
   [/\bconstrutora|\bconstru[çc][ãa]o|\bincorporadora/, 'sub:Construção Civil'],
   [/\bshopping/, 'seg:Exploração de Imóveis'],
+  [/\bim[óo]ve[li]|\bimobili[áa]ri/, 'seg:Exploração de Imóveis'],
   [/\bsiderurg|\ba[çc]o\b/, 'sub:Siderurgia e Metalurgia'],
   [/\bminera[çc][ãa]o|\bminera/, 'sub:Mineração'],
   [/\bpapel|\bcelulose/, 'sub:Madeira e Papel'],
@@ -2076,25 +3251,45 @@ const APELIDOS = [
   [/\bagro|\bagr[íi]cola/, 'sub:Agropecuária'],
   [/\btransporte|\blog[íi]stica/, 'sub:Transporte'],
   [/\beduca[çc][ãa]o|\bensino/, 'seg:Serviços Educacionais'],
-  [/\bvestu[áa]rio|\brroupa|\bmoda\b/, 'sub:Tecidos. Vestuário e Calçados'],
+  [/\bvestu[áa]rio|\broupa|\bmoda\b|\bcal[çc]ado/, 'sub:Tecidos. Vestuário e Calçados'],
   [/\bfarm[áa]cia|\bdrogaria/, 'seg:Medicamentos e Outros Produtos'],
 ];
-// indicadores reconhecidos na frase (usa as chaves de CMP_INDS)
+// Indicadores reconhecidos na frase (usa as chaves de CMP_INDS).
+//
+// A ORDEM NÃO RESOLVE SOZINHA a ambiguidade: "crescimento da receita" contém
+// "receita", e "ev ebitda" contém "ev". Antes, /receita/ vencia e "crescimento da
+// receita acima de 10" virava "Receita 12m > R$ 10 mi"; e "ev ebitda abaixo de 8"
+// virava "Valor da firma < R$ 8 mi". O desempate agora é por SOBREPOSIÇÃO no
+// próprio texto (ver buscaInterpreta): quando o trecho casado por um indicador
+// está contido no de outro, vale o mais longo. As regras abaixo ficam mais
+// específicas primeiro só para deixar a intenção óbvia na leitura.
 const BUSCA_INDS = [
+  [/crescimento (da |de )?receita|cresc\w*\.? ?(da )?rec\w*|cresc\w* 5/, 'cresc5a'],
+  [/ev\s*\/?\s*ebitda|ev sobre ebitda|ev ebitda/, 'evebitda'],
+  [/margem ebitda/, 'mgE12'],
+  [/margem l[íi]quida/, 'mgL12'],
+  [/margem bruta/, 'mgB12'],
   [/\broic\b/, 'roic'],
   [/\broe\b|retorno sobre o patrim/, 'roe'],
-  [/ev\s*\/?\s*ebitda|ev sobre ebitda/, 'evebitda'],
+  [/\broa\b|retorno sobre (o )?ativo/, 'roa'],
   [/\bp\s*\/?\s*l\b|pre[çc]o\s*\/?\s*lucro/, 'pl'],
   [/\bp\s*\/?\s*vp\b|pre[çc]o\s*\/?\s*valor patrimonial/, 'pvp'],
   [/dividend\s*yield|\bdy\b|dividendo/, 'dy'],
-  [/margem ebitda/, 'mgE12'],
-  [/margem l[íi]quida/, 'mgL12'],
   [/d[íi]vida l[íi]quida\s*\/?\s*ebitda|alavancagem|endividamento/, 'dlEbitda'],
+  [/liquidez corrente/, 'liqCorr'],
+  [/cobertura de juros/, 'cobJuros'],
   [/valor de mercado|market\s*cap|mktcap/, 'mktCap'],
-  [/valor da firma|\bev\b(?!\s*\/)/, 'ev'],
+  [/valor da firma|\bev\b(?!\s*[\/ ]*ebitda)/, 'ev'],
   [/receita/, 'rev12'],
-  [/crescimento (da )?receita|cresc\w* 5/, 'cresc5a'],
 ];
+// Unidades que aparecem depois do número na frase. O modelo guarda tudo em R$
+// MILHÕES, então "valor de mercado acima de 50 bi" tem de virar 50000, não 50 —
+// antes a unidade era apagada junto com o número e o filtro saía mil vezes errado,
+// sem aviso: "acima de 50 bi" devolvia 237 das 354 empresas.
+const UNIDADES = [[/\btri(lh[õo]es?|lh[ãa]o)?\b/, 1e6], [/\bbi(lh[õo]es?|lh[ãa]o)?\b/, 1e3],
+                  [/\bmi(lh[õo]es?|lh[ãa]o)?\b/, 1], [/\bmil\b/, 1e-3]];
+// indicadores cujo valor está em R$ milhões (só nesses a unidade multiplica)
+const INDS_REAIS = new Set(['mktCap', 'ev', 'rev12', 'ebitda12', 'ni12', 'fco12', 'fcl12']);
 const semAcento = s => (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 
 // ---- "você quis dizer?": aproxima o termo digitado do vocabulário que existe ----
@@ -2219,14 +3414,23 @@ function achaEmpresaNaFrase(frase){
     for(const t of (c.tickers||[]))
       if(palavras.includes(t.t.toLowerCase())) return {cvm:c.cvm, nome:c.name, nota:99, via:'ticker'};
 
-  // 3) nome/razão social por prefixo de token
+  // 3) nome/razão social por prefixo de token.
+  //
+  // O prefixo INVERSO (a palavra digitada é prefixo do token do nome) existe para
+  // aceitar "petro" → PETROBRAS, mas com 4 letras ele transformava palavra
+  // funcional em empresa: "entre" casava ENTRETENIMENTO e a frase
+  // "compare os setores entre si" era interpretada como a empresa TIME FOR FUN,
+  // o que matava a comparação entre grupos e punha "Não consegui interpretar" na
+  // tela. Agora o prefixo inverso exige 6 letras e a palavra não pode ser
+  // funcional (GENERICAS vale nos dois sentidos).
   let melhor = null;
   for(const c of COS){
     for(const fonte of [c.name, c.fullName]){
       if(!fonte) continue;
       const toks = tokensNome(fonte);
       if(!toks.length) continue;
-      const casam = toks.filter(t => palavras.some(w => w.startsWith(t) || (t.startsWith(w) && w.length>=4)));
+      const casam = toks.filter(t => palavras.some(w =>
+        (!GENERICAS.has(w)) && (w.startsWith(t) || (t.startsWith(w) && w.length >= 6))));
       if(casam.length === toks.length && (toks.length >= 2 || toks[0].length >= 5)){
         const nota = toks.join('').length;
         if(!melhor || nota > melhor.nota) melhor = {cvm:c.cvm, nome:c.name, nota, via:'nome'};
@@ -2298,22 +3502,55 @@ function buscaInterpreta(txt){
   const s = semAcento(bruto).replace(/\s+/g,' ');
   const usado = [];                       // pedaços que conseguimos ler
   let resto = s;
-  const marca = re => { const m = resto.match(re); if(m){ usado.push(m[0]); resto = resto.replace(m[0],' '); } return m; };
+  // `marca` apagava só a PRIMEIRA alternativa casada da regex, então
+  // "papel e celulose com maior margem" reconhecia o subsetor por "papel" e
+  // depois acusava "celulose" como termo ignorado. Agora apaga todas.
+  const marca = re => {
+    const m = resto.match(re);
+    if(m){ usado.push(m[0]); resto = resto.replace(new RegExp(re.source, 'g' + (re.flags||'').replace('g','')), ' '); }
+    return m;
+  };
+  const campoDoNivel = p => p==='set' ? 'setor' : p==='sub' ? 'subsetor' : 'segmento';
 
   // 1) escopo (setor/subsetor/segmento) — apelido primeiro, depois nome literal
-  let escopoAchado = '';
+  let escopoAchado = '', escopoExtra = [];
   for(const [re, alvo] of APELIDOS){
-    if(re.test(s)){
-      const [pref, nome] = [alvo.slice(0,3), alvo.slice(4)];
-      const existe = COS.some(c => c[pref==='set'?'setor':pref==='sub'?'subsetor':'segmento'] === nome);
-      if(existe){ escopoAchado = alvo; marca(re); break; }
-    }
+    if(!re.test(s)) continue;
+    // um apelido pode cobrir vários grupos da B3 (ver APELIDOS): fica com todos
+    // os que existem na base, e o rótulo da tela cita a lista inteira
+    const alvos = (Array.isArray(alvo) ? alvo : [alvo]).filter(a =>
+      COS.some(c => c[campoDoNivel(a.slice(0,3))] === a.slice(4)));
+    if(!alvos.length) continue;
+    escopoAchado = alvos.join('+');     // escopo composto: ver escopoFiltra
+    escopoExtra = alvos.slice(1);
+    marca(re);
+    break;
   }
   if(!escopoAchado){
+    // Casamento com FRONTEIRA DE PALAVRA. Com `includes` puro, "imóveis" caía no
+    // segmento "Móveis" (3 empresas de mobiliário) e "quais outros setores"
+    // caía no setor "Outros" — escopo errado, silenciosamente. Em empate, vale
+    // o nome mais longo, que é o mais específico.
     const OPC = escopoOpcoes();
+    let hit = null;
+    // Nome de grupo que é palavra funcional em português não vira escopo por
+    // acidente: "quais OUTROS setores têm ROE alto" caía no setor "Outros"
+    // (8 holdings) e o ranking saía daquelas 8 empresas. Um nome desses só entra
+    // pelo seletor de escopo, onde a escolha é explícita.
+    const ESCOPO_AMBIGUO = new Set(['outros','outras','diversos','diversas','geral']);
     for(const [pref] of NIVEIS){
-      const hit = OPC[pref].find(([v]) => s.includes(semAcento(v)));
-      if(hit){ escopoAchado = pref+':'+hit[0]; usado.push(semAcento(hit[0])); resto = resto.replace(semAcento(hit[0]),' '); break; }
+      for(const [v] of OPC[pref]){
+        const alvo = semAcento(v);
+        if(!alvo || ESCOPO_AMBIGUO.has(alvo)) continue;
+        const re = new RegExp('(^|[^a-z0-9])' + alvo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '($|[^a-z0-9])');
+        if(re.test(s) && (!hit || alvo.length > hit.alvo.length)) hit = {pref, v, alvo};
+      }
+      if(hit) break;
+    }
+    if(hit){
+      escopoAchado = hit.pref+':'+hit.v;
+      usado.push(hit.alvo);
+      resto = resto.replace(new RegExp(hit.alvo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), ' ');
     }
   }
 
@@ -2323,33 +3560,78 @@ function buscaInterpreta(txt){
   // alavancagem capturar o "acima de 10" do ROIC.
   const achados = [];
   for(const [reInd, chave] of BUSCA_INDS){
-    const m = resto.match(reInd);
-    if(m) achados.push({chave, ini:m.index, fim:m.index + m[0].length, texto:m[0]});
+    // TODAS as ocorrências, não só a primeira: "ROE acima de 15 e ROE abaixo de 30"
+    // perdia o segundo limite e ainda acusava "roe" como termo não reconhecido.
+    const reG = new RegExp(reInd.source, 'g' + (reInd.flags||'').replace('g',''));
+    let m;
+    while((m = reG.exec(resto)) !== null){
+      achados.push({chave, ini:m.index, fim:m.index + m[0].length, texto:m[0]});
+      if(m.index === reG.lastIndex) reG.lastIndex++;   // regex que casa vazio
+    }
   }
-  achados.sort((a,b)=>a.ini-b.ini);
-  const num = '(-?\\d+(?:[.,]\\d+)?)';
+  // SOBREPOSIÇÃO: descarta o casamento contido em outro maior. É o que faz
+  // "crescimento da receita" ganhar de "receita" e "ev ebitda" ganhar de "ev",
+  // sem depender da ordem da lista.
+  const contido = (a, b) => a !== b && a.ini >= b.ini && a.fim <= b.fim &&
+                            (b.fim - b.ini) > (a.fim - a.ini);
+  const limpos = achados.filter(a => !achados.some(b => contido(a, b)));
+  limpos.sort((a,b)=>a.ini-b.ini);
+  achados.length = 0;
+  achados.push(...limpos);
+  // número seguido de unidade opcional (%, x, bi, mi, mil…). Sem aceitar a unidade
+  // aqui, "margem EBITDA entre 20% e 30%" não casava o intervalo e a consulta virava
+  // um ranking de TODAS as empresas, sem nenhum aviso.
+  const num = '(-?\\d+(?:[.,]\\d+)?)\\s*((?:%|x|tri|bi|mi|mil)(?:lh[õoãa][eo]?s?)?)?';
   const OPS = [
     ['bt', new RegExp('entre\\s*'+num+'\\s*(?:e|a|-)\\s*'+num)],
     ['gt', new RegExp('(?:acima de|maior que|maior do que|superior a|mais de|>=?|acima)\\s*'+num)],
     ['lt', new RegExp('(?:abaixo de|menor que|menor do que|inferior a|menos de|<=?|abaixo)\\s*'+num)],
   ];
+  // converte o número lido para a unidade interna do indicador (R$ milhões)
+  const escala = (chave, un) => {
+    if(!un || !INDS_REAIS.has(chave)) return 1;
+    const u = String(un).toLowerCase();
+    for(const [re, mult] of UNIDADES) if(re.test(u)) return mult;
+    return 1;
+  };
   const filtros = [];
   achados.forEach((a, ix) => {
     const limite = ix+1 < achados.length ? achados[ix+1].ini : Math.min(resto.length, a.fim + 60);
     const trecho = resto.slice(a.fim, limite);
-    let melhor = null;
+    let melhor = null; const achadosOp = {};
     for(const [op, re] of OPS){
       const m = trecho.match(re);
       if(!m) continue;
-      if(!melhor || m.index < melhor.pos)
-        melhor = {op, pos:m.index, v1:+m[1].replace(',','.'), v2: m[2]!=null ? +m[2].replace(',','.') : null};
+      const cand = {op, pos:m.index,
+                    v1: +m[1].replace(',','.') * escala(a.chave, m[2]),
+                    v2: m[3]!=null ? +m[3].replace(',','.') * escala(a.chave, m[4]) : null,
+                    un: m[2]||m[4]||''};
+      achadosOp[op] = cand;
+      if(!melhor || m.index < melhor.pos) melhor = cand;
+    }
+    // "ROIC acima de 15 e abaixo de 30": o segundo limite não tem indicador antes
+    // dele, então ficava fora do filtro sem nenhum aviso. Quando os dois lados
+    // aparecem na MESMA janela do indicador, vale o intervalo.
+    if(achadosOp.gt && achadosOp.lt && !achadosOp.bt){
+      melhor = {op:'bt', pos:Math.min(achadosOp.gt.pos, achadosOp.lt.pos),
+                v1: Math.min(achadosOp.gt.v1, achadosOp.lt.v1),
+                v2: Math.max(achadosOp.gt.v1, achadosOp.lt.v1), un:''};
     }
     if(melhor){
       const f = {ind:a.chave, op:melhor.op, v1:melhor.v1, v2:melhor.v2};
       if(f.op==='bt' && f.v2==null) f.op = 'gt';
-      filtros.push(f);
+      // dois limites do MESMO indicador (gt + lt) viram um intervalo em vez de o
+      // segundo ser descartado em silêncio
+      const irmao = filtros.find(x => x.ind === f.ind && x.op !== 'bt' && f.op !== 'bt' && x.op !== f.op);
+      if(irmao){
+        const lo = (irmao.op === 'gt' ? irmao.v1 : f.v1), hi = (irmao.op === 'gt' ? f.v1 : irmao.v1);
+        irmao.op = 'bt'; irmao.v1 = Math.min(lo, hi); irmao.v2 = Math.max(lo, hi);
+      } else if(!filtros.some(x => x.ind === f.ind && x.op === f.op && x.v1 === f.v1)){
+        filtros.push(f);
+      }
       usado.push(a.texto);
-    } else { a.semValor = true; usado.push(a.texto); }
+    } else if(!filtros.some(x => x.ind === a.chave)) { a.semValor = true; usado.push(a.texto); }
+    else { usado.push(a.texto); }
   });
   // remove do "resto" tudo que foi lido, para o aviso de não-entendido ser honesto
   for(const a of achados.slice().reverse()) resto = resto.slice(0, a.ini) + ' ' + resto.slice(a.fim);
@@ -2448,8 +3730,33 @@ function buscaInterpreta(txt){
 
   // 4) intenção: com valor → screener (filtra); sem valor → ranking (ordena)
   // "bancos com maior ROIC" não tem número: é pedido de ranking, não de filtro.
-  const ehMenor = /\b(menor(es)?|pior(es)?|mais baix|menos)\b/.test(s);
-  const ehMaior = /\b(maior(es)?|melhor(es)?|mais alt|top\s*\d*|ranking|rank)\b/.test(s);
+  const RE_MENOR = /\b(menor(es)?|pior(es)?|mais baix|menos)\b/;
+  const RE_MAIOR = /\b(maior(es)?|melhor(es)?|mais alt|top\s*\d*|ranking|rank)\b/;
+  const ehMenor = RE_MENOR.test(s);
+  const ehMaior = RE_MAIOR.test(s);
+  // A direção tem de ser a da palavra MAIS PRÓXIMA do indicador escolhido. Antes,
+  // "menores" vencia sempre que aparecia na frase: "maiores ROE do setor financeiro
+  // e menores P/L" desenhava o gráfico dos MENORES ROE — o oposto do pedido.
+  const ondeNaFrase = (re) => {
+    const o = []; const r = new RegExp(re.source, 'g' + (re.flags||'').replace('g','')); let m;
+    while((m = r.exec(s)) !== null){ o.push(m.index); if(m.index === r.lastIndex) r.lastIndex++; }
+    return o;
+  };
+  const posMenor = ondeNaFrase(RE_MENOR), posMaior = ondeNaFrase(RE_MAIOR);
+  const posDoInd = (chave) => {
+    const par = BUSCA_INDS.find(([, k]) => k === chave);
+    if(!par) return 0;
+    const m = s.match(par[0]);
+    return m ? m.index : 0;
+  };
+  const dirPerto = (chave) => {
+    if(!posMenor.length) return 'desc';
+    if(!posMaior.length) return 'asc';
+    const p = posDoInd(chave);
+    const dMenor = Math.min(...posMenor.map(x => Math.abs(x - p)));
+    const dMaior = Math.min(...posMaior.map(x => Math.abs(x - p)));
+    return dMenor < dMaior ? 'asc' : 'desc';
+  };
   const semValor = achados.find(a => a.semValor);
   let intencao = null, indRank = null, dir = 'desc';
   let nivel = null, setStat = null, setFiltros = [], avisoGrupo = '';
@@ -2472,7 +3779,7 @@ function buscaInterpreta(txt){
     nivel = nivelPedido;
     const fFin = filtros.find(f => !f.kpi);
     indRank = fFin ? fFin.ind : (achados[0] ? achados[0].chave : 'mktCap');
-    dir = ehMenor ? 'asc' : 'desc';
+    dir = dirPerto(indRank);
     setFiltros = filtros.filter(f => !f.kpi && typeof f.v1 === 'number');
     // "somar" pedido na frase vira agregado (razão das somas) quando o indicador
     // tem componentes na base, e soma simples quando é valor em R$
@@ -2489,13 +3796,13 @@ function buscaInterpreta(txt){
   else if(querGrupos && (!(empAchada && ['apelido','ticker','nome'].includes(empAchada.via)) || escopoAchado)){
     intencao = 'setores'; nivel = nivelPedido; indRank = 'mktCap';
     setStat = statPedido === 'avg' ? 'avg' : statPedido === 'med' ? 'med' : 'sum';
-    dir = ehMenor ? 'asc' : 'desc';
+    dir = dirPerto(indRank);
   }
   else if(filtros.length) intencao = 'scr';
-  else if(semValor){ intencao = 'rank'; indRank = semValor.chave; dir = ehMenor ? 'asc' : 'desc'; }
+  else if(semValor){ intencao = 'rank'; indRank = semValor.chave; dir = dirPerto(indRank); }
   else if((ehMaior || ehMenor) && escopoAchado){
     // "maiores empresas do varejo" → ranking por valor de mercado
-    intencao = 'rank'; indRank = 'mktCap'; dir = ehMenor ? 'asc' : 'desc';
+    intencao = 'rank'; indRank = 'mktCap'; dir = dirPerto(indRank);
   }
 
   const sobraLimpa = sobra.replace(/\b(maior(es)?|menor(es)?|melhor(es)?|pior(es)?|top|ranking|rank|alto|alta|baixo|baixa|quais|qual|quem|tem|tenha|possuem?)\b/g,' ').replace(/\s+/g,' ').trim();
@@ -2564,6 +3871,14 @@ function unidadeCanon(u){
   if(s.includes('gwh') || s.includes('mwh') || s.includes('mw')) return 'energia';
   if(s.includes('milh') || s.includes('mil ') || s.includes('unidades')) return 'quantidade';
   return s.slice(0,18);
+}
+// opsIndex() custa ~19 ms e era refeito a cada renderCmp — ou seja, a cada troca
+// de qualquer seletor da aba Comparar. OPD só muda quando loadExtras carrega, então
+// a memória invalida sozinha por identidade do objeto.
+let _opsIdx = null, _opsSrc = undefined;
+function opsIndexCache(){
+  if(_opsSrc !== OPD){ _opsSrc = OPD; _opsIdx = opsIndex(); }
+  return _opsIdx;
 }
 function opsIndex(){
   const idx = {};   // família -> [{cvm, empresa, setor, nomeOriginal, unidade, valores}]
@@ -2664,14 +3979,18 @@ function renderCmp(){
     s.onchange = () => { onch(s.value); lsSet('cmp_sel', cmpSel); renderCmp(); };
     return s;
   };
-  const OPIDX = opsIndex();
+  const OPIDX = opsIndexCache();
   // famílias com 2+ empresas primeiro (comparáveis); depois as demais
-  const opNomes = Object.keys(OPIDX).sort((a,b) => (OPIDX[b].length - OPIDX[a].length) || a.localeCompare(b,'pt-BR'));
+  // Conta EMPRESAS distintas, não linhas de indicador: uma empresa pode divulgar
+  // vários itens da mesma família, e o seletor dizia "Produção (50)" enquanto o
+  // gráfico desenhava 17 barras e o screener dizia "26 empresas" para a mesma coisa.
+  const opEmpresas = n => new Set((OPIDX[n]||[]).map(x=>x.cvm)).size;
+  const opNomes = Object.keys(OPIDX).sort((a,b) => (opEmpresas(b) - opEmpresas(a)) || a.localeCompare(b,'pt-BR'));
   if(cmpSel.modo==='hist')
     bar.append(mkSel(HIST_INDS.map(x=>[x[0],x[1]]), cmpSel.hind, v=>cmpSel.hind=v, 'Indicador'));
   else if(cmpSel.modo==='op'){
     if(OPD && !opNomes.some(n=>n===cmpSel.opind)) cmpSel.opind = opNomes[0] || '';
-    bar.append(mkSel(opNomes.length? opNomes.map(n=>[n, n+' ('+OPIDX[n].length+')']) : [['','(nenhuma empresa curada ainda)']],
+    bar.append(mkSel(opNomes.length? opNomes.map(n=>[n, n+' ('+opEmpresas(n)+' '+(opEmpresas(n)===1?'empresa':'empresas')+')']) : [['','(nenhuma empresa curada ainda)']],
       cmpSel.opind, v=>cmpSel.opind=v, 'Indicador operacional'));
   } else if(cmpSel.modo!=='scr' && cmpSel.modo!=='peer')
     bar.append(mkSel(CMP_INDS.map(x=>[x[0],x[1]]), cmpSel.ind, v=>cmpSel.ind=v, 'Indicador'));
@@ -2689,6 +4008,15 @@ function renderCmp(){
     }
     selEsc.append(g);
   }
+  // Escopo composto ('sub:A+sub:B') não casa com nenhuma <option> gerada por
+  // nível/valor, e o seletor ficava em branco enquanto o recorte estava aplicado.
+  // Uma opção sintética mostra o recorte real e deixa o usuário voltar dele.
+  if(escopoPartes(cmpSel.setor).length > 1){
+    const o = document.createElement('option');
+    o.value = escopoNorm(cmpSel.setor);
+    o.textContent = rotuloRecorte() + ' (recorte da busca)';
+    selEsc.insertBefore(o, selEsc.firstChild);
+  }
   selEsc.value = escopoNorm(cmpSel.setor);
   selEsc.onchange = () => {
     cmpSel.setor = selEsc.value;
@@ -2697,18 +4025,42 @@ function renderCmp(){
     lsSet('cmp_sel', cmpSel); renderCmp();
   };
   bar.append(selEsc);
-  bar.append(mkSel([['rank','Ranking de empresas'],['set','Setores entre si'],['emp','Empresa × setor'],
+  // porte é o segundo corte mais usado depois do setor — e o painel só tinha o setor
+  bar.append(mkSel(PORTES.map(p=>[p[0],p[1]]), cmpSel.porte||'', v=>cmpSel.porte=v, 'Porte'));
+  const bLink = el('button','btn','🔗 copiar link desta tela');
+  bLink.title = 'gera um endereço que abre exatamente esta comparação em outro computador';
+  bLink.onclick = () => copiaLinkDaTela(bLink);
+  bar.append(bLink);
+  const bApr = el('button','btn','⛶ apresentação');
+  bApr.title = 'fontes maiores e sem filtros na tela, para projetar (tecla P)';
+  bApr.onclick = () => modoApresentacao(!document.body.classList.contains('apres'));
+  bar.append(bApr);
+  bar.append(mkSel([['rank','Ranking de empresas'],['mapa','Mapa de calor'],['set','Setores entre si'],['emp','Empresa × setor'],
                     ['hist','Histórico (linhas)'],
                     ['op','KPIs operacionais'],['scr','Screener (filtros)'],['peer','Peer set (tabela)']],
                    cmpSel.modo, v=>cmpSel.modo=v, 'Modo'));
+  if(cmpSel.modo==='mapa'){
+    bar.append(mkSel(MAPA_CORES.map(m=>[m[0],m[1]]), cmpSel.mapaCor||'var', v=>cmpSel.mapaCor=v, 'Cor'));
+    bar.append(mkSel([['setor','Agrupar por setor'],['subsetor','por subsetor'],['segmento','por segmento']],
+                     cmpSel.mapaNivel||'setor', v=>cmpSel.mapaNivel=v, 'Agrupamento'));
+  }
   if(cmpSel.modo==='rank' || cmpSel.modo==='set')
     bar.append(mkSel([['desc','Maiores'],['asc','Menores']], cmpSel.dir, v=>cmpSel.dir=v, 'Direção'));
-  const [key,label,getter,fmt] = CMP_INDS.find(x=>x[0]===cmpSel.ind);
-  const escopo = escopoFiltra(COS, cmpSel.setor);
+  const parInd = CMP_INDS.find(x=>x[0]===cmpSel.ind) || CMP_INDS[0];
+  if(parInd[0] !== cmpSel.ind) cmpSel.ind = parInd[0];   // estado salvo com chave que não existe mais
+  const [key,label,getter,fmt] = parInd;
+  const escopo = porteFiltra(escopoFiltra(COS, cmpSel.setor), cmpSel.porte);
   if(cmpSel.modo==='hist'){
     const cands = escopo.filter(c=>c.q && c.q.length).sort((a,b)=>(a.name||'').localeCompare(b.name||'','pt-BR'));
-    const add = mkSel([['','+ adicionar empresa…'],...cands.filter(c=>!cmpSel.emps.includes(c.cvm)).map(c=>[c.cvm,c.name])],
-      '', v=>{ if(v && cmpSel.emps.length<4) cmpSel.emps.push(v); }, 'Adicionar empresa');
+    // No limite o push era descartado em silêncio: o seletor continuava listando
+    // 340 empresas e escolher qualquer uma não fazia nada.
+    const cheio = cmpSel.emps.length >= 4;
+    const add = mkSel(cheio
+        ? [['','limite de 4 empresas — remova uma para adicionar outra']]
+        : [['','+ adicionar empresa…'],...cands.filter(c=>!cmpSel.emps.includes(c.cvm)).map(c=>[c.cvm,c.name])],
+      '', v=>{ if(v && cmpSel.emps.length<4){ cmpSel.emps.push(v); lsSet('cmp_sel', cmpSel); renderCmp(); } },
+      'Adicionar empresa');
+    if(cheio) add.disabled = true;
     bar.append(add);
   }
   if(cmpSel.modo==='emp'){
@@ -2864,7 +4216,7 @@ function renderCmp(){
     const btnQ = el('button','btn','🔍 Buscar');
     btnQ.onclick = aplicaBusca;
     const btnLimpa = el('button','btn','limpar');
-    btnLimpa.onclick = () => { cmpSel.busca=''; cmpSel.buscaLida=null; cmpSel.filtros=[]; cmpSel.setor=''; lsSet('cmp_sel', cmpSel); renderCmp(); };
+    btnLimpa.onclick = () => { cmpSel.busca=''; cmpSel.buscaLida=null; cmpSel.filtros=[]; cmpSel.setFiltros=[]; cmpSel.setor=''; lsSet('cmp_sel', cmpSel); renderCmp(); };
     bq.append(inpQ, btnQ, btnLimpa);
     box.append(bq);
     // como a frase foi entendida (e o que ficou de fora)
@@ -2878,13 +4230,23 @@ function renderCmp(){
         const sinal = f.op==='gt' ? '>' : f.op==='lt' ? '<' : 'entre';
         partes.push(nome+' '+sinal+' '+(f.op==='bt' ? (f.v1+' e '+f.v2) : f.v1));
       }
-      const falhou = bl.falhou || (!partes.length && !cmpSel.filtros.length);
-      if(falhou){
+      const falhou = bl.falhou || (!partes.length && !cmpSel.filtros.length && !bl.parcial);
+      if(falhou || bl.parcial){
         // Busca não reconhecida: aviso em destaque + o que existe de parecido +
         // exemplos clicáveis. Não deixa a tela vazia nem executa busca parcial.
+        // Quando METADE foi entendida (o escopo), o texto diz isso e o escopo já
+        // está aplicado — antes o painel afirmava "não consegui interpretar" para
+        // uma consulta cujo setor havia sido reconhecido e usado.
         const av = el('div','notice'); av.style.margin = '0 0 10px';
-        av.append(el('b',null,'Não consegui interpretar '+(cmpSel.busca ? '"'+cmpSel.busca+'"' : 'a busca')+'. '),
-          document.createTextNode('Nada foi filtrado — corrija a frase ou use os seletores abaixo.'));
+        if(bl.parcial && bl.escopo){
+          av.append(el('b',null,'Entendi só o recorte: '+escopoRotulo(bl.escopo)+'. '),
+            document.createTextNode('Falta dizer o indicador (ex.: "com maior ROE", "com P/L abaixo de 10"). '
+              + 'O recorte já está aplicado abaixo'
+              + ((bl.naoEntendi||[]).length ? ' · não reconheci: '+bl.naoEntendi.join(', ') : '')+'.'));
+        } else {
+          av.append(el('b',null,'Não consegui interpretar '+(cmpSel.busca ? '"'+cmpSel.busca+'"' : 'a busca')+'. '),
+            document.createTextNode('Nada foi filtrado — corrija a frase ou use os seletores abaixo.'));
+        }
         box.append(av);
 
         const sug = sugereTermos(bl.naoEntendi && bl.naoEntendi.length ? bl.naoEntendi : String(cmpSel.busca||'').split(/\s+/), 8);
@@ -2996,7 +4358,7 @@ function renderCmp(){
     resumo.style.marginTop = '12px';
     resumo.textContent = ativos.length
       ? res.length + ' empresa' + (res.length===1?'':'s') + (res.length===1?' passa ':' passam ') + (ativos.length===1?'no ':'nos ') + ativos.length + ' filtro' + (ativos.length===1?'':'s')
-        + (escopoNorm(cmpSel.setor) ? ' · ' + escopoRotulo(cmpSel.setor) : '') + ' (de ' + escopo.length + ' no escopo)'
+        + (escopoNorm(cmpSel.setor) ? ' · ' + rotuloRecorte() : '') + ' (de ' + escopo.length + ' no escopo)'
       : 'Adicione um filtro e preencha o valor para ver o resultado.';
     box.append(resumo);
 
@@ -3017,12 +4379,21 @@ function renderCmp(){
           return v>=lo && v<=hi;
         });
         const vals = escopo.map(c=>valorDe(f,c)).filter(v=>v!=null && isFinite(v)).sort((a,b)=>f.op==='lt'? a-b : b-a);
-        const sugerido = vals.length>=3 ? vals[2] : (vals.length? vals[vals.length-1] : null);
+        // O filtro é ESTRITO (v > limite), então o limite que deixa 3 empresas passando
+  // é o 4º melhor valor, não o 3º: com vals[2] a tela prometia "traria 3" e trazia 2.
+  const sugerido = vals.length>=4 ? vals[3] : (vals.length? vals[vals.length-1] : null);
+  const sugeridoN = vals.length>=4 ? 3 : Math.max(0, vals.length-1);
         const sinal = f.op==='gt' ? '>' : f.op==='lt' ? '<' : 'entre';
         const fm = fmtDe(f);
+        // 'nenhuma empresa passa' e 'nenhuma empresa TEM este dado' são coisas
+        // diferentes, e a tabela dizia 0 nos dois casos. Indicador recém-adicionado
+        // (ou que só existe para parte da base) precisa dizer que falta o dado.
+        const semDado = vals.length === 0;
         return [rotuloDe(f) + ' ' + sinal + ' ' + (f.op==='bt' ? (f.v1+'–'+f.v2) : f.v1),
-                passaSo.length + (f.kpi ? ' (de ' + new Set((OPIDX[f.ind]||[]).map(x=>x.cvm)).size + ' que divulgam)' : ''),
-                sugerido==null ? '—' : (f.op==='bt' ? '—' : (sinal+' '+fm(sugerido)+' traria 3'))];
+                semDado ? 'nenhuma empresa do escopo tem este dado'
+                        : passaSo.length + (f.kpi ? ' (de ' + new Set((OPIDX[f.ind]||[]).map(x=>x.cvm)).size + ' que divulgam)' : ''),
+                semDado ? 'o indicador ainda não está na base publicada'
+                        : (sugerido==null ? '—' : (f.op==='bt' ? '—' : (sinal+' '+fm(sugerido)+' traria '+sugeridoN)))];
       });
       box.append(tabelaValores(['Filtro','Empresas que passam só neste','Para ter resultado'], linhas));
       const solto = el('div'); solto.style.cssText='display:flex;gap:8px;margin:8px 0 0;flex-wrap:wrap';
@@ -3065,7 +4436,9 @@ function renderCmp(){
       tools.append(bCopy, bPeer);
       box.append(tools);
       if(res.length > PEER_MAX)
-        box.append(el('div','dim','O peer set leva as '+PEER_MAX+' primeiras (ordenado por '+(cols[0]||CMP_INDS[0])[1]+').'));
+        // rotuloCol e não cols[0][1]: cols guarda objetos {kpi, ind}, então indexar
+        // por [1] escrevia "ordenado por undefined" na tela
+        box.append(el('div','dim','O peer set leva as '+PEER_MAX+' primeiras (ordenado por '+rotuloCol(ordCol)+').'));
     }
     const kpisAtivos = ativos.filter(f=>f.kpi);
     let avisoKpi = '';
@@ -3090,8 +4463,14 @@ function renderCmp(){
     titulo.textContent = nome + ' — ' + cmpSel.emps.length + ' empresa' + (cmpSel.emps.length===1?'':'s');
     const cands = COS.slice().sort((a,b)=>(a.name||'').localeCompare(b.name||'','pt-BR'));
     const addBar = el('div','cmpbar'); addBar.style.margin='0 0 10px';
-    addBar.append(mkSel([['','+ adicionar empresa…'], ...cands.filter(c=>!cmpSel.emps.includes(c.cvm)).map(c=>[c.cvm,c.name])],
-      '', v => { if(v && cmpSel.emps.length<PEER_MAX) cmpSel.emps.push(v); }, 'Adicionar empresa ao peer set'));
+    const peerCheio = cmpSel.emps.length >= PEER_MAX;
+    const addPeer = mkSel(peerCheio
+        ? [['','limite de '+PEER_MAX+' empresas — remova uma para adicionar outra']]
+        : [['','+ adicionar empresa…'], ...cands.filter(c=>!cmpSel.emps.includes(c.cvm)).map(c=>[c.cvm,c.name])],
+      '', v => { if(v && cmpSel.emps.length<PEER_MAX){ cmpSel.emps.push(v); lsSet('cmp_sel', cmpSel); renderCmp(); } },
+      'Adicionar empresa ao peer set');
+    if(peerCheio) addPeer.disabled = true;
+    addBar.append(addPeer);
     box.append(addBar);
     // chips para remover
     if(cmpSel.emps.length){
@@ -3140,25 +4519,73 @@ function renderCmp(){
         }
         tb.append(tr);
       }
-      const trP = el('tr'); trP.style.background='var(--wash)';
-      trP.append(el('td',null,'mediana do peer set'));
-      for(const k of cols) trP.append(el('td',null, k[3](medPeer[k[0]])));
-      tb.append(trP);
-      const trS = el('tr'); trS.style.background='var(--wash)';
-      trS.append(el('td',null,'mediana do setor '+setorDom));
-      for(const k of cols) trS.append(el('td',null, k[3](medSet[k[0]])));
-      tb.append(trS);
+      // Estatística completa do conjunto, no formato que a comps table de um
+      // banco ou de uma consultoria usa: n com o dado, mínimo, 1º quartil,
+      // mediana, 3º quartil, máximo. Sem o "n", mediana de 3 empresas parece ter
+      // o mesmo peso que mediana de 30 — e não tem.
+      const vetor = {};
+      for(const k of cols) vetor[k[0]] = membros.map(c => k[2](c)).filter(v => v != null && isFinite(v));
+      const estatLinhas = [
+        ['empresas com o dado', k => String(vetor[k[0]].length), true],
+        ['mínimo',   k => k[3](vetor[k[0]].length ? Math.min(...vetor[k[0]]) : null)],
+        ['1º quartil', k => k[3](quantil(vetor[k[0]], 0.25))],
+        ['mediana do peer set', k => k[3](medPeer[k[0]])],
+        ['3º quartil', k => k[3](quantil(vetor[k[0]], 0.75))],
+        ['máximo',   k => k[3](vetor[k[0]].length ? Math.max(...vetor[k[0]]) : null)],
+        ['mediana do setor '+setorDom, k => k[3](medSet[k[0]])],
+      ];
+      for(const [rot, fn] of estatLinhas){
+        const tr = el('tr'); tr.style.background='var(--wash)';
+        const td0 = el('td',null,rot); td0.style.fontWeight = '600';
+        tr.append(td0);
+        for(const k of cols) tr.append(el('td',null, fn(k)));
+        tb.append(tr);
+      }
       t.append(tb); w.append(t); box.append(w);
+      // Percentil de cada empresa dentro do PRÓPRIO SETOR (não do peer set): é a
+      // pergunta "esta empresa é cara ou barata para o setor dela", que o peer
+      // set escolhido a dedo não responde sozinho.
+      const wp = el('div','qtblwrap'); wp.style.marginTop='10px';
+      const tp = el('table','qtbl');
+      const hp = el('tr'); hp.append(el('th',null,'Percentil no setor'));
+      for(const k of cols) hp.append(el('th',null,k[1]));
+      const thp = el('thead'); thp.append(hp); tp.append(thp);
+      const tbp = el('tbody');
+      let algumPerc = false;
+      for(const c of membros){
+        const tr = el('tr'); tr.style.cursor='pointer'; tr.onclick = () => openDetail(c.cvm);
+        tr.append(el('td',null,c.name));
+        for(const k of cols){
+          const universo = COS.filter(x => x.setor === c.setor).map(k[2]);
+          const p = percentilDe(k[2](c), universo);
+          if(p != null) algumPerc = true;
+          const td = el('td',null, p == null ? '—' : 'p'+p);
+          if(p != null){
+            td.title = c.name+' está acima de '+p+'% das empresas do setor '+c.setor
+              +' neste indicador ('+universo.filter(v=>v!=null&&isFinite(v)).length+' com o dado)';
+            if(p >= 75) td.style.fontWeight='600';
+            if(p <= 25) td.className='dim';
+          }
+          tr.append(td);
+        }
+        tbp.append(tr);
+      }
+      tp.append(tbp); wp.append(tp);
+      if(algumPerc){
+        box.append(el('div','ct','Posição no setor (percentil)'));
+        box.append(wp);
+      }
       const linhas = [
         ...membros.map(c => [c.name, ...cols.map(k=>k[2](c))]),
-        ['mediana do peer set', ...cols.map(k=>medPeer[k[0]])],
-        ['mediana do setor '+setorDom, ...cols.map(k=>medSet[k[0]])],
+        ...estatLinhas.map(([rot, fn]) => [rot, ...cols.map(k => {
+          const v = fn(k); return typeof v === 'string' ? v : v;
+        })]),
       ];
       const bCopy2 = el('button','btn','⧉ copiar tabela (Excel)');
       bCopy2.onclick = () => copiaTSV(headers, linhas, bCopy2);
       const tb2 = el('div'); tb2.style.cssText='display:flex;gap:8px;margin:8px 0 0;flex-wrap:wrap';
       tb2.append(bCopy2); card.append(tb2);
-      noteEl2.textContent = 'Negrito = acima da mediana do próprio peer set. A mediana setorial usa o setor com mais empresas no conjunto ('
+      noteEl2.textContent = 'Negrito = acima da mediana do próprio peer set. Quartis e mínimo/máximo são calculados só sobre as empresas do conjunto que TÊM o indicador (a linha "empresas com o dado" diz quantas são). O percentil compara a empresa com todas as listadas do SETOR dela, não com o peer set. A mediana setorial usa o setor com mais empresas no conjunto ('
         + setorDom + ', ' + peersSetor.length + ' empresas listadas). Clique numa linha para abrir a empresa. '
         + 'Salve o conjunto e copie o link para abrir a mesma comparação em outro computador.';
     }
@@ -3212,7 +4639,11 @@ function renderCmp(){
         + 'Fonte: releases das próprias empresas, curadoria verificada.';
     }
   } else if(cmpSel.modo==='hist'){
-    const [hk, hlabel, hfmt] = HIST_INDS.find(x=>x[0]===cmpSel.hind);
+    // mesmo cuidado do CMP_INDS: desestruturar find() sem fallback derruba a view
+    // inteira quando a chave salva no navegador não existe mais na lista
+    const parHist = HIST_INDS.find(x=>x[0]===cmpSel.hind) || HIST_INDS[0];
+    if(parHist[0] !== cmpSel.hind) cmpSel.hind = parHist[0];
+    const [hk, hlabel, hfmt] = parHist;
     titulo.textContent = 'Histórico — '+hlabel;
     // chips das empresas escolhidas
     const chips = el('div','badges'); chips.style.marginBottom = '8px';
@@ -3232,7 +4663,13 @@ function renderCmp(){
         const s = c2 && indSeries(c2, hk);
         return {label: c2? c2.name : cv, rows: (s && s.rows) || []};
       });
-      multiLineChart(box, series, hfmt);
+      // a paleta tem 4 cores (SERIE_CORES): acima disso duas empresas ficavam com
+      // a MESMA cor e o gráfico deixava de ser legível. O modo "KPIs operacionais"
+      // já cortava em 4; aqui não cortava.
+      const series4 = series.slice(0,4);
+      multiLineChart(box, series4, hfmt);
+      if(series.length > 4)
+        box.append(el('div','dim','Mostrando as 4 primeiras de '+series.length+' empresas — o gráfico tem 4 cores. Remova alguma para trocar.'));
       const perAll = [...new Set(series.flatMap(s=>s.rows.filter(r=>r.v!=null).map(r=>r.p)))].sort();
       const linhas = perAll.map(p => [p, ...series.map(s => { const r = s.rows.find(x=>x.p===p); return r? r.v : null; })]);
       card.append(chartTools(() => box.querySelector('svg'),
@@ -3263,7 +4700,10 @@ function renderCmp(){
             hfmt(e.fim.v),
             hfmt(+e.media.toFixed(2)),
             ...(podeCagr ? [e.cagr==null? '—' : fmtPct(+e.cagr.toFixed(1))] : []),
-            e.varTotal==null? '—' : fmtPct(+e.varTotal.toFixed(1)),
+            // base negativa não gera percentual (inverteria o sinal): mostra a
+            // variação absoluta, que é a informação honesta nesse caso
+            e.varTotal!=null ? fmtPct(+e.varTotal.toFixed(1))
+              : (e.varAbs!=null ? hfmt(+e.varAbs.toFixed(2))+' (absoluta)' : '—'),
             hfmt(e.min), hfmt(e.max)];
         });
         if(medianaSetor)
@@ -3291,7 +4731,7 @@ function renderCmp(){
     if(!niv){
       // escopo já está no nível mais fino: não há grupo abaixo para comparar
       titulo.textContent = 'Setores entre si — '+label;
-      box.append(el('div','notice','⚠ O filtro está em '+escopoRotulo(cmpSel.setor)+', o nível mais fino da classificação da B3 — '
+      box.append(el('div','notice','⚠ O filtro está em '+rotuloRecorte()+', o nível mais fino da classificação da B3 — '
         + 'não existe grupo abaixo dele para comparar. Suba o filtro para subsetor ou setor (ou limpe-o) para comparar grupos entre si.'));
       const wr = el('div'); wr.style.cssText = 'display:flex;gap:8px;margin:10px 0 0;flex-wrap:wrap';
       const b1 = el('button','btn','ver o ranking das empresas deste segmento');
@@ -3338,10 +4778,10 @@ function renderCmp(){
       }
       vis.sort((a,b) => cmpSel.dir==='asc' ? setValor(a.e,st)-setValor(b.e,st) : setValor(b.e,st)-setValor(a.e,st));
       titulo.textContent = (cmpSel.dir==='asc'?'Menores':'Maiores')+' — '+label+' · '+setStatRotulo(st)+' por '+nivelNome(niv)
-        + (escopoNorm(cmpSel.setor) ? ' · dentro de '+escopoRotulo(cmpSel.setor) : '');
+        + (escopoNorm(cmpSel.setor) ? ' · dentro de '+rotuloRecorte() : '');
       // desceu de nível sozinho porque o pedido daria um grupo só
       if(niv !== nivPedido)
-        box.append(el('div','note','Você pediu '+nivelNome(nivPedido)+', mas o filtro já está em '+escopoRotulo(cmpSel.setor)
+        box.append(el('div','note','Você pediu '+nivelNome(nivPedido)+', mas o filtro já está em '+rotuloRecorte()
           +' — agrupei por '+nivelNome(niv)+', o nível abaixo, que é o que divide esse conjunto em partes comparáveis.'));
       if(fls.length){
         const chip = el('div'); chip.style.cssText = 'display:flex;gap:8px;align-items:center;margin:0 0 8px;flex-wrap:wrap';
@@ -3497,17 +4937,23 @@ function renderCmp(){
         + 'Fontes: CVM (12 meses acumulados) para margens, retornos e alavancagem; Fundamentus (último fechamento) para P/L, P/VP, DY e EV/EBITDA.';
     }
 
+  } else if(cmpSel.modo==='mapa'){
+    const metR = (MAPA_CORES.find(m=>m[0]===(cmpSel.mapaCor||'var')) || MAPA_CORES[0])[1];
+    titulo.textContent = 'Mapa de calor — ' + metR + ' · ' + rotuloRecorte();
+    renderMapa(box);
+    card.append(chartTools(() => box.querySelector('svg'), () => null, 'Mapa de calor ' + metR));
+
   } else if(cmpSel.modo==='rank'){
     const avIg = avisoIgnorados('Este ranking');
     if(avIg) card.insertBefore(avIg, box);
     let rows = escopo.map(c=>({label:c.name, v:getter(c), cvm:c.cvm})).filter(r=>r.v!=null && isFinite(r.v));
     rows.sort((a,b)=>cmpSel.dir==='asc'? a.v-b.v : b.v-a.v);
-    titulo.textContent = (cmpSel.dir==='asc'?'Menores':'Maiores')+' — '+label+' · '+escopoRotulo(cmpSel.setor);
+    titulo.textContent = (cmpSel.dir==='asc'?'Menores':'Maiores')+' — '+label+' · '+rotuloRecorte();
     const mostra20 = rows.slice(0,20);
     hbarChart(box, mostra20, fmt, cvm=>openDetail(cvm));
     card.append(chartTools(() => box.querySelector('svg'),
       () => ({headers: ['Empresa', label], linhas: rows.map(r=>[r.label, r.v])}),
-      () => 'Ranking '+label+(escopoNorm(cmpSel.setor)?' - '+escopoRotulo(cmpSel.setor):'')));
+      () => 'Ranking '+label+(escopoNorm(cmpSel.setor)?' - '+rotuloRecorte():'')));
     // Quando o escopo é de bancos/seguradoras e o indicador depende de EBITDA ou
     // capital investido, muita empresa fica de fora — explica o porquê em vez de
     // deixar o ranking curto sem motivo aparente.
@@ -3529,7 +4975,7 @@ function renderCmp(){
     // Eletrodomésticos), os pares são desse segmento — não do setor inteiro.
     const usaEscopo = !!escopoNorm(cmpSel.setor);
     const peers = usaEscopo ? escopo : COS.filter(c=>c.setor===emp.setor);
-    const grupo = usaEscopo ? escopoRotulo(cmpSel.setor) : ('setor '+emp.setor);
+    const grupo = usaEscopo ? rotuloRecorte() : ('setor '+emp.setor);
     let rows = peers.map(c=>({label:c.name, v:getter(c), cvm:c.cvm, hl:c.cvm===emp.cvm})).filter(r=>r.v!=null && isFinite(r.v));
     rows.sort((a,b)=>b.v-a.v);
     const pos = rows.findIndex(r=>r.hl)+1;
@@ -3575,7 +5021,7 @@ function renderETF(){
     m.append(el('h3','sect', cat+' ('+arr.length+')'));
     const w = el('div','qtblwrap'); const t = el('table','qtbl');
     const hd = el('tr');
-    for(const h of ['Ticker','Nome','Cotação','Var. dia','Abertura','Mín · Máx do dia','Negócios','Atualizado','']) hd.append(el('th',null,h));
+    for(const h of ['Ticker','Nome','Cotação','Var. dia','Abertura','Mín · Máx do dia','Quantidade','Atualizado','']) hd.append(el('th',null,h));
     const th = el('thead'); th.append(hd); t.append(th);
     const tb = el('tbody');
     for(const e of arr){
@@ -3612,7 +5058,7 @@ function renderETF(){
     lsSet('meus_etfs', mine); renderETF(); refreshB3();
   };
   m.append(add);
-  m.append(el('div','note','Cotações direto da API pública da B3 (a mesma do site de cotações da bolsa; defasagem ~15 min do pregão), atualizadas a cada 60 s com a página aberta. "Negócios" = contagem informada pela B3 na sessão. A lista padrão vem de data/watchlists.json no repositório; a lista "Meus ETFs" fica só neste navegador.'));
+  m.append(el('div','note','Cotações direto da API pública da B3 (a mesma do site de cotações da bolsa; defasagem ~15 min do pregão), atualizadas a cada 60 s com a página aberta. A coluna "Quantidade" é a quantidade total negociada que a B3 informa na sessão (campo ttlQty), não o número de negócios. A lista padrão vem de data/watchlists.json no repositório; a lista "Meus ETFs" fica só neste navegador.'));
   m.append(el('div','foot','Insignia Partners · painel interno. Nada aqui é recomendação de investimento; verifique taxa, tributação e liquidez de cada fundo nos documentos oficiais do gestor e da B3.'));
 }
 
@@ -3684,7 +5130,7 @@ function renderEUA(){
     lsSet('meus_us', mm); renderEUA(); refreshFinnhub();
   };
   m.append(add);
-  m.append(el('div','note','Sem chave, os dados dos EUA vêm do robô (Yahoo Finance via GitHub Actions, a cada 15 min em pregão) — tickers fora da lista padrão só aparecem se adicionados em data/watchlists.json no repositório. Com uma chave gratuita do Finnhub (botão "⚙ Ao vivo"), preços de ações e ETFs atualizam em tempo real direto no navegador, inclusive os da lista "Meus tickers".'));
+  m.append(el('div','note','Sem chave, os dados dos EUA vêm do robô (Yahoo Finance via GitHub Actions, a cada 10 min em pregão) — tickers fora da lista padrão só aparecem se adicionados em data/watchlists.json no repositório. Com uma chave gratuita do Finnhub (botão "⚙ Ao vivo"), preços de ações e ETFs atualizam em tempo real direto no navegador, inclusive os da lista "Meus tickers".'));
   m.append(el('div','foot','Insignia Partners · painel interno. Preços em dólar. Uso informativo; não é recomendação de investimento.'));
 }
 
@@ -3704,7 +5150,7 @@ function openConfig(){
   const mk = (id, label, ph) => {
     const row = el('div','cfgrow'); row.append(el('label',null,label));
     const inp = el('input'); inp.type = 'text'; inp.id = id; inp.placeholder = ph;
-    inp.value = localStorage.getItem(id) || '';
+    inp.value = lsStr(id) || '';
     row.append(inp); ibox.append(row); return inp;
   };
   const f = mk('tok_finnhub','Chave Finnhub (EUA)','ex.: c0abc1234…');
@@ -3712,8 +5158,8 @@ function openConfig(){
   const save = el('button','btn','Salvar'); save.style.marginTop = '8px';
   save.onclick = () => {
     const fv = f.value.trim(), bv = b.value.trim();
-    if(fv) localStorage.setItem('tok_finnhub', fv); else localStorage.removeItem('tok_finnhub');
-    if(bv) localStorage.setItem('tok_brapi', bv); else localStorage.removeItem('tok_brapi');
+    lsStrSet('tok_finnhub', fv);
+    lsStrSet('tok_brapi', bv);
     if(!fv){ for(const k of Object.keys(LIVEUS)) delete LIVEUS[k]; FINN.ok=false; } // sem chave, some o "tempo real"
     closeInfo(); refreshFinnhub(); refreshB3();
     if(document.body.dataset.view==='eua') renderEUA();
@@ -3863,7 +5309,8 @@ function renderMacro(){
       +'Enquanto isso não mudar, este bloco fica parado nessa data — as notícias por empresa e as manchetes por veículo continuam atualizando a cada 2 horas.'));
   for(const n of (MACRO.reddit&&MACRO.reddit.news)||[]){
     const it=el('div','newsit');
-    const a=el('a',null,n.t); a.href=n.u; a.target='_blank'; a.rel='noopener'; it.append(a);
+    const hu=safeU(n.u); if(!hu) continue;   // link de fonte externa: só http/https
+    const a=el('a',null,n.t); a.href=hu; a.target='_blank'; a.rel='noopener'; it.append(a);
     const meta=el('div','newsmeta');
     if(n.nc != null) meta.append(el('span','ncchip','💬 '+n.nc+' coment.'));
     meta.append(el('span',null,(n.dom||'').replace('www.','')+' · r/'+n.sub));
@@ -3900,7 +5347,8 @@ function renderMacro(){
     dc.append(el('div','note','⚠ Mesma limitação do bloco acima: este conteúdo está parado em '+redditMaisNovoTxt()+'.'));
   for(const n of (MACRO.reddit&&MACRO.reddit.disc)||[]){
     const it=el('div','newsit');
-    const a=el('a',null,n.t); a.href=n.u; a.target='_blank'; a.rel='noopener'; it.append(a);
+    const hu=safeU(n.u); if(!hu) continue;   // link de fonte externa: só http/https
+    const a=el('a',null,n.t); a.href=hu; a.target='_blank'; a.rel='noopener'; it.append(a);
     const meta=el('div','newsmeta'); if(n.nc != null) meta.append(el('span','ncchip','💬 '+n.nc));
     meta.append(el('span',null,'r/'+n.sub)); it.append(meta); dc.append(it);
   }
@@ -3970,6 +5418,23 @@ function emPregao(){
     return d>=1 && d<=5 && h>=10.25 && h<=18.25;
   }catch(e){ return false; }
 }
+// emPregao() só sabe de dia da semana e hora — não sabe de FERIADO. Em feriado de
+// dia útil o robô corretamente não republica (o carimbo do próprio preço não
+// avança) e a faixa vermelha passava o dia inteiro acusando o robô de estar
+// parado. Em vez de manter uma lista de feriados que envelhece, perguntamos ao
+// dado: a API da B3 devolve a data da ÚLTIMA SESSÃO junto do Ibovespa. Se essa
+// data não é a de hoje, a bolsa não abriu hoje — e não há atraso a cobrar.
+function bolsaAbriuHoje(){
+  try{
+    const ib = LIVEIDX.IBOV || MACRO.ibov;      // "dd/mm/aaaa" no feed da B3
+    if(!ib || !ib.date) return null;            // sem informação: não afirma nada
+    const p = String(ib.date).split(/[^\d]/).filter(Boolean);
+    if(p.length < 3) return null;
+    const dd = p[0].padStart(2,'0'), mm = p[1].padStart(2,'0');
+    const aa = p[2].length === 2 ? '20'+p[2] : p[2];
+    return (dd+'/'+mm+'/'+aa) === hojeSP();
+  }catch(e){ return null; }
+}
 function idadeProblemas(){
   const out = [];
   const push = (nome, iso, limiteH, comoResolve) => {
@@ -3982,21 +5447,44 @@ function idadeProblemas(){
   if(CANDLES && CANDLES.updatedAt) push('gráficos de preço (candles)', CANDLES.updatedAt, 40);
   if(NEWSD && NEWSD.updatedAt) push('notícias por empresa', NEWSD.updatedAt, 5);
   if(MACRO.noticiasAoVivoEm) push('manchetes gerais', MACRO.noticiasAoVivoEm, 5);
-  // o arquivo do robô de cotações fica naturalmente parado fora do pregão
-  if(emPregao() && QSNAP && QSNAP.updatedAt) push('cotações do robô (lista completa da B3 + EUA)', QSNAP.updatedAt, 1.5);
+  // O arquivo do robô fica naturalmente parado fora do pregão E em feriado — e
+  // `bolsaAbriuHoje() === false` é a prova, vinda do próprio feed da B3.
+  if(emPregao() && bolsaAbriuHoje() !== false && QSNAP && QSNAP.updatedAt)
+    push('cotações do robô (lista completa da B3 + EUA)', QSNAP.updatedAt, 1.5);
   return out;
+}
+// "não consegui LER" é diferente de "o robô não publicou", e a faixa dizia sempre a
+// segunda coisa. Quando a leitura do arquivo falha no cliente (rede, proxy, cache),
+// acusar o robô é acusar o inocente — e esconde o problema real, que é local.
+function leituraFalhou(){
+  const f = [];
+  if(RELAY.erroEm && (!RELAY.at || RELAY.erroEm > RELAY.okEm)) f.push('cotações do robô');
+  if(NEWSD && NEWSD.erroEm && !NEWSD.updatedAt) f.push('notícias por empresa');
+  if(NEWSMAC === null && newsMacTentou) f.push('manchetes gerais');
+  if(CANDLES_ERR && !CANDLES) f.push('gráficos de preço');
+  return f;
 }
 function renderAvisoIdade(){
   const box = document.getElementById('idadeaviso'); if(!box) return;
   const p = idadeProblemas();
+  const falhas = leituraFalhou();
   box.textContent = '';
-  if(!p.length) return;
+  if(!p.length && !falhas.length) return;
   // abaixo de 3h o arredondamento inteiro fazia "2h (esperado até 2h)"
   const fmtH = h => h < 3 ? nbr2.format(+h.toFixed(1))+'h' : h < 48 ? Math.round(h)+'h' : Math.round(h/24)+' dias';
-  box.append(el('b',null,'⚠ Dado atrasado — '));
-  box.append(document.createTextNode(
-    p.map(x => x.nome+': '+fmtH(x.h)+' (esperado até '+fmtH(x.limiteH)+')').join(' · ')
-    + '. O robô desse conjunto não publicou no prazo; o que está na tela é a última coleta que deu certo, com a data acima.'));
+  if(falhas.length && !p.length){
+    box.append(el('b',null,'⚠ Não consegui ler o dado agora — '));
+    box.append(document.createTextNode(
+      falhas.join(' · ') + '. A falha é na leitura aqui no navegador (rede, proxy ou cache), '
+      + 'não na publicação: o robô pode ter publicado normalmente. O que está na tela é o que '
+      + 'veio no carregamento.'));
+  } else {
+    box.append(el('b',null,'⚠ Dado atrasado — '));
+    box.append(document.createTextNode(
+      p.map(x => x.nome+': '+fmtH(x.h)+' (esperado até '+fmtH(x.limiteH)+')').join(' · ')
+      + '. O que está na tela é a última coleta que deu certo, com a data acima.'
+      + (falhas.length ? ' Também não consegui ler agora: ' + falhas.join(', ') + '.' : '')));
+  }
   const b = el('button','btn','recarregar a página');
   b.onclick = () => location.reload();
   box.append(b);
@@ -4059,7 +5547,9 @@ function openInfo(){
    ['Uso','painel interno da Insignia Partners, informativo e educacional — não é recomendação de investimento nem oferta. Os números vêm de fontes públicas e podem conter erros ou defasagens; confira sempre os documentos oficiais (cada empresa tem link direto para a CVM).'],
    ['Como atualiza','três robôs independentes, para a falha de um não parar os outros. (1) Balanços, múltiplos e valor de mercado: 3 tentativas por dia, todos os dias — a primeira que conseguir rodar publica. (2) Notícias por empresa e manchetes gerais: a cada 2 horas, todos os dias, em arquivo próprio que a página relê sozinha (não depende de o painel ser regerado). (3) Cotações dos EUA e da lista completa da B3: ciclo de 10 minutos dentro do pregão. Um quarto robô (vigia) checa de hora em hora a idade do que está publicado e redispara quem passou do prazo; se ainda assim algo atrasar, aparece uma faixa vermelha no topo desta página com a idade real do dado. IMPORTANTE: o agendamento do GitHub é "melhor esforço" e já atrasou de 35 minutos a 11h39 nas medições de agosto/setembro de 2026 — por isso o que vale é a data de cada conjunto na tabela acima, não um horário prometido. Com a página aberta e internet: cotações da B3 (ações, ETFs, Ibovespa, IFIX) a cada 60 s direto na API pública da bolsa (defasagem ~15 min do pregão); câmbio e cripto a cada 60 s; Selic/CDI/IPCA e Focus a cada 5 min; notícias releem a cada 15 min. Chaves gratuitas opcionais (botão "⚙ Ao vivo") deixam os EUA em tempo real (Finnhub) e a B3 em lote (brapi). A classificação setorial da B3 se renova a cada ~45 dias.'],
    ['Defasagens naturais','resultados trimestrais seguem o calendário de entrega da CVM (até ~45 dias após o fim do trimestre); múltiplos e cotações de ações usam o último fechamento coletado; a agenda usa os calendários oficiais de 2026 (os de 2027 entram quando os bancos centrais publicarem).'],
-   ['Convenções de cálculo','demonstrações consolidadas quando disponíveis; lucro atribuído aos sócios da controladora; EBITDA = EBIT + depreciação/amortização (DFC); dívida bruta = empréstimos e financiamentos; ROIC = EBIT 12m × (1−34%) ÷ (PL + máx(dívida líquida, 0)), e caixa líquido não reduz o capital investido nesta aproximação — mas o ROIC exibido vem do Fundamentus quando existe, e essa conta entra só como reserva; ROE exige patrimônio líquido de pelo menos R$ 20 mi (abaixo disso o percentual não tem significado) e dív.líq./EBITDA exige EBITDA acima de 2% da receita; EBITDA, dívida e ROIC não se aplicam a bancos e seguradoras.'],
+   ['Convenções de cálculo','demonstrações consolidadas quando o consolidado tem número (arquivo consolidado inteiramente zerado é tratado como ausente e o painel usa o individual); lucro atribuído aos sócios da controladora; EBITDA = EBIT + depreciação/amortização (DFC); dívida bruta = empréstimos e financiamentos; ROIC = EBIT 12m × (1 − alíquota efetiva da própria empresa, limitada a 0–45%) ÷ (PL + máx(dívida líquida, 0)) — o ROIC exibido vem do Fundamentus quando existe e essa conta entra como reserva. Cada indicador tem a fórmula, a fonte e a regra de ausência no botão "?" ao lado do rótulo.'],
+   ['Quando o painel NÃO publica um número','é a regra central: denominador que não sustenta a conta não gera número, gera ausência explicada. ROE exige patrimônio líquido de pelo menos R$ 20 mi; dív.líq./EBITDA exige EBITDA positivo e de pelo menos 2% da receita; margens exigem receita positiva e de pelo menos R$ 10 mi; cobertura de juros exige despesa financeira de pelo menos R$ 1 mi. O acumulado de 12 meses só sai com quatro trimestres CONSECUTIVOS e nenhum deles marcado. Um trimestre é marcado quando a aritmética da própria entrega não fecha (acumulado do período ≠ acumulado anterior + trimestre) ou quando o T4, que é derivado por subtração entre a DFP e o ITR, sairia negativo ou acima de 1,5× os nove meses anteriores. ROE e ROIC também não saem quando o patrimônio líquido virou de negativo para positivo dentro da janela — nesse caso o resultado criou o patrimônio em vez de render sobre ele. EBITDA, dívida e ROIC não se aplicam a bancos e seguradoras.'],
+   ['O que dá para fazer aqui','buscar em português ("varejo com ROIC acima de 15", "compare os setores por margem EBITDA", "valor de mercado acima de 50 bi"); comparar em 8 modos, incluindo mapa de calor por valor de mercado e peer set com quartis e percentil dentro do setor; filtrar por setor, subsetor, segmento e porte; abrir a ficha de qualquer empresa com demonstrações conta a conta, checagens objetivas e campo de anotações; imprimir a ficha A4 (botão 🖨 no detalhe) para anexar a um deck; copiar qualquer tabela para o Excel e qualquer gráfico em PNG; copiar o link desta tela para abrir a mesma comparação em outro computador. Atalhos: / para buscar, 1 a 5 para as abas, P para o modo apresentação, ? para a lista.'],
    ['Saúde da automação','se as datas acima ficarem defasadas por vários dias, a automação precisa de atenção — o histórico de execuções fica em github.com/12533230/painel-b3/actions.'],
   ];
   for(const [b2,t2] of ps){ const p=el('p'); p.append(el('b',null,b2+' — '), document.createTextNode(t2)); ibox.append(p); }
@@ -4115,11 +5605,13 @@ function veiculoCard(titulo, lista){
   const card=el('div','card'); card.append(el('div','ct',titulo));
   for(const v of lista){
     const it=el('div','newsit');
-    const a=el('a',null,(v.n||v[0])+' ↗'); a.href=v.u||v[1]; a.target='_blank'; a.rel='noopener'; a.style.color='var(--link)';
+    const vu=safeU(v.u||v[1]); if(!vu) continue;   // link de fonte externa: só http/https
+    const a=el('a',null,(v.n||v[0])+' ↗'); a.href=vu; a.target='_blank'; a.rel='noopener'; a.style.color='var(--link)';
     it.append(a);
     for(const m of (v.itens||[]).slice(0,3)){
       const row=el('div'); row.style.margin='4px 0 0 10px';
-      const ma=el('a',null,m.t); ma.href=m.u; ma.target='_blank'; ma.rel='noopener'; ma.style.fontWeight='400'; ma.style.fontSize='12.5px';
+      const mu=safeU(m.u); if(!mu) continue;   // link de fonte externa: só http/https
+      const ma=el('a',null,m.t); ma.href=mu; ma.target='_blank'; ma.rel='noopener'; ma.style.fontWeight='400'; ma.style.fontSize='12.5px';
       row.append(ma);
       if(m.d) row.append(el('span','newsmeta',' '+m.d));
       it.append(row);
@@ -4162,6 +5654,9 @@ $('#nav-etf').onclick=()=>setView('etf');
 $('#nav-eua').onclick=()=>setView('eua');
 $('#nav-mac').onclick=()=>setView('macro');
 $('#cfgbtn').onclick=openConfig;
+// "?" no título do botão de tema é pouco: quem não sabe que existem atalhos não
+// vai procurar. O rodapé de cada visão passa a citá-los.
+
 
 // ---------- init ----------
 $('#srcline').textContent = 'CVM (ITR/DFP) · B3 (setores + cotações ao vivo) · Fundamentus · Yahoo (EUA) · atualizado '+DB.updatedAt.split('-').reverse().join('/');
@@ -4190,10 +5685,19 @@ function abrePeerDaURL(){
   cmpSel.modo = 'peer';
   lsSet('cmp_sel', cmpSel);
   setView('cmp');
+  // Limpa o hash depois de aplicar. Antes, o #peer era reimposto em TODO
+  // carregamento e sobrescrevia o que o usuário tivesse feito no Comparar desde
+  // então — o link continua funcionando para quem o recebe, que é o objetivo.
+  try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){}
   return true;
 }
-abrePeerDaURL();
-addEventListener('hashchange', abrePeerDaURL);
+// formato novo (#v=cmp&m=mapa&...) tem prioridade; o #peer= antigo continua valendo
+if(!aplicaHash()) abrePeerDaURL();
+if(lsGet('apres')) modoApresentacao(true);
+// Os dois formatos de link têm de responder à troca de endereço, não só ao
+// carregamento: colar um link na barra do navegador com a página já aberta é o
+// caso mais comum de uso compartilhado. O formato novo (#v=…) tem prioridade.
+addEventListener('hashchange', () => { if(!aplicaHash()) abrePeerDaURL(); });
 renderTicker();
 refreshLive();
 refreshRelay();
@@ -4252,6 +5756,17 @@ if(btnInstall) btnInstall.onclick = async () => {
 };
 addEventListener('appinstalled', () => { if(btnInstall) btnInstall.style.display = 'none'; });
 if(matchMedia('(display-mode: standalone)').matches && btnInstall) btnInstall.style.display = 'none';
+// O botão nascia escondido e só aparecia no evento beforeinstallprompt, que o
+// Safari (iPhone/iPad) nunca dispara — então a instrução de instalação manual que
+// existe no próprio handler ficava inalcançável justamente em quem mais precisa
+// dela. Agora, fora do modo aplicativo e sem o evento, o botão aparece de todo
+// jeito depois de um instante e leva às instruções por plataforma.
+setTimeout(() => {
+  if(!btnInstall || deferredPrompt) return;
+  if(matchMedia('(display-mode: standalone)').matches) return;
+  if(window.navigator.standalone === true) return;   // iOS já instalado
+  btnInstall.style.display = '';
+}, 1500);
 </script>
 </body>
 </html>

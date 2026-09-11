@@ -370,7 +370,7 @@ def main():
         sys.exit(1)
 
     snap = {"updatedAt": dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "janelaDias": MAX_IDADE_DIAS, "comNoticia": com_item,
+            "janelaDias": JANELA_DIAS, "maxIdadeDias": MAX_IDADE_DIAS, "comNoticia": com_item,
             "semResposta": sem_resposta, "n": n}
     OUT_FILE.write_text(json.dumps(snap, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     log(f"OK {OUT_FILE} ({OUT_FILE.stat().st_size/1024:.0f} KB)")

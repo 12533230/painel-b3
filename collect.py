@@ -64,7 +64,10 @@ def baixa_cvm():
     for f in CVM.glob("*"):
         if re.search(r"_(DRA|DMPL|parecer|DFC_MD)_", f.name):
             f.unlink(missing_ok=True)
-    return ok >= 4  # precisa ao menos dos principais
+    # Antes: ok >= 4, o que tolerava a falta de QUALQUER um dos cinco — inclusive
+    # o ITR do ano corrente, que é a fonte do trimestre mais recente, ou a DFP do
+    # ano anterior, que é a fonte do T4. O painel saía sem um ano inteiro e verde.
+    return ok == len(urls)
 
 # ---------------------------------------------------------------- 2. Fundamentus
 FUND_COLS = ["Papel","Cotação","P/L","P/VP","PSR","Div.Yield","P/Ativo","P/Cap.Giro","P/EBIT",
@@ -99,13 +102,19 @@ def j(url, timeout=30):
 
 def macro_core():
     core = (PREV.get("core") or {}).copy()
+    # quais blocos responderam NESTA execução — é o que decide se o carimbo avança
+    novos = set()
+    core.pop("stale", None)
+    core.pop("fontesOk", None)
     def sgs(sid):
         v = j(f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{sid}/dados/ultimos/1?formato=json")
         return v[0] if v else None
     for chave, sid in [("selic", 432), ("ipca12", 13522), ("cdi", 4389), ("dolarPtax", 1)]:
         try:
             v = sgs(sid)
-            if v: core[chave] = v
+            if v:
+                core[chave] = v
+                novos.add(chave)
         except Exception as e: log("SGS", sid, "falhou:", repr(e))
     try:
         dmin = (HOJE - dt.timedelta(days=12)).isoformat()
@@ -123,17 +132,28 @@ def macro_core():
         if rows:
             rows.sort(key=lambda r: (r["i"], str(r["ref"])))
             core["focus"] = rows
+            novos.add("focus")
     except Exception as e: log("Focus falhou:", repr(e))
     try:
         fx = j("https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,GBP-BRL,JPY-BRL,CNY-BRL,ARS-BRL,BTC-BRL")
         core["fx"] = {k: {"bid": float(v["bid"]), "pct": float(v["pctChange"]), "ts": v["create_date"], "name": v["name"]}
                       for k, v in fx.items()}
+        novos.add("fx")
     except Exception as e: log("AwesomeAPI falhou:", repr(e))
     try:
         core["cripto"] = j("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum"
                            "&vs_currencies=usd,brl&include_24hr_change=true")
+        novos.add("cripto")
     except Exception as e: log("CoinGecko falhou:", repr(e))
-    core["coletadoEm"] = dt.datetime.utcnow().isoformat() + "Z"
+    # O carimbo só avança quando ALGUMA fonte desta execução respondeu. Antes era
+    # gravado incondicionalmente: com BCB, AwesomeAPI e CoinGecko todos fora, a
+    # Selic e o dólar de ontem saíam com a data de hoje, e a tela dizia "ao vivo".
+    if novos:
+        core["coletadoEm"] = dt.datetime.utcnow().isoformat() + "Z"
+        core["fontesOk"] = sorted(novos)
+    else:
+        log("NENHUMA fonte macro respondeu — mantendo o carimbo anterior")
+        core["stale"] = True
     return core
 
 def ibov():

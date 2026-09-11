@@ -99,8 +99,15 @@ def main():
             pv = m.get("chartPreviousClose") or m.get("previousClose")
             if p is None or float(p) <= 0:  # 0.0 = papel suspenso; não sobrescrever valor bom anterior
                 continue
+            # O nome vem do Yahoo e às vezes volta como o próprio parâmetro da
+            # consulta ("APTI4.SA,0P0000D5O8,0"): 14 entradas do arquivo ficaram
+            # com isso gravado. Nome com vírgula ou ".SA" não é nome — nesse caso
+            # fica o ticker, que é sempre correto.
+            nome = str(m.get("shortName") or m.get("longName") or "").strip()
+            if not nome or "," in nome or nome.upper().endswith(".SA"):
+                nome = key
             q[key] = {
-                "n": (m.get("shortName") or m.get("longName") or key)[:60],
+                "n": nome[:60],
                 "p": round(float(p), 4),
                 "pv": round(float(pv), 4) if pv else None,
                 "cur": m.get("currency"),
