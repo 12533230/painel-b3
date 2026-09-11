@@ -1,0 +1,85 @@
+=== autoteste 2026-09-11T16:09:14Z · commit 56e5a039
+
+--- sintaxe (py_compile de todos os .py do repo)
+arquivos: build_html.py build_public.py collect.py collect_candles.py collect_fre.py collect_hist.py collect_indices.py collect_ipe.py collect_news.py collect_news_macro.py collect_precos.py collect_proventos.py collect_quotes.py process.py refresh_b3.py sonda_fontes.py 
+OK: todos os 16 arquivos compilam
+
+--- collect_news.py --amostra 10 (não grava arquivo)
+/home/runner/work/painel-b3/painel-b3/collect_news.py:265: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  hoje = dt.datetime.utcnow().date()
+[news] MODO AMOSTRA: 10 empresas, sem gravar arquivo
+[news] 0/10 (1 com notícia)
+[news] 8 das 10 empresas da AMOSTRA têm notícia na janela de 30d
+[news] --- 3TENTOS (25950): 2 item(ns)
+[news]       2026-09-10 | AgFeed             | S&P corta rating da 3tentos e classifica liquidez da companhia como “insuficient
+[news]       2026-09-10 | The AgriBiz        | S&P rebaixa rating da 3tentos e aponta liquidez insuficiente
+[news] --- B100 S.A. (27634): 1 item(ns)
+[news]       2026-08-14 | Brasil 61          | Ibovespa fecha o último pregão aos 166.934 pontos, após nona queda seguida
+[news] --- CASAN (16861): 0 item(ns)
+[news] --- DASA (19623): 5 item(ns)
+[news]       2026-09-09 | Visno Invest       | Dasa (DASA3) registra extensão de prazo para free float
+[news]       2026-09-09 | TradingView        | B3 prorroga prazo para enquadramento de free float da Dasa
+[news]       2026-08-26 | Gazeta da Semana   | Dasa conquista acreditação do College of American Pathologists
+[news]       2026-09-10 | Valor Econômico    | Agenda de empresas: Petrobras ajusta preço da gasolina após nova subvenção; Ligh
+[news]       2026-09-09 | Cyber Security Bra | De agentes de IA a ataques à infraestrutura crítica: Cyber Security Summit Brasi
+[news] --- FLEURY (21881): 6 item(ns)
+[news]       2026-09-10 | Money Times        | Virada operacional? XP vê melhora estrutural do Fleury (FLRY3) e revisa preço-al
+[news]       2026-09-09 | Valor Econômico    | Valor 1000: Aos 100 anos, Fleury assume primeira posição em serviços médicos
+[news]       2026-09-09 | Valor Econômico    | Valor 1000: Grupo Fleury é campeão do setor de Serviços Médicos em 2026
+[news]       2026-09-02 | financenews.com.br | Rápidas: B3, Petrobras, Vale, Azzas, Magazine Luiza, Brava, Eneva, Allos, Fleury
+[news]       2026-09-02 | financenews.com.br | Vale, Fleury e Allos pagam dividendo nesta quarta-feira, 2. Veja:
+[news]       2026-08-31 | InfoMoney          | Fleury (FLRY3) chega à sobrecompra; Brava (BRAV3) pode ensaiar recuperação?
+[news] --- INTELBRAS (25453): 4 item(ns)
+[news]       2026-09-09 | Valor Econômico    | Valor 1000: Intelbras é a campeã no setor Eletroeletrônica em 2026
+[news]       2026-09-09 | Valor Econômico    | Valor 1000: Intelbras, vencedora do setor de eletroeletrônica, integra segurança
+[news]       2026-08-25 | Seu Dinheiro       | A segurança futurista da Intelbras (INTB3), Casas Bahia (BHIA3), Braskem (BRKM5)
+[news]       2026-08-25 | Toro Blog          | Ações de empresas de tecnologia: está na hora de investir neste setor?
+[news] --- MATER DEI (25690): 6 item(ns)
+[news]       2026-09-11 | Guia do Investidor | Mater Dei (MATD3) ganha até 2027 para aumentar ações em circulação
+[news]       2026-09-10 | ativovirtual.com.b | Fato relevante Mater Dei (MATD3): B3 estende prazo do free float até 2027
+[news]       2026-09-09 | Visno Invest       | Mater Dei (MATD3) registra extensão de prazo para free float de 15%
+[news]       2026-09-09 | TradingView        | B3 aprova extensão do prazo para enquadramento de free float da Mater Dei
+[news]       2026-09-10 | Valor Econômico    | Agenda de empresas: Petrobras ajusta preço da gasolina após nova subvenção; Ligh
+[news]       2026-09-10 | InfoMoney          | Vale, Petrobras, Light, Motiva e mais ações para acompanhar nesta quinta
+[news] --- PADTEC (18414): 0 item(ns)
+[news] --- RIACHUELO (4669): 6 item(ns)
+[news]       2026-09-11 | Guia do Investidor | Riachuelo (RIAA3) ganha mais um ano da B3 para resolver problema do free float
+[news]       2026-09-10 | InfoMoney          | B3 dá mais um ano para Riachuelo (RIAA3) ajustar free float
+[news]       2026-09-10 | Investidor10       | Riachuelo (RIAA3) ganha prazo até 2027 para cumprir free float mínimo da B3
+[news]       2026-09-10 | Money Times        | Riachuelo (RIAA3) ganha mais um ano para se adequar ao free float mínimo exigido
+[news]       2026-09-10 | SpaceMoney         | B3 estende prazo da Riachuelo para free float até 2027
+[news]       2026-09-10 | SpaceMoney         | B3 prorroga prazo para Riachuelo ajustar free float
+[news] --- TELEBRAS (11258): 6 item(ns)
+[news]       2026-09-08 | itforum.com.br     | [IT Web TV] Telebrás beneficiará Empresas com Produção Nacional - IT Forum
+[news]       2026-08-27 | boca.com.br        | Telebras nega interesse em ativos da Oi após rumor de mercado
+[news]       2026-09-08 | itforum.com.br     | São Paulo terá PNBL até janeiro - IT Forum
+[news]       2026-09-08 | ADVFN              | B3 - Ibovespa: Nova carteira teórica para período de setembro a dezembro de 2026
+[news]       2026-08-27 | ADVFN              | Momento B3: Azevedo & Travassos, Oncoclínicas, Petrobras, Vale e os principais d
+[news]       2026-08-27 | ADVFN              | Fluxo estrangeiro melhora na B3, mas capital externo ainda registra saldo negati
+[news] MODO AMOSTRA: nada gravado
+
+--- collect_news_macro.py (grava data/news_macro.json)
+[collect] RSS ok: G1 Economia 3
+[collect] RSS ok: Valor Econômico 3
+[collect] RSS ok: InfoMoney 3
+[collect] RSS ok: Brazil Journal 3
+[collect] RSS ok: InvestNews 3
+[collect] RSS ok: NY Times Business 3
+[collect] RSS ok: The Economist 3
+[collect] RSS ok: The Guardian Business 3
+[collect] RSS ok: BBC Business 3
+[collect] Reddit ok: investimentos 25
+[collect] Reddit economia 1ª tentativa falhou: HTTPError('429 Client Error: Too Many Requests for url: https://www.reddit.com/r/economia/top/.rss?t=week') — espera 45 s
+[collect] Reddit ok: economia 50
+[collect] Reddit farialimabets 1ª tentativa falhou: HTTPError('429 Client Error: Too Many Requests for url: https://www.reddit.com/r/farialimabets/top/.rss?t=week') — espera 45 s
+[collect] Reddit ok: farialimabets 75
+[news-macro] manchetes=12 itens de veículos=27 reddit=3+8
+/home/runner/work/painel-b3/painel-b3/collect_news_macro.py:50: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  snap = {"updatedAt": dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+[news-macro] OK /home/runner/work/painel-b3/painel-b3/data/news_macro.json (10 KB)
+
+--- conteúdo de data/news_macro.json
+updatedAt 2026-09-11T16:11:26Z | manchetes 12 | reddit 3 | veiculos [('G1 Economia', 3), ('Valor Econômico', 3), ('InfoMoney', 3), ('Brazil Journal', 3), ('InvestNews', 3), ('Exame Invest', 0), ('NY Times Business', 3), ('The Economist', 3), ('The Guardian Business', 3), ('BBC Business', 3), ('Financial Times', 0), ('Bloomberg', 0), ('Reuters Business', 0), ('WSJ Finance', 0)]
+
+
+=== fim do autoteste · falhas: 0
