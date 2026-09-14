@@ -600,7 +600,16 @@ cap["CNPJ"] = cap["CNPJ_CIA"].map(norm_cnpj).str[:8].map(CNPJ8)
 cap = cap[cap["CNPJ"].notna()]
 for col in ["QT_ACAO_ORDIN_CAP_INTEGR", "QT_ACAO_PREF_CAP_INTEGR", "QT_ACAO_ORDIN_TESOURO", "QT_ACAO_PREF_TESOURO"]:
     cap[col] = pd.to_numeric(cap[col], errors="coerce").fillna(0)
-cap = cap.sort_values("DT_REFER").groupby("CNPJ").tail(1)
+# Este número é o divisor do valor de mercado: dele saem P/L, P/VP, EV/EBITDA e a
+# ordenação dos rankings. sort_values usa quicksort (instável), então, se um dia
+# aparecerem duas linhas com o MESMO DT_REFER (reapresentação), o tail(1) ficaria
+# com a que sobrasse por acaso — inclusive a VERSAO superada, e o resultado podia
+# mudar entre duas execuções com o mesmo arquivo. Medido em 14/09/2026 sobre
+# 4.731 linhas reais (ITR 2025-2026 + DFP 2024-2026): ZERO pares (CNPJ, DT_REFER)
+# repetidos, ou seja, hoje a CVM já entrega só a última versão aqui. A ordenação
+# explícita por VERSAO com mergesort (estável) é seguro contra isso mudar.
+cap["V"] = pd.to_numeric(cap["VERSAO"], errors="coerce").fillna(1) if "VERSAO" in cap.columns else 1
+cap = cap.sort_values(["DT_REFER", "V"], kind="mergesort").groupby("CNPJ").tail(1)
 shares = {r["CNPJ"]: {"on": r["QT_ACAO_ORDIN_CAP_INTEGR"] - r["QT_ACAO_ORDIN_TESOURO"],
                       "pn": r["QT_ACAO_PREF_CAP_INTEGR"] - r["QT_ACAO_PREF_TESOURO"],
                       "ref": r["DT_REFER"]}
@@ -654,9 +663,34 @@ def build_company(cnpj, meta):
         if ini and ini[5:] == "01-01" and fim[5:] == "09-30" and not pd.isna(r["VL"]):
             y = int(fim[:4])
             da_ytd_itr[y] = da_ytd_itr.get(y, 0.0) + r["VL"]
+    # É a MESMA subtração entre documentos diferentes que o add_t4 acima chama de
+    # "a maior fonte de número inventado do pipeline" — e aqui estava sem guarda
+    # nenhuma. Não é detalhe: a D&A do T4 entra no EBITDA do trimestre e no
+    # acumulado de 12 meses, que por sua vez movem EV/EBITDA e alavancagem.
+    # Duas recusas, na mesma linha das do add_t4:
+    #  · depreciação e amortização só ACUMULAM ao longo do exercício, então anual
+    #    MENOR que o acumulado até setembro é base diferente, não trimestre;
+    #  · T4 acima de 1,5x os nove meses anteriores é o mesmo sintoma de troca de
+    #    base que já se recusa para a receita.
+    # Quando a guarda dispara, o T4 não é gravado e o motivo vai para o log da
+    # execução — é melhor o trimestre faltar do que sair inventado.
     for y, v in da_year.items():
-        if y in da_ytd_itr:
-            da_q[(y, 4)] = v - da_ytd_itr[y]
+        if y not in da_ytd_itr:
+            continue
+        nove = da_ytd_itr[y]
+        t4 = v - nove
+        if t4 < 0 or (nove > 0 and t4 > 1.5 * nove):
+            # Só NÃO GRAVA, sem marcar o trimestre inteiro como suspeito. A marca
+            # em `ruins` derruba todo acumulado de 12 meses que contenha o T4 —
+            # levaria junto receita, lucro e ROE, que aqui não têm problema
+            # nenhum. Sem o `da`, a linha 706 já devolve ebitda=None para o
+            # trimestre, e o s12 devolve None para o 12m: somem exatamente
+            # EV/EBITDA e dívida líquida/EBITDA, que são os únicos números que
+            # dependiam deste valor.
+            print(f"D&A T4 {y} descartada ({cnpj}): anual {fmt_mi(v)} contra "
+                  f"{fmt_mi(nove)} em nove meses — bases diferentes", file=sys.stderr)
+            continue
+        da_q[(y, 4)] = t4
 
     bpa = pick(bpa_con, bpa_ind, cnpj); bpp = pick(bpp_con, bpp_ind, cnpj)
     bal = bal_values(bpa[bpa["CNPJ"] == cnpj], bpp[bpp["CNPJ"] == cnpj])
