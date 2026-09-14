@@ -6322,8 +6322,13 @@ function renderAvisoIdade(){
   const box = document.getElementById('idadeaviso'); if(!box) return;
   const p = idadeProblemas();
   const falhas = leituraFalhou();
+  const copias = cvmCopias();
   box.textContent = '';
-  if(!p.length && !falhas.length) return;
+  // A saída antecipada TEM de olhar as cópias também. Sem isso o ramo de cópia
+  // abaixo era inalcançável no caso normal (nada atrasado, nada falhando) e o
+  // painel sairia com a data de hoje sobre demonstração da semana passada sem
+  // dizer uma palavra — exatamente o que o aviso existe para impedir.
+  if(!p.length && !falhas.length && !copias.length) return;
   // abaixo de 3h o arredondamento inteiro fazia "2h (esperado até 2h)"
   const fmtH = h => h < 3 ? nbr2.format(+h.toFixed(1))+'h' : h < 48 ? Math.round(h)+'h' : Math.round(h/24)+' dias';
   if(falhas.length && !p.length){
@@ -6331,8 +6336,9 @@ function renderAvisoIdade(){
     box.append(document.createTextNode(
       falhas.join(' · ') + '. A falha é na leitura aqui no navegador (rede, proxy ou cache), '
       + 'não na publicação: o robô pode ter publicado normalmente. O que está na tela é o que '
-      + 'veio no carregamento.'));
-  } else if(!p.length && cvmCopias().length){
+      + 'veio no carregamento.'
+      + (copias.length ? ' Além disso, veio de cópia: ' + copias.join(' · ') + '.' : '')));
+  } else if(!p.length && copias.length){
     // nada atrasado, mas um exercício veio da cópia: é aviso, não alarme
     box.append(el('b',null,'ℹ Um exercício da CVM veio de cópia — '));
     box.append(document.createTextNode(cvmCopias().join(' · ')
