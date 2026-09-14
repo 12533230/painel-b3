@@ -152,6 +152,9 @@
   #idadeaviso:empty{display:none}
   #idadeaviso{margin:10px 14px 0;background:var(--wash);border:1px solid var(--bad);border-left:4px solid var(--bad);
     border-radius:10px;padding:9px 12px;font-size:12px;color:var(--ink);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+  /* aviso de cópia não é alarme: pintar de vermelho o que o próprio texto chama
+     de "informativo" ensina o leitor a ignorar a faixa vermelha de verdade */
+  #idadeaviso.info{border-color:var(--link);border-left-color:var(--link)}
   .notice b{color:var(--ink)}
   .notice a{color:var(--link);cursor:pointer;font-weight:700;text-decoration:none;white-space:nowrap}
   .notice a:hover{text-decoration:underline}
@@ -1757,14 +1760,20 @@ async function loadCandles(){
   }
   return CANDLES;
 }
+// Índice do dia do PREGÃO, não do relógio UTC de quem lê. O collect_candles.py
+// grava int(t // 86400) sobre o timestamp da barra diária (13:00 UTC), ou seja,
+// o dia em São Paulo. Usar Date.now()/864e5 direto dava um índice a mais entre
+// 21h e meia-noite de Brasília (já é o dia seguinte em UTC): o candle do dia
+// virava um candle EXTRA carimbado com a data de amanhã, ao lado do de hoje.
+const diaPregao = () => Math.floor((Date.now() - 3*36e5) / 864e5);
 function todayCandle(sym){
   const L = LIVEB3[sym];
   if(freshQ(L) && L.open!=null && L.min!=null && L.max!=null)
-    return {t:Math.floor(Date.now()/864e5), o:L.open, h:L.max, l:L.min, c:L.p, parcial:true};
+    return {t:diaPregao(), o:L.open, h:L.max, l:L.min, c:L.p, parcial:true};
   const q = getQ(sym);
   if(q && q.p!=null && q.pct!=null){
     const pv = q.p/(1+q.pct/100);
-    return {t:Math.floor(Date.now()/864e5), o:pv, h:Math.max(q.p,pv), l:Math.min(q.p,pv), c:q.p, parcial:true, aprox:true};
+    return {t:diaPregao(), o:pv, h:Math.max(q.p,pv), l:Math.min(q.p,pv), c:q.p, parcial:true, aprox:true};
   }
   return null;
 }
@@ -6088,7 +6097,14 @@ function renderMacro(){
   // Focus
   const fdate = (c.focus&&c.focus[0]&&c.focus[0].d) ? brDate(c.focus[0].d) : '';
   m.append(el('h3','sect','Boletim Focus — medianas das expectativas (BCB, '+fdate+')'));
-  const refs=['2026','2027','2028','2029'];
+  // Os anos saem do PRÓPRIO dado do BCB, não de uma lista fixa. Com
+  // ['2026'…'2029'] escrito no código, em 1º de janeiro de 2027 a tabela
+  // continuaria abrindo com uma coluna de 2026 (ano que já acabou) e perderia
+  // 2030 quando o Focus passasse a publicá-lo — colunas de "—" com cara de
+  // "o BCB não projetou", que é diferente de "o painel não mostra".
+  const refs=[...new Set((c.focus||[]).map(x=>String(x.ref)).filter(r=>/^\d{4}$/.test(r)))]
+    .sort().slice(0, 4);
+  if(!refs.length) refs.push(String(new Date().getUTCFullYear()));
   const fw=el('div','qtblwrap'); const ft=el('table','qtbl');
   const fh=el('tr'); fh.append(el('th',null,'Indicador')); for(const r of refs) fh.append(el('th',null,r));
   ft.append(el('thead')); ft.firstChild.append(fh);
@@ -6133,6 +6149,15 @@ function renderMacro(){
     const days=Math.ceil((new Date(a.dt)-new Date(today))/864e5);
     row.append(el('span','agdays', days<=0?'em andamento':('em '+days+(days===1?' dia':' dias'))));
     agCard.append(row);
+  }
+  // data/agenda.json é mantido à mão e termina onde os bancos centrais já
+  // publicaram. Sem esta linha, o cartão aparecia com o título, nenhuma linha e
+  // o rodapé de fontes — e "nenhuma linha" lê-se como "não há reunião marcada",
+  // que é uma afirmação sobre o futuro que este painel não tem como fazer.
+  if(!fut.length){
+    agCard.append(el('div','note','A agenda carregada acabou — não é que não haja reuniões, '
+      + 'é que o calendário oficial do período seguinte ainda não foi incorporado aqui. '
+      + 'Confira no site de cada banco central.'));
   }
   agCard.append(el('div','note','Fontes: '+(MACRO.fontesAgenda||'BCB, Fed, BCE, IBGE')+'. “Super Quarta” = Copom e FOMC decidem no mesmo dia.'));
   grid.append(agCard);
@@ -6313,9 +6338,17 @@ function cvmCopias(){
   const c = (DB.fontes || {}).cvmCopias;
   if(!c) return [];
   return Object.keys(c).map(nome => {
-    const d = c[nome];
     const rot = nome.replace('.zip','').replace('_cia_aberta_',' ').toUpperCase();
-    return rot + (d == null ? '' : ' (cópia de ' + d + ' dia' + (d === 1 ? '' : 's') + ' atrás)');
+    // O que viaja é a DATA da cópia, em ISO, e a idade é calculada AQUI, no
+    // relógio de quem lê. Antes viajava o número de dias, calculado no dia da
+    // COLETA: bastava o painel ficar dois dias sem republicar para a faixa dizer
+    // "cópia de 1 dia atrás" ao lado de "painel gerado há 2 dias" — a cópia
+    // apareceria mais nova que o build que a consumiu, o que é impossível.
+    // O número (formato antigo) ainda é aceito para não quebrar um HTML velho.
+    const v = c[nome];
+    const d = typeof v === 'string' ? diasDesde(v) : (typeof v === 'number' ? v : null);
+    if(d == null) return rot;
+    return rot + ' (cópia de ' + (d <= 0 ? 'hoje' : d === 1 ? 'ontem' : d + ' dias atrás') + ')';
   });
 }
 function renderAvisoIdade(){
@@ -6324,6 +6357,9 @@ function renderAvisoIdade(){
   const falhas = leituraFalhou();
   const copias = cvmCopias();
   box.textContent = '';
+  // a faixa é redesenhada de 5 em 5 min: sem zerar a classe, o azul do aviso de
+  // cópia ficaria grudado quando o estado seguinte fosse alarme de verdade
+  box.className = '';
   // A saída antecipada TEM de olhar as cópias também. Sem isso o ramo de cópia
   // abaixo era inalcançável no caso normal (nada atrasado, nada falhando) e o
   // painel sairia com a data de hoje sobre demonstração da semana passada sem
@@ -6339,10 +6375,18 @@ function renderAvisoIdade(){
       + 'veio no carregamento.'
       + (copias.length ? ' Além disso, veio de cópia: ' + copias.join(' · ') + '.' : '')));
   } else if(!p.length && copias.length){
-    // nada atrasado, mas um exercício veio da cópia: é aviso, não alarme
-    box.append(el('b',null,'ℹ Um exercício da CVM veio de cópia — '));
-    box.append(document.createTextNode(cvmCopias().join(' · ')
-      + '. A CVM estava republicando o arquivo e o painel usou a última versão boa que tinha, '
+    // nada atrasado, mas um exercício veio da cópia: é aviso, não alarme — e a
+    // moldura acompanha, em vez de usar o vermelho reservado ao alarme
+    box.className = 'info';
+    box.append(el('b',null, copias.length === 1
+      ? 'ℹ Um exercício da CVM veio de cópia — '
+      : 'ℹ ' + copias.length + ' exercícios da CVM vieram de cópia — '));
+    // Nada aqui sabe POR QUE o download não serviu: o collect.py cai na cópia
+    // por tempo esgotado, 5xx, falha de rede do runner, zip sem os membros
+    // exigidos ou CSV mestre encolhido. Afirmar "a CVM estava republicando"
+    // seria inventar a causa mais provável e apresentá-la como fato.
+    box.append(document.createTextNode(copias.join(' · ')
+      + '. O download não serviu nesta coleta e o painel usou a última versão boa que tinha, '
       + 'em vez de deixar de publicar. Exercício fechado não muda entre uma semana e outra; '
       + 'o do ano corrente pode estar sem as entregas mais recentes.'));
   } else {
@@ -6350,7 +6394,7 @@ function renderAvisoIdade(){
     box.append(document.createTextNode(
       p.map(x => x.nome+': '+fmtH(x.h)+' (esperado até '+fmtH(x.limiteH)+')').join(' · ')
       + '. O que está na tela é a última coleta que deu certo, com a data acima.'
-      + (cvmCopias().length ? ' Além disso, veio de cópia: ' + cvmCopias().join(' · ') + '.' : '')
+      + (copias.length ? ' Além disso, veio de cópia: ' + copias.join(' · ') + '.' : '')
       + (falhas.length ? ' Também não consegui ler agora: ' + falhas.join(', ') + '.' : '')));
   }
   const b = el('button','btn','recarregar a página');
@@ -6366,7 +6410,11 @@ function freshRows(){
   const liveTxt='● ao vivo · '+(LIVE.at||'');
   const snap=dmy(MACRO.snapshotEm);
   return [
-   ['Resultados trimestrais e balanços','CVM (ITR/DFP)','dados até '+(META.dadosAte||'—')+' · lidos em '+dmy(DB.updatedAt),'robô · 3 tentativas/dia, todos os dias'],
+   // A faixa de aviso manda o leitor para ESTA tabela, e o cabeçalho dela promete
+   // que a coluna reflete "o dado realmente carregado neste momento". Dizer
+   // "lidos em <hoje>" quando um exercício veio da cópia desmentia as duas coisas.
+   ['Resultados trimestrais e balanços','CVM (ITR/DFP)','dados até '+(META.dadosAte||'—')+' · lidos em '+dmy(DB.updatedAt)
+     +(cvmCopias().length ? ' · de cópia: '+cvmCopias().join(' · ') : ''),'robô · 3 tentativas/dia, todos os dias'],
    ['Múltiplos (P/L, ROE etc.)','Fundamentus','último fechamento disponível · coletado em '+dmy(DB.updatedAt),'robô · 3 tentativas/dia, todos os dias'],
    ['Valor de mercado calculado','CVM × cotações','último fechamento disponível · coletado em '+dmy(DB.updatedAt),'robô · 3 tentativas/dia, todos os dias'],
    ['Classificação setorial','B3',dmy(DB.b3FetchedAt),'automática · ~45 dias'],
