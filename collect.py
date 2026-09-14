@@ -45,29 +45,183 @@ def prev_snapshot():
 PREV = prev_snapshot()
 
 # ---------------------------------------------------------------- 1. CVM
+# A CVM REESCREVE A ÁRVORE INTEIRA dos dados abertos de tempos em tempos (aos
+# domingos, medido) e DURANTE a reescrita um exercício simplesmente some. Em
+# 14/09/2026, às 13h30 UTC, `itr_cia_aberta_2025.zip` e `dfp_cia_aberta_2025.zip`
+# davam 404; às 13h40 o DFP voltou com 12,2 MB e às 13h49 o CSV de 2025 do ITR
+# apareceu em ITR/Temp/ — ou seja, a CVM monta os CSVs numa pasta de trabalho e
+# só depois publica o zip. Como a regra aqui era "os cinco zips ou nada", o painel
+# ficou DOIS DIAS sem publicar e o vigia mandou um e-mail de falha a cada meia
+# hora, por um problema que não era nosso e que se resolve sozinho.
+#
+# Agora cada exercício guarda uma cópia do último zip BOM (data/cvm_zip,
+# preservado entre execuções pelo actions/cache). Exercício que não baixa hoje
+# entra pela cópia, e o painel DIZ NA TELA que entrou — ver cvm_origem.json,
+# que o process.py carrega para DB.fontes.cvmCopias.
+#
+# Três coisas que esta função recusa de propósito, porque todas produziriam número
+# errado parecendo certo:
+#  · zip que abre mas está em montagem (falta a DRE, falta o balanço) — por isso a
+#    validação é por MEMBRO EXIGIDO, não por contagem nem por tamanho;
+#  · cópia de idade desconhecida — sem carimbo não dá para saber se é de ontem ou
+#    de março, e "não sei" não é "está fresca";
+#  · cópia mais velha que CACHE_MAX_DIAS — um painel com a data de hoje montado
+#    sobre demonstração de um mês atrás é exatamente o erro caro.
+CVM_CACHE = DATA / "cvm_zip"
+CACHE_MAX_DIAS = 21     # 3 ciclos semanais de reescrita; além disso é apagão de verdade
+MIN_MESTRE = 500        # bytes do CSV mestre
+# Os 18 membros são os mesmos em ITR e DFP, e em 2024, 2025 e 2026 (conferido).
+# Exigimos exatamente os que o process.py lê (DRE, BPA, BPP, DFC_MI e a
+# composição de capital): um zip a que falte a DRE abre, extrai e produz um
+# painel sem lucro nenhum. DMPL, DRA, DVA e parecer não entram porque o
+# process.py não os usa — e o passo de limpeza logo abaixo os apaga.
+MEMBROS_EXIGIDOS = ("DRE_con", "DRE_ind", "BPA_con", "BPA_ind", "BPP_con", "BPP_ind",
+                    "DFC_MI_con", "DFC_MI_ind", "composicao_capital")
+
+
+def _abre_zip(conteudo, pref, ano):
+    """Valida ESTRUTURALMENTE o zip da CVM e devolve o tamanho do CSV mestre.
+
+    Não dá para validar por TAMANHO: `dfp_cia_aberta_2026.zip` tem 213 KB contra
+    13 MB do de 2024 e está CERTO — o exercício de 2026 não fechou, então quase
+    nenhuma empresa entregou DFP ainda (o CSV mestre tem 1.719 bytes). Um piso de
+    tamanho recusaria dado bom e aceitaria zip pela metade.
+    """
+    zf = zipfile.ZipFile(io.BytesIO(conteudo))
+    nomes = set(zf.namelist())
+    mestre = f"{pref}_cia_aberta_{ano}.csv"
+    if mestre not in nomes:
+        raise ValueError(f"sem o CSV mestre {mestre}")
+    faltam = [m for m in MEMBROS_EXIGIDOS
+              if f"{pref}_cia_aberta_{m}_{ano}.csv" not in nomes]
+    if faltam:
+        raise ValueError("faltam membros: " + ", ".join(faltam))
+    n = zf.getinfo(mestre).file_size
+    if n < MIN_MESTRE:
+        raise ValueError(f"CSV mestre com {n} bytes")
+    return n
+
+
+def _le_copia(arq, carimbo, pref, ano):
+    """Cópia local utilizável: existe, é zip íntegro e tem idade CONHECIDA e curta.
+
+    Idade desconhecida é recusa. O carimbo é gravado junto com a cópia; sem ele a
+    cópia pode ser de qualquer época, e este projeto não publica o que não sabe.
+    """
+    if not arq.exists():
+        return None, "sem cópia local", None
+    try:
+        dias = (HOJE - dt.date.fromisoformat(carimbo.read_text().strip())).days
+    except Exception:                                           # noqa: BLE001
+        return None, "cópia sem carimbo de data — não dá para saber de quando é", None
+    if dias > CACHE_MAX_DIAS:
+        return None, f"cópia de {dias} dias, acima do limite de {CACHE_MAX_DIAS}", None
+    try:
+        conteudo = arq.read_bytes()
+        _abre_zip(conteudo, pref, ano)
+    except Exception as e:                                      # noqa: BLE001
+        return None, f"cópia não serve ({e})", None
+    return conteudo, f"CÓPIA de {dias} dia(s) atrás", dias
+
+
+def _exigido(pref, ano):
+    """O exercício é obrigatório hoje?
+
+    O ITR do ano corrente só passa a existir na CVM depois da primeira entrega
+    trimestral (o 1T vence em meados de maio). Exigi-lo em janeiro derrubaria o
+    painel todo começo de ano — e não haveria cópia, porque o arquivo nunca
+    existiu. Antes de junho, a ausência do ITR do ano corrente é o esperado.
+    """
+    if pref == "itr" and ano == YCUR and HOJE.month < 6:
+        return False
+    return True
+
+
 def baixa_cvm():
     anos_itr = [YCUR - 2, YCUR - 1, YCUR]
     anos_dfp = [YCUR - 2, YCUR - 1]
-    urls = [f"https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/ITR/DADOS/itr_cia_aberta_{y}.zip" for y in anos_itr] + \
-           [f"https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/DFP/DADOS/dfp_cia_aberta_{y}.zip" for y in anos_dfp]
-    ok = 0
-    for u in urls:
-        nome = u.rsplit("/", 1)[1]
+    alvos = [("itr", y) for y in anos_itr] + [("dfp", y) for y in anos_dfp]
+    CVM_CACHE.mkdir(exist_ok=True)
+    # marca de "baixei algo novo hoje": o workflow só regrava o cache quando ela
+    # existe. Sem isso, 107 MB subiriam três vezes por dia para guardar exatamente
+    # os mesmos arquivos.
+    marca = CVM_CACHE / ".novo"
+    marca.unlink(missing_ok=True)
+    faltando, do_cache = [], {}
+    for pref, ano in alvos:
+        nome = f"{pref}_cia_aberta_{ano}.zip"
+        url = (f"https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/{pref.upper()}"
+               f"/DADOS/{nome}")
+        arq = CVM_CACHE / nome
+        carimbo = CVM_CACHE / (nome + ".dia")
+        conteudo, origem, da_rede = None, "", False
         try:
-            r = get(u, timeout=300)
-            zipfile.ZipFile(io.BytesIO(r.content)).extractall(CVM)
-            ok += 1
-            log("CVM ok:", nome, f"{len(r.content)/1e6:.0f}MB")
-        except Exception as e:
-            log("CVM FALHOU:", nome, repr(e))
+            r = get(url, timeout=300)
+            n = _abre_zip(r.content, pref, ano)
+            # Publicação pela metade que AINDA ASSIM tem todos os membros: um
+            # exercício só CRESCE (reapresentação acrescenta linhas, não tira).
+            # O mestre cair para menos de 80% do que já tínhamos é a CVM no meio
+            # da gravação, não dado novo. Comparar é opcional — no primeiro dia
+            # não há com quê —, então uma falha ao ler a cópia não pode derrubar
+            # um download bom.
+            n_ant = None
+            try:
+                n_ant = _abre_zip(arq.read_bytes(), pref, ano) if arq.exists() else None
+            except Exception:                                   # noqa: BLE001
+                n_ant = None
+            if n_ant and n < 0.8 * n_ant:
+                raise ValueError(f"CSV mestre encolheu de {n_ant} para {n} bytes")
+            conteudo, origem, da_rede = r.content, f"{len(r.content)/1e6:.0f} MB", True
+        except Exception as e:                                  # noqa: BLE001
+            log(f"CVM: {nome} não serviu agora ({e})")
+        if conteudo is None:
+            conteudo, motivo, dias = _le_copia(arq, carimbo, pref, ano)
+            if conteudo is None:
+                if _exigido(pref, ano):
+                    log(f"CVM: {nome} sem download e sem cópia — {motivo}")
+                    faltando.append(nome)
+                else:
+                    log(f"CVM: {nome} ausente, mas ainda não é exigido nesta época do ano")
+                continue
+            origem = motivo
+            do_cache[nome] = dias
+        # grava a cópia ANTES de extrair: zip baixado e validado não se perde por
+        # causa de uma falha de extração
+        if da_rede:
+            arq.write_bytes(conteudo)
+            carimbo.write_text(HOJE.isoformat(), encoding="utf-8")
+            marca.write_text(HOJE.isoformat(), encoding="utf-8")
+        try:
+            zipfile.ZipFile(io.BytesIO(conteudo)).extractall(CVM)
+        except Exception as e:                                  # noqa: BLE001
+            log(f"CVM: {nome} não extraiu ({e})")
+            if _exigido(pref, ano):
+                faltando.append(nome)
+            do_cache.pop(nome, None)
+            continue
+        log(f"CVM ok: {nome} ({origem})")
     # limpa arquivos que não usamos
     for f in CVM.glob("*"):
         if re.search(r"_(DRA|DMPL|parecer|DFC_MD)_", f.name):
             f.unlink(missing_ok=True)
-    # Antes: ok >= 4, o que tolerava a falta de QUALQUER um dos cinco — inclusive
-    # o ITR do ano corrente, que é a fonte do trimestre mais recente, ou a DFP do
-    # ano anterior, que é a fonte do T4. O painel saía sem um ano inteiro e verde.
-    return ok == len(urls)
+    # A tela precisa PODER dizer que um exercício não veio da CVM hoje. Sem isto o
+    # painel sairia com a data de hoje e o leitor não teria como saber que um
+    # exercício é a foto da semana passada.
+    (DATA / "cvm_origem.json").write_text(json.dumps({
+        "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "copias": do_cache,
+        "faltando": faltando,
+    }, ensure_ascii=False), encoding="utf-8")
+    if do_cache:
+        log("CVM: veio da cópia local (a CVM não serviu hoje): " + ", ".join(do_cache))
+    if faltando:
+        # Antes: ok >= 4, o que tolerava a falta de QUALQUER um dos cinco —
+        # inclusive o ITR do ano corrente, que é a fonte do trimestre mais
+        # recente, ou a DFP do ano anterior, que é a fonte do T4. O painel saía
+        # sem um ano inteiro e verde. Continua sendo falha; o que mudou é que
+        # agora só chega aqui o exercício que não tem NEM download NEM cópia.
+        log("CVM FALTANDO (sem download e sem cópia utilizável): " + ", ".join(faltando))
+    return not faltando
 
 # ---------------------------------------------------------------- 2. Fundamentus
 FUND_COLS = ["Papel","Cotação","P/L","P/VP","PSR","Div.Yield","P/Ativo","P/Cap.Giro","P/EBIT",
