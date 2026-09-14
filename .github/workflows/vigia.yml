@@ -18,9 +18,22 @@ name: Vigia (checa se o painel está atualizando)
 # 2. RUÍDO. Quando a CVM tirou do ar dois arquivos e o painel parou de publicar,
 #    este vigia mandou um e-mail de falha A CADA EXECUÇÃO — ~20 e-mails para UM
 #    problema, que ainda por cima não era nosso. Alerta que repete vira ruído e
-#    ensina a ignorar. Agora o vigia continua checando e redisparando sempre, mas
-#    só fica VERMELHO uma vez a cada ALERTA_H horas: o primeiro e-mail sai na
-#    hora, os seguintes só se o problema atravessar o dia.
+#    ensina a ignorar.
+#
+# TERCEIRA LIÇÃO, achada na revisão do próprio conserto acima: O ALARME NÃO PODE
+# SER A COR DO RUN. Quem recebe o e-mail de um run vermelho é o ATOR que disparou
+# o run — em "schedule", quem editou o arquivo por último. Um run criado por
+# "gh workflow run" com o GITHUB_TOKEN (é assim que o noticias.yml acorda o
+# vigia, e são ~12 por dia contra 8 de cron entregues) tem como ator o
+# github-actions[bot], que não tem caixa de entrada: o exit 1 saía VERMELHO E
+# MUDO. E o pior: aquele vermelho contava como "último alerta" e silenciava por
+# 8 h justamente os runs de cron, que são os únicos capazes de avisar alguém.
+# Ou seja, o alarme podia sumir inteiro — o oposto do que o conserto queria.
+#
+# Agora quem avisa é uma ISSUE: notifica o dono do repositório venha o gatilho de
+# onde vier, é UMA por incidente, recebe no máximo um comentário a cada ALERTA_H
+# horas, FECHA SOZINHA quando tudo volta ao prazo e deixa histórico. A cor do run
+# virou reforço — só sai vermelho quando o gatilho consegue mesmo notificar.
 #
 # E não adianta redisparar de meia em meia hora um robô que acabou de falhar por
 # causa da FONTE: se a última execução dele falhou há menos de BACKOFF_MIN, o
@@ -34,6 +47,7 @@ on:
 permissions:
   contents: read
   actions: write
+  issues: write
 
 concurrency:
   group: vigia
@@ -51,19 +65,38 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+          DONO: ${{ github.repository_owner }}
+          # por env, não por ${{ }} dentro do script: valor de contexto
+          # interpolado direto no shell é injeção esperando acontecer
+          EVENTO: ${{ github.event_name }}
+          ATOR: ${{ github.triggering_actor }}
           VOLTA_MIN: "20"     # intervalo entre as voltas do ciclo
           VOLTAS: "12"        # 12 x 20 min = 4 h de cobertura por gatilho entregue
-          ALERTA_H: "8"       # no máximo um e-mail de falha a cada 8 h por incidente
+          ALERTA_H: "8"       # no máximo um aviso a cada 8 h por incidente
           BACKOFF_MIN: "120"  # não redisparo robô que falhou há menos que isto
+          CEGO_VOLTAS: "3"    # voltas seguidas sem conseguir LER antes de cobrar
+          TITULO: "Painel parado: conjunto de dados fora do prazo"
         run: |
           set -u
 
-          # idade, em minutos, do último commit de um caminho num branch
+          # Este run consegue fazer o e-mail nativo do Actions chegar a alguém?
+          # Só se o gatilho for "schedule" (vai para quem editou o arquivo) ou se
+          # o ator for gente. Dispatch feito pelo GITHUB_TOKEN é do bot.
+          if [ "$EVENTO" = "schedule" ] || [ "$ATOR" != "github-actions[bot]" ]; then
+            posso_avisar=1
+          else
+            posso_avisar=0
+          fi
+          echo "gatilho: $EVENTO por $ATOR · e-mail de run vermelho chega a alguém: $posso_avisar"
+
+          # idade, em minutos, do último commit de um caminho num branch.
+          # -1 quer dizer NÃO CONSEGUI LER, que é diferente de "está velho".
           idade() {   # $1=branch  $2=caminho
             d=$(gh api "repos/$REPO/commits?sha=$1&path=$2&per_page=1" \
                   --jq '.[0].commit.committer.date' 2>/dev/null || echo "")
             if [ -z "$d" ] || [ "$d" = "null" ]; then echo "-1"; return 0; fi
-            t=$(date -u -d "$d" +%s)
+            t=$(date -u -d "$d" +%s 2>/dev/null || echo 0)
+            if [ "$t" = "0" ]; then echo "-1"; return 0; fi
             echo $(( ($(date -u +%s) - t) / 60 ))
           }
 
@@ -72,7 +105,8 @@ jobs:
             d=$(gh run list --workflow "$1" --repo "$REPO" --status "$2" --limit 1 \
                   --json createdAt --jq '.[0].createdAt' 2>/dev/null || echo "")
             if [ -z "$d" ] || [ "$d" = "null" ]; then echo "999999"; return 0; fi
-            t=$(date -u -d "$d" +%s)
+            t=$(date -u -d "$d" +%s 2>/dev/null || echo 0)
+            if [ "$t" = "0" ]; then echo "999999"; return 0; fi
             echo $(( ($(date -u +%s) - t) / 60 ))
           }
 
@@ -81,7 +115,10 @@ jobs:
           redispara() {   # $1=rótulo  $2=workflow
             emcurso=$(gh run list --workflow "$2" --repo "$REPO" --status in_progress --json databaseId --jq 'length' 2>/dev/null || echo 0)
             fila=$(gh run list --workflow "$2" --repo "$REPO" --status queued --json databaseId --jq 'length' 2>/dev/null || echo 0)
-            if [ "${emcurso:-0}" -gt 0 ] || [ "${fila:-0}" -gt 0 ]; then
+            # gh devolvendo lixo não pode virar erro de aritmética
+            case "$emcurso" in ''|*[!0-9]*) emcurso=0 ;; esac
+            case "$fila" in ''|*[!0-9]*) fila=0 ;; esac
+            if [ "$emcurso" -gt 0 ] || [ "$fila" -gt 0 ]; then
               echo "   $1: $2 já está rodando/na fila — não redisparo"
               return 0
             fi
@@ -91,27 +128,113 @@ jobs:
               return 0
             fi
             echo "   $1: redisparando $2"
-            gh workflow run "$2" --repo "$REPO" || echo "::warning::não consegui redisparar $2"
+            gh workflow run "$2" --repo "$REPO" >/dev/null 2>&1 || echo "::warning::não consegui redisparar $2"
           }
 
-          # devolve 0 se está no prazo, 1 se está atrasado
+          # 0 = no prazo · 1 = atrasado · 2 = não consegui ler a data
           checa() {   # $1=rótulo  $2=branch  $3=caminho  $4=limite(min)  $5=workflow
             m=$(idade "$2" "$3")
             if [ "$m" -lt 0 ]; then
-              echo "::warning::$1: não consegui ler a data de $2:$3 — não verificado"
-              return 1
+              echo "   $1: não consegui ler a data de $2:$3"
+              return 2
             fi
             printf '   %-28s %5s min (limite %s)\n' "$1" "$m" "$4"
             if [ "$m" -le "$4" ]; then return 0; fi
             echo "::warning::$1 está com $m min de idade (limite $4)"
-            # o e-mail de falha mostra só a última linha de erro: sem nomear o
-            # conjunto aqui, o alerta dizia "N conjuntos fora do prazo" e quem
-            # recebia tinha de abrir o Actions para descobrir qual
+            # o aviso tem de NOMEAR o conjunto: "N conjuntos fora do prazo"
+            # obrigava a abrir o Actions para descobrir qual
             atrasados="${atrasados:+$atrasados, }$1 ($m min)"
             redispara "$1" "$5"
             return 1
           }
 
+          avalia() {   # ... $6 = nome da variável que conta as voltas sem leitura
+            rc=0
+            checa "$1" "$2" "$3" "$4" "$5" || rc=$?
+            if [ "$rc" = "0" ]; then eval "$6=0"; return 0; fi
+            if [ "$rc" = "1" ]; then eval "$6=0"; problemas=$((problemas+1)); return 0; fi
+            # Não conseguir LER não é dado velho. Um soluço da API do GitHub
+            # cobrado na primeira falha abriria alarme sobre número que ninguém
+            # mediu — e alarme falso ensina a ignorar alarme. Só vira problema
+            # depois de CEGO_VOLTAS voltas seguidas sem leitura, e aí o texto diz
+            # exatamente isso, em vez de afirmar um atraso que não foi medido.
+            eval "$6=\$(( $6 + 1 ))"
+            eval "c=\$$6"
+            if [ "$c" -ge "$CEGO_VOLTAS" ]; then
+              problemas=$((problemas+1))
+              atrasados="${atrasados:+$atrasados, }$1 (sem conseguir ler a data há $(( c * VOLTA_MIN )) min)"
+            else
+              echo "   $1: sem leitura ($c/$CEGO_VOLTAS) — não cobro ainda"
+            fi
+          }
+
+          # ---- o alarme: uma issue por incidente, que fecha sozinha
+          # A issue é achada pelo TÍTULO EXATO, não por etiqueta nem por busca.
+          # Etiqueta obrigaria "gh label create" a dar certo antes, e a busca do
+          # GitHub é indexada com atraso — as duas coisas podem fazer o vigia não
+          # enxergar a issue que ele mesmo abriu e abrir outra a cada volta.
+          issue_num() {
+            gh issue list --repo "$REPO" --state open --limit 100 --json number,title \
+              --jq "[.[] | select(.title == \"$TITULO\")] | .[0].number // empty" 2>/dev/null || echo ""
+          }
+
+          issue_idade() {   # minutos desde o último sinal de vida da issue
+            d=$(gh issue view "$1" --repo "$REPO" --json createdAt,comments \
+                  --jq '[.createdAt] + [.comments[].createdAt] | max' 2>/dev/null || echo "")
+            if [ -z "$d" ] || [ "$d" = "null" ]; then echo "999999"; return 0; fi
+            t=$(date -u -d "$d" +%s 2>/dev/null || echo 0)
+            if [ "$t" = "0" ]; then echo "999999"; return 0; fi
+            echo $(( ($(date -u +%s) - t) / 60 ))
+          }
+
+          # 0 = acabei de avisar (issue nova ou comentário novo) · 1 = fiquei quieto
+          alerta() {   # $1 = conjuntos atrasados
+            corpo="**Fora do prazo em $(date -u +%FT%TZ)**
+
+          $1
+
+          O vigia continua checando a cada ${VOLTA_MIN} min e redisparando sozinho o robô parado. Esta issue **fecha automaticamente** quando tudo voltar ao prazo, e recebe no máximo um comentário a cada ${ALERTA_H}h — ela existe para avisar, não para repetir.
+
+          cc @${DONO}"
+            n=$(issue_num)
+            if [ -z "$n" ]; then
+              if gh issue create --repo "$REPO" --title "$TITULO" \
+                   --body "$corpo" >/dev/null 2>&1; then
+                echo "   alerta: abri a issue"
+                return 0
+              fi
+              echo "::warning::não consegui abrir a issue de alerta"
+              return 1
+            fi
+            m=$(issue_idade "$n")
+            if [ "$m" -lt $(( ALERTA_H * 60 )) ]; then
+              echo "   alerta: a issue #$n já avisou há ${m} min — não repito antes de $(( ALERTA_H * 60 )) min"
+              return 1
+            fi
+            if gh issue comment "$n" --repo "$REPO" --body "$corpo" >/dev/null 2>&1; then
+              echo "   alerta: comentei na issue #$n"
+              return 0
+            fi
+            echo "::warning::não consegui comentar na issue #$n"
+            return 1
+          }
+
+          normalizou() {
+            n=$(issue_num)
+            if [ -z "$n" ]; then return 0; fi
+            gh issue comment "$n" --repo "$REPO" \
+              --body "Tudo dentro do prazo em $(date -u +%FT%TZ) — fechando." >/dev/null 2>&1 || true
+            if gh issue close "$n" --repo "$REPO" >/dev/null 2>&1; then
+              echo "   issue #$n fechada: voltou ao normal"
+            else
+              echo "::warning::não consegui fechar a issue #$n"
+            fi
+          }
+
+          ceg_painel=0
+          ceg_noticias=0
+          ceg_extra=0
+          ceg_quotes=0
           volta=1
           while [ "$volta" -le "$VOLTAS" ]; do
             dow=$(date -u +%u)     # 1=segunda … 7=domingo
@@ -121,36 +244,50 @@ jobs:
             atrasados=""
 
             # Painel (HTML gerado): 3 agendamentos/dia, então 30h é folga suficiente
-            checa "painel (docs/index.html)" main docs/index.html 1800 update.yml || problemas=$((problemas+1))
+            avalia "painel (docs/index.html)" main docs/index.html 1800 update.yml ceg_painel
 
             # Notícias: coleta a cada 2h no branch news
-            checa "notícias (branch news)" news data/news.json 300 noticias.yml || problemas=$((problemas+1))
+            avalia "notícias (branch news)" news data/news.json 300 noticias.yml ceg_noticias
 
             # Dados extra: ciclo diário depois do fechamento; 40h cobre o fim de semana
-            checa "dados extra (branch extra)" extra data/indices.json 2400 extra.yml || problemas=$((problemas+1))
+            avalia "dados extra (branch extra)" extra data/indices.json 2400 extra.yml ceg_extra
 
-            # Cotações: só faz sentido cobrar durante o pregão (13h–21h UTC, dia útil)
+            # Cotações: só faz sentido cobrar durante o pregão (13h–21h UTC, dia útil).
+            #
+            # Não há calendário de feriado aqui, e é de propósito. Em feriado só
+            # do Brasil o branch continua avançando: data/quotes.json tem 506
+            # símbolos e o juiz de frescor do collect_quotes.py é o MAIOR carimbo
+            # do arquivo inteiro — medido em 14/09/2026, quem manda é ^DJI, não a
+            # B3. Sobra o dia em que as DUAS praças fecham (1º de janeiro, Sexta
+            # -feira Santa, Natal em dia útil): 2 ou 3 vezes por ano o vigia abre
+            # uma issue de alarme falso, que fecha sozinha quando o pregão volta.
+            # A alternativa — absolver o atraso quando o quotes.yml terminou bem
+            # há pouco — cria um buraco pior: o quotes.yml sai VERDE quando todas
+            # as voltas dão "sem preço novo", então um feed do Yahoo congelado
+            # ficaria mudo para sempre. Duas issues por ano valem mais que um
+            # alarme que pode sumir.
             if [ "$dow" -le 5 ] && [ "$hora" -ge 13 ] && [ "$hora" -le 21 ]; then
-              checa "cotações (branch quotes)" quotes data/quotes.json 90 quotes.yml || problemas=$((problemas+1))
+              avalia "cotações (branch quotes)" quotes data/quotes.json 90 quotes.yml ceg_quotes
             else
               echo "   fora do pregão — cotações não são cobradas agora"
+              ceg_quotes=0
             fi
 
             if [ "$problemas" -gt 0 ]; then
-              alertei_ha=$(desde vigia.yml failure)
-              if [ "$alertei_ha" -ge $(( ALERTA_H * 60 )) ]; then
-                # O exit encerra este ciclo, e isso é deliberado: alerta que
-                # depende de o job chegar ao fim morre quando o gatilho seguinte
-                # cancela o ciclo (cancel-in-progress), e um alarme que some é
-                # pior que um ciclo curto. O próximo gatilho — cron de meia em
-                # meia hora e o batimento do noticias a cada 2h — recomeça a
-                # vigilância em minutos.
-                echo "::error::fora do prazo: ${atrasados:-conjunto não identificado}. O vigia redispara e recomeça no próximo gatilho; este e-mail não se repete antes de ${ALERTA_H}h."
-                exit 1
+              if alerta "${atrasados:-conjunto não identificado}"; then
+                # A issue já avisou. O vermelho do run é reforço, e só faz sentido
+                # quando o gatilho consegue notificar alguém: sair vermelho num run
+                # de bot é alarme que não toca em lugar nenhum e ainda encerra o
+                # ciclo à toa.
+                if [ "$posso_avisar" = "1" ]; then
+                  echo "::error::fora do prazo: ${atrasados:-conjunto não identificado}. Abri/atualizei a issue de alerta; ela fecha sozinha quando voltar ao prazo."
+                  exit 1
+                fi
+                echo "   gatilho de robô: a issue avisou, mas não saio vermelho — e-mail de run de bot não chega a ninguém"
               fi
-              echo "   $problemas problema(s) em aberto — último alerta há ${alertei_ha} min, não repito o e-mail antes de $(( ALERTA_H * 60 )) min"
             else
               echo "   tudo dentro do prazo"
+              normalizou
             fi
 
             volta=$((volta+1))
