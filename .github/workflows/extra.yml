@@ -81,8 +81,11 @@ jobs:
             fi
           done
 
-      # É preciso decidir se a semana já rodou a série anual. Domingo (dow 7) é o
-      # dia escolhido; execução manual decide pelo input.
+      # É preciso decidir se a semana já rodou a série anual. SEGUNDA (dow 1) é o
+      # dia escolhido — o comentário dizia domingo e o código testava segunda, e
+      # comentário que mente sobre o código é pior que comentário nenhum.
+      # Segunda faz sentido: a CVM reescreve a árvore no domingo, então na
+      # segunda a série anual pega a reescrita já concluída.
       - name: Rodar a série anual hoje?
         id: q
         run: |
@@ -153,8 +156,26 @@ jobs:
             exit 0
           fi
           echo "publicando:$presentes"
+          # A árvore órfã publicada É o branch inteiro. Partir do índice VAZIO
+          # significa que todo arquivo ausente de data/ nesta execução é APAGADO
+          # do branch — sem erro, sem aviso e sem ninguém perceber. Basta o curl
+          # da base falhar (404, corpo truncado) num dia em que aquele coletor
+          # não roda: hist.json só roda na segunda, então a série anual inteira
+          # sumiria do branch até a segunda seguinte, e o passo de regressão
+          # abaixo nem olha — ele exige [ -f "data/$f" ], que é justamente o
+          # caso que falta.
+          # Partindo da árvore que JÁ ESTÁ publicada, o que esta execução não
+          # regravou continua exatamente como estava.
+          base=""
+          if git fetch --no-tags --depth=1 origin extra >/dev/null 2>&1; then base=FETCH_HEAD; fi
           tmpidx=$(mktemp)
-          GIT_INDEX_FILE="$tmpidx" git read-tree --empty
+          if [ -n "$base" ]; then
+            GIT_INDEX_FILE="$tmpidx" git read-tree "$base"
+            echo "partindo da árvore já publicada em extra"
+          else
+            GIT_INDEX_FILE="$tmpidx" git read-tree --empty
+            echo "branch extra ainda não existe — árvore nova"
+          fi
           GIT_INDEX_FILE="$tmpidx" git add -f $presentes
           tree=$(GIT_INDEX_FILE="$tmpidx" git write-tree)
           rm -f "$tmpidx"
@@ -180,7 +201,14 @@ jobs:
             if [ -f "/tmp/base_$f" ] && [ -f "data/$f" ] && cmp -s "/tmp/base_$f" "data/$f"; then
               # uma linha só: bloco YAML não aceita linha fora da indentação
               idade=$(python -c "import json,datetime as dt,sys; d=json.load(open(sys.argv[1])); t=dt.datetime.strptime(d['updatedAt'],'%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=dt.timezone.utc); print(int((dt.datetime.now(dt.timezone.utc)-t).total_seconds()//3600))" "data/$f" 2>/dev/null || echo 999)
-              if [ "${idade:-999}" -le 30 ]; then
+              # 30h era frouxo demais para o ciclo real: os dois crons são 22:40
+              # e 02:40, então o intervalo alterna 4h e 20h e a idade medida em
+              # execuções sucessivas depois da última coleta boa salta
+              # 4h -> 24h -> 28h -> 48h. Com o corte em 30h, 28h ainda passava
+              # como "oscilando" e o primeiro erro só saía com o dado já em ~48h:
+              # dois dias servindo índice e provento velhos com o job verde.
+              # 22h deixa passar UMA volta perdida e acusa na segunda.
+              if [ "${idade:-999}" -le 22 ]; then
                 echo "::warning::$f não foi regravado agora, mas tem só ${idade}h — a execução anterior entregou. Fonte oscilando, não parada."
               else
                 echo "::error::$f não foi regravado e já está com ${idade}h — o coletor que já funcionava parou de entregar"
@@ -188,5 +216,20 @@ jobs:
               fi
             fi
           done
+          # hist.json tem cadência SEMANAL e por isso fica fora do laço acima —
+          # nele "não foi regravado hoje" é o normal. Só que ficar fora do laço
+          # virou ficar fora de TODA vigilância: o collect_hist.py roda com
+          # "|| echo ::warning::", então podia falhar toda segunda-feira para
+          # sempre e a série anual envelheceria em silêncio, com o job verde.
+          # Duas semanas é o limite: uma segunda perdida ainda passa, duas não.
+          if [ -f "data/hist.json" ]; then
+            idade=$(python -c "import json,datetime as dt,sys; d=json.load(open(sys.argv[1])); t=dt.datetime.strptime(d['updatedAt'],'%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=dt.timezone.utc); print(int((dt.datetime.now(dt.timezone.utc)-t).total_seconds()//3600))" "data/hist.json" 2>/dev/null || echo 999)
+            if [ "${idade:-999}" -gt 336 ]; then
+              echo "::error::hist.json está com ${idade}h (mais de 14 dias) — a série anual parou de ser gerada"
+              parou=$((parou+1))
+            else
+              echo "hist.json com ${idade}h (limite 336h — cadência semanal)"
+            fi
+          fi
           if [ "$parou" -gt 0 ]; then exit 1; fi
           echo "todos os coletores que já funcionavam entregaram nesta execução"
