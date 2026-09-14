@@ -1,0 +1,7 @@
+data/cvm/
+data/cvm_zip/
+data/fundamentus_*.tsv
+out/
+pkg/
+__pycache__/
+*.pyc
