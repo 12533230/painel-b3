@@ -27,8 +27,15 @@ name: Dados extra (índices, proventos, preço longo, série anual, composição
 # existe e não foi regravado).
 on:
   schedule:
-    - cron: "40 22 * * 1-5"   # 19:40 Brasília, depois do fechamento
-    - cron: "40 2 * * 2-6"    # 23:40 Brasília — 2ª chance (o cron é descartado com frequência)
+    # TODOS os dias, não só em dia útil. Com a janela de segunda a sexta, a
+    # última execução da semana caía no sábado de madrugada e a seguinte só na
+    # segunda à noite: 68 horas de intervalo, em que ninguém consegue distinguir
+    # "fim de semana" de "coletor parado" — e foi exatamente assim que estes
+    # arquivos apareceram com 60h de idade em 14/09/2026. Rodar no sábado e no
+    # domingo custa dois minutos de runner e devolve ao vigia um prazo que ele
+    # pode cobrar de verdade (40h).
+    - cron: "40 22 * * *"     # 19:40 Brasília, depois do fechamento
+    - cron: "40 2 * * *"      # 23:40 Brasília — 2ª chance (o cron é descartado com frequência)
   workflow_dispatch:
     inputs:
       hist:
@@ -79,8 +86,15 @@ jobs:
       - name: Rodar a série anual hoje?
         id: q
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "hist=${{ inputs.hist }}" >> "$GITHUB_OUTPUT"
+          # Antes: QUALQUER disparo manual (inclusive o do vigia, que não passa
+          # input) forçava hist=false. Como o cron de segunda-feira é descartado
+          # com frequência e o vigia redispara justamente quando o agendamento
+          # falhou, a série anual podia passar semanas sem rodar — foi o que
+          # deixou hist.json com 3 dias a mais que os outros arquivos.
+          # Agora o input só MANDA quando é "true"; no resto, quem decide é o dia
+          # da semana, seja o gatilho qual for.
+          if [ "${{ inputs.hist }}" = "true" ]; then
+            echo "hist=true" >> "$GITHUB_OUTPUT"
           elif [ "$(date -u +%u)" = "1" ]; then
             echo "hist=true" >> "$GITHUB_OUTPUT"
           else
@@ -123,6 +137,21 @@ jobs:
             echo "::error::nenhum arquivo para publicar — não vou apagar o branch com uma árvore vazia"
             exit 1
           fi
+          # Commit órfão a cada execução, mesmo sem coletor nenhum ter entregue,
+          # renova a data do branch — e é EXATAMENTE essa data que o vigia mede.
+          # O painel ficaria com dado velho e o vigia cego, porque o carimbo
+          # estaria sempre fresco. Se nada mudou em relação ao que já está no
+          # branch, não há o que publicar.
+          mudou=0
+          for f in indices.json proventos.json precos_longo.json hist.json fre.json ipe.json; do
+            if [ -f "data/$f" ] && { [ ! -f "/tmp/base_$f" ] || ! cmp -s "/tmp/base_$f" "data/$f"; }; then
+              mudou=1
+            fi
+          done
+          if [ "$mudou" = "0" ]; then
+            echo "::warning::nenhum arquivo mudou nesta execução — não recarimbo o branch com dado igual"
+            exit 0
+          fi
           echo "publicando:$presentes"
           tmpidx=$(mktemp)
           GIT_INDEX_FILE="$tmpidx" git read-tree --empty
@@ -138,11 +167,25 @@ jobs:
       - name: Falhar se um coletor que funcionava parou de entregar
         if: always()
         run: |
+          # "Não regravou" só é PARADA se o dado também estiver velho. Em
+          # 12/09/2026 a execução das 00h35 entregou tudo e a das 07h19 (a 2ª
+          # chance do mesmo ciclo) pegou a B3 fora do ar às 4h da manhã: os
+          # arquivos de índices e proventos ficaram idênticos aos de 7 horas
+          # antes, a regra antiga chamou isso de "coletor parou" e mandou um
+          # e-mail de falha — com o dado do dia já publicado e correto.
+          # Agora o alarme olha a IDADE do arquivo: fonte oscilando numa
+          # tentativa é aviso; dado velho é erro.
           parou=0
           for f in indices.json proventos.json precos_longo.json fre.json ipe.json; do
             if [ -f "/tmp/base_$f" ] && [ -f "data/$f" ] && cmp -s "/tmp/base_$f" "data/$f"; then
-              echo "::error::$f não foi regravado nesta execução — o coletor que já funcionava parou de entregar"
-              parou=$((parou+1))
+              # uma linha só: bloco YAML não aceita linha fora da indentação
+              idade=$(python -c "import json,datetime as dt,sys; d=json.load(open(sys.argv[1])); t=dt.datetime.strptime(d['updatedAt'],'%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=dt.timezone.utc); print(int((dt.datetime.now(dt.timezone.utc)-t).total_seconds()//3600))" "data/$f" 2>/dev/null || echo 999)
+              if [ "${idade:-999}" -le 30 ]; then
+                echo "::warning::$f não foi regravado agora, mas tem só ${idade}h — a execução anterior entregou. Fonte oscilando, não parada."
+              else
+                echo "::error::$f não foi regravado e já está com ${idade}h — o coletor que já funcionava parou de entregar"
+                parou=$((parou+1))
+              fi
             fi
           done
           if [ "$parou" -gt 0 ]; then exit 1; fi
