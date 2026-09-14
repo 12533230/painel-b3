@@ -3,14 +3,29 @@ name: Vigia (checa se o painel está atualizando)
 # Um agendamento descartado pelo GitHub não avisa ninguém: em setembro/2026 o
 # branch "quotes" ficou 3 dias parado e o painel continuou no ar mostrando dado
 # velho. Este vigia checa a idade do que está PUBLICADO (não a do agendamento) e
-# redispara o workflow correspondente. Roda de hora em hora, em minuto ímpar.
-# O cron de hora em hora NÃO é entregue de hora em hora: medido em 10/09/2026 pela
-# API dos runs, foram ~5 execuções por dia contra as 24 agendadas. Dois slots por
-# hora aumentam a chance de cair numa janela em que o GitHub esteja entregando.
-# Enquanto o vigia depende do agendador, o limite de 45 min das cotações não é
-# exequível — por isso o limite de cotações passou para 90 min, coerente com a
-# frequência real de checagem, e a faixa vermelha da própria página (que roda no
-# navegador, a cada 5 min) continua sendo o aviso rápido para quem está olhando.
+# redispara o workflow correspondente.
+#
+# DUAS LIÇÕES DE 13-14/09/2026, que é quando isto virou um problema para quem usa:
+#
+# 1. COBERTURA. O cron de hora em hora NÃO é entregue de hora em hora: medido
+#    pela API dos runs, foram 8 execuções em 24h contra as 48 agendadas, e no dia
+#    14 o vigia ficou das 06h56 às 13h40 sem rodar — justamente a abertura do
+#    pregão, com as cotações paradas desde sexta. Depender da frequência do
+#    agendador é o erro. Agora cada execução entregue VIGIA POR CONTA PRÓPRIA
+#    durante horas, em ciclo interno: um único gatilho entregue cobre o bloco
+#    inteiro, do mesmo jeito que o quotes.yml já fazia.
+#
+# 2. RUÍDO. Quando a CVM tirou do ar dois arquivos e o painel parou de publicar,
+#    este vigia mandou um e-mail de falha A CADA EXECUÇÃO — ~20 e-mails para UM
+#    problema, que ainda por cima não era nosso. Alerta que repete vira ruído e
+#    ensina a ignorar. Agora o vigia continua checando e redisparando sempre, mas
+#    só fica VERMELHO uma vez a cada ALERTA_H horas: o primeiro e-mail sai na
+#    hora, os seguintes só se o problema atravessar o dia.
+#
+# E não adianta redisparar de meia em meia hora um robô que acabou de falhar por
+# causa da FONTE: se a última execução dele falhou há menos de BACKOFF_MIN, o
+# vigia espera. Isso é o que impede o par vigia+update de gerar dois e-mails de
+# falha por hora enquanto a CVM está no meio de uma republicação.
 on:
   schedule:
     - cron: "7,37 * * * *"
@@ -22,75 +37,123 @@ permissions:
 
 concurrency:
   group: vigia
+  # O gatilho seguinte substitui o ciclo em andamento. Cada volta do ciclo é
+  # completa em si (checa, avisa, redispara, e sai vermelho se for o caso), então
+  # ser cancelado no meio não perde alerta nenhum.
   cancel-in-progress: true
 
 jobs:
   vigia:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 260
     steps:
-      - name: Checar idade do publicado e redisparar o que está parado
+      - name: Vigiar em ciclo (uma volta a cada VOLTA_MIN, por até 4 horas)
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+          VOLTA_MIN: "20"     # intervalo entre as voltas do ciclo
+          VOLTAS: "12"        # 12 x 20 min = 4 h de cobertura por gatilho entregue
+          ALERTA_H: "8"       # no máximo um e-mail de falha a cada 8 h por incidente
+          BACKOFF_MIN: "120"  # não redisparo robô que falhou há menos que isto
         run: |
           set -u
-          agora=$(date -u +%s)
-          dow=$(date -u +%u)     # 1=segunda … 7=domingo
-          hora=$(date -u +%H)
-          problemas=0
-          naoverificados=0
 
           # idade, em minutos, do último commit de um caminho num branch
           idade() {   # $1=branch  $2=caminho
             d=$(gh api "repos/$REPO/commits?sha=$1&path=$2&per_page=1" \
                   --jq '.[0].commit.committer.date' 2>/dev/null || echo "")
-            if [ -z "$d" ] || [ "$d" = "null" ]; then echo "-1"; return; fi
+            if [ -z "$d" ] || [ "$d" = "null" ]; then echo "-1"; return 0; fi
             t=$(date -u -d "$d" +%s)
-            echo $(( (agora - t) / 60 ))
+            echo $(( ($(date -u +%s) - t) / 60 ))
           }
 
+          # minutos desde a última execução de um workflow com uma conclusão
+          desde() {   # $1=workflow  $2=conclusão (failure, success, ...)
+            d=$(gh run list --workflow "$1" --repo "$REPO" --status "$2" --limit 1 \
+                  --json createdAt --jq '.[0].createdAt' 2>/dev/null || echo "")
+            if [ -z "$d" ] || [ "$d" = "null" ]; then echo "999999"; return 0; fi
+            t=$(date -u -d "$d" +%s)
+            echo $(( ($(date -u +%s) - t) / 60 ))
+          }
+
+          # redispara, com freio: robô que acabou de falhar por causa da fonte não
+          # melhora sendo chamado de novo em 30 minutos
+          redispara() {   # $1=rótulo  $2=workflow
+            emcurso=$(gh run list --workflow "$2" --repo "$REPO" --status in_progress --json databaseId --jq 'length' 2>/dev/null || echo 0)
+            fila=$(gh run list --workflow "$2" --repo "$REPO" --status queued --json databaseId --jq 'length' 2>/dev/null || echo 0)
+            if [ "${emcurso:-0}" -gt 0 ] || [ "${fila:-0}" -gt 0 ]; then
+              echo "   $1: $2 já está rodando/na fila — não redisparo"
+              return 0
+            fi
+            falhou_ha=$(desde "$2" failure)
+            if [ "$falhou_ha" -lt "$BACKOFF_MIN" ]; then
+              echo "   $1: $2 falhou há ${falhou_ha} min (freio de ${BACKOFF_MIN} min) — espero a fonte voltar"
+              return 0
+            fi
+            echo "   $1: redisparando $2"
+            gh workflow run "$2" --repo "$REPO" || echo "::warning::não consegui redisparar $2"
+          }
+
+          # devolve 0 se está no prazo, 1 se está atrasado
           checa() {   # $1=rótulo  $2=branch  $3=caminho  $4=limite(min)  $5=workflow
             m=$(idade "$2" "$3")
             if [ "$m" -lt 0 ]; then
-              # não medir NÃO é "está tudo bem": conta como problema próprio
-              naoverificados=$((naoverificados+1))
               echo "::warning::$1: não consegui ler a data de $2:$3 — não verificado"
-              return
+              return 1
             fi
-            printf '%-28s %5s min (limite %s)\n' "$1" "$m" "$4"
-            # return sem código herda o status do teste: com -e isso derrubava o
-            # passo justamente quando o conjunto estava no prazo
+            printf '   %-28s %5s min (limite %s)\n' "$1" "$m" "$4"
             if [ "$m" -le "$4" ]; then return 0; fi
-            problemas=$((problemas+1))
-            # se o robô JÁ está rodando, redisparar só cancelaria/enfileiraria o
-            # que está em curso (no quotes.yml o ciclo em andamento seria morto)
-            emcurso=$(gh run list --workflow "$5" --repo "$REPO" --status in_progress --json databaseId --jq 'length' 2>/dev/null || echo 0)
-            fila=$(gh run list --workflow "$5" --repo "$REPO" --status queued --json databaseId --jq 'length' 2>/dev/null || echo 0)
-            if [ "${emcurso:-0}" -gt 0 ] || [ "${fila:-0}" -gt 0 ]; then
-              echo "::warning::$1 está com $m min, mas $5 já está rodando/na fila — não redisparo"
-              return
-            fi
-            echo "::warning::$1 está com $m min de idade (limite $4) — redisparando $5"
-            gh workflow run "$5" --repo "$REPO" || echo "::error::não consegui redisparar $5"
+            echo "::warning::$1 está com $m min de idade (limite $4)"
+            # o e-mail de falha mostra só a última linha de erro: sem nomear o
+            # conjunto aqui, o alerta dizia "N conjuntos fora do prazo" e quem
+            # recebia tinha de abrir o Actions para descobrir qual
+            atrasados="${atrasados:+$atrasados, }$1 ($m min)"
+            redispara "$1" "$5"
+            return 1
           }
 
-          # Painel (HTML gerado): 3 agendamentos/dia, então 30h é folga suficiente
-          checa "painel (docs/index.html)" main docs/index.html 1800 update.yml
+          volta=1
+          while [ "$volta" -le "$VOLTAS" ]; do
+            dow=$(date -u +%u)     # 1=segunda … 7=domingo
+            hora=$(date -u +%H)
+            echo "--- volta $volta/$VOLTAS · $(date -u +%FT%TZ)"
+            problemas=0
+            atrasados=""
 
-          # Notícias: coleta a cada 2h no branch news
-          checa "notícias (branch news)" news data/news.json 300 noticias.yml
+            # Painel (HTML gerado): 3 agendamentos/dia, então 30h é folga suficiente
+            checa "painel (docs/index.html)" main docs/index.html 1800 update.yml || problemas=$((problemas+1))
 
-          # Cotações: só faz sentido cobrar durante o pregão (13h–21h UTC, dia útil)
-          if [ "$dow" -le 5 ] && [ "$hora" -ge 13 ] && [ "$hora" -le 21 ]; then
-            checa "cotações (branch quotes)" quotes data/quotes.json 90 quotes.yml
-          else
-            echo "fora do pregão — cotações não são cobradas agora"
-          fi
+            # Notícias: coleta a cada 2h no branch news
+            checa "notícias (branch news)" news data/news.json 300 noticias.yml || problemas=$((problemas+1))
 
-          if [ "$problemas" -gt 0 ] || [ "$naoverificados" -gt 0 ]; then
-            if [ "$problemas" -gt 0 ]; then echo "::error::$problemas conjunto(s) de dados fora do prazo. Se repetir, a fonte está caindo."; fi
-            if [ "$naoverificados" -gt 0 ]; then echo "::error::$naoverificados conjunto(s) NÃO verificados (não consegui ler a data) — o vigia ficou cego nesses."; fi
-            exit 1
-          fi
-          echo "os três conjuntos verificados estão dentro do prazo"
+            # Dados extra: ciclo diário depois do fechamento; 40h cobre o fim de semana
+            checa "dados extra (branch extra)" extra data/indices.json 2400 extra.yml || problemas=$((problemas+1))
+
+            # Cotações: só faz sentido cobrar durante o pregão (13h–21h UTC, dia útil)
+            if [ "$dow" -le 5 ] && [ "$hora" -ge 13 ] && [ "$hora" -le 21 ]; then
+              checa "cotações (branch quotes)" quotes data/quotes.json 90 quotes.yml || problemas=$((problemas+1))
+            else
+              echo "   fora do pregão — cotações não são cobradas agora"
+            fi
+
+            if [ "$problemas" -gt 0 ]; then
+              alertei_ha=$(desde vigia.yml failure)
+              if [ "$alertei_ha" -ge $(( ALERTA_H * 60 )) ]; then
+                # O exit encerra este ciclo, e isso é deliberado: alerta que
+                # depende de o job chegar ao fim morre quando o gatilho seguinte
+                # cancela o ciclo (cancel-in-progress), e um alarme que some é
+                # pior que um ciclo curto. O próximo gatilho — cron de meia em
+                # meia hora e o batimento do noticias a cada 2h — recomeça a
+                # vigilância em minutos.
+                echo "::error::fora do prazo: ${atrasados:-conjunto não identificado}. O vigia redispara e recomeça no próximo gatilho; este e-mail não se repete antes de ${ALERTA_H}h."
+                exit 1
+              fi
+              echo "   $problemas problema(s) em aberto — último alerta há ${alertei_ha} min, não repito o e-mail antes de $(( ALERTA_H * 60 )) min"
+            else
+              echo "   tudo dentro do prazo"
+            fi
+
+            volta=$((volta+1))
+            if [ "$volta" -le "$VOLTAS" ]; then sleep $(( VOLTA_MIN * 60 )); fi
+          done
+          echo "ciclo encerrado sem alerta novo — o próximo gatilho entregue começa outro"
