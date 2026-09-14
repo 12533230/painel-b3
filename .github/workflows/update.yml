@@ -23,7 +23,13 @@ concurrency:
 jobs:
   atualizar:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    # 40 minutos não comportavam três tentativas do collect.py: cada tentativa tem
+    # cinco downloads da CVM com timeout de 300s, mais 90s de espera entre elas.
+    # Quando o teto estourava o job era CANCELADO — e job cancelado não roda nem o
+    # passo de publicar (que salvaria cotação, candles e notícia do dia) nem os
+    # passos com if: always(). Foi o que aconteceu em 13/09 22h32 e 14/09 01h32:
+    # duas execuções cinzas, sem publicar nada e sem avisar ninguém.
+    timeout-minutes: 75
     steps:
       # actions fixadas por SHA (supply chain); os comentários indicam a tag equivalente
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -55,6 +61,25 @@ jobs:
         if: steps.guarda.outputs.pular != '1'
         run: pip install --quiet pandas==3.0.5 lxml==6.1.2 requests==2.34.2
 
+      # A CVM reescreve a árvore inteira dos dados abertos aos domingos e, DURANTE
+      # a reescrita, um ano some. Em 13-14/09/2026 o itr_cia_aberta_2025.zip e o
+      # dfp_cia_aberta_2025.zip ficaram 404 por mais de 24 horas — os CSVs soltos
+      # de 2025 estavam sendo gravados naquele momento e o zip só é montado depois.
+      # Como o collect.py exigia os cinco zips, o painel passou DOIS DIAS sem
+      # publicar e o vigia mandou um e-mail de falha a cada meia hora.
+      # Guardar o último zip bom de cada ano deixa o collect.py cair para a cópia
+      # e publicar assim mesmo; ele diz no log qual ano veio da cópia e de quando.
+      # Restaurar e salvar são passos separados de propósito: o save roda com
+      # if: always(), então um ano que baixou bem hoje fica guardado mesmo que um
+      # passo posterior falhe.
+      - name: Restaurar a cópia dos zips da CVM
+        if: steps.guarda.outputs.pular != '1'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: data/cvm_zip
+          key: cvm-zips-
+          restore-keys: cvm-zips-
+
       # Fonte essencial (CVM/Fundamentus) já derrubou o dia inteiro por falha
       # passageira: 3 tentativas com intervalo, e o resultado não interrompe o
       # workflow — os dados voláteis (cotação, candles, notícia) são publicados
@@ -64,13 +89,32 @@ jobs:
         if: steps.guarda.outputs.pular != '1'
         continue-on-error: true
         run: |
-          for i in 1 2 3; do
-            echo "--- tentativa $i de 3"
+          # Duas tentativas, não três. A 3ª só fazia sentido quando a falha era
+          # oscilação de rede; com a cópia local cobrindo a fonte fora do ar, o
+          # que sobra de falha real (CVM sem o arquivo E sem cópia) não melhora
+          # com mais uma volta — só consome o orçamento do job e leva o
+          # cancelamento a engolir o passo de publicar.
+          for i in 1 2; do
+            echo "--- tentativa $i de 2"
             python collect.py && exit 0
-            echo "--- falhou; esperando 90s"
-            sleep 90
+            [ "$i" = "2" ] || { echo "--- falhou; esperando 90s"; sleep 90; }
           done
           exit 1
+
+      # Logo depois da coleta, e com always(): o que baixou bem hoje já fica
+      # guardado para o dia em que a CVM estiver no meio da reescrita.
+      # Só regrava quando o collect.py baixou algo novo (ele deixa a marca
+      # .novo): num dia em que tudo veio da cópia, subir os mesmos 107 MB de
+      # novo não guardaria nada que já não estivesse guardado.
+      - name: Guardar a cópia dos zips da CVM
+        if: always() && steps.guarda.outputs.pular != '1' && hashFiles('data/cvm_zip/.novo') != ''
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: data/cvm_zip
+          # run_id NÃO muda em "Re-run jobs": sem o run_attempt, a segunda
+          # tentativa tenta gravar uma chave que já existe, o save falha em
+          # silêncio e o zip que baixou na re-execução não fica guardado.
+          key: cvm-zips-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Coletar cotações (snapshot diário embutido no HTML)
         if: steps.guarda.outputs.pular != '1'
