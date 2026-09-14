@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  actions: write        # para acordar o vigia no fim (ver o último passo)
 
 concurrency:
   group: noticias
@@ -89,3 +90,18 @@ jobs:
           git add -f data/news.json data/news_macro.json
           git commit -m "notícias $(date -u +%FT%TZ)"
           git push -f origin news-tmp:news
+
+      # BATIMENTO DO VIGIA. O agendamento do GitHub trata cada workflow de um
+      # jeito: medido em 13-14/09/2026, este aqui recebeu quase todos os gatilhos
+      # de 2 em 2 horas, enquanto o vigia recebeu 8 de 48 e ficou quase 7 horas
+      # sem rodar bem na abertura do pregão. Como este workflow é o que o
+      # agendador entrega de verdade, ele acorda o vigia no fim de cada execução.
+      # São dois caminhos independentes até o vigia; o "cancel-in-progress" dele
+      # faz o ciclo novo substituir o que estiver correndo, sem empilhar.
+      # Roda com always() e nunca derruba esta execução: notícia publicada é o
+      # resultado deste workflow, acordar o vigia é cortesia.
+      - name: Acordar o vigia (o agendador entrega este workflow, não aquele)
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run vigia.yml --repo "$GITHUB_REPOSITORY" || echo "::warning::não consegui acordar o vigia"
