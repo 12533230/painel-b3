@@ -111,7 +111,8 @@ def _le_copia(arq, carimbo, pref, ano):
     if not arq.exists():
         return None, "sem cópia local", None
     try:
-        dias = (HOJE - dt.date.fromisoformat(carimbo.read_text().strip())).days
+        quando = dt.date.fromisoformat(carimbo.read_text().strip())
+        dias = (HOJE - quando).days
     except Exception:                                           # noqa: BLE001
         return None, "cópia sem carimbo de data — não dá para saber de quando é", None
     if dias > CACHE_MAX_DIAS:
@@ -121,7 +122,10 @@ def _le_copia(arq, carimbo, pref, ano):
         _abre_zip(conteudo, pref, ano)
     except Exception as e:                                      # noqa: BLE001
         return None, f"cópia não serve ({e})", None
-    return conteudo, f"CÓPIA de {dias} dia(s) atrás", dias
+    # devolve a DATA, não a contagem de dias: quem mostra na tela é o navegador,
+    # que tem de calcular a idade no relógio de quem lê. Um inteiro calculado
+    # aqui envelhece errado se o painel passar dias sem republicar.
+    return conteudo, f"CÓPIA de {dias} dia(s) atrás", quando.isoformat()
 
 
 def _exigido(pref, ano):
@@ -175,7 +179,7 @@ def baixa_cvm():
         except Exception as e:                                  # noqa: BLE001
             log(f"CVM: {nome} não serviu agora ({e})")
         if conteudo is None:
-            conteudo, motivo, dias = _le_copia(arq, carimbo, pref, ano)
+            conteudo, motivo, copia_de = _le_copia(arq, carimbo, pref, ano)
             if conteudo is None:
                 if _exigido(pref, ano):
                     log(f"CVM: {nome} sem download e sem cópia — {motivo}")
@@ -184,7 +188,7 @@ def baixa_cvm():
                     log(f"CVM: {nome} ausente, mas ainda não é exigido nesta época do ano")
                 continue
             origem = motivo
-            do_cache[nome] = dias
+            do_cache[nome] = copia_de
         # grava a cópia ANTES de extrair: zip baixado e validado não se perde por
         # causa de uma falha de extração
         if da_rede:
