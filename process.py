@@ -933,20 +933,46 @@ for cnpj, meta in universe.items():
 # todas as listadas em bolsa entram; sem dado nenhum a linha mostra "—"
 companies.sort(key=lambda c: (c["setor"], c["subsetor"], c["segmento"], c["name"] or ""))
 
+# De onde veio cada exercício da CVM nesta execução (o collect.py grava). Ano que
+# entrou pela cópia local vira aviso na tela, com a idade em dias.
+_cvm_copias = {}
+try:
+    _o = json.loads((DATA / "cvm_origem.json").read_text(encoding="utf-8"))
+    _cvm_copias = {k: v for k, v in (_o.get("copias") or {}).items()}
+except Exception:                                               # noqa: BLE001
+    pass
+
 panel = {
     "updatedAt": UPDATED,
     "b3FetchedAt": b3.get("fetchedAt"),
     "fontes": {"demonstracoes": "CVM Dados Abertos (ITR/DFP)", "setores": "B3 Classificação Setorial",
-               "mercado": f"Fundamentus ({UPDATED})"},
+               "mercado": f"Fundamentus ({UPDATED})",
+               # quando a CVM está no meio de uma republicação, o collect.py usa a
+               # cópia local do exercício que sumiu. A tela avisa; ver cvmAviso().
+               **({"cvmCopias": _cvm_copias} if _cvm_copias else {})},
     "companies": companies,
 }
 # Piso de sanidade. Sem isto, um erro que estourasse em build_company para TODAS
 # as empresas gravava um painel_data.json com companies vazio, o passo do workflow
 # saía verde e o painel publicado ficava sem nenhuma empresa.
-ncur_ = sum(1 for c in companies if any(x["p"].startswith(str(YCUR)) for x in c["q"]))
+# O piso de atualidade NÃO pode ser "tem trimestre do ANO CORRENTE". O ITR do ano
+# novo só existe na CVM depois da primeira entrega trimestral (o 1T vence em
+# meados de maio): de janeiro a maio nenhuma empresa tem trimestre com o ano de
+# hoje, e o painel abortaria todo começo de ano com o dado certo na mão — a mesma
+# família de defeito que tirou o painel do ar em 13/09/2026, uma regra correta no
+# regime permanente que quebra numa virada previsível do calendário.
+# O que importa é que a base esteja ATUAL, não que o carimbo tenha o ano de hoje:
+# 200 empresas com trimestre nos últimos 15 meses (5 trimestres) atravessa a
+# virada do ano e continua barrando base velha de verdade.
+_m = _HOJE.month - 15
+_y = _HOJE.year + (_m - 1) // 12
+_m = (_m - 1) % 12 + 1
+_LIM_Q = f"{_y}T{(_m - 1) // 3 + 1}"
+ncur_ = sum(1 for c in companies if any(x["p"] >= _LIM_Q for x in c["q"]))
 if len(companies) < 300 or ncur_ < 200:
-    sys.exit(f"apenas {len(companies)} empresas ({ncur_} com trimestre {YCUR}) — "
-             f"abaixo do piso de 300/200; abortando para não publicar painel furado")
+    sys.exit(f"apenas {len(companies)} empresas ({ncur_} com trimestre a partir de "
+             f"{_LIM_Q}) — abaixo do piso de 300/200; abortando para não publicar "
+             f"painel furado")
 (OUT / "painel_data.json").write_text(json.dumps(panel, ensure_ascii=False), encoding="utf-8")
 ncur = sum(1 for c in companies if any(x["p"].startswith(str(YCUR)) for x in c["q"]))
 print(f"OK {len(companies)} empresas no painel | {ncur} com trimestre {YCUR} | JSON: {(OUT/'painel_data.json').stat().st_size/1024:.0f} KB", file=sys.stderr)
