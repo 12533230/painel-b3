@@ -81,10 +81,10 @@ jobs:
           restore-keys: cvm-zips-
 
       # Fonte essencial (CVM/Fundamentus) já derrubou o dia inteiro por falha
-      # passageira: 3 tentativas com intervalo, e o resultado não interrompe o
+      # passageira: 2 tentativas com intervalo, e o resultado não interrompe o
       # workflow — os dados voláteis (cotação, candles, notícia) são publicados
       # mesmo assim, e o passo final marca a execução como falha.
-      - name: Coletar dados (CVM, Fundamentus, B3, BCB, moedas, cripto) — 3 tentativas
+      - name: Coletar dados (CVM, Fundamentus, B3, BCB, moedas, cripto) — 2 tentativas
         id: coleta
         if: steps.guarda.outputs.pular != '1'
         continue-on-error: true
@@ -212,7 +212,7 @@ jobs:
         run: |
           falhou=0
           if [ "${{ steps.coleta.outcome }}" != "success" ]; then
-            echo "::error::collect.py falhou nas 3 tentativas (CVM ou Fundamentus)."; falhou=1
+            echo "::error::collect.py falhou nas 2 tentativas (CVM ou Fundamentus)."; falhou=1
           fi
           if [ "${{ steps.consolida.outcome }}" = "failure" ]; then
             echo "::error::process.py falhou — o HTML não foi regerado."; falhou=1
